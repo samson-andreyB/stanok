@@ -527,11 +527,11 @@ fn run_branch_watch_event_loop(
   projects_path: &str,
   groups: &[String],
 ) {
-  let repo_entries: Vec<(String, String, PathBuf)> = groups
+  let repo_entries: Vec<(String, String, Option<PathBuf>)> = groups
     .iter()
     .map(|group| {
       let repo_path = PathBuf::from(projects_path).join(group).to_string_lossy().to_string();
-      let watch_target = resolve_git_watch_target(&repo_path).unwrap_or_else(|| PathBuf::from(&repo_path));
+      let watch_target = resolve_git_watch_target(&repo_path);
       (group.clone(), repo_path, watch_target)
     })
     .collect();
@@ -552,10 +552,13 @@ fn run_branch_watch_event_loop(
 
   let mut watched_any = false;
   for (_, _, target) in &repo_entries {
-    if !target.exists() {
+    let Some(target_path) = target else {
+      continue;
+    };
+    if !target_path.exists() {
       continue;
     }
-    if watcher.watch(target, RecursiveMode::Recursive).is_ok() {
+    if watcher.watch(target_path, RecursiveMode::Recursive).is_ok() {
       watched_any = true;
     }
   }
@@ -593,11 +596,11 @@ fn run_branch_watch_polling_loop(
   projects_path: &str,
   groups: &[String],
 ) {
-  let repo_entries: Vec<(String, String, PathBuf)> = groups
+  let repo_entries: Vec<(String, String, Option<PathBuf>)> = groups
     .iter()
     .map(|group| {
       let repo_path = PathBuf::from(projects_path).join(group).to_string_lossy().to_string();
-      (group.clone(), repo_path, PathBuf::new())
+      (group.clone(), repo_path, None)
     })
     .collect();
 
@@ -613,7 +616,7 @@ fn run_branch_watch_polling_loop(
 
 fn emit_branch_changes(
   app_handle: &tauri::AppHandle,
-  repo_entries: &[(String, String, PathBuf)],
+  repo_entries: &[(String, String, Option<PathBuf>)],
   previous: &mut HashMap<String, String>,
   first_pass: bool,
 ) {

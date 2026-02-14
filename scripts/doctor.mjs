@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import { cmdOk, pkgOk } from './cli-utils.mjs';
 const isLinux = process.platform === 'linux';
+const isWindows = process.platform === 'win32';
 
 const checks = [];
 
@@ -14,8 +15,13 @@ add('cargo', cargo.ok, cargo.out || 'not found');
 const rustc = cmdOk('rustc');
 add('rustc', rustc.ok, rustc.out || 'not found');
 
-const cc = cmdOk('cc');
-add('cc', cc.ok, cc.out || 'not found');
+if (isWindows) {
+  const cl = cmdOk('cl');
+  add('cl (MSVC compiler)', cl.ok, cl.out || 'not found');
+} else {
+  const cc = cmdOk('cc');
+  add('cc', cc.ok, cc.out || 'not found');
+}
 
 const git = cmdOk('git');
 add('git', git.ok, git.out || 'not found');

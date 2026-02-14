@@ -673,15 +673,15 @@ async function toggleProject(id) {
   }
   const project = state.projectMap.get(id);
   setActiveProjectLabel(project);
-  addLog(`Начата сборка проекта ${project.name}`);
+  addProjectLog(id, `Начата сборка проекта ${project.name}`);
 
   // Start initial build without blocking UI interactions.
   queueMicrotask(async () => {
     const startedAt = Date.now();
     try {
-      await runInitialBuild(project);
+      await runInitialBuild(project, id, startSeq);
       if (state.currentProjectId === id && state.startSequenceId === startSeq) {
-        await startProjectWatch(project);
+        await startProjectWatch(project, id, startSeq);
       }
     } finally {
       const elapsed = Date.now() - startedAt;
@@ -712,16 +712,36 @@ async function buildImages() {
   });
 }
 
-async function runInitialBuild(project) {
+async function runInitialBuild(project, projectId, startSeq) {
   if (!project?.data) {
     return;
   }
-  await buildImages();
-  await buildStyles();
+  if (state.currentProjectId !== projectId || state.startSequenceId !== startSeq) {
+    return;
+  }
+  await runProjectBuildFor(project, projectId, {
+    startMessage: (target) => `Запуск обработки изображений для ${target.name}`,
+    command: 'build_images',
+    successMessage: 'Изображения обработаны',
+    staleGuard: () => state.currentProjectId === projectId && state.startSequenceId === startSeq,
+  });
+  if (state.currentProjectId !== projectId || state.startSequenceId !== startSeq) {
+    return;
+  }
+  await runProjectBuildFor(project, projectId, {
+    startMessage: (target) => `Запуск сборки стилей для ${target.name}`,
+    command: 'build_styles',
+    successMessage: 'Стили обработаны',
+    staleGuard: () => state.currentProjectId === projectId && state.startSequenceId === startSeq,
+  });
 }
 
-async function startProjectWatch(project) {
+async function startProjectWatch(project, projectId = state.currentProjectId, startSeq = state.startSequenceId) {
   if (!project?.data || !state.projectsPath) {
+    return;
+  }
+
+  if (state.currentProjectId !== projectId || state.startSequenceId !== startSeq) {
     return;
   }
 
@@ -736,7 +756,9 @@ async function startProjectWatch(project) {
       timeoutMs: 10000,
     });
   } catch (error) {
-    addLog(`Ошибка запуска автослежения: ${String(error)}`, 'warn');
+    if (state.currentProjectId === projectId && state.startSequenceId === startSeq) {
+      addProjectLog(projectId, `Ошибка запуска автослежения: ${String(error)}`, 'warn');
+    }
   }
 }
 
@@ -813,6 +835,39 @@ function addLog(text, type = '') {
   }
 }
 
+function addProjectLog(projectId, text, type = '') {
+  if (!text) {
+    return;
+  }
+
+  if (!projectId) {
+    addLog(text, type);
+    return;
+  }
+
+  if (type === 'error') {
+    try {
+      new Notification('Станок', {
+        body: 'Ошибка. Детали в истории проекта',
+      });
+    } catch {
+      // no-op
+    }
+  }
+
+  const projectLog = document.querySelector(`.Project[data-project-id="${projectId}"] .Project__log`);
+  if (!projectLog) {
+    addLog(text, type);
+    return;
+  }
+
+  const entry = `\n[${timeNow()}] ${type ? `[${type}] ` : ''}${String(text)}`;
+  projectLog.insertAdjacentHTML('afterbegin', `<div class="Log Log--${escapeHtml(type)}"><div class="Log__box Log__box--data">${escapeHtml(entry)}</div></div>`);
+  while (projectLog.childElementCount > MAX_PROJECT_LOG_ENTRIES) {
+    projectLog.lastElementChild?.remove();
+  }
+}
+
 function patchConsole() {
   const originalLog = console.log;
   const originalWarn = console.warn;
@@ -850,15 +905,32 @@ async function runProjectBuild({ startMessage, command, successMessage }) {
     return;
   }
 
-  addLog(startMessage(project));
-
   const currentId = state.currentProjectId;
+  await runProjectBuildFor(project, currentId, {
+    startMessage,
+    command,
+    successMessage,
+    staleGuard: () => state.currentProjectId === currentId,
+  });
+}
+
+async function runProjectBuildFor(project, projectId, { startMessage, command, successMessage, staleGuard = null }) {
+  if (!project?.data) {
+    return;
+  }
+
+  if (typeof staleGuard === 'function' && !staleGuard()) {
+    return;
+  }
+
+  addProjectLog(projectId, startMessage(project));
+
   const loadingClass = command === 'build_styles' ? 'Project--styles-loading' : 'Project--images-loading';
-  const currentEl = currentId
-    ? document.querySelector(`.Project[data-project-id="${currentId}"]`)
+  const projectEl = projectId
+    ? document.querySelector(`.Project[data-project-id="${projectId}"]`)
     : null;
-  if (currentEl) {
-    currentEl.classList.add(loadingClass);
+  if (projectEl) {
+    projectEl.classList.add(loadingClass);
   }
 
   try {
@@ -869,12 +941,16 @@ async function runProjectBuild({ startMessage, command, successMessage }) {
     }, {
       timeoutMs: INVOKE_BUILD_TIMEOUT_MS,
     });
-    addLog(output || successMessage, 'success');
+    if (typeof staleGuard !== 'function' || staleGuard()) {
+      addProjectLog(projectId, output || successMessage, 'success');
+    }
   } catch (error) {
-    addLog(String(error), 'error');
+    if (typeof staleGuard !== 'function' || staleGuard()) {
+      addProjectLog(projectId, String(error), 'error');
+    }
   } finally {
-    if (currentEl) {
-      currentEl.classList.remove(loadingClass);
+    if (projectEl) {
+      projectEl.classList.remove(loadingClass);
     }
   }
 }

@@ -1,5 +1,6 @@
 import { hasCommand, pkgOk, runOrExit } from './cli-utils.mjs';
 const isLinux = process.platform === 'linux';
+const isWindows = process.platform === 'win32';
 
 if (!hasCommand('cargo')) {
   console.error('\n[Tauri] Не найден cargo (Rust toolchain).');
@@ -8,7 +9,7 @@ if (!hasCommand('cargo')) {
   runOrExit('npm', ['run', 'dev:web']);
 }
 
-if (!hasCommand('cc')) {
+if (!isWindows && !hasCommand('cc')) {
   console.error('\n[Tauri] Не найден C-компилятор (cc/gcc/clang).');
   console.error('[Tauri] Для Fedora установите: sudo dnf install -y gcc');
   console.error('[Tauri] Запускаю только фронтенд режим: npm run dev:web\n');
