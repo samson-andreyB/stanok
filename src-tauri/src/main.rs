@@ -71,6 +71,7 @@ struct ResourceSnapshot {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(not(target_os = "linux"), allow(dead_code))]
 struct ResourceStatsEvent {
   cpu_percent: f64,
   rss_kb: u64,
@@ -1622,6 +1623,8 @@ fn main() {
     .setup(|app| {
       #[cfg(target_os = "linux")]
       spawn_resource_stats_emitter(app.handle().clone());
+      #[cfg(not(target_os = "linux"))]
+      let _ = app;
       Ok(())
     })
     .invoke_handler(tauri::generate_handler![

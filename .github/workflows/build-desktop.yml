@@ -38,6 +38,10 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install dependencies
+        env:
+          PHANTOMJS_SKIP_DOWNLOAD: 'true'
+          npm_config_phantomjs_skip_download: 'true'
+          npm_config_tmp: ${{ runner.temp }}
         run: npm ci
 
       - name: Install Linux system packages
