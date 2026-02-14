@@ -9,6 +9,8 @@ pnpm-debug.log*
 dist/
 src-tauri/target/
 src-tauri/gen/
+src-tauri/bundled-node/*
+!src-tauri/bundled-node/.gitkeep
 
 # IDE / OS
 .idea/

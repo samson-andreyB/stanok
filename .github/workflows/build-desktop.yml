@@ -59,6 +59,54 @@ jobs:
             libayatana-appindicator3-dev \
             librsvg2-dev
 
+      - name: Prepare bundled Node runtime (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        env:
+          NODE_RUNTIME_VERSION: '20.19.0'
+        run: |
+          $arch = if ("${{ runner.arch }}" -eq "ARM64") { "arm64" } else { "x64" }
+          $url = "https://nodejs.org/dist/v$env:NODE_RUNTIME_VERSION/node-v$env:NODE_RUNTIME_VERSION-win-$arch.zip"
+          $work = Join-Path $env:RUNNER_TEMP "node-runtime"
+          New-Item -ItemType Directory -Force -Path $work | Out-Null
+          Invoke-WebRequest -Uri $url -OutFile (Join-Path $work "node.zip")
+          Expand-Archive -Path (Join-Path $work "node.zip") -DestinationPath (Join-Path $work "extracted") -Force
+          $nodeExe = Get-ChildItem -Path (Join-Path $work "extracted") -Filter node.exe -Recurse | Select-Object -First 1
+          if (-not $nodeExe) { throw "node.exe was not found in downloaded archive" }
+          New-Item -ItemType Directory -Force -Path "src-tauri/bundled-node" | Out-Null
+          Copy-Item $nodeExe.FullName "src-tauri/bundled-node/node.exe" -Force
+
+      - name: Prepare bundled Node runtime (Linux/macOS)
+        if: matrix.os != 'windows-latest'
+        shell: bash
+        env:
+          NODE_RUNTIME_VERSION: '20.19.0'
+        run: |
+          set -euo pipefail
+          arch="x64"
+          if [[ "${{ runner.arch }}" == "ARM64" ]]; then
+            arch="arm64"
+          fi
+
+          if [[ "${{ matrix.os }}" == "ubuntu-22.04" ]]; then
+            platform="linux-${arch}"
+          else
+            platform="darwin-${arch}"
+          fi
+
+          url="https://nodejs.org/dist/v${NODE_RUNTIME_VERSION}/node-v${NODE_RUNTIME_VERSION}-${platform}.tar.gz"
+          work="${RUNNER_TEMP}/node-runtime"
+          mkdir -p "${work}" src-tauri/bundled-node
+          curl -fsSL "${url}" -o "${work}/node.tgz"
+          tar -xzf "${work}/node.tgz" -C "${work}"
+          node_bin="$(find "${work}" -type f -path "*/bin/node" | head -n 1)"
+          if [[ -z "${node_bin}" ]]; then
+            echo "Failed to locate node binary in archive"
+            exit 1
+          fi
+          cp "${node_bin}" src-tauri/bundled-node/node
+          chmod +x src-tauri/bundled-node/node
+
       - name: Build app bundles
         run: npx tauri build --bundles ${{ matrix.bundle }}
 

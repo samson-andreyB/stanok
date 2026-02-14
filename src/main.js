@@ -24,6 +24,7 @@ const state = {
   windowFocused: true,
   runtimeNodeMissing: false,
   runtimeNodeVersion: '',
+  runtimeNodeSource: '',
   watchBuildInFlight: false,
   watchBuildPendingCss: false,
   watchBuildPendingImg: false,
@@ -324,13 +325,20 @@ async function checkRuntimeStatus() {
     const nodeAvailable = Boolean(status?.node_available);
     state.runtimeNodeMissing = !nodeAvailable;
     state.runtimeNodeVersion = nodeAvailable ? String(status?.node_version || '') : '';
+    state.runtimeNodeSource = nodeAvailable ? String(status?.node_source || '') : '';
+    if (nodeAvailable) {
+      const source = state.runtimeNodeSource || 'unknown';
+      const version = state.runtimeNodeVersion || '?';
+      addLog(`Node runtime: ${source} (${version})`);
+    }
     if (!nodeAvailable) {
-      addLog('Node.js не найден в PATH. Установите Node.js LTS и перезапустите приложение.', 'error');
+      addLog('Не найден Node.js runtime (bundled/system). Установите Node.js LTS или переустановите приложение.', 'error');
     }
   } catch {
     // Keep UI usable even if runtime status probe fails.
     state.runtimeNodeMissing = false;
     state.runtimeNodeVersion = '';
+    state.runtimeNodeSource = '';
   } finally {
     updateWatcherStatusUi();
   }

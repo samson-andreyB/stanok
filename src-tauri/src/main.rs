@@ -85,6 +85,7 @@ struct ResourceStatsEvent {
 struct RuntimeStatus {
   node_available: bool,
   node_version: Option<String>,
+  node_source: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -247,15 +248,17 @@ fn open_external_url(url: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn get_runtime_status() -> RuntimeStatus {
-  match detect_node_version() {
-    Ok(version) => RuntimeStatus {
+fn get_runtime_status(app: tauri::AppHandle) -> RuntimeStatus {
+  match detect_node_runtime(&app) {
+    Ok((_, source, version)) => RuntimeStatus {
       node_available: true,
       node_version: Some(version),
+      node_source: Some(source),
     },
     Err(_) => RuntimeStatus {
       node_available: false,
       node_version: None,
+      node_source: None,
     },
   }
 }
@@ -933,18 +936,13 @@ fn run_node_script(
   script_name: &str,
   payload: &BuildPayload,
 ) -> Result<String, String> {
-  if detect_node_version().is_err() {
-    return Err(
-      "Не найден Node.js в PATH. Установите Node.js LTS и перезапустите приложение."
-        .to_string(),
-    );
-  }
+  let (node_cmd, _, _) = detect_node_runtime(app_handle)?;
 
   const WORKER_RETRIES: u8 = 1;
   let mut last_error: Option<String> = None;
 
   for attempt in 0..=WORKER_RETRIES {
-    match run_node_script_with_worker(state, app_handle, script_name, payload) {
+    match run_node_script_with_worker(state, app_handle, &node_cmd, script_name, payload) {
       Ok(output) => return Ok(output),
       Err(error) => {
         last_error = Some(error.clone());
@@ -957,7 +955,7 @@ fn run_node_script(
     }
   }
 
-  match run_node_script_once(app_handle, script_name, payload) {
+  match run_node_script_once(app_handle, &node_cmd, script_name, payload) {
     Ok(output) => Ok(output),
     Err(fallback_error) => {
       if let Some(worker_error) = last_error {
@@ -976,6 +974,7 @@ fn run_node_script(
 fn run_node_script_with_worker(
   state: &BuildOrchestratorState,
   app_handle: &tauri::AppHandle,
+  node_cmd: &Path,
   script_name: &str,
   payload: &BuildPayload,
 ) -> Result<String, String> {
@@ -996,7 +995,7 @@ fn run_node_script_with_worker(
       .lock()
       .map_err(|_| "Ошибка блокировки worker pool".to_string())?;
     if !workers.contains_key(script_name) {
-      let spawned = spawn_node_worker(&workspace_root, &worker_path)?;
+      let spawned = spawn_node_worker(node_cmd, &workspace_root, &worker_path)?;
       workers.insert(script_name.to_string(), Arc::new(Mutex::new(spawned)));
     }
     workers
@@ -1015,7 +1014,7 @@ fn run_node_script_with_worker(
     .map_err(|e| e.to_string())?
     .is_some()
   {
-    *worker = spawn_node_worker(&workspace_root, &worker_path)?;
+    *worker = spawn_node_worker(node_cmd, &workspace_root, &worker_path)?;
   }
 
   let request = serde_json::json!({
@@ -1026,7 +1025,7 @@ fn run_node_script_with_worker(
   let request_line = serde_json::to_string(&request).map_err(|e| e.to_string())?;
 
   if writeln!(worker.stdin, "{}", request_line).is_err() || worker.stdin.flush().is_err() {
-    *worker = spawn_node_worker(&workspace_root, &worker_path)?;
+    *worker = spawn_node_worker(node_cmd, &workspace_root, &worker_path)?;
     writeln!(worker.stdin, "{}", request_line).map_err(|e| e.to_string())?;
     worker.stdin.flush().map_err(|e| e.to_string())?;
   }
@@ -1034,7 +1033,7 @@ fn run_node_script_with_worker(
   let mut line = String::new();
   let read = worker.stdout.read_line(&mut line).map_err(|e| e.to_string())?;
   if read == 0 {
-    *worker = spawn_node_worker(&workspace_root, &worker_path)?;
+    *worker = spawn_node_worker(node_cmd, &workspace_root, &worker_path)?;
     writeln!(worker.stdin, "{}", request_line).map_err(|e| e.to_string())?;
     worker.stdin.flush().map_err(|e| e.to_string())?;
     line.clear();
@@ -1063,8 +1062,8 @@ fn run_node_script_with_worker(
   Err(message)
 }
 
-fn spawn_node_worker(workspace_root: &Path, worker_path: &Path) -> Result<NodeWorker, String> {
-  let mut child = Command::new("node")
+fn spawn_node_worker(node_cmd: &Path, workspace_root: &Path, worker_path: &Path) -> Result<NodeWorker, String> {
+  let mut child = Command::new(node_cmd)
     .arg(worker_path)
     .current_dir(workspace_root)
     .stdin(Stdio::piped())
@@ -1084,6 +1083,7 @@ fn spawn_node_worker(workspace_root: &Path, worker_path: &Path) -> Result<NodeWo
 
 fn run_node_script_once(
   app_handle: &tauri::AppHandle,
+  node_cmd: &Path,
   script_name: &str,
   payload: &BuildPayload,
 ) -> Result<String, String> {
@@ -1098,7 +1098,7 @@ fn run_node_script_once(
   }
 
   let payload_json = serde_json::to_string(payload).map_err(|e| e.to_string())?;
-  let output = Command::new("node")
+  let output = Command::new(node_cmd)
     .arg(script_path)
     .arg(payload_json)
     .current_dir(workspace_root)
@@ -1169,8 +1169,8 @@ fn compact_script_error(stderr: &str) -> String {
   "Ошибка сборки".to_string()
 }
 
-fn detect_node_version() -> Result<String, String> {
-  let output = Command::new("node")
+fn detect_node_version(node_cmd: &Path) -> Result<String, String> {
+  let output = Command::new(node_cmd)
     .arg("--version")
     .output()
     .map_err(|e| format!("Не удалось запустить node: {}", e))?;
@@ -1182,6 +1182,56 @@ fn detect_node_version() -> Result<String, String> {
     return Err("Node.js не вернул версию".to_string());
   }
   Ok(version)
+}
+
+fn detect_node_runtime(app_handle: &tauri::AppHandle) -> Result<(PathBuf, String, String), String> {
+  if let Some(path) = resolve_bundled_node_path(app_handle) {
+    if let Ok(version) = detect_node_version(&path) {
+      return Ok((path, "bundled".to_string(), version));
+    }
+  }
+
+  let system = PathBuf::from("node");
+  if let Ok(version) = detect_node_version(&system) {
+    return Ok((system, "system".to_string(), version));
+  }
+
+  Err("Не найден Node.js (ни bundled, ни system). Установите Node.js LTS или пересоберите бандл с bundled runtime.".to_string())
+}
+
+fn resolve_bundled_node_path(app_handle: &tauri::AppHandle) -> Option<PathBuf> {
+  #[cfg(target_os = "windows")]
+  const NODE_BIN: &str = "node.exe";
+  #[cfg(not(target_os = "windows"))]
+  const NODE_BIN: &str = "node";
+
+  let dev_root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).parent()?.to_path_buf();
+  let dev_candidate = dev_root.join("src-tauri").join("bundled-node").join(NODE_BIN);
+  if dev_candidate.exists() {
+    return Some(dev_candidate);
+  }
+
+  if let Ok(resource_dir) = app_handle.path().resource_dir() {
+    for candidate in [
+      resource_dir.join("bundled-node").join(NODE_BIN),
+      resource_dir.join(NODE_BIN),
+    ] {
+      if candidate.exists() {
+        return Some(candidate);
+      }
+    }
+  }
+
+  if let Ok(resolved) = app_handle
+    .path()
+    .resolve(&format!("bundled-node/{}", NODE_BIN), BaseDirectory::Resource)
+  {
+    if resolved.exists() {
+      return Some(resolved);
+    }
+  }
+
+  None
 }
 
 #[cfg(target_os = "linux")]
@@ -1695,9 +1745,14 @@ fn resolve_scripts_root(app_handle: &tauri::AppHandle) -> Result<PathBuf, String
   }
 
   if let Ok(resource_dir) = app_handle.path().resource_dir() {
-    let bundled_scripts = resource_dir.join("scripts");
-    if bundled_scripts.exists() {
-      return Ok(bundled_scripts);
+    for candidate in [
+      resource_dir.join("scripts"),
+      resource_dir.clone(),
+      resource_dir.join("_up_1_").join("scripts"),
+    ] {
+      if candidate.join("build-worker.mjs").exists() {
+        return Ok(candidate);
+      }
     }
   }
 
