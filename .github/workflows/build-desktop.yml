@@ -42,6 +42,10 @@ jobs:
           PHANTOMJS_SKIP_DOWNLOAD: 'true'
           npm_config_phantomjs_skip_download: 'true'
           npm_config_tmp: ${{ runner.temp }}
+          TMPDIR: ${{ runner.temp }}
+          TMP: ${{ runner.temp }}
+          TEMP: ${{ runner.temp }}
+          npm_config_cache: ${{ runner.temp }}/.npm-cache
         run: npm ci
 
       - name: Install Linux system packages
