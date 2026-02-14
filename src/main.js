@@ -1,5 +1,6 @@
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
+import { getVersion, getTauriVersion } from '@tauri-apps/api/app';
 
 const state = {
   projectsPath: null,
@@ -50,6 +51,9 @@ const ui = {
   cpuUsage: document.querySelector('#cpuUsage'),
   memoryUsage: document.querySelector('#memoryUsage'),
   watcherStatus: document.querySelector('#watcherStatus'),
+  runtimeAppVersion: document.querySelector('#runtimeAppVersion'),
+  runtimeTauriVersion: document.querySelector('#runtimeTauriVersion'),
+  runtimeNodeVersion: document.querySelector('#runtimeNodeVersion'),
 };
 
 function setProjectsPanelVisible(visible) {
@@ -121,6 +125,7 @@ init().catch((error) => {
 async function init() {
   patchConsole();
   bindEvents();
+  await loadRuntimeVersions();
   await setupBranchEvents();
   await setupProjectWatchEvents();
   startWatchStatusTicker();
@@ -133,6 +138,28 @@ async function init() {
     await setProjectsPath(savedPath, false);
   } else {
     await chooseProjectsPath();
+  }
+}
+
+async function loadRuntimeVersions() {
+  try {
+    const [appVersion, tauriVersion] = await Promise.all([
+      getVersion(),
+      getTauriVersion(),
+    ]);
+    if (ui.runtimeAppVersion) {
+      ui.runtimeAppVersion.textContent = appVersion || '--';
+    }
+    if (ui.runtimeTauriVersion) {
+      ui.runtimeTauriVersion.textContent = tauriVersion || '--';
+    }
+  } catch {
+    if (ui.runtimeAppVersion) {
+      ui.runtimeAppVersion.textContent = '--';
+    }
+    if (ui.runtimeTauriVersion) {
+      ui.runtimeTauriVersion.textContent = '--';
+    }
   }
 }
 
@@ -340,8 +367,24 @@ async function checkRuntimeStatus() {
     state.runtimeNodeVersion = '';
     state.runtimeNodeSource = '';
   } finally {
+    updateRuntimeNodeInfoUi();
     updateWatcherStatusUi();
   }
+}
+
+function updateRuntimeNodeInfoUi() {
+  if (!ui.runtimeNodeVersion) {
+    return;
+  }
+
+  if (state.runtimeNodeMissing) {
+    ui.runtimeNodeVersion.textContent = 'missing';
+    return;
+  }
+
+  const version = state.runtimeNodeVersion || '--';
+  const source = state.runtimeNodeSource ? ` (${state.runtimeNodeSource})` : '';
+  ui.runtimeNodeVersion.textContent = `${version}${source}`;
 }
 
 function startResourceUpdates() {

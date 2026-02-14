@@ -91,6 +91,57 @@ body.Page {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
+.Hero__runtime {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.RuntimeItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(44, 49, 60, 0.72);
+  font-size: 0.76rem;
+  color: var(--text-soft);
+}
+
+.RuntimeItem__icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  border: 1px solid var(--line-strong);
+  background: linear-gradient(180deg, rgba(130, 137, 151, 0.45), rgba(92, 99, 112, 0.65));
+}
+
+.RuntimeItem__icon--app {
+  border-color: rgba(97, 175, 239, 0.75);
+  background: linear-gradient(180deg, rgba(97, 175, 239, 0.6), rgba(56, 102, 140, 0.9));
+}
+
+.RuntimeItem__icon--tauri {
+  border-color: rgba(152, 195, 121, 0.75);
+  background: linear-gradient(180deg, rgba(152, 195, 121, 0.6), rgba(96, 133, 75, 0.92));
+}
+
+.RuntimeItem__icon--node {
+  border-color: rgba(229, 192, 123, 0.75);
+  background: linear-gradient(180deg, rgba(229, 192, 123, 0.62), rgba(163, 121, 54, 0.9));
+}
+
+.RuntimeItem__label {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.RuntimeItem__value {
+  color: var(--text);
+  font-weight: 700;
+}
+
 .Stat {
   padding: 11px 13px;
   border: 1px solid var(--line);
