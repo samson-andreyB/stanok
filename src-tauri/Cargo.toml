@@ -1,0 +1,21 @@
+[package]
+name = "stanok"
+version = "2.0.0"
+description = "Stanok on Tauri"
+authors = ["you"]
+license = "MIT"
+repository = ""
+edition = "2021"
+rust-version = "1.77"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tauri = { version = "2", features = [] }
+rfd = "0.15"
+open = "5"
+tauri-plugin-window-state = "2"
+notify = "6"

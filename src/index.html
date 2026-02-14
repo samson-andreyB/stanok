@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Станок</title>
+  <link rel="stylesheet" href="./main.css" />
+</head>
+<body class="Page">
+  <div class="App">
+    <header class="Hero">
+      <div class="ProjectsChooser">
+        <span class="ProjectsChooser__path" id="projectsPathInfo">Укажите папку с проектами:</span>
+        <div class="ProjectsChooser__actions">
+          <button class="ProjectsChooser__choose" id="projectsPathChoose" type="button">Выбрать папку</button>
+          <button class="ProjectsChooser__refresh" type="button">Обновить список проектов</button>
+        </div>
+      </div>
+
+      <div class="Hero__stats">
+        <div class="Stat">
+          <div class="Stat__label">Проектов</div>
+          <div class="Stat__value" id="projectsCount">0</div>
+        </div>
+        <div class="Stat">
+          <div class="Stat__label">Активный</div>
+          <div class="Stat__value Stat__value--small" id="activeProjectName">не выбран</div>
+        </div>
+        <div class="Stat">
+          <div class="Stat__label">Ресурсы</div>
+          <div class="Stat__value Stat__value--small"><span id="cpuUsage">CPU: --</span> • <span id="memoryUsage">RAM: --</span></div>
+        </div>
+        <div class="Stat">
+          <div class="Stat__label">Watcher</div>
+          <div class="Stat__value Stat__value--small" id="watcherStatus">idle</div>
+        </div>
+      </div>
+    </header>
+
+    <div class="Page__wrapper">
+      <section class="Panel Panel--projects">
+        <div class="Panel__header">Список проектов</div>
+        <div class="Projects"></div>
+      </section>
+    </div>
+  </div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

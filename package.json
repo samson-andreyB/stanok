@@ -1,0 +1,26 @@
+{
+  "name": "stanok",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Станок на Tauri",
+  "scripts": {
+    "dev:web": "vite",
+    "build:web": "vite build",
+    "dev": "node scripts/dev.mjs",
+    "build": "tauri build",
+    "doctor": "node scripts/doctor.mjs",
+    "test:unit": "cargo test --manifest-path src-tauri/Cargo.toml",
+    "test:smoke": "node --test test/smoke/*.test.mjs",
+    "test:e2e": "node --test test/e2e/*.test.mjs",
+    "test": "npm run test:unit && npm run test:smoke"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.0.0"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0",
+    "intcss": "github:verstak-int/intcss",
+    "postcss5": "npm:postcss@^5.2.18",
+    "vite": "^5.4.11"
+  }
+}
