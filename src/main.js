@@ -25,12 +25,17 @@ const state = {
   watchBuildInFlight: false,
   watchBuildPendingCss: false,
   watchBuildPendingImg: false,
+  watchBuildDebounceTimer: null,
+  watchBuildPendingEvents: 0,
+  watchBuildPendingCssEvents: 0,
+  watchBuildPendingImgEvents: 0,
 };
 
 const MAX_PROJECT_LOG_ENTRIES = 200;
 const MAX_GLOBAL_LOG_CHARS = 20000;
 const INVOKE_DEFAULT_TIMEOUT_MS = 12000;
 const INVOKE_BUILD_TIMEOUT_MS = 10 * 60 * 1000;
+const WATCH_BUILD_DEBOUNCE_MS = 250;
 
 const ui = {
   projectsPathInfo: document.querySelector('#projectsPathInfo'),
@@ -198,16 +203,29 @@ async function handleProjectWatchPayload(payload) {
   state.watchLastError = '';
   if (payload.img_changed) {
     state.watchBuildPendingImg = true;
+    state.watchBuildPendingImgEvents += 1;
   }
   if (payload.css_changed) {
     state.watchBuildPendingCss = true;
+    state.watchBuildPendingCssEvents += 1;
   }
   if (payload.img_changed || payload.css_changed) {
-    void processWatchBuildQueue();
+    state.watchBuildPendingEvents += 1;
+    scheduleWatchBuildQueue();
   }
   if (payload.layout_changed) {
     addLog('Обнаружены изменения разметки/скриптов');
   }
+}
+
+function scheduleWatchBuildQueue() {
+  if (state.watchBuildDebounceTimer) {
+    return;
+  }
+  state.watchBuildDebounceTimer = window.setTimeout(() => {
+    state.watchBuildDebounceTimer = null;
+    void processWatchBuildQueue();
+  }, WATCH_BUILD_DEBOUNCE_MS);
 }
 
 async function processWatchBuildQueue() {
@@ -220,15 +238,21 @@ async function processWatchBuildQueue() {
     while (state.watchBuildPendingImg || state.watchBuildPendingCss) {
       const runImages = state.watchBuildPendingImg;
       const runStyles = state.watchBuildPendingCss;
+      const batchEvents = state.watchBuildPendingEvents;
+      const batchCssEvents = state.watchBuildPendingCssEvents;
+      const batchImgEvents = state.watchBuildPendingImgEvents;
       state.watchBuildPendingImg = false;
       state.watchBuildPendingCss = false;
+      state.watchBuildPendingEvents = 0;
+      state.watchBuildPendingCssEvents = 0;
+      state.watchBuildPendingImgEvents = 0;
 
       if (runImages && runStyles) {
-        addLog('Обнаружены изменения стилей и изображений');
+        addLog(`Обнаружены изменения стилей и изображений (батч: ${batchEvents}, css:${batchCssEvents}, img:${batchImgEvents})`);
       } else if (runImages) {
-        addLog('Обнаружены изменения изображений');
+        addLog(`Обнаружены изменения изображений (батч: ${batchEvents}, img:${batchImgEvents})`);
       } else if (runStyles) {
-        addLog('Обнаружены изменения стилей');
+        addLog(`Обнаружены изменения стилей (батч: ${batchEvents}, css:${batchCssEvents})`);
       }
 
       if (runImages) {
@@ -241,6 +265,18 @@ async function processWatchBuildQueue() {
   } finally {
     state.watchBuildInFlight = false;
   }
+}
+
+function resetWatchBuildQueueState() {
+  if (state.watchBuildDebounceTimer) {
+    window.clearTimeout(state.watchBuildDebounceTimer);
+    state.watchBuildDebounceTimer = null;
+  }
+  state.watchBuildPendingImg = false;
+  state.watchBuildPendingCss = false;
+  state.watchBuildPendingEvents = 0;
+  state.watchBuildPendingCssEvents = 0;
+  state.watchBuildPendingImgEvents = 0;
 }
 
 function updateWatcherStatusUi() {
@@ -572,6 +608,7 @@ function renderProjects(projects) {
   stopBranchPolling();
   state.branchSnapshot.clear();
   stopProjectWatch();
+  resetWatchBuildQueueState();
   setActiveProjectLabel(null);
 
   const html = [
@@ -646,6 +683,7 @@ async function toggleProject(id) {
   }
 
   stopProjectWatch();
+  resetWatchBuildQueueState();
 
   if (state.currentProjectId) {
     const prevEl = document.querySelector(`.Project[data-project-id="${state.currentProjectId}"]`);
@@ -764,6 +802,7 @@ async function startProjectWatch(project, projectId = state.currentProjectId, st
 
 function stopProjectWatch() {
   invokeWithPolicy('stop_project_watch', {}, { timeoutMs: 3000 }).catch(() => {});
+  resetWatchBuildQueueState();
 }
 
 function startBranchPolling() {
