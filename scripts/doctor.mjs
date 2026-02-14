@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import { cmdOk, pkgOk } from './cli-utils.mjs';
+const isLinux = process.platform === 'linux';
 
 const checks = [];
 
@@ -19,13 +20,17 @@ add('cc', cc.ok, cc.out || 'not found');
 const git = cmdOk('git');
 add('git', git.ok, git.out || 'not found');
 
-const pkgCfg = cmdOk('pkg-config');
-add('pkg-config', pkgCfg.ok, pkgCfg.out || 'not found');
+if (isLinux) {
+  const pkgCfg = cmdOk('pkg-config');
+  add('pkg-config', pkgCfg.ok, pkgCfg.out || 'not found');
 
-if (pkgCfg.ok) {
-  add('gtk+-3.0 (pkg-config)', pkgOk('gtk+-3.0'));
-  add('webkit2gtk-4.1 (pkg-config)', pkgOk('webkit2gtk-4.1'));
-  add('libsoup-3.0 (pkg-config)', pkgOk('libsoup-3.0'));
+  if (pkgCfg.ok) {
+    add('gtk+-3.0 (pkg-config)', pkgOk('gtk+-3.0'));
+    add('webkit2gtk-4.1 (pkg-config)', pkgOk('webkit2gtk-4.1'));
+    add('libsoup-3.0 (pkg-config)', pkgOk('libsoup-3.0'));
+  }
+} else {
+  add('pkg-config / gtk checks (linux-only)', true, `skipped on ${process.platform}`);
 }
 
 const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));

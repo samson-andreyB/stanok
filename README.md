@@ -60,3 +60,14 @@ npm run build
 - Для работы приложения нужны `node`, `cargo/rustc`, `cc`, `pkg-config`, `git`.
 - Проверка окружения: `npm run doctor`.
 - Кэш списка проектов хранится в `~/.cache/stanok` (или `$XDG_CACHE_HOME/stanok`) и живет `1 час`.
+
+## Platform Notes
+
+- Метрики ресурсов (`CPU`/`RAM`) поддерживаются на Linux, Windows и macOS.
+- Linux-специфичные проверки (`pkg-config`, `gtk`, `webkit`) выполняются только на Linux.
+  На Windows/macOS в `doctor` они помечаются как `skipped`.
+- Путь к кэшу проектов:
+  - `XDG_CACHE_HOME/stanok` (если задано)
+  - `LOCALAPPDATA/stanok` (Windows fallback)
+  - `HOME/.cache/stanok`
+  - `temp_dir()/stanok` (резервный fallback)

@@ -360,14 +360,19 @@ function updateResourceStats(snapshot) {
   const memMb = Math.max(0, rssKb / 1024);
 
   let cpuText = '--';
-  const prev = state.lastResourceSample;
-  if (prev) {
-    const deltaProcess = Number(snapshot.process_jiffies || 0) - Number(prev.process_jiffies || 0);
-    const deltaTotal = Number(snapshot.total_jiffies || 0) - Number(prev.total_jiffies || 0);
-    const cpuCount = Math.max(1, Number(snapshot.cpu_count || 1));
-    if (deltaProcess >= 0 && deltaTotal > 0) {
-      const cpuPercent = (deltaProcess / deltaTotal) * 100 * cpuCount;
-      cpuText = `${Math.max(0, cpuPercent).toFixed(1)}%`;
+  const directCpu = Number(snapshot.cpu_percent);
+  if (Number.isFinite(directCpu) && directCpu >= 0) {
+    cpuText = `${Math.max(0, directCpu).toFixed(1)}%`;
+  } else {
+    const prev = state.lastResourceSample;
+    if (prev) {
+      const deltaProcess = Number(snapshot.process_jiffies || 0) - Number(prev.process_jiffies || 0);
+      const deltaTotal = Number(snapshot.total_jiffies || 0) - Number(prev.total_jiffies || 0);
+      const cpuCount = Math.max(1, Number(snapshot.cpu_count || 1));
+      if (deltaProcess >= 0 && deltaTotal > 0) {
+        const cpuPercent = (deltaProcess / deltaTotal) * 100 * cpuCount;
+        cpuText = `${Math.max(0, cpuPercent).toFixed(1)}%`;
+      }
     }
   }
 

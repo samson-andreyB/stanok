@@ -18,6 +18,8 @@ use std::sync::{
 };
 use std::time::Duration;
 use tauri::Emitter;
+#[cfg(not(target_os = "linux"))]
+use sysinfo::{ProcessesToUpdate, System};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct ProjectsResponse {
@@ -68,10 +70,10 @@ struct ResourceSnapshot {
   total_jiffies: u64,
   rss_kb: u64,
   cpu_count: u32,
+  cpu_percent: Option<f64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-#[cfg_attr(not(target_os = "linux"), allow(dead_code))]
 struct ResourceStatsEvent {
   cpu_percent: f64,
   rss_kb: u64,
@@ -678,55 +680,95 @@ fn get_resource_snapshot() -> Result<ResourceSnapshot, String> {
       total_jiffies,
       rss_kb,
       cpu_count,
+      cpu_percent: None,
     });
   }
 
   #[cfg(not(target_os = "linux"))]
   {
-    Err("Мониторинг ресурсов поддерживается только на Linux".to_string())
+    let pid = sysinfo::get_current_pid().map_err(|e| e.to_string())?;
+    let mut system = System::new_all();
+    system.refresh_processes(ProcessesToUpdate::Some(&[pid]), true);
+    let process = system
+      .process(pid)
+      .ok_or("Не найден текущий процесс в sysinfo".to_string())?;
+    let cpu_count = std::thread::available_parallelism()
+      .map(|n| n.get() as u32)
+      .unwrap_or(1);
+
+    Ok(ResourceSnapshot {
+      process_jiffies: 0,
+      total_jiffies: 0,
+      rss_kb: process.memory() / 1024,
+      cpu_count,
+      cpu_percent: Some(process.cpu_usage() as f64),
+    })
   }
 }
 
-#[cfg(target_os = "linux")]
 fn spawn_resource_stats_emitter(app: tauri::AppHandle) {
   std::thread::spawn(move || {
-    let mut prev_process = 0u64;
-    let mut prev_total = 0u64;
-    let mut has_prev = false;
+    #[cfg(target_os = "linux")]
+    {
+      let mut prev_process = 0u64;
+      let mut prev_total = 0u64;
+      let mut has_prev = false;
 
-    loop {
-      let snapshot = match get_resource_snapshot() {
-        Ok(value) => value,
-        Err(_) => {
-          std::thread::sleep(Duration::from_secs(4));
-          continue;
-        }
-      };
+      loop {
+        let snapshot = match get_resource_snapshot() {
+          Ok(value) => value,
+          Err(_) => {
+            std::thread::sleep(Duration::from_secs(4));
+            continue;
+          }
+        };
 
-      let cpu_percent = if has_prev {
-        let delta_process = snapshot.process_jiffies.saturating_sub(prev_process) as f64;
-        let delta_total = snapshot.total_jiffies.saturating_sub(prev_total) as f64;
-        if delta_total > 0.0 {
-          let cpus = snapshot.cpu_count.max(1) as f64;
-          ((delta_process / delta_total) * 100.0 * cpus).max(0.0)
+        let cpu_percent = if has_prev {
+          let delta_process = snapshot.process_jiffies.saturating_sub(prev_process) as f64;
+          let delta_total = snapshot.total_jiffies.saturating_sub(prev_total) as f64;
+          if delta_total > 0.0 {
+            let cpus = snapshot.cpu_count.max(1) as f64;
+            ((delta_process / delta_total) * 100.0 * cpus).max(0.0)
+          } else {
+            0.0
+          }
         } else {
           0.0
+        };
+
+        prev_process = snapshot.process_jiffies;
+        prev_total = snapshot.total_jiffies;
+        has_prev = true;
+
+        let payload = ResourceStatsEvent {
+          cpu_percent,
+          rss_kb: snapshot.rss_kb,
+        };
+
+        let _ = app.emit("resource://stats", payload);
+        std::thread::sleep(Duration::from_secs(4));
+      }
+    }
+
+    #[cfg(not(target_os = "linux"))]
+    {
+      let pid = match sysinfo::get_current_pid() {
+        Ok(value) => value,
+        Err(_) => return,
+      };
+      let mut system = System::new_all();
+
+      loop {
+        system.refresh_processes(ProcessesToUpdate::Some(&[pid]), true);
+        if let Some(process) = system.process(pid) {
+          let payload = ResourceStatsEvent {
+            cpu_percent: process.cpu_usage() as f64,
+            rss_kb: process.memory() / 1024,
+          };
+          let _ = app.emit("resource://stats", payload);
         }
-      } else {
-        0.0
-      };
-
-      prev_process = snapshot.process_jiffies;
-      prev_total = snapshot.total_jiffies;
-      has_prev = true;
-
-      let payload = ResourceStatsEvent {
-        cpu_percent,
-        rss_kb: snapshot.rss_kb,
-      };
-
-      let _ = app.emit("resource://stats", payload);
-      std::thread::sleep(Duration::from_secs(4));
+        std::thread::sleep(Duration::from_secs(4));
+      }
     }
   });
 }
@@ -1310,10 +1352,14 @@ fn scan_projects(projects_path: &str) -> Result<ProjectsResponse, String> {
 fn projects_cache_file(projects_path: &str) -> Option<PathBuf> {
   let cache_root = if let Ok(xdg) = env::var("XDG_CACHE_HOME") {
     PathBuf::from(xdg)
+  } else if let Ok(local_app_data) = env::var("LOCALAPPDATA") {
+    // Windows fallback.
+    PathBuf::from(local_app_data)
   } else if let Ok(home) = env::var("HOME") {
     PathBuf::from(home).join(".cache")
   } else {
-    return None;
+    // Last-resort fallback for restricted CI/user envs.
+    env::temp_dir()
   };
 
   let mut hasher = DefaultHasher::new();
@@ -1621,10 +1667,7 @@ fn main() {
     .manage(ProjectsCacheState::default())
     .manage(BuildOrchestratorState::default())
     .setup(|app| {
-      #[cfg(target_os = "linux")]
       spawn_resource_stats_emitter(app.handle().clone());
-      #[cfg(not(target_os = "linux"))]
-      let _ = app;
       Ok(())
     })
     .invoke_handler(tauri::generate_handler![
