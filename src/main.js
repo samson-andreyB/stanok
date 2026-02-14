@@ -22,6 +22,8 @@ const state = {
   resourceFallbackStarted: false,
   resourceUnlisten: null,
   windowFocused: true,
+  runtimeNodeMissing: false,
+  runtimeNodeVersion: '',
   watchBuildInFlight: false,
   watchBuildPendingCss: false,
   watchBuildPendingImg: false,
@@ -123,6 +125,7 @@ async function init() {
   startWatchStatusTicker();
   state.windowFocused = document.hasFocus();
   startResourceUpdates();
+  await checkRuntimeStatus();
 
   const savedPath = localStorage.getItem('projectsPath');
   if (savedPath) {
@@ -288,7 +291,10 @@ function updateWatcherStatusUi() {
   let text = 'idle';
   let cls = '';
 
-  if (!isVisible) {
+  if (state.runtimeNodeMissing) {
+    text = 'node missing';
+    cls = 'Stat__value--error';
+  } else if (!isVisible) {
     text = 'paused';
     cls = 'Stat__value--warn';
   } else if (state.watchLastError && projectAgeMs < 30000) {
@@ -310,6 +316,24 @@ function updateWatcherStatusUi() {
 
   ui.watcherStatus.textContent = text;
   ui.watcherStatus.className = `Stat__value Stat__value--small ${cls}`.trim();
+}
+
+async function checkRuntimeStatus() {
+  try {
+    const status = await invokeWithPolicy('get_runtime_status', {}, { timeoutMs: 5000 });
+    const nodeAvailable = Boolean(status?.node_available);
+    state.runtimeNodeMissing = !nodeAvailable;
+    state.runtimeNodeVersion = nodeAvailable ? String(status?.node_version || '') : '';
+    if (!nodeAvailable) {
+      addLog('Node.js не найден в PATH. Установите Node.js LTS и перезапустите приложение.', 'error');
+    }
+  } catch {
+    // Keep UI usable even if runtime status probe fails.
+    state.runtimeNodeMissing = false;
+    state.runtimeNodeVersion = '';
+  } finally {
+    updateWatcherStatusUi();
+  }
 }
 
 function startResourceUpdates() {

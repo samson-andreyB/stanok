@@ -18,6 +18,8 @@ use std::sync::{
 };
 use std::time::{Duration, Instant};
 use tauri::Emitter;
+use tauri::Manager;
+use tauri::path::BaseDirectory;
 #[cfg(not(target_os = "linux"))]
 use sysinfo::{ProcessesToUpdate, System};
 
@@ -77,6 +79,12 @@ struct ResourceSnapshot {
 struct ResourceStatsEvent {
   cpu_percent: f64,
   rss_kb: u64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct RuntimeStatus {
+  node_available: bool,
+  node_version: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -209,20 +217,23 @@ fn refresh_projects_cache(
 
 #[tauri::command]
 fn get_git_branch(repo_path: String) -> Result<String, String> {
-  let output = Command::new("git")
+  if let Ok(output) = Command::new("git")
     .arg("-C")
-    .arg(repo_path)
+    .arg(&repo_path)
     .arg("rev-parse")
     .arg("--abbrev-ref")
     .arg("HEAD")
     .output()
-    .map_err(|e| format!("Не удалось запустить git: {}", e))?;
-
-  if !output.status.success() {
-    return Ok(String::new());
+  {
+    if output.status.success() {
+      let value = String::from_utf8_lossy(&output.stdout).trim().to_string();
+      if !value.is_empty() {
+        return Ok(value);
+      }
+    }
   }
 
-  Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
+  Ok(read_git_branch_fallback(&repo_path).unwrap_or_default())
 }
 
 #[tauri::command]
@@ -236,7 +247,22 @@ fn open_external_url(url: String) -> Result<(), String> {
 }
 
 #[tauri::command]
+fn get_runtime_status() -> RuntimeStatus {
+  match detect_node_version() {
+    Ok(version) => RuntimeStatus {
+      node_available: true,
+      node_version: Some(version),
+    },
+    Err(_) => RuntimeStatus {
+      node_available: false,
+      node_version: None,
+    },
+  }
+}
+
+#[tauri::command]
 fn build_styles(
+  app: tauri::AppHandle,
   state: tauri::State<BuildOrchestratorState>,
   projects_path: String,
   project_name: String,
@@ -248,11 +274,12 @@ fn build_styles(
     project_name,
     config,
   };
-  run_build_orchestrated(state.inner(), BuildKind::Styles, payload)
+  run_build_orchestrated(state.inner(), &app, BuildKind::Styles, payload)
 }
 
 #[tauri::command]
 fn build_images(
+  app: tauri::AppHandle,
   state: tauri::State<BuildOrchestratorState>,
   projects_path: String,
   project_name: String,
@@ -264,7 +291,7 @@ fn build_images(
     project_name,
     config,
   };
-  run_build_orchestrated(state.inner(), BuildKind::Images, payload)
+  run_build_orchestrated(state.inner(), &app, BuildKind::Images, payload)
 }
 
 #[tauri::command]
@@ -733,6 +760,10 @@ fn emit_branch_changes(
 }
 
 fn resolve_git_watch_target(repo_path: &str) -> Option<PathBuf> {
+  resolve_git_dir(repo_path)
+}
+
+fn resolve_git_dir(repo_path: &str) -> Option<PathBuf> {
   let git_path = PathBuf::from(repo_path).join(".git");
   if git_path.is_dir() {
     return Some(git_path);
@@ -755,6 +786,30 @@ fn resolve_git_watch_target(repo_path: &str) -> Option<PathBuf> {
   } else {
     git_path.parent().map(|p| p.join(target))
   }
+}
+
+fn read_git_branch_fallback(repo_path: &str) -> Option<String> {
+  let git_dir = resolve_git_dir(repo_path)?;
+  let head_path = git_dir.join("HEAD");
+  let head = fs::read_to_string(head_path).ok()?;
+  let line = head.lines().next()?.trim();
+  if let Some(ref_value) = line.strip_prefix("ref:") {
+    let ref_path = ref_value.trim().replace('\\', "/");
+    let branch = ref_path
+      .strip_prefix("refs/heads/")
+      .unwrap_or(ref_path.as_str())
+      .to_string();
+    if !branch.is_empty() {
+      return Some(branch);
+    }
+  }
+
+  // Detached HEAD fallback.
+  let short = line.chars().take(8).collect::<String>();
+  if !short.is_empty() {
+    return Some(format!("detached@{}", short));
+  }
+  None
 }
 
 #[tauri::command]
@@ -874,14 +929,22 @@ fn spawn_resource_stats_emitter(app: tauri::AppHandle) {
 
 fn run_node_script(
   state: &BuildOrchestratorState,
+  app_handle: &tauri::AppHandle,
   script_name: &str,
   payload: &BuildPayload,
 ) -> Result<String, String> {
+  if detect_node_version().is_err() {
+    return Err(
+      "Не найден Node.js в PATH. Установите Node.js LTS и перезапустите приложение."
+        .to_string(),
+    );
+  }
+
   const WORKER_RETRIES: u8 = 1;
   let mut last_error: Option<String> = None;
 
   for attempt in 0..=WORKER_RETRIES {
-    match run_node_script_with_worker(state, script_name, payload) {
+    match run_node_script_with_worker(state, app_handle, script_name, payload) {
       Ok(output) => return Ok(output),
       Err(error) => {
         last_error = Some(error.clone());
@@ -894,7 +957,7 @@ fn run_node_script(
     }
   }
 
-  match run_node_script_once(script_name, payload) {
+  match run_node_script_once(app_handle, script_name, payload) {
     Ok(output) => Ok(output),
     Err(fallback_error) => {
       if let Some(worker_error) = last_error {
@@ -912,15 +975,17 @@ fn run_node_script(
 
 fn run_node_script_with_worker(
   state: &BuildOrchestratorState,
+  app_handle: &tauri::AppHandle,
   script_name: &str,
   payload: &BuildPayload,
 ) -> Result<String, String> {
-  let workspace_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+  let scripts_root = resolve_scripts_root(app_handle)?;
+  let workspace_root = scripts_root
     .parent()
-    .ok_or("Не найден корень workspace")?
+    .ok_or("Не найден корень scripts")?
     .to_path_buf();
 
-  let worker_path = workspace_root.join("scripts").join("build-worker.mjs");
+  let worker_path = scripts_root.join("build-worker.mjs");
   if !worker_path.exists() {
     return Err(format!("Не найден скрипт {}", worker_path.display()));
   }
@@ -1017,12 +1082,17 @@ fn spawn_node_worker(workspace_root: &Path, worker_path: &Path) -> Result<NodeWo
   })
 }
 
-fn run_node_script_once(script_name: &str, payload: &BuildPayload) -> Result<String, String> {
-  let workspace_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+fn run_node_script_once(
+  app_handle: &tauri::AppHandle,
+  script_name: &str,
+  payload: &BuildPayload,
+) -> Result<String, String> {
+  let scripts_root = resolve_scripts_root(app_handle)?;
+  let workspace_root = scripts_root
     .parent()
-    .ok_or("Не найден корень workspace")?
+    .ok_or("Не найден корень scripts")?
     .to_path_buf();
-  let script_path = workspace_root.join("scripts").join(script_name);
+  let script_path = scripts_root.join(script_name);
   if !script_path.exists() {
     return Err(format!("Не найден скрипт {}", script_path.display()));
   }
@@ -1097,6 +1167,21 @@ fn compact_script_error(stderr: &str) -> String {
   }
 
   "Ошибка сборки".to_string()
+}
+
+fn detect_node_version() -> Result<String, String> {
+  let output = Command::new("node")
+    .arg("--version")
+    .output()
+    .map_err(|e| format!("Не удалось запустить node: {}", e))?;
+  if !output.status.success() {
+    return Err("Node.js вернул ошибку при проверке версии".to_string());
+  }
+  let version = String::from_utf8_lossy(&output.stdout).trim().to_string();
+  if version.is_empty() {
+    return Err("Node.js не вернул версию".to_string());
+  }
+  Ok(version)
 }
 
 #[cfg(target_os = "linux")]
@@ -1514,6 +1599,7 @@ fn cache_file_is_stale(file: &Path) -> bool {
 
 fn run_build_orchestrated(
   state: &BuildOrchestratorState,
+  app_handle: &tauri::AppHandle,
   kind: BuildKind,
   payload: BuildPayload,
 ) -> Result<String, String> {
@@ -1550,13 +1636,13 @@ fn run_build_orchestrated(
 
     let run_result = (|| -> Result<(), String> {
       if run_images {
-        let out = run_node_script(state, "build-images.mjs", &payload)?;
+        let out = run_node_script(state, app_handle, "build-images.mjs", &payload)?;
         if !out.is_empty() {
           outputs.push(out);
         }
       }
       if run_styles {
-        let out = run_node_script(state, "build-css.mjs", &payload)?;
+        let out = run_node_script(state, app_handle, "build-css.mjs", &payload)?;
         if !out.is_empty() {
           outputs.push(out);
         }
@@ -1596,6 +1682,40 @@ fn run_build_orchestrated(
   } else {
     Ok(outputs.join("\n"))
   }
+}
+
+fn resolve_scripts_root(app_handle: &tauri::AppHandle) -> Result<PathBuf, String> {
+  let dev_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+    .parent()
+    .ok_or("Не найден корень workspace")?
+    .to_path_buf();
+  let dev_scripts = dev_root.join("scripts");
+  if dev_scripts.exists() {
+    return Ok(dev_scripts);
+  }
+
+  if let Ok(resource_dir) = app_handle.path().resource_dir() {
+    let bundled_scripts = resource_dir.join("scripts");
+    if bundled_scripts.exists() {
+      return Ok(bundled_scripts);
+    }
+  }
+
+  if let Ok(worker_path) = app_handle
+    .path()
+    .resolve("scripts/build-worker.mjs", BaseDirectory::Resource)
+  {
+    if worker_path.exists() {
+      if let Some(scripts_dir) = worker_path.parent() {
+        return Ok(scripts_dir.to_path_buf());
+      }
+    }
+  }
+
+  Err(format!(
+    "Не найдена папка scripts (checked: {}, bundled resources)",
+    dev_scripts.display()
+  ))
 }
 
 fn should_skip_dir(path: &Path) -> bool {
@@ -1784,6 +1904,7 @@ fn main() {
       get_git_branch,
       open_in_explorer,
       open_external_url,
+      get_runtime_status,
       build_styles,
       build_images,
       project_watch_snapshot,
@@ -1889,6 +2010,23 @@ mod tests {
     )
     .expect("third snapshot");
     assert_ne!(second.img, third.img);
+
+    let _ = fs::remove_dir_all(root);
+  }
+
+  #[test]
+  fn read_git_branch_fallback_reads_head_ref() {
+    let uniq = SystemTime::now()
+      .duration_since(UNIX_EPOCH)
+      .unwrap_or_default()
+      .as_nanos();
+    let root = std::env::temp_dir().join(format!("stanok-git-branch-test-{}", uniq));
+    let git_dir = root.join(".git");
+    fs::create_dir_all(&git_dir).expect("create .git");
+    fs::write(git_dir.join("HEAD"), "ref: refs/heads/feature/windows\n").expect("write HEAD");
+
+    let branch = read_git_branch_fallback(root.to_string_lossy().as_ref());
+    assert_eq!(branch.as_deref(), Some("feature/windows"));
 
     let _ = fs::remove_dir_all(root);
   }
