@@ -1749,6 +1749,8 @@ fn resolve_scripts_root(app_handle: &tauri::AppHandle) -> Result<PathBuf, String
       resource_dir.join("scripts"),
       resource_dir.clone(),
       resource_dir.join("_up_1_").join("scripts"),
+      resource_dir.join("_up_2_").join("scripts"),
+      resource_dir.join("..").join("scripts"),
     ] {
       if candidate.join("build-worker.mjs").exists() {
         return Ok(candidate);
@@ -1756,13 +1758,18 @@ fn resolve_scripts_root(app_handle: &tauri::AppHandle) -> Result<PathBuf, String
     }
   }
 
-  if let Ok(worker_path) = app_handle
-    .path()
-    .resolve("scripts/build-worker.mjs", BaseDirectory::Resource)
-  {
-    if worker_path.exists() {
-      if let Some(scripts_dir) = worker_path.parent() {
-        return Ok(scripts_dir.to_path_buf());
+  for rel in [
+    "scripts/build-worker.mjs",
+    "build-worker.mjs",
+    "_up_1_/scripts/build-worker.mjs",
+    "_up_2_/scripts/build-worker.mjs",
+    "../scripts/build-worker.mjs",
+  ] {
+    if let Ok(worker_path) = app_handle.path().resolve(rel, BaseDirectory::Resource) {
+      if worker_path.exists() {
+        if let Some(scripts_dir) = worker_path.parent() {
+          return Ok(scripts_dir.to_path_buf());
+        }
       }
     }
   }
