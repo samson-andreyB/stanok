@@ -6,6 +6,7 @@
   "scripts": {
     "dev:web": "vite",
     "build:web": "vite build",
+    "prepare:runtime-node": "node scripts/prepare-runtime-node.mjs",
     "dev": "node scripts/dev.mjs",
     "build": "tauri build",
     "doctor": "node scripts/doctor.mjs",

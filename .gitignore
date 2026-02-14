@@ -11,6 +11,7 @@ src-tauri/target/
 src-tauri/gen/
 src-tauri/bundled-node/*
 !src-tauri/bundled-node/.gitkeep
+src-tauri/runtime-node/
 
 # IDE / OS
 .idea/

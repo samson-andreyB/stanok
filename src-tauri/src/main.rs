@@ -988,6 +988,7 @@ fn run_node_script_with_worker(
   if !worker_path.exists() {
     return Err(format!("Не найден скрипт {}", worker_path.display()));
   }
+  let node_path_env = resolve_runtime_node_modules(app_handle);
 
   let worker_handle = {
     let mut workers = state
@@ -995,7 +996,12 @@ fn run_node_script_with_worker(
       .lock()
       .map_err(|_| "Ошибка блокировки worker pool".to_string())?;
     if !workers.contains_key(script_name) {
-      let spawned = spawn_node_worker(node_cmd, &workspace_root, &worker_path)?;
+      let spawned = spawn_node_worker(
+        node_cmd,
+        &workspace_root,
+        &worker_path,
+        node_path_env.as_deref(),
+      )?;
       workers.insert(script_name.to_string(), Arc::new(Mutex::new(spawned)));
     }
     workers
@@ -1014,7 +1020,12 @@ fn run_node_script_with_worker(
     .map_err(|e| e.to_string())?
     .is_some()
   {
-    *worker = spawn_node_worker(node_cmd, &workspace_root, &worker_path)?;
+    *worker = spawn_node_worker(
+      node_cmd,
+      &workspace_root,
+      &worker_path,
+      node_path_env.as_deref(),
+    )?;
   }
 
   let request = serde_json::json!({
@@ -1025,7 +1036,12 @@ fn run_node_script_with_worker(
   let request_line = serde_json::to_string(&request).map_err(|e| e.to_string())?;
 
   if writeln!(worker.stdin, "{}", request_line).is_err() || worker.stdin.flush().is_err() {
-    *worker = spawn_node_worker(node_cmd, &workspace_root, &worker_path)?;
+    *worker = spawn_node_worker(
+      node_cmd,
+      &workspace_root,
+      &worker_path,
+      node_path_env.as_deref(),
+    )?;
     writeln!(worker.stdin, "{}", request_line).map_err(|e| e.to_string())?;
     worker.stdin.flush().map_err(|e| e.to_string())?;
   }
@@ -1033,7 +1049,12 @@ fn run_node_script_with_worker(
   let mut line = String::new();
   let read = worker.stdout.read_line(&mut line).map_err(|e| e.to_string())?;
   if read == 0 {
-    *worker = spawn_node_worker(node_cmd, &workspace_root, &worker_path)?;
+    *worker = spawn_node_worker(
+      node_cmd,
+      &workspace_root,
+      &worker_path,
+      node_path_env.as_deref(),
+    )?;
     writeln!(worker.stdin, "{}", request_line).map_err(|e| e.to_string())?;
     worker.stdin.flush().map_err(|e| e.to_string())?;
     line.clear();
@@ -1062,13 +1083,23 @@ fn run_node_script_with_worker(
   Err(message)
 }
 
-fn spawn_node_worker(node_cmd: &Path, workspace_root: &Path, worker_path: &Path) -> Result<NodeWorker, String> {
-  let mut child = Command::new(node_cmd)
+fn spawn_node_worker(
+  node_cmd: &Path,
+  workspace_root: &Path,
+  worker_path: &Path,
+  node_path: Option<&Path>,
+) -> Result<NodeWorker, String> {
+  let mut command = Command::new(node_cmd);
+  command
     .arg(worker_path)
     .current_dir(workspace_root)
     .stdin(Stdio::piped())
     .stdout(Stdio::piped())
-    .stderr(Stdio::null())
+    .stderr(Stdio::null());
+  if let Some(value) = node_path {
+    command.env("NODE_PATH", value);
+  }
+  let mut child = command
     .spawn()
     .map_err(|e| format!("Ошибка запуска worker: {}", e))?;
 
@@ -1098,10 +1129,16 @@ fn run_node_script_once(
   }
 
   let payload_json = serde_json::to_string(payload).map_err(|e| e.to_string())?;
-  let output = Command::new(node_cmd)
+  let node_path_env = resolve_runtime_node_modules(app_handle);
+  let mut command = Command::new(node_cmd);
+  command
     .arg(script_path)
     .arg(payload_json)
-    .current_dir(workspace_root)
+    .current_dir(workspace_root);
+  if let Some(value) = node_path_env.as_deref() {
+    command.env("NODE_PATH", value);
+  }
+  let output = command
     .output()
     .map_err(|e| format!("Ошибка запуска node: {}", e))?;
   let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
@@ -1739,17 +1776,27 @@ fn resolve_scripts_root(app_handle: &tauri::AppHandle) -> Result<PathBuf, String
     .parent()
     .ok_or("Не найден корень workspace")?
     .to_path_buf();
-  let dev_scripts = dev_root.join("scripts");
-  if dev_scripts.exists() {
-    return Ok(dev_scripts);
+  for dev_scripts in [
+    dev_root.join("src-tauri").join("runtime-node").join("scripts"),
+    dev_root.join("scripts"),
+  ] {
+    if dev_scripts.join("build-worker.mjs").exists() {
+      return Ok(dev_scripts);
+    }
   }
 
   if let Ok(resource_dir) = app_handle.path().resource_dir() {
     for candidate in [
+      resource_dir.join("runtime-node").join("scripts"),
+      resource_dir.join("scripts"),
+      resource_dir.join("runtime-node"),
       resource_dir.join("scripts"),
       resource_dir.clone(),
+      resource_dir.join("_up_1_").join("runtime-node").join("scripts"),
       resource_dir.join("_up_1_").join("scripts"),
+      resource_dir.join("_up_2_").join("runtime-node").join("scripts"),
       resource_dir.join("_up_2_").join("scripts"),
+      resource_dir.join("..").join("runtime-node").join("scripts"),
       resource_dir.join("..").join("scripts"),
     ] {
       if candidate.join("build-worker.mjs").exists() {
@@ -1759,10 +1806,15 @@ fn resolve_scripts_root(app_handle: &tauri::AppHandle) -> Result<PathBuf, String
   }
 
   for rel in [
+    "runtime-node/scripts/build-worker.mjs",
+    "runtime-node/build-worker.mjs",
     "scripts/build-worker.mjs",
     "build-worker.mjs",
+    "_up_1_/runtime-node/scripts/build-worker.mjs",
     "_up_1_/scripts/build-worker.mjs",
+    "_up_2_/runtime-node/scripts/build-worker.mjs",
     "_up_2_/scripts/build-worker.mjs",
+    "../runtime-node/scripts/build-worker.mjs",
     "../scripts/build-worker.mjs",
   ] {
     if let Ok(worker_path) = app_handle.path().resolve(rel, BaseDirectory::Resource) {
@@ -1775,9 +1827,49 @@ fn resolve_scripts_root(app_handle: &tauri::AppHandle) -> Result<PathBuf, String
   }
 
   Err(format!(
-    "Не найдена папка scripts (checked: {}, bundled resources)",
-    dev_scripts.display()
+    "Не найдена папка scripts/runtime-node в bundled resources"
   ))
+}
+
+fn resolve_runtime_node_modules(app_handle: &tauri::AppHandle) -> Option<PathBuf> {
+  let dev_root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).parent()?.to_path_buf();
+  for candidate in [
+    dev_root.join("src-tauri").join("runtime-node").join("node_modules"),
+    dev_root.join("node_modules"),
+  ] {
+    if candidate.exists() {
+      return Some(candidate);
+    }
+  }
+
+  if let Ok(resource_dir) = app_handle.path().resource_dir() {
+    for candidate in [
+      resource_dir.join("runtime-node").join("node_modules"),
+      resource_dir.join("node_modules"),
+      resource_dir.join("_up_1_").join("runtime-node").join("node_modules"),
+      resource_dir.join("_up_2_").join("runtime-node").join("node_modules"),
+      resource_dir.join("..").join("runtime-node").join("node_modules"),
+    ] {
+      if candidate.exists() {
+        return Some(candidate);
+      }
+    }
+  }
+
+  for rel in [
+    "runtime-node/node_modules",
+    "_up_1_/runtime-node/node_modules",
+    "_up_2_/runtime-node/node_modules",
+    "../runtime-node/node_modules",
+  ] {
+    if let Ok(candidate) = app_handle.path().resolve(rel, BaseDirectory::Resource) {
+      if candidate.exists() {
+        return Some(candidate);
+      }
+    }
+  }
+
+  None
 }
 
 fn should_skip_dir(path: &Path) -> bool {
