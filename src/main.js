@@ -32,7 +32,6 @@ const state = {
 };
 
 const MAX_PROJECT_LOG_ENTRIES = 200;
-const MAX_GLOBAL_LOG_CHARS = 20000;
 const INVOKE_DEFAULT_TIMEOUT_MS = 12000;
 const INVOKE_BUILD_TIMEOUT_MS = 10 * 60 * 1000;
 const WATCH_BUILD_DEBOUNCE_MS = 250;
@@ -43,7 +42,6 @@ const ui = {
   refresh: document.querySelector('.ProjectsChooser__refresh'),
   projectsPanel: document.querySelector('.Panel--projects'),
   projects: document.querySelector('.Projects'),
-  log: document.querySelector('#log'),
   projectsCount: document.querySelector('#projectsCount'),
   activeProjectName: document.querySelector('#activeProjectName'),
   cpuUsage: document.querySelector('#cpuUsage'),
@@ -238,9 +236,6 @@ async function processWatchBuildQueue() {
     while (state.watchBuildPendingImg || state.watchBuildPendingCss) {
       const runImages = state.watchBuildPendingImg;
       const runStyles = state.watchBuildPendingCss;
-      const batchEvents = state.watchBuildPendingEvents;
-      const batchCssEvents = state.watchBuildPendingCssEvents;
-      const batchImgEvents = state.watchBuildPendingImgEvents;
       state.watchBuildPendingImg = false;
       state.watchBuildPendingCss = false;
       state.watchBuildPendingEvents = 0;
@@ -248,11 +243,11 @@ async function processWatchBuildQueue() {
       state.watchBuildPendingImgEvents = 0;
 
       if (runImages && runStyles) {
-        addLog(`Обнаружены изменения стилей и изображений (батч: ${batchEvents}, css:${batchCssEvents}, img:${batchImgEvents})`);
+        addLog('Обнаружены изменения стилей и изображений');
       } else if (runImages) {
-        addLog(`Обнаружены изменения изображений (батч: ${batchEvents}, img:${batchImgEvents})`);
+        addLog('Обнаружены изменения изображений');
       } else if (runStyles) {
-        addLog(`Обнаружены изменения стилей (батч: ${batchEvents}, css:${batchCssEvents})`);
+        addLog('Обнаружены изменения стилей');
       }
 
       if (runImages) {
@@ -856,7 +851,7 @@ function addLog(text, type = '') {
     }
   }
 
-  const entry = `\n[${timeNow()}] ${type ? `[${type}] ` : ''}${String(text)}`;
+  const entry = `[${timeNow()}] ${type ? `[${type}] ` : ''}${String(text)}`;
   const current = getCurrentProject();
   if (current && state.currentProjectId) {
     const projectLog = document.querySelector(`.Project[data-project-id="${state.currentProjectId}"] .Project__log`);
@@ -869,9 +864,6 @@ function addLog(text, type = '') {
     }
   }
 
-  if (ui.log) {
-    ui.log.textContent = `${entry}${ui.log.textContent}`.slice(0, MAX_GLOBAL_LOG_CHARS);
-  }
 }
 
 function addProjectLog(projectId, text, type = '') {
@@ -900,7 +892,7 @@ function addProjectLog(projectId, text, type = '') {
     return;
   }
 
-  const entry = `\n[${timeNow()}] ${type ? `[${type}] ` : ''}${String(text)}`;
+  const entry = `[${timeNow()}] ${type ? `[${type}] ` : ''}${String(text)}`;
   projectLog.insertAdjacentHTML('afterbegin', `<div class="Log Log--${escapeHtml(type)}"><div class="Log__box Log__box--data">${escapeHtml(entry)}</div></div>`);
   while (projectLog.childElementCount > MAX_PROJECT_LOG_ENTRIES) {
     projectLog.lastElementChild?.remove();

@@ -1,10 +1,13 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { normalizeRel, resolveProjectDir } from './path-utils.mjs';
+import { normalizeRel, resolveProjectDir, resolveStanokCacheRoot } from './path-utils.mjs';
 
 const IMAGE_EXT_RE = /\.(gif|jpg|jpeg|png|svg)$/i;
 const IMG_CACHE_VERSION = 1;
+const MEMORY_CACHE_MAX_ENTRIES = 16;
+const memoryImageCaches = new Map();
 
 export async function runBuild(payload) {
   const safePayload = normalizePayload(payload);
@@ -13,7 +16,13 @@ export async function runBuild(payload) {
   const imgDir = safePayload.config.img || 'img';
   const srcDir = path.join(projectDir, root, imgDir, 'src');
   const destDir = path.join(projectDir, root, imgDir, 'dest');
-  const cachePath = path.join(projectDir, root, imgDir, '.img-build-cache.json');
+  const cachePath = resolveImagesBuildCachePath(projectDir, root, imgDir, safePayload.config);
+
+  try {
+    await fs.rm(path.join(projectDir, root, imgDir, '.img-build-cache.json'), { force: true });
+  } catch {
+    // ignore legacy cache cleanup errors
+  }
 
   await ensureDir(destDir);
   if (!(await exists(srcDir))) {
@@ -23,11 +32,7 @@ export async function runBuild(payload) {
   const cacheLoaded = await loadBuildCache(cachePath);
   const previousEntries = cacheLoaded.cache.entries || {};
   const nextEntries = {};
-  const activeRelPaths = new Set();
   let copied = 0;
-  let skipped = 0;
-  let scanned = 0;
-  let removed = 0;
   const ensuredDirs = new Set([destDir]);
 
   for await (const sourceFile of walk(srcDir)) {
@@ -35,18 +40,20 @@ export async function runBuild(payload) {
       continue;
     }
 
-    scanned += 1;
     const rel = path.relative(srcDir, sourceFile);
-    activeRelPaths.add(normalizeRelPath(rel));
+    const relKey = normalizeRelPath(rel);
     const target = path.join(destDir, rel);
     const targetDir = path.dirname(target);
     const srcStat = await fs.stat(sourceFile);
     const sourceSignature = `${Math.floor(srcStat.mtimeMs)}:${srcStat.size}`;
     const targetExists = await exists(target);
-    nextEntries[rel] = sourceSignature;
+    nextEntries[relKey] = sourceSignature;
 
-    if (targetExists && previousEntries[rel] === sourceSignature) {
-      skipped += 1;
+    if (targetExists && previousEntries[relKey] === sourceSignature) {
+      continue;
+    }
+
+    if (targetExists && await filesAreEqual(sourceFile, target, srcStat)) {
       continue;
     }
 
@@ -59,8 +66,6 @@ export async function runBuild(payload) {
     copied += 1;
   }
 
-  removed += await cleanupStaleDestFiles(destDir, activeRelPaths);
-
   await saveBuildCache(cachePath, {
     version: IMG_CACHE_VERSION,
     entries: nextEntries,
@@ -71,9 +76,6 @@ export async function runBuild(payload) {
   if (cacheLoaded.resetReason) {
     summary.push(`Кэш изображений сброшен: ${cacheLoaded.resetReason}`);
   }
-  summary.push(`Пропущено без изменений: ${skipped}`);
-  summary.push(`Удалено устаревших: ${removed}`);
-  summary.push(`Проверено файлов: ${scanned}`);
   return summary.join('\n');
 }
 
@@ -116,6 +118,19 @@ async function exists(filePath) {
 }
 
 async function loadBuildCache(filePath) {
+  const memoryEntry = memoryImageCaches.get(filePath);
+  let fileMtimeMs = -1;
+  try {
+    const stat = await fs.stat(filePath);
+    fileMtimeMs = stat.mtimeMs;
+  } catch {
+    fileMtimeMs = -1;
+  }
+  if (memoryEntry && memoryEntry.mtimeMs === fileMtimeMs) {
+    touchMemoryCacheEntry(memoryImageCaches, filePath, memoryEntry, MEMORY_CACHE_MAX_ENTRIES);
+    return { cache: memoryEntry.cache, resetReason: '' };
+  }
+
   try {
     const raw = await fs.readFile(filePath, 'utf8');
     const parsed = JSON.parse(raw);
@@ -134,6 +149,12 @@ async function loadBuildCache(filePath) {
     if (!parsed.entries || typeof parsed.entries !== 'object') {
       parsed.entries = {};
     }
+    touchMemoryCacheEntry(
+      memoryImageCaches,
+      filePath,
+      { cache: parsed, mtimeMs: fileMtimeMs },
+      MEMORY_CACHE_MAX_ENTRIES
+    );
     return { cache: parsed, resetReason: '' };
   } catch {
     return {
@@ -146,6 +167,14 @@ async function loadBuildCache(filePath) {
 async function saveBuildCache(filePath, cache) {
   await ensureDir(path.dirname(filePath));
   await fs.writeFile(filePath, JSON.stringify(cache, null, 2), 'utf8');
+  let mtimeMs = -1;
+  try {
+    const stat = await fs.stat(filePath);
+    mtimeMs = stat.mtimeMs;
+  } catch {
+    mtimeMs = -1;
+  }
+  touchMemoryCacheEntry(memoryImageCaches, filePath, { cache, mtimeMs }, MEMORY_CACHE_MAX_ENTRIES);
 }
 
 async function* walk(dir) {
@@ -160,57 +189,55 @@ async function* walk(dir) {
   }
 }
 
-async function cleanupStaleDestFiles(destDir, activeRelPaths) {
-  let removed = 0;
-  const dirs = [];
-
-  for await (const destFile of walk(destDir)) {
-    const rel = normalizeRelPath(path.relative(destDir, destFile));
-    if (!IMAGE_EXT_RE.test(destFile)) {
-      continue;
-    }
-    if (activeRelPaths.has(rel)) {
-      continue;
-    }
-    await fs.rm(destFile, { force: true });
-    removed += 1;
-  }
-
-  for await (const dirPath of walkDirs(destDir)) {
-    dirs.push(dirPath);
-  }
-  dirs.sort((a, b) => b.length - a.length);
-  for (const dirPath of dirs) {
-    if (dirPath === destDir) {
-      continue;
-    }
-    try {
-      const entries = await fs.readdir(dirPath);
-      if (!entries.length) {
-        await fs.rmdir(dirPath);
-      }
-    } catch {
-      // ignore
-    }
-  }
-
-  return removed;
-}
-
-async function* walkDirs(dir) {
-  const entries = await fs.readdir(dir, { withFileTypes: true });
-  yield dir;
-  for (const entry of entries) {
-    if (!entry.isDirectory()) {
-      continue;
-    }
-    const entryPath = path.join(dir, entry.name);
-    yield* walkDirs(entryPath);
-  }
-}
-
 function normalizeRelPath(relPath) {
   return String(relPath || '').replace(/\\/g, '/');
+}
+
+function resolveImagesBuildCachePath(projectDir, root, imgDir, config) {
+  const cacheRoot = resolveStanokCacheRoot();
+  const hash = createHash('sha1');
+  hash.update('img-build-cache-v1');
+  hash.update('\0');
+  hash.update(projectDir);
+  hash.update('\0');
+  hash.update(root);
+  hash.update('\0');
+  hash.update(imgDir);
+  hash.update('\0');
+  hash.update(JSON.stringify(config || {}));
+  return path.join(cacheRoot, 'images', `${hash.digest('hex')}.json`);
+}
+
+async function filesAreEqual(sourceFile, targetFile, sourceStat = null) {
+  try {
+    const srcStat = sourceStat || await fs.stat(sourceFile);
+    const targetStat = await fs.stat(targetFile);
+    if (srcStat.size !== targetStat.size) {
+      return false;
+    }
+
+    const [srcBuf, targetBuf] = await Promise.all([
+      fs.readFile(sourceFile),
+      fs.readFile(targetFile),
+    ]);
+    return srcBuf.equals(targetBuf);
+  } catch {
+    return false;
+  }
+}
+
+function touchMemoryCacheEntry(map, key, value, maxEntries) {
+  if (map.has(key)) {
+    map.delete(key);
+  }
+  map.set(key, value);
+  while (map.size > maxEntries) {
+    const oldestKey = map.keys().next().value;
+    if (typeof oldestKey === 'undefined') {
+      break;
+    }
+    map.delete(oldestKey);
+  }
 }
 
 async function main() {

@@ -4,11 +4,15 @@ import path from 'node:path';
 import fs from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 
-function runNodeScript(scriptPath, payload) {
+function runNodeScript(scriptPath, payload, extraEnv = {}) {
   const fullScriptPath = path.resolve(scriptPath);
   return spawnSync(process.execPath, [fullScriptPath, JSON.stringify(payload)], {
     encoding: 'utf8',
     cwd: process.cwd(),
+    env: {
+      ...process.env,
+      ...extraEnv,
+    },
   });
 }
 
@@ -40,25 +44,32 @@ test('build-images copies changed file', async () => {
   const tmp = await createSmokeTempDir();
   const group = path.join(tmp, 'demo');
   const srcImg = path.join(group, 'assets', 'img', 'src');
+  const cacheDir = path.join(tmp, '.stanok-cache');
   await fs.mkdir(srcImg, { recursive: true });
   await fs.writeFile(path.join(srcImg, 'x.png'), 'png');
 
-  const res = runNodeScript(path.join('scripts', 'build-images.mjs'), {
-    projects_path: tmp,
-    project_name: 'demo/main',
-    config: baseConfig(),
-  });
+  const res = runNodeScript(
+    path.join('scripts', 'build-images.mjs'),
+    {
+      projects_path: tmp,
+      project_name: 'demo/main',
+      config: baseConfig(),
+    },
+    { STANOK_CACHE_DIR: cacheDir }
+  );
 
   assert.equal(res.status, 0, res.stderr);
   const destFile = path.join(group, 'assets', 'img', 'dest', 'x.png');
   const copied = await fs.readFile(destFile, 'utf8');
   assert.equal(copied, 'png');
+  await assert.rejects(fs.stat(path.join(group, 'assets', 'img', '.img-build-cache.json')));
 });
 
 test('build-images is incremental for unchanged files', async () => {
   const tmp = await createSmokeTempDir();
   const group = path.join(tmp, 'demo');
   const srcImg = path.join(group, 'assets', 'img', 'src');
+  const cacheDir = path.join(tmp, '.stanok-cache');
   await fs.mkdir(srcImg, { recursive: true });
   const imgFile = path.join(srcImg, 'x.png');
   await fs.writeFile(imgFile, 'png');
@@ -69,21 +80,21 @@ test('build-images is incremental for unchanged files', async () => {
     config: baseConfig(),
   };
 
-  const first = runNodeScript(path.join('scripts', 'build-images.mjs'), payload);
+  const first = runNodeScript(path.join('scripts', 'build-images.mjs'), payload, { STANOK_CACHE_DIR: cacheDir });
   assert.equal(first.status, 0, first.stderr);
   const destFile = path.join(group, 'assets', 'img', 'dest', 'x.png');
   const firstContent = await fs.readFile(destFile, 'utf8');
   assert.equal(firstContent, 'png');
   const firstStat = await fs.stat(destFile);
 
-  const second = runNodeScript(path.join('scripts', 'build-images.mjs'), payload);
+  const second = runNodeScript(path.join('scripts', 'build-images.mjs'), payload, { STANOK_CACHE_DIR: cacheDir });
   assert.equal(second.status, 0, second.stderr);
   const secondStat = await fs.stat(destFile);
   assert.equal(secondStat.mtimeMs, firstStat.mtimeMs, 'unchanged file should not be recopied');
 
   await sleep(20);
   await fs.writeFile(imgFile, 'png2');
-  const third = runNodeScript(path.join('scripts', 'build-images.mjs'), payload);
+  const third = runNodeScript(path.join('scripts', 'build-images.mjs'), payload, { STANOK_CACHE_DIR: cacheDir });
   assert.equal(third.status, 0, third.stderr);
   const thirdContent = await fs.readFile(destFile, 'utf8');
   assert.equal(thirdContent, 'png2');
@@ -95,14 +106,19 @@ test('build-css prints compact error for invalid css', async () => {
   const tmp = await createSmokeTempDir();
   const group = path.join(tmp, 'demo');
   const srcCss = path.join(group, 'assets', 'css', 'src');
+  const cacheDir = path.join(tmp, '.stanok-cache');
   await fs.mkdir(srcCss, { recursive: true });
   await fs.writeFile(path.join(srcCss, '_main.css'), '.A { color: red');
 
-  const res = runNodeScript(path.join('scripts', 'build-css.mjs'), {
-    projects_path: tmp,
-    project_name: 'demo/main',
-    config: baseConfig(),
-  });
+  const res = runNodeScript(
+    path.join('scripts', 'build-css.mjs'),
+    {
+      projects_path: tmp,
+      project_name: 'demo/main',
+      config: baseConfig(),
+    },
+    { STANOK_CACHE_DIR: cacheDir }
+  );
 
   assert.notEqual(res.status, 0);
   const output = `${res.stderr || ''}\n${res.stdout || ''}`.trim();
@@ -115,6 +131,7 @@ test('build-css prints compact error for invalid css', async () => {
 test('build-css is incremental and rebuilds on imported dependency change', async () => {
   const tmp = await createSmokeTempDir();
   const group = path.join(tmp, 'demo');
+  const cacheDir = path.join(tmp, '.stanok-cache');
   const srcCss = path.join(group, 'assets', 'css', 'src');
   const moduleDir = path.join(srcCss, 'modules');
   const destImg = path.join(group, 'assets', 'img', 'dest');
@@ -132,24 +149,22 @@ test('build-css is incremental and rebuilds on imported dependency change', asyn
     config: baseConfig(),
   };
 
-  const first = runNodeScript(path.join('scripts', 'build-css.mjs'), payload);
+  const first = runNodeScript(path.join('scripts', 'build-css.mjs'), payload, { STANOK_CACHE_DIR: cacheDir });
   assert.equal(first.status, 0, first.stderr);
   const outCss = path.join(group, 'assets', 'css', 'main.css');
-  const cacheFile = path.join(group, 'assets', 'css', '.css-build-cache.json');
   const firstCssText = await fs.readFile(outCss, 'utf8');
   assert.ok(firstCssText.length > 0, 'compiled css must be generated');
   const firstCssStat = await fs.stat(outCss);
-  const firstCache = JSON.parse(await fs.readFile(cacheFile, 'utf8'));
-  assert.ok(firstCache.entries?.['_main.css'], 'cache entry for _main.css must exist');
+  await assert.rejects(fs.stat(path.join(group, 'assets', 'css', '.css-build-cache.json')));
 
-  const second = runNodeScript(path.join('scripts', 'build-css.mjs'), payload);
+  const second = runNodeScript(path.join('scripts', 'build-css.mjs'), payload, { STANOK_CACHE_DIR: cacheDir });
   assert.equal(second.status, 0, second.stderr);
   const secondCssStat = await fs.stat(outCss);
   assert.equal(secondCssStat.mtimeMs, firstCssStat.mtimeMs, 'unchanged css should be skipped');
 
   await sleep(20);
   await fs.writeFile(depFile, ".A { background-image: url('/assets/img/dest/x.png'); color: #123456; }\n");
-  const third = runNodeScript(path.join('scripts', 'build-css.mjs'), payload);
+  const third = runNodeScript(path.join('scripts', 'build-css.mjs'), payload, { STANOK_CACHE_DIR: cacheDir });
   assert.equal(third.status, 0, third.stderr);
   const thirdCssText = await fs.readFile(outCss, 'utf8');
   assert.ok(thirdCssText.includes('#123456'), 'changed dependency should trigger rebuild');

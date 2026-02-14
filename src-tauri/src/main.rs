@@ -16,7 +16,7 @@ use std::sync::{
   atomic::{AtomicBool, Ordering},
   mpsc::{self, RecvTimeoutError},
 };
-use std::time::Duration;
+use std::time::{Duration, Instant};
 use tauri::Emitter;
 #[cfg(not(target_os = "linux"))]
 use sysinfo::{ProcessesToUpdate, System};
@@ -119,7 +119,7 @@ struct ProjectsCacheState {
 #[derive(Default)]
 struct BuildOrchestratorState {
   entries: Mutex<HashMap<String, BuildQueueEntry>>,
-  workers: Mutex<HashMap<String, NodeWorker>>,
+  workers: Mutex<HashMap<String, Arc<Mutex<NodeWorker>>>>,
 }
 
 #[derive(Default, Clone)]
@@ -138,9 +138,11 @@ struct NodeWorker {
 impl Drop for BuildOrchestratorState {
   fn drop(&mut self) {
     if let Ok(mut workers) = self.workers.lock() {
-      for (_, worker) in workers.iter_mut() {
-        let _ = worker.child.kill();
-        let _ = worker.child.wait();
+      for (_, worker) in workers.iter() {
+        if let Ok(mut guard) = worker.lock() {
+          let _ = guard.child.kill();
+          let _ = guard.child.wait();
+        }
       }
       workers.clear();
     }
@@ -306,8 +308,13 @@ fn run_project_watch_event_loop(
   project_name: &str,
   config: &BuildConfig,
 ) {
+  const COALESCE_WINDOW_MS: u64 = 250;
   let watch_paths = resolve_watch_paths(projects_path, project_name, config);
   let (tx, rx) = mpsc::channel();
+  let mut pending_css = false;
+  let mut pending_img = false;
+  let mut pending_layout = false;
+  let mut pending_since: Option<Instant> = None;
 
   let mut watcher = match RecommendedWatcher::new(
     move |result| {
@@ -381,20 +388,24 @@ fn run_project_watch_event_loop(
               let img_changed = snapshot.img != prev.img;
               let layout_changed = snapshot.layout != prev.layout;
               if css_changed || img_changed || layout_changed {
-                let _ = app_handle.emit(
-                  "project://watch",
-                  ProjectWatchEvent {
-                    css_changed,
-                    img_changed,
-                    layout_changed,
-                    error: None,
-                  },
-                );
+                pending_css |= css_changed;
+                pending_img |= img_changed;
+                pending_layout |= layout_changed;
+                if pending_since.is_none() {
+                  pending_since = Some(Instant::now());
+                }
               }
             }
             previous = Some(snapshot);
           }
           Err(error) => {
+            emit_pending_project_watch_event(
+              app_handle,
+              &mut pending_css,
+              &mut pending_img,
+              &mut pending_layout,
+            );
+            pending_since = None;
             let _ = app_handle.emit(
               "project://watch",
               ProjectWatchEvent {
@@ -408,6 +419,13 @@ fn run_project_watch_event_loop(
         }
       }
       Ok(Err(error)) => {
+        emit_pending_project_watch_event(
+          app_handle,
+          &mut pending_css,
+          &mut pending_img,
+          &mut pending_layout,
+        );
+        pending_since = None;
         let _ = app_handle.emit(
           "project://watch",
           ProjectWatchEvent {
@@ -419,9 +437,59 @@ fn run_project_watch_event_loop(
         );
       }
       Err(RecvTimeoutError::Timeout) => {}
-      Err(RecvTimeoutError::Disconnected) => return,
+      Err(RecvTimeoutError::Disconnected) => {
+        emit_pending_project_watch_event(
+          app_handle,
+          &mut pending_css,
+          &mut pending_img,
+          &mut pending_layout,
+        );
+        return;
+      }
+    }
+
+    if let Some(since) = pending_since {
+      if since.elapsed() >= Duration::from_millis(COALESCE_WINDOW_MS) {
+        emit_pending_project_watch_event(
+          app_handle,
+          &mut pending_css,
+          &mut pending_img,
+          &mut pending_layout,
+        );
+        pending_since = None;
+      }
     }
   }
+
+  emit_pending_project_watch_event(
+    app_handle,
+    &mut pending_css,
+    &mut pending_img,
+    &mut pending_layout,
+  );
+}
+
+fn emit_pending_project_watch_event(
+  app_handle: &tauri::AppHandle,
+  pending_css: &mut bool,
+  pending_img: &mut bool,
+  pending_layout: &mut bool,
+) {
+  if !*pending_css && !*pending_img && !*pending_layout {
+    return;
+  }
+  let _ = app_handle.emit(
+    "project://watch",
+    ProjectWatchEvent {
+      css_changed: *pending_css,
+      img_changed: *pending_img,
+      layout_changed: *pending_layout,
+      error: None,
+    },
+  );
+  *pending_css = false;
+  *pending_img = false;
+  *pending_layout = false;
 }
 
 fn run_project_watch_polling_loop(
@@ -431,9 +499,14 @@ fn run_project_watch_polling_loop(
   project_name: &str,
   config: &BuildConfig,
 ) {
+  const COALESCE_WINDOW_MS: u64 = 250;
   let mut previous: Option<WatchSnapshot> = None;
   let mut idle_ticks = 0u8;
   let mut delay_ms = 3500u64;
+  let mut pending_css = false;
+  let mut pending_img = false;
+  let mut pending_layout = false;
+  let mut pending_since: Option<Instant> = None;
 
   while !stop_worker.load(Ordering::Relaxed) {
     match compute_project_watch_snapshot(projects_path, project_name, config) {
@@ -445,15 +518,12 @@ fn run_project_watch_polling_loop(
           let has_changes = css_changed || img_changed || layout_changed;
 
           if has_changes {
-            let _ = app_handle.emit(
-              "project://watch",
-              ProjectWatchEvent {
-                css_changed,
-                img_changed,
-                layout_changed,
-                error: None,
-              },
-            );
+            pending_css |= css_changed;
+            pending_img |= img_changed;
+            pending_layout |= layout_changed;
+            if pending_since.is_none() {
+              pending_since = Some(Instant::now());
+            }
             idle_ticks = 0;
             delay_ms = 3500;
           } else {
@@ -466,6 +536,13 @@ fn run_project_watch_polling_loop(
         previous = Some(snapshot);
       }
       Err(error) => {
+        emit_pending_project_watch_event(
+          app_handle,
+          &mut pending_css,
+          &mut pending_img,
+          &mut pending_layout,
+        );
+        pending_since = None;
         let _ = app_handle.emit(
           "project://watch",
           ProjectWatchEvent {
@@ -479,8 +556,27 @@ fn run_project_watch_polling_loop(
       }
     }
 
+    if let Some(since) = pending_since {
+      if since.elapsed() >= Duration::from_millis(COALESCE_WINDOW_MS) {
+        emit_pending_project_watch_event(
+          app_handle,
+          &mut pending_css,
+          &mut pending_img,
+          &mut pending_layout,
+        );
+        pending_since = None;
+      }
+    }
+
     sleep_with_stop(stop_worker, delay_ms);
   }
+
+  emit_pending_project_watch_event(
+    app_handle,
+    &mut pending_css,
+    &mut pending_img,
+    &mut pending_layout,
+  );
 }
 
 #[tauri::command]
@@ -829,17 +925,24 @@ fn run_node_script_with_worker(
     return Err(format!("Не найден скрипт {}", worker_path.display()));
   }
 
-  let mut workers = state
-    .workers
+  let worker_handle = {
+    let mut workers = state
+      .workers
+      .lock()
+      .map_err(|_| "Ошибка блокировки worker pool".to_string())?;
+    if !workers.contains_key(script_name) {
+      let spawned = spawn_node_worker(&workspace_root, &worker_path)?;
+      workers.insert(script_name.to_string(), Arc::new(Mutex::new(spawned)));
+    }
+    workers
+      .get(script_name)
+      .cloned()
+      .ok_or("Не удалось получить worker".to_string())?
+  };
+
+  let mut worker = worker_handle
     .lock()
-    .map_err(|_| "Ошибка блокировки worker pool".to_string())?;
-  if !workers.contains_key(script_name) {
-    let spawned = spawn_node_worker(&workspace_root, &worker_path)?;
-    workers.insert(script_name.to_string(), spawned);
-  }
-  let worker = workers
-    .get_mut(script_name)
-    .ok_or("Не удалось получить worker".to_string())?;
+    .map_err(|_| "Ошибка блокировки worker".to_string())?;
 
   if worker
     .child

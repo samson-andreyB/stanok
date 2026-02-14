@@ -10,6 +10,7 @@ import {
   normalizeRel,
   normalizeRoot,
   resolveProjectDir,
+  resolveStanokCacheRoot,
 } from './path-utils.mjs';
 
 const require = createRequire(import.meta.url);
@@ -30,6 +31,7 @@ let srcDir;
 const inlineMaxSizeKb = 1;
 const fallbackUrlRe = /url\((['"]?)([a-f0-9]{32}-\d+x\d+\.png)\1\)/gi;
 const BUILD_CACHE_VERSION = 2;
+const MEMORY_CACHE_MAX_ENTRIES = 16;
 let fallbackUrlPrefix;
 let profiler;
 let styleIncludePaths;
@@ -37,6 +39,7 @@ let buildCache;
 let buildCachePath;
 let buildCacheDirty;
 let cacheResetReason = '';
+const memoryBuildCaches = new Map();
 
 export async function runBuild(payloadInput) {
   const totalStartedAt = performance.now();
@@ -70,20 +73,21 @@ export async function runBuild(payloadInput) {
   profiler.add('setup', performance.now() - setupStartedAt);
 
   const cacheStartedAt = performance.now();
-  buildCachePath = path.join(styleDir, '.css-build-cache.json');
+  try {
+    fs.rmSync(path.join(styleDir, '.css-build-cache.json'), { force: true });
+  } catch {
+    // ignore legacy cache cleanup errors
+  }
+  buildCachePath = resolveCssBuildCachePath();
   const cacheLoaded = loadBuildCache(buildCachePath);
   buildCache = cacheLoaded.cache;
   cacheResetReason = cacheLoaded.resetReason || '';
   buildCacheDirty = false;
   profiler.add('cache-load', performance.now() - cacheStartedAt);
 
-  const cleanupStartedAt = performance.now();
-  try {
-    fs.rmSync(path.join(imgDir, 'svg_fallback'), { recursive: true, force: true });
-  } catch {
-    // ignore
-  }
-  profiler.add('cleanup', performance.now() - cleanupStartedAt);
+  // Keep svg_fallback between runs to avoid regenerating fallback assets
+  // and introducing noisy diffs in main_data.css.
+  profiler.add('cleanup', 0);
 
   const discoverStartedAt = performance.now();
   const styles = fs
@@ -125,17 +129,11 @@ export async function runBuild(payloadInput) {
   if (cacheResetReason) {
     summary.push(`Кэш инкрементальной сборки сброшен: ${cacheResetReason}`);
   }
-  if (skippedCount > 0) {
-    summary.push(`Инкрементально пропущено: ${skippedCount}`);
-  }
-  if (builtCount > 0) {
-    summary.push(`Пересобрано: ${builtCount}`);
-  }
   for (const item of results) {
     if (!item?.style) {
       continue;
     }
-    summary.push(`- ${item.style}: ${item.status}${item.reason ? ` (${item.reason})` : ''}`);
+    summary.push(`- ${item.style}: ${formatBuildItemStatus(item.status)}${item.reason ? ` (${formatBuildItemReason(item.reason)})` : ''}`);
   }
   return summary.join('\n');
 }
@@ -298,6 +296,39 @@ function formatBuildError(error) {
   return `${plugin}${reason}`;
 }
 
+function formatBuildItemStatus(status) {
+  if (status === 'built') {
+    return 'пересобран';
+  }
+  if (status === 'skipped') {
+    return 'пропущен';
+  }
+  return String(status || '');
+}
+
+function formatBuildItemReason(reason) {
+  const value = String(reason || '');
+  if (value === 'unchanged') {
+    return 'без изменений';
+  }
+  if (value === 'force-rebuild') {
+    return 'принудительная пересборка';
+  }
+  if (value === 'initial') {
+    return 'первичная сборка';
+  }
+  if (value === 'outputs-missing') {
+    return 'выходные файлы отсутствуют';
+  }
+  if (value.startsWith('dependency-changed: ')) {
+    return `изменились зависимости: ${value.slice('dependency-changed: '.length)}`;
+  }
+  if (value === 'dependency-changed') {
+    return 'изменились зависимости';
+  }
+  return value;
+}
+
 function normalizeCssOutput(cssText) {
   return String(cssText)
     .replace(/-moz-\s*oldlinear-gradient/gi, '-moz-linear-gradient')
@@ -323,6 +354,21 @@ function writeIfChanged(filePath, content) {
 
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   fs.writeFileSync(filePath, next);
+}
+
+function resolveCssBuildCachePath() {
+  const cacheRoot = resolveStanokCacheRoot();
+  const hash = createHash('sha1');
+  hash.update('css-build-cache-v1');
+  hash.update('\0');
+  hash.update(projectDir);
+  hash.update('\0');
+  hash.update(styleDir);
+  hash.update('\0');
+  hash.update(root);
+  hash.update('\0');
+  hash.update(JSON.stringify(payload.config || {}));
+  return path.join(cacheRoot, 'css', `${hash.digest('hex')}.json`);
 }
 
 async function runWithConcurrency(items, workers, handler) {
@@ -353,6 +399,18 @@ async function runWithConcurrency(items, workers, handler) {
 }
 
 function loadBuildCache(filePath) {
+  const memoryEntry = memoryBuildCaches.get(filePath);
+  let fileMtimeMs = -1;
+  try {
+    fileMtimeMs = fs.statSync(filePath).mtimeMs;
+  } catch {
+    fileMtimeMs = -1;
+  }
+  if (memoryEntry && memoryEntry.mtimeMs === fileMtimeMs) {
+    touchMemoryCacheEntry(memoryBuildCaches, filePath, memoryEntry, MEMORY_CACHE_MAX_ENTRIES);
+    return { cache: memoryEntry.cache, resetReason: '' };
+  }
+
   try {
     const raw = fs.readFileSync(filePath, 'utf8');
     const parsed = JSON.parse(raw);
@@ -371,6 +429,12 @@ function loadBuildCache(filePath) {
     if (!parsed.entries || typeof parsed.entries !== 'object') {
       parsed.entries = {};
     }
+    touchMemoryCacheEntry(
+      memoryBuildCaches,
+      filePath,
+      { cache: parsed, mtimeMs: fileMtimeMs },
+      MEMORY_CACHE_MAX_ENTRIES
+    );
     return {
       cache: parsed,
       resetReason: '',
@@ -386,6 +450,13 @@ function loadBuildCache(filePath) {
 function saveBuildCache(filePath, cache) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   fs.writeFileSync(filePath, JSON.stringify(cache, null, 2));
+  let mtimeMs = -1;
+  try {
+    mtimeMs = fs.statSync(filePath).mtimeMs;
+  } catch {
+    mtimeMs = -1;
+  }
+  touchMemoryCacheEntry(memoryBuildCaches, filePath, { cache, mtimeMs }, MEMORY_CACHE_MAX_ENTRIES);
 }
 
 function collectImportGraph(entryPath, includePaths) {
@@ -402,8 +473,7 @@ function collectImportGraph(entryPath, includePaths) {
 
     const source = fs.readFileSync(realPath, 'utf8');
     const parentDir = path.dirname(realPath);
-    for (const line of source.split(/\r?\n/)) {
-      const target = parseImportTarget(line);
+    for (const target of extractImportTargets(source)) {
       if (!target) {
         continue;
       }
@@ -418,17 +488,19 @@ function collectImportGraph(entryPath, includePaths) {
   return [...deps].sort();
 }
 
-function parseImportTarget(line) {
-  const normalized = String(line || '').replace(/\/\*[\s\S]*?\*\//g, '').trim();
-  if (!normalized.startsWith('@import') || !normalized.endsWith(';') || normalized.includes('url(')) {
-    return null;
+function extractImportTargets(sourceText) {
+  const text = String(sourceText || '').replace(/\/\*[\s\S]*?\*\//g, ' ');
+  const importRe = /@import\s+(?:url\(\s*)?(?:'([^']+)'|"([^"]+)")\s*\)?[^;]*;/gi;
+  const out = [];
+  let match = importRe.exec(text);
+  while (match) {
+    const target = String(match[1] || match[2] || '').trim();
+    if (target && !/^(?:https?:|data:|\/\/)/i.test(target)) {
+      out.push(target);
+    }
+    match = importRe.exec(text);
   }
-  const single = normalized.match(/@import\s+'([^']+)'\s*;/);
-  if (single) {
-    return single[1];
-  }
-  const dbl = normalized.match(/@import\s+"([^"]+)"\s*;/);
-  return dbl ? dbl[1] : null;
+  return out;
 }
 
 function resolveImportPath(target, currentParent, includePaths) {
@@ -505,6 +577,20 @@ function diffDepMeta(prevMeta, nextMeta) {
     }
   }
   return changed.sort();
+}
+
+function touchMemoryCacheEntry(map, key, value, maxEntries) {
+  if (map.has(key)) {
+    map.delete(key);
+  }
+  map.set(key, value);
+  while (map.size > maxEntries) {
+    const oldestKey = map.keys().next().value;
+    if (typeof oldestKey === 'undefined') {
+      break;
+    }
+    map.delete(oldestKey);
+  }
 }
 
 function createProfiler() {

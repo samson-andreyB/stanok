@@ -225,9 +225,6 @@ button:focus-visible,
   padding: 14px;
 }
 
-.Projects__group {
-}
-
 .Projects__group + .Projects__group {
   margin-top: 16px;
 }
@@ -533,6 +530,11 @@ button:focus-visible,
 .Log__box {
   display: table-cell;
   vertical-align: top;
+}
+
+.Log__box--data {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .Log--warn .Log__box--data {
