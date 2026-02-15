@@ -12,6 +12,7 @@ src-tauri/gen/
 src-tauri/binaries/node-*
 src-tauri/runtime-node/*/node
 src-tauri/runtime-node/*/node.exe
+src-tauri/runtime-node/scripts/
 src-tauri/runtime-node/node_modules/*
 !src-tauri/runtime-node/node_modules/
 !src-tauri/runtime-node/node_modules/.gitkeep

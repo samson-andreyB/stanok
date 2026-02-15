@@ -103,18 +103,11 @@ jobs:
           test -f "${APP_ROOT}/runtime-node/scripts/build-css.mjs"
           test -d "${APP_ROOT}/runtime-node/node_modules/intcss"
 
-          RUNTIME_NODE_A="${APP_ROOT}/runtime-node/linux-x64/node"
-          RUNTIME_NODE_B="${APP_ROOT}/runtime-node/node"
-
           SIDECAR_A="${APP_ROOT}/node-x86_64-unknown-linux-gnu"
           SIDECAR_B="${APP_ROOT}/binaries/node-x86_64-unknown-linux-gnu"
 
           NODE_FOUND=""
-          if [ -f "${RUNTIME_NODE_A}" ]; then
-            NODE_FOUND="${RUNTIME_NODE_A}"
-          elif [ -f "${RUNTIME_NODE_B}" ]; then
-            NODE_FOUND="${RUNTIME_NODE_B}"
-          elif [ -f "${SIDECAR_A}" ]; then
+          if [ -f "${SIDECAR_A}" ]; then
             NODE_FOUND="${SIDECAR_A}"
           elif [ -f "${SIDECAR_B}" ]; then
             NODE_FOUND="${SIDECAR_B}"
@@ -123,8 +116,7 @@ jobs:
           if [ -n "${NODE_FOUND}" ]; then
             echo "Node binary found at ${NODE_FOUND}"
           else
-            echo "Node binary not found in expected locations under ${APP_ROOT}"
-            find "${APP_ROOT}/runtime-node" -maxdepth 5 -type f | sed -n '1,300p'
+            echo "Sidecar Node binary not found in expected locations under ${APP_ROOT}"
             find "${APP_ROOT}" -maxdepth 4 -type f | sed -n '1,300p'
             exit 1
           fi
