@@ -29,7 +29,7 @@
       "binaries/node"
     ],
     "resources": [
-      "../scripts/*.mjs",
+      "../scripts/**/*",
       "runtime-node/node_modules/**/*"
     ],
     "icon": [
