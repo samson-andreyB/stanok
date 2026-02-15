@@ -1,4 +1,4 @@
-name: Build Desktop (Windows + macOS + Linux)
+name: Build Desktop (Linux RPM)
 
 on:
   workflow_dispatch:
@@ -13,14 +13,8 @@ jobs:
       matrix:
         include:
           - os: ubuntu-22.04
-            bundle: 'deb,rpm'
+            bundle: 'rpm'
             artifact_name: 'stanok-linux'
-          - os: windows-latest
-            bundle: 'msi,nsis'
-            artifact_name: 'stanok-windows'
-          - os: macos-latest
-            bundle: 'app,dmg'
-            artifact_name: 'stanok-macos'
 
     runs-on: ${{ matrix.os }}
 
@@ -70,28 +64,30 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          APPDIR="$(find src-tauri/target/release/bundle -type d -name 'Stanok.AppDir' | head -n 1 || true)"
-          if [ -z "${APPDIR}" ]; then
-            echo "Stanok.AppDir not found"
-            find src-tauri/target/release/bundle -maxdepth 4 -type d | sed -n '1,200p'
+          WORKER_PATH="$(find src-tauri/target/release/bundle -type f -path '*/runtime-node/scripts/build-worker.mjs' | head -n 1 || true)"
+          if [ -z "${WORKER_PATH}" ]; then
+            echo "build-worker.mjs not found in bundle"
+            find src-tauri/target/release/bundle -maxdepth 8 -type f | sed -n '1,300p'
             exit 1
           fi
 
-          echo "Inspecting AppDir: ${APPDIR}"
-          test -f "${APPDIR}/usr/lib/Stanok/runtime-node/scripts/build-worker.mjs"
-          test -f "${APPDIR}/usr/lib/Stanok/runtime-node/scripts/build-css.mjs"
-          test -f "${APPDIR}/usr/lib/Stanok/runtime-node/linux-x64/node"
-          test -d "${APPDIR}/usr/lib/Stanok/runtime-node/node_modules/intcss"
+          APP_ROOT="${WORKER_PATH%/runtime-node/scripts/build-worker.mjs}"
+          echo "Inspecting app root: ${APP_ROOT}"
 
-          SIDECAR_A="${APPDIR}/usr/lib/Stanok/node-x86_64-unknown-linux-gnu"
-          SIDECAR_B="${APPDIR}/usr/lib/Stanok/binaries/node-x86_64-unknown-linux-gnu"
+          test -f "${APP_ROOT}/runtime-node/scripts/build-worker.mjs"
+          test -f "${APP_ROOT}/runtime-node/scripts/build-css.mjs"
+          test -f "${APP_ROOT}/runtime-node/linux-x64/node"
+          test -d "${APP_ROOT}/runtime-node/node_modules/intcss"
+
+          SIDECAR_A="${APP_ROOT}/node-x86_64-unknown-linux-gnu"
+          SIDECAR_B="${APP_ROOT}/binaries/node-x86_64-unknown-linux-gnu"
           if [ -f "${SIDECAR_A}" ]; then
             echo "Sidecar found at ${SIDECAR_A}"
           elif [ -f "${SIDECAR_B}" ]; then
             echo "Sidecar found at ${SIDECAR_B}"
           else
-            echo "Sidecar not found in expected locations"
-            find "${APPDIR}/usr/lib/Stanok" -maxdepth 3 -type f | sed -n '1,200p'
+            echo "Sidecar not found in expected locations under ${APP_ROOT}"
+            find "${APP_ROOT}" -maxdepth 4 -type f | sed -n '1,300p'
             exit 1
           fi
 
