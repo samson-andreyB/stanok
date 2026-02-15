@@ -1951,6 +1951,7 @@ fn is_sidecar_node_binary(path: &Path) -> bool {
 
 fn main() {
   tauri::Builder::default()
+    .plugin(tauri_plugin_shell::init())
     .plugin(tauri_plugin_window_state::Builder::default().build())
     .manage(ProjectWatchState::default())
     .manage(BranchWatchState::default())
