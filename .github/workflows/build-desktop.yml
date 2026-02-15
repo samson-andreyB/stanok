@@ -47,13 +47,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            cpio \
             libwebkit2gtk-4.1-dev \
             libgtk-3-dev \
             libsoup-3.0-dev \
             libayatana-appindicator3-dev \
             librsvg2-dev \
-            rpm2cpio
+            rpm
 
       - name: Prepare sidecar Node
         run: npm run prepare:sidecar-node
@@ -74,52 +73,47 @@ jobs:
           fi
 
           echo "Inspecting RPM: ${RPM_FILE}"
-          AUDIT_DIR="$(mktemp -d)"
           RPM_ABS="$(realpath "${RPM_FILE}")"
-          if ! (cd "${AUDIT_DIR}" && rpm2cpio "${RPM_ABS}" | cpio -idm --quiet); then
-            echo "Failed to extract RPM: ${RPM_ABS}"
+          RPM_LIST="$(rpm -qlp "${RPM_ABS}" | sed 's#^\./#/#')"
+          if [ -z "${RPM_LIST}" ]; then
+            echo "Failed to read RPM file list: ${RPM_ABS}"
             exit 1
           fi
 
-          APP_ROOT=""
-          for candidate in \
-            "${AUDIT_DIR}/usr/lib/Stanok" \
-            "${AUDIT_DIR}/usr/lib64/Stanok"; do
-            if [ -d "${candidate}" ]; then
-              APP_ROOT="${candidate}"
-              break
-            fi
-          done
+          has_path() {
+            printf '%s\n' "${RPM_LIST}" | grep -Fqx "$1"
+          }
 
-          if [ -z "${APP_ROOT}" ]; then
-            echo "App root not found after RPM extract (checked: usr/lib and usr/lib64)"
-            find "${AUDIT_DIR}" -maxdepth 8 -type d | sed -n '1,300p'
-            find "${AUDIT_DIR}" -maxdepth 8 -type f | sed -n '1,300p'
+          assert_any() {
+            local label="$1"
+            shift
+            for p in "$@"; do
+              if has_path "$p"; then
+                echo "${label}: found ${p}"
+                return 0
+              fi
+            done
+            echo "${label}: not found"
+            printf '%s\n' "${RPM_LIST}" | sed -n '1,400p'
             exit 1
-          fi
-          echo "Resolved app root: ${APP_ROOT}"
+          }
 
-          test -f "${APP_ROOT}/runtime-node/scripts/build-worker.mjs"
-          test -f "${APP_ROOT}/runtime-node/scripts/build-css.mjs"
-          test -d "${APP_ROOT}/runtime-node/node_modules/intcss"
-
-          SIDECAR_A="${APP_ROOT}/node-x86_64-unknown-linux-gnu"
-          SIDECAR_B="${APP_ROOT}/binaries/node-x86_64-unknown-linux-gnu"
-
-          NODE_FOUND=""
-          if [ -f "${SIDECAR_A}" ]; then
-            NODE_FOUND="${SIDECAR_A}"
-          elif [ -f "${SIDECAR_B}" ]; then
-            NODE_FOUND="${SIDECAR_B}"
-          fi
-
-          if [ -n "${NODE_FOUND}" ]; then
-            echo "Node binary found at ${NODE_FOUND}"
-          else
-            echo "Sidecar Node binary not found in expected locations under ${APP_ROOT}"
-            find "${APP_ROOT}" -maxdepth 4 -type f | sed -n '1,300p'
-            exit 1
-          fi
+          assert_any "build-worker.mjs" \
+            "/usr/lib/Stanok/runtime-node/scripts/build-worker.mjs" \
+            "/usr/lib64/Stanok/runtime-node/scripts/build-worker.mjs"
+          assert_any "build-css.mjs" \
+            "/usr/lib/Stanok/runtime-node/scripts/build-css.mjs" \
+            "/usr/lib64/Stanok/runtime-node/scripts/build-css.mjs"
+          assert_any "intcss module dir marker" \
+            "/usr/lib/Stanok/runtime-node/node_modules/intcss" \
+            "/usr/lib/Stanok/runtime-node/node_modules/intcss/package.json" \
+            "/usr/lib64/Stanok/runtime-node/node_modules/intcss" \
+            "/usr/lib64/Stanok/runtime-node/node_modules/intcss/package.json"
+          assert_any "sidecar node binary" \
+            "/usr/lib/Stanok/node-x86_64-unknown-linux-gnu" \
+            "/usr/lib/Stanok/binaries/node-x86_64-unknown-linux-gnu" \
+            "/usr/lib64/Stanok/node-x86_64-unknown-linux-gnu" \
+            "/usr/lib64/Stanok/binaries/node-x86_64-unknown-linux-gnu"
 
       - name: Upload bundle artifacts
         uses: actions/upload-artifact@v4
