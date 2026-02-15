@@ -1844,7 +1844,13 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
         None
       }
     })
-    .unwrap_or_else(|| PathBuf::from("node"));
+    .unwrap_or_else(|| {
+      if cfg!(debug_assertions) {
+        PathBuf::from("node")
+      } else {
+        PathBuf::from("node-sidecar-missing")
+      }
+    });
 
   let node_modules_dir = resource_dir
     .as_ref()

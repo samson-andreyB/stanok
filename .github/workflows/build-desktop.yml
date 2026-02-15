@@ -61,8 +61,37 @@ jobs:
       - name: Prepare sidecar Node
         run: npm run prepare:sidecar-node
 
+      - name: Verify prepared sidecar
+        shell: bash
+        run: |
+          set -euo pipefail
+          SIDECAR="src-tauri/binaries/node-x86_64-unknown-linux-gnu"
+          if [ ! -f "${SIDECAR}" ]; then
+            echo "Prepared sidecar missing: ${SIDECAR}"
+            find src-tauri/binaries -maxdepth 2 -type f | sed -n '1,200p' || true
+            exit 1
+          fi
+          echo "Prepared sidecar: ${SIDECAR}"
+          "${SIDECAR}" -v
+
       - name: Build app bundles
         run: npx tauri build --bundles ${{ matrix.bundle }}
+
+      - name: Debug RPM contents
+        if: matrix.os == 'ubuntu-22.04'
+        shell: bash
+        run: |
+          set -euo pipefail
+          RPM_FILE="$(find src-tauri/target/release/bundle -type f -name '*.rpm' | head -n 1 || true)"
+          if [ -z "${RPM_FILE}" ]; then
+            echo "RPM not found after build"
+            find src-tauri/target/release/bundle -maxdepth 6 -type f | sed -n '1,300p'
+            exit 1
+          fi
+          echo "Inspecting RPM: ${RPM_FILE}"
+          rpm -qlp "${RPM_FILE}" | sed -n '1,400p'
+          echo "Filtered runtime lines:"
+          rpm -qlp "${RPM_FILE}" | rg -n "node-|runtime-node/scripts|runtime-node/node_modules/intcss|/usr/bin/stanok" -S || true
 
       - name: Upload bundle artifacts
         uses: actions/upload-artifact@v4
