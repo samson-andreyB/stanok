@@ -139,7 +139,9 @@ function collectRuntimePackageClosure(rootPackages) {
   }
 
   if (missingRoots.length > 0) {
-    console.warn(`Minimal runtime: missing root packages: ${missingRoots.join(', ')}`);
+    throw new Error(
+      `Minimal runtime: missing required root packages: ${missingRoots.join(', ')}`
+    );
   }
 
   return visited;
