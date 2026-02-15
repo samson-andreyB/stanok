@@ -7,9 +7,8 @@ use std::collections::HashMap;
 use std::env;
 use std::fs;
 use std::hash::{DefaultHasher, Hash, Hasher};
-use std::io::{BufRead, BufReader, Write};
 use std::path::{Path, PathBuf};
-use std::process::{Child, ChildStdin, ChildStdout, Command, Stdio};
+use std::process::Command;
 use std::sync::{
   Arc,
   Mutex,
@@ -19,6 +18,10 @@ use std::sync::{
 use std::time::Duration;
 use tauri::Emitter;
 use tauri::Manager;
+use tauri_plugin_shell::{
+  ShellExt,
+  process::{CommandChild as ShellCommandChild, CommandEvent},
+};
 #[cfg(not(target_os = "linux"))]
 use sysinfo::{ProcessesToUpdate, System};
 
@@ -138,13 +141,14 @@ struct BuildQueueEntry {
 }
 
 struct NodeWorker {
-  child: Child,
-  stdin: ChildStdin,
-  stdout: BufReader<ChildStdout>,
+  child: ShellCommandChild,
+  events: tauri::async_runtime::Receiver<CommandEvent>,
+  stdout_buffer: Vec<u8>,
 }
 
 #[derive(Clone)]
 struct RuntimePathsState {
+  app_handle: tauri::AppHandle,
   resource_dir: Option<PathBuf>,
   workspace_root: PathBuf,
   scripts_dir: PathBuf,
@@ -158,11 +162,9 @@ struct RuntimePathsState {
 impl Drop for BuildOrchestratorState {
   fn drop(&mut self) {
     if let Ok(mut workers) = self.workers.lock() {
-      for (_, worker) in workers.iter_mut() {
+      for (_, worker) in workers.drain() {
         let _ = worker.child.kill();
-        let _ = worker.child.wait();
       }
-      workers.clear();
     }
   }
 }
@@ -876,40 +878,34 @@ fn run_node_script_with_worker(
     .get_mut(script_name)
     .ok_or("Не удалось получить worker".to_string())?;
 
-  if worker
-    .child
-    .try_wait()
-    .map_err(|e| e.to_string())?
-    .is_some()
-  {
-    *worker = spawn_node_worker(runtime)?;
-  }
-
   let request = serde_json::json!({
     "id": 1,
     "script": script_name,
     "payload": payload
   });
   let request_line = serde_json::to_string(&request).map_err(|e| e.to_string())?;
+  let request_bytes = format!("{request_line}\n").into_bytes();
 
-  if writeln!(worker.stdin, "{}", request_line).is_err() || worker.stdin.flush().is_err() {
+  if worker.child.write(&request_bytes).is_err() {
     *worker = spawn_node_worker(runtime)?;
-    writeln!(worker.stdin, "{}", request_line).map_err(|e| e.to_string())?;
-    worker.stdin.flush().map_err(|e| e.to_string())?;
+    worker
+      .child
+      .write(&request_bytes)
+      .map_err(|e| e.to_string())?;
   }
 
-  let mut line = String::new();
-  let read = worker.stdout.read_line(&mut line).map_err(|e| e.to_string())?;
-  if read == 0 {
-    *worker = spawn_node_worker(runtime)?;
-    writeln!(worker.stdin, "{}", request_line).map_err(|e| e.to_string())?;
-    worker.stdin.flush().map_err(|e| e.to_string())?;
-    line.clear();
-    let reread = worker.stdout.read_line(&mut line).map_err(|e| e.to_string())?;
-    if reread == 0 {
-      return Err("Worker не вернул ответ".to_string());
+  let line = match read_worker_response(worker) {
+    Ok(line) => line,
+    Err(_) => {
+      // Worker мог умереть между запросами: перезапускаем один раз и повторяем.
+      *worker = spawn_node_worker(runtime)?;
+      worker
+        .child
+        .write(&request_bytes)
+        .map_err(|e| e.to_string())?;
+      read_worker_response(worker)?
     }
-  }
+  };
 
   let response: serde_json::Value = serde_json::from_str(line.trim()).map_err(|e| e.to_string())?;
   if response.get("ok").and_then(Value::as_bool).unwrap_or(false) {
@@ -930,32 +926,81 @@ fn run_node_script_with_worker(
   Err(message)
 }
 
-fn spawn_node_worker(runtime: &RuntimePathsState) -> Result<NodeWorker, String> {
-  let mut cmd = Command::new(&runtime.node_bin);
-  cmd.arg(&runtime.worker_path).current_dir(&runtime.workspace_root);
-  if let Some(node_modules_dir) = &runtime.node_modules_dir {
-    cmd.env("NODE_PATH", node_modules_dir);
+fn read_worker_response(worker: &mut NodeWorker) -> Result<String, String> {
+  let mut stderr_buf = String::new();
+  loop {
+    let event = tauri::async_runtime::block_on(worker.events.recv());
+    let Some(event) = event else {
+      return Err("Worker не вернул ответ".to_string());
+    };
+
+    match event {
+      CommandEvent::Stdout(chunk) => {
+        worker.stdout_buffer.extend(chunk);
+        if let Some(pos) = worker.stdout_buffer.iter().position(|&b| b == b'\n') {
+          let line = worker.stdout_buffer.drain(..=pos).collect::<Vec<u8>>();
+          let text = String::from_utf8_lossy(&line).trim().to_string();
+          if !text.is_empty() {
+            return Ok(text);
+          }
+        }
+      }
+      CommandEvent::Stderr(chunk) => {
+        let piece = String::from_utf8_lossy(&chunk).trim().to_string();
+        if !piece.is_empty() {
+          if !stderr_buf.is_empty() {
+            stderr_buf.push('\n');
+          }
+          stderr_buf.push_str(&piece);
+        }
+      }
+      CommandEvent::Error(err) => return Err(compact_script_error(&err)),
+      CommandEvent::Terminated(payload) => {
+        if !stderr_buf.is_empty() {
+          return Err(compact_script_error(&stderr_buf));
+        }
+        return Err(format!(
+          "Worker завершился (code: {:?}, signal: {:?})",
+          payload.code, payload.signal
+        ));
+      }
+      _ => {}
+    }
   }
-  let mut child = cmd
-    .stdin(Stdio::piped())
-    .stdout(Stdio::piped())
-    .stderr(Stdio::null())
-    .spawn()
+}
+
+fn spawn_node_worker(runtime: &RuntimePathsState) -> Result<NodeWorker, String> {
+  let mut cmd = runtime
+    .app_handle
+    .shell()
+    .sidecar("node")
     .map_err(|e| {
       format!(
-        "Ошибка запуска worker ({}): {}\n{}",
-        runtime.node_bin.display(),
+        "Ошибка подготовки sidecar node: {}\n{}",
         e,
         format_runtime_diagnostics(runtime)
       )
-    })?;
+    })?
+    .arg(&runtime.worker_path)
+    .current_dir(&runtime.workspace_root);
 
-  let stdin = child.stdin.take().ok_or("Не удалось открыть stdin worker")?;
-  let stdout = child.stdout.take().ok_or("Не удалось открыть stdout worker")?;
+  if let Some(node_modules_dir) = &runtime.node_modules_dir {
+    cmd = cmd.env("NODE_PATH", node_modules_dir);
+  }
+
+  let (events, child) = cmd.spawn().map_err(|e| {
+    format!(
+      "Ошибка запуска worker ({}): {}\n{}",
+      runtime.node_bin.display(),
+      e,
+      format_runtime_diagnostics(runtime)
+    )
+  })?;
+
   Ok(NodeWorker {
     child,
-    stdin,
-    stdout: BufReader::new(stdout),
+    events,
+    stdout_buffer: Vec::new(),
   })
 }
 
@@ -974,16 +1019,24 @@ fn run_node_script_once(
   }
 
   let payload_json = serde_json::to_string(payload).map_err(|e| e.to_string())?;
-  let mut cmd = Command::new(&runtime.node_bin);
-  cmd
+  let mut cmd = runtime
+    .app_handle
+    .shell()
+    .sidecar("node")
+    .map_err(|e| {
+      format!(
+        "Ошибка подготовки sidecar node: {}\n{}",
+        e,
+        format_runtime_diagnostics(runtime)
+      )
+    })?
     .arg(script_path)
     .arg(payload_json)
     .current_dir(&runtime.workspace_root);
   if let Some(node_modules_dir) = &runtime.node_modules_dir {
-    cmd.env("NODE_PATH", node_modules_dir);
+    cmd = cmd.env("NODE_PATH", node_modules_dir);
   }
-  let output = cmd
-    .output()
+  let output = tauri::async_runtime::block_on(cmd.output())
     .map_err(|e| {
       format!(
         "Ошибка запуска node ({}): {}\n{}",
@@ -1893,6 +1946,7 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
     });
 
   RuntimePathsState {
+    app_handle: app.clone(),
     resource_dir,
     workspace_root,
     scripts_dir,
