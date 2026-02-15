@@ -1740,6 +1740,11 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
   if let Some(resource_root) = resource_dir.as_ref() {
     script_candidates.push(resource_root.join("scripts"));
     script_candidates.push(resource_root.clone());
+    script_candidates.push(resource_root.join("resources"));
+    script_candidates.push(resource_root.join("resources").join("scripts"));
+    if let Some(found_dir) = find_dir_with_file(resource_root, "build-worker.mjs", 3) {
+      script_candidates.push(found_dir);
+    }
   }
   if cfg!(debug_assertions) {
     script_candidates.push(dev_workspace_root.join("scripts"));
@@ -1780,6 +1785,16 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
   if let Some(resource_root) = resource_dir.as_ref() {
     node_candidates.push(resource_root.join(&sidecar_name));
     node_candidates.push(resource_root.join("binaries").join(&sidecar_name));
+    node_candidates.push(resource_root.join("resources").join(&sidecar_name));
+    node_candidates.push(
+      resource_root
+        .join("resources")
+        .join("binaries")
+        .join(&sidecar_name),
+    );
+    if let Some(found_sidecar) = find_file_recursive(resource_root, &sidecar_name, 3) {
+      node_candidates.push(found_sidecar);
+    }
     for rel in runtime_node_relative_candidates() {
       node_candidates.push(resource_root.join(rel));
     }
@@ -1815,6 +1830,12 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
     .or_else(|| {
       resource_dir
         .as_ref()
+        .map(|r| r.join("resources").join("runtime-node").join("node_modules"))
+        .filter(|p| p.exists())
+    })
+    .or_else(|| {
+      resource_dir
+        .as_ref()
         .map(|r| r.join("node_modules"))
         .filter(|p| p.exists())
     })
@@ -1838,6 +1859,40 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
     node_bin,
     node_modules_dir,
   }
+}
+
+fn find_dir_with_file(root: &Path, file_name: &str, max_depth: usize) -> Option<PathBuf> {
+  let file = find_file_recursive(root, file_name, max_depth)?;
+  file.parent().map(Path::to_path_buf)
+}
+
+fn find_file_recursive(root: &Path, file_name: &str, max_depth: usize) -> Option<PathBuf> {
+  let mut stack = vec![(root.to_path_buf(), 0usize)];
+  while let Some((dir, depth)) = stack.pop() {
+    let Ok(read_dir) = fs::read_dir(&dir) else {
+      continue;
+    };
+    for entry in read_dir.flatten() {
+      let path = entry.path();
+      if path
+        .file_name()
+        .and_then(|n| n.to_str())
+        .map(|n| n == file_name)
+        .unwrap_or(false)
+      {
+        return Some(path);
+      }
+      if depth < max_depth {
+        let Ok(ft) = entry.file_type() else {
+          continue;
+        };
+        if ft.is_dir() {
+          stack.push((path, depth + 1));
+        }
+      }
+    }
+  }
+  None
 }
 
 fn runtime_node_relative_candidates() -> Vec<PathBuf> {
