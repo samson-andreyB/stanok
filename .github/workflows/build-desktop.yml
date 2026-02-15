@@ -75,14 +75,26 @@ jobs:
 
           echo "Inspecting RPM: ${RPM_FILE}"
           AUDIT_DIR="$(mktemp -d)"
-          pushd "${AUDIT_DIR}" >/dev/null
-          rpm2cpio "${GITHUB_WORKSPACE}/${RPM_FILE}" | cpio -idmv --quiet
-          popd >/dev/null
+          RPM_ABS="$(realpath "${RPM_FILE}")"
+          if ! (cd "${AUDIT_DIR}" && rpm2cpio "${RPM_ABS}" | cpio -idm --quiet); then
+            echo "Failed to extract RPM: ${RPM_ABS}"
+            exit 1
+          fi
 
-          APP_ROOT="${AUDIT_DIR}/usr/lib/Stanok"
-          if [ ! -d "${APP_ROOT}" ]; then
-            echo "App root not found after RPM extract: ${APP_ROOT}"
-            find "${AUDIT_DIR}" -maxdepth 6 -type d | sed -n '1,300p'
+          APP_ROOT=""
+          for candidate in \
+            "${AUDIT_DIR}/usr/lib/Stanok" \
+            "${AUDIT_DIR}/usr/lib64/Stanok"; do
+            if [ -d "${candidate}" ]; then
+              APP_ROOT="${candidate}"
+              break
+            fi
+          done
+
+          if [ -z "${APP_ROOT}" ]; then
+            echo "App root not found after RPM extract (checked: usr/lib and usr/lib64)"
+            find "${AUDIT_DIR}" -maxdepth 8 -type d | sed -n '1,300p'
+            find "${AUDIT_DIR}" -maxdepth 8 -type f | sed -n '1,300p'
             exit 1
           fi
           echo "Resolved app root: ${APP_ROOT}"
