@@ -6,6 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, '..');
 const tauriRoot = path.join(repoRoot, 'src-tauri');
+const binariesDir = path.join(tauriRoot, 'binaries');
 const runtimeRoot = path.join(tauriRoot, 'runtime-node');
 const runtimeModulesDir = path.join(runtimeRoot, 'node_modules');
 const runtimeScriptsDir = path.join(runtimeRoot, 'scripts');
@@ -29,12 +30,8 @@ function detectTargetTriple() {
   throw new Error(`Unsupported platform/arch for auto-detect: ${platform}/${arch}`);
 }
 
-function runtimeNodeRelPath() {
-  if (process.platform === 'linux' && process.arch === 'x64') return path.join('linux-x64', 'node');
-  if (process.platform === 'win32' && process.arch === 'x64') return path.join('win-x64', 'node.exe');
-  if (process.platform === 'darwin' && process.arch === 'arm64') return path.join('macos-arm64', 'node');
-  if (process.platform === 'darwin' && process.arch === 'x64') return path.join('macos-x64', 'node');
-  throw new Error(`Unsupported platform/arch for runtime-node layout: ${process.platform}/${process.arch}`);
+function sidecarBinaryName(triple) {
+  return process.platform === 'win32' ? `node-${triple}.exe` : `node-${triple}`;
 }
 
 function ensureDir(dirPath) {
@@ -43,26 +40,21 @@ function ensureDir(dirPath) {
 
 function copyNodeBinary() {
   const triple = detectTargetTriple();
+  const destName = sidecarBinaryName(triple);
+  const destPath = path.join(binariesDir, destName);
+  ensureDir(binariesDir);
+  fs.rmSync(destPath, { force: true });
+
   if (!fs.existsSync(sourceNodeBin)) {
     throw new Error(`Node binary not found: ${sourceNodeBin}`);
   }
-  const runtimeNodePath = path.join(runtimeRoot, runtimeNodeRelPath());
-  ensureDir(path.dirname(runtimeNodePath));
-  fs.rmSync(runtimeNodePath, { force: true });
-  fs.copyFileSync(sourceNodeBin, runtimeNodePath);
+
+  fs.copyFileSync(sourceNodeBin, destPath);
   if (process.platform !== 'win32') {
-    fs.chmodSync(runtimeNodePath, 0o755);
+    fs.chmodSync(destPath, 0o755);
   }
 
-  const runtimeCompatPath = path.join(runtimeRoot, process.platform === 'win32' ? 'node.exe' : 'node');
-  ensureDir(path.dirname(runtimeCompatPath));
-  fs.rmSync(runtimeCompatPath, { force: true });
-  fs.copyFileSync(sourceNodeBin, runtimeCompatPath);
-  if (process.platform !== 'win32') {
-    fs.chmodSync(runtimeCompatPath, 0o755);
-  }
-
-  return { triple, runtimeNodePath, runtimeCompatPath };
+  return { triple, destPath };
 }
 
 function shouldSkipEntry(srcPath) {
@@ -130,16 +122,14 @@ function copyRuntimeScripts() {
 }
 
 function main() {
-  const { triple, runtimeNodePath, runtimeCompatPath } = copyNodeBinary();
+  const { triple, destPath } = copyNodeBinary();
   const copiedScripts = copyRuntimeScripts();
   let mode = 'skipped';
   if (!skipNodeModulesCopy) {
     mode = copyRuntimeNodeModules();
   }
 
-  console.log('Sidecar Node disabled: using runtime-node only');
-  console.log(`Runtime Node prepared: ${runtimeNodePath}`);
-  console.log(`Runtime Node compat prepared: ${runtimeCompatPath}`);
+  console.log(`Sidecar Node prepared: ${destPath}`);
   console.log(`Runtime scripts copied: ${copiedScripts}`);
   console.log(`Source Node binary: ${sourceNodeBin}`);
   console.log(`Target triple: ${triple}`);
