@@ -152,7 +152,6 @@ struct RuntimePathsState {
   script_candidates: Vec<PathBuf>,
   node_bin: PathBuf,
   node_candidates: Vec<PathBuf>,
-  sidecar_candidates: Vec<PathBuf>,
   node_modules_dir: Option<PathBuf>,
 }
 
@@ -1795,40 +1794,6 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
     .map(Path::to_path_buf)
     .unwrap_or_else(|| dev_workspace_root.clone());
 
-  let mut sidecar_candidates: Vec<PathBuf> = Vec::new();
-  let sidecar_name = sidecar_node_name();
-  if let Ok(exe) = env::current_exe() {
-    let exe = exe.canonicalize().unwrap_or(exe);
-    if let Some(exe_dir) = exe.parent() {
-      sidecar_candidates.push(exe_dir.join(&sidecar_name));
-      sidecar_candidates.push(exe_dir.join("binaries").join(&sidecar_name));
-      if cfg!(target_os = "macos") {
-        if let Some(parent) = exe_dir.parent() {
-          sidecar_candidates.push(parent.join("Resources").join(&sidecar_name));
-          sidecar_candidates.push(parent.join("Resources").join("binaries").join(&sidecar_name));
-        }
-      }
-    }
-  }
-  if let Some(resource_root) = resource_dir.as_ref() {
-    sidecar_candidates.push(resource_root.join(&sidecar_name));
-    sidecar_candidates.push(resource_root.join("binaries").join(&sidecar_name));
-    sidecar_candidates.push(resource_root.join("resources").join(&sidecar_name));
-    sidecar_candidates.push(
-      resource_root
-        .join("resources")
-        .join("binaries")
-        .join(&sidecar_name),
-    );
-  }
-  if cfg!(debug_assertions) {
-    sidecar_candidates.push(
-      dev_workspace_root
-        .join("src-tauri")
-        .join("binaries")
-        .join(&sidecar_name),
-    );
-  }
   let mut node_candidates: Vec<PathBuf> = Vec::new();
   if let Some(resource_root) = resource_dir.as_ref() {
     for rel in runtime_node_relative_candidates() {
@@ -1836,7 +1801,6 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
       node_candidates.push(resource_root.join("resources").join(&rel));
     }
   }
-  node_candidates.extend(sidecar_candidates.iter().cloned());
   if cfg!(debug_assertions) {
     node_candidates.push(PathBuf::from("node"));
   }
@@ -1852,13 +1816,7 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
         None
       }
     })
-    .unwrap_or_else(|| {
-      if let Some(resource_root) = resource_dir.as_ref() {
-        resource_root.join(&sidecar_name)
-      } else {
-        PathBuf::from(&sidecar_name)
-      }
-    });
+    .unwrap_or_else(|| PathBuf::from("node"));
 
   let node_modules_dir = resource_dir
     .as_ref()
@@ -1891,7 +1849,6 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
     script_candidates,
     node_bin,
     node_candidates,
-    sidecar_candidates,
     node_modules_dir,
   }
 }
@@ -1916,12 +1873,6 @@ fn format_runtime_diagnostics(runtime: &RuntimePathsState) -> String {
     .map(|p| format!("- {}", fmt_path_line(p)))
     .collect::<Vec<String>>()
     .join("\n");
-  let sidecar_candidates = runtime
-    .sidecar_candidates
-    .iter()
-    .map(|p| format!("- {}", fmt_path_line(p)))
-    .collect::<Vec<String>>()
-    .join("\n");
   let node_candidates = runtime
     .node_candidates
     .iter()
@@ -1930,7 +1881,7 @@ fn format_runtime_diagnostics(runtime: &RuntimePathsState) -> String {
     .join("\n");
 
   format!(
-    "Диагностика runtime:\nresource_dir: {}\nworkspace_root: {}\nscripts_dir: {}\nworker_path: {}\nnode_bin: {}\nnode_modules: {}\nscript_candidates:\n{}\nnode_candidates:\n{}\nsidecar_candidates:\n{}",
+    "Диагностика runtime:\nresource_dir: {}\nworkspace_root: {}\nscripts_dir: {}\nworker_path: {}\nnode_bin: {}\nnode_modules: {}\nscript_candidates:\n{}\nnode_candidates:\n{}",
     resource_dir,
     runtime.workspace_root.display(),
     runtime.scripts_dir.display(),
@@ -1950,11 +1901,6 @@ fn format_runtime_diagnostics(runtime: &RuntimePathsState) -> String {
       "<none>".to_string()
     } else {
       node_candidates
-    },
-    if sidecar_candidates.is_empty() {
-      "<none>".to_string()
-    } else {
-      sidecar_candidates
     }
   )
 }
@@ -1983,25 +1929,6 @@ fn runtime_node_relative_candidates() -> Vec<PathBuf> {
     rel.push(PathBuf::from("runtime-node/node"));
   }
   rel
-}
-
-fn sidecar_node_name() -> String {
-  let triple = if cfg!(target_os = "windows") {
-    "x86_64-pc-windows-msvc"
-  } else if cfg!(target_os = "macos") {
-    if std::env::consts::ARCH == "aarch64" {
-      "aarch64-apple-darwin"
-    } else {
-      "x86_64-apple-darwin"
-    }
-  } else {
-    "x86_64-unknown-linux-gnu"
-  };
-  if cfg!(target_os = "windows") {
-    format!("node-{}.exe", triple)
-  } else {
-    format!("node-{}", triple)
-  }
 }
 
 fn main() {

@@ -54,8 +54,8 @@ jobs:
             librsvg2-dev \
             rpm
 
-      - name: Prepare sidecar Node
-        run: npm run prepare:sidecar-node
+      - name: Prepare runtime Node
+        run: npm run prepare:runtime-node
 
       - name: Build app bundles
         run: npx tauri build --bundles ${{ matrix.bundle }}
