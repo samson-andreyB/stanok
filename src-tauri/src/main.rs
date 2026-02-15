@@ -1794,39 +1794,40 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
     .map(Path::to_path_buf)
     .unwrap_or_else(|| dev_workspace_root.clone());
 
-  let sidecar_name = sidecar_node_name();
   let mut node_candidates: Vec<PathBuf> = Vec::new();
+  let mut sidecar_dirs: Vec<PathBuf> = Vec::new();
   if let Ok(exe) = env::current_exe() {
     let exe = exe.canonicalize().unwrap_or(exe);
     if let Some(exe_dir) = exe.parent() {
-      node_candidates.push(exe_dir.join(&sidecar_name));
-      node_candidates.push(exe_dir.join("binaries").join(&sidecar_name));
+      sidecar_dirs.push(exe_dir.to_path_buf());
+      sidecar_dirs.push(exe_dir.join("binaries"));
       if cfg!(target_os = "macos") {
         if let Some(parent) = exe_dir.parent() {
-          node_candidates.push(parent.join("Resources").join(&sidecar_name));
-          node_candidates.push(parent.join("Resources").join("binaries").join(&sidecar_name));
+          sidecar_dirs.push(parent.join("Resources"));
+          sidecar_dirs.push(parent.join("Resources").join("binaries"));
         }
       }
     }
   }
   if let Some(resource_root) = resource_dir.as_ref() {
-    node_candidates.push(resource_root.join(&sidecar_name));
-    node_candidates.push(resource_root.join("binaries").join(&sidecar_name));
-    node_candidates.push(resource_root.join("resources").join(&sidecar_name));
-    node_candidates.push(
-      resource_root
-        .join("resources")
-        .join("binaries")
-        .join(&sidecar_name),
-    );
+    sidecar_dirs.push(resource_root.clone());
+    sidecar_dirs.push(resource_root.join("binaries"));
+    sidecar_dirs.push(resource_root.join("resources"));
+    sidecar_dirs.push(resource_root.join("resources").join("binaries"));
   }
   if cfg!(debug_assertions) {
-    node_candidates.push(
-      dev_workspace_root
-        .join("src-tauri")
-        .join("binaries")
-        .join(&sidecar_name),
-    );
+    sidecar_dirs.push(dev_workspace_root.join("src-tauri").join("binaries"));
+  }
+
+  for dir in &sidecar_dirs {
+    if let Ok(entries) = fs::read_dir(dir) {
+      for entry in entries.flatten() {
+        let path = entry.path();
+        if is_sidecar_node_binary(&path) {
+          node_candidates.push(path);
+        }
+      }
+    }
   }
   if cfg!(debug_assertions) {
     node_candidates.push(PathBuf::from("node"));
@@ -1843,15 +1844,7 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
         None
       }
     })
-    .unwrap_or_else(|| {
-      if cfg!(debug_assertions) {
-        PathBuf::from("node")
-      } else if let Some(resource_root) = resource_dir.as_ref() {
-        resource_root.join(&sidecar_name)
-      } else {
-        PathBuf::from(&sidecar_name)
-      }
-    });
+    .unwrap_or_else(|| PathBuf::from("node"));
 
   let node_modules_dir = resource_dir
     .as_ref()
@@ -1940,22 +1933,19 @@ fn format_runtime_diagnostics(runtime: &RuntimePathsState) -> String {
   )
 }
 
-fn sidecar_node_name() -> String {
-  let triple = if cfg!(target_os = "windows") {
-    "x86_64-pc-windows-msvc"
-  } else if cfg!(target_os = "macos") {
-    if std::env::consts::ARCH == "aarch64" {
-      "aarch64-apple-darwin"
-    } else {
-      "x86_64-apple-darwin"
-    }
-  } else {
-    "x86_64-unknown-linux-gnu"
+fn is_sidecar_node_binary(path: &Path) -> bool {
+  if !path.is_file() {
+    return false;
+  }
+
+  let Some(name) = path.file_name().and_then(|s| s.to_str()) else {
+    return false;
   };
+
   if cfg!(target_os = "windows") {
-    format!("node-{}.exe", triple)
+    name.starts_with("node-") && name.ends_with(".exe")
   } else {
-    format!("node-{}", triple)
+    name.starts_with("node-") && !name.ends_with(".exe")
   }
 }
 
