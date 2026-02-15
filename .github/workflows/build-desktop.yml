@@ -27,6 +27,10 @@ jobs:
         with:
           node-version: 20
           cache: npm
+          check-latest: false
+
+      - name: Verify Node Version
+        run: node -v
 
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
