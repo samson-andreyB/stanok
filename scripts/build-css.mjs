@@ -11,8 +11,35 @@ import {
 } from './path-utils.mjs';
 
 const require = createRequire(import.meta.url);
-const postcss = require('postcss5');
-const intcss = require('intcss');
+const intcss = requireOrThrow('intcss', 'Не найден модуль intcss. Выполни npm install перед запуском сборки.');
+const postcss = resolvePostcss();
+
+function requireOrThrow(moduleName, message) {
+  try {
+    return require(moduleName);
+  } catch {
+    throw new Error(message);
+  }
+}
+
+function resolvePostcss() {
+  try {
+    return require('postcss5');
+  } catch {}
+
+  try {
+    return require('postcss');
+  } catch {}
+
+  try {
+    const intcssEntry = require.resolve('intcss');
+    return require(require.resolve('postcss', { paths: [path.dirname(intcssEntry)] }));
+  } catch {}
+
+  throw new Error(
+    'Не найден postcss5/postcss. Выполни npm install (или npm ci) и перезапусти сборку.',
+  );
+}
 
 let payload;
 let projectDir;
@@ -28,6 +55,7 @@ let srcDir;
 const inlineMaxSizeKb = 1;
 const fallbackUrlRe = /url\((['"]?)([a-f0-9]{32}-\d+x\d+\.png)\1\)/gi;
 let fallbackUrlPrefix;
+const enableSvgFallback = process.env.STANOK_ENABLE_SVG_FALLBACK === '1';
 
 export async function runBuild(payloadInput) {
   payload = normalizePayload(payloadInput);
@@ -94,57 +122,61 @@ async function processStyle(style) {
   const stylePath = path.normalize(path.join(srcDir, style));
   const stylePure = style.replace(/^_/, '');
   const source = fs.readFileSync(stylePath);
+  const intcssOptions = {
+    import: {
+      from: stylePath,
+      path: [
+        path.dirname(stylePath),
+        path.normalize(path.join(projectDir, pathToProjectsRoot, libDir, 'styles/postcss/')),
+        bPath,
+      ],
+    },
+    assets: {
+      loadPaths: [path.normalize(path.join(imgDir, 'dest'))],
+    },
+    svg: {
+      paths: [path.normalize(path.join(imgDir, 'dest'))],
+    },
+    url: {
+      maxSize: inlineMaxSizeKb,
+      basePath: projectDir,
+      filter(url) {
+        const normalizedUrl = String(url || '');
+
+        return (
+          /[\\/]dest[\\/]/.test(normalizedUrl) ||
+          /[\\/]lib[\\/]styles[\\/]/.test(normalizedUrl) ||
+          /[\\/]src[\\/]b[\\/]/.test(normalizedUrl)
+        );
+      },
+    },
+    autoprefixer: {
+      browsers,
+      remove: false,
+    },
+    'data-packer': {
+      dest: {
+        path(opts) {
+          return path.join(path.dirname(opts.to), `${path.basename(opts.to, '.css')}_data.css`);
+        },
+        map: {
+          inline: false,
+          annotation(dataOpts, opts) {
+            return path.join(path.dirname(opts.map.annotation), `${path.basename(dataOpts.to)}.map`);
+          },
+        },
+      },
+    },
+  };
+
+  if (enableSvgFallback) {
+    intcssOptions['svg-fallback'] = {
+      dest: path.normalize(path.join(imgDir, 'svg_fallback/')),
+    };
+  }
 
   const result = await postcss([
-    intcss({
-      import: {
-        from: stylePath,
-        path: [
-          path.dirname(stylePath),
-          path.normalize(path.join(projectDir, pathToProjectsRoot, libDir, 'styles/postcss/')),
-          bPath,
-        ],
-      },
-      assets: {
-        loadPaths: [path.normalize(path.join(imgDir, 'dest'))],
-      },
-      svg: {
-        paths: [path.normalize(path.join(imgDir, 'dest'))],
-      },
-      url: {
-        maxSize: inlineMaxSizeKb,
-        basePath: projectDir,
-        filter(url) {
-          const normalizedUrl = String(url || '');
-
-          return (
-            /[\\/]dest[\\/]/.test(normalizedUrl) ||
-            /[\\/]lib[\\/]styles[\\/]/.test(normalizedUrl) ||
-            /[\\/]src[\\/]b[\\/]/.test(normalizedUrl)
-          );
-        },
-      },
-      'svg-fallback': {
-        dest: path.normalize(path.join(imgDir, 'svg_fallback/')),
-      },
-      autoprefixer: {
-        browsers,
-        remove: false,
-      },
-      'data-packer': {
-        dest: {
-          path(opts) {
-            return path.join(path.dirname(opts.to), `${path.basename(opts.to, '.css')}_data.css`);
-          },
-          map: {
-            inline: false,
-            annotation(dataOpts, opts) {
-              return path.join(path.dirname(opts.map.annotation), `${path.basename(dataOpts.to)}.map`);
-            },
-          },
-        },
-      },
-    }),
+    intcss(intcssOptions),
   ]).process(source, {
     from: stylePath,
     to: path.normalize(path.join(styleDir, stylePure)),

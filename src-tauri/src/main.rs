@@ -18,6 +18,7 @@ use std::sync::{
 };
 use std::time::Duration;
 use tauri::Emitter;
+use tauri::Manager;
 #[cfg(not(target_os = "linux"))]
 use sysinfo::{ProcessesToUpdate, System};
 
@@ -55,6 +56,13 @@ struct BuildPayload {
   projects_path: String,
   project_name: String,
   config: BuildConfig,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct RuntimeInfo {
+  app_version: String,
+  tauri_version: String,
+  node_version: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -133,6 +141,15 @@ struct NodeWorker {
   child: Child,
   stdin: ChildStdin,
   stdout: BufReader<ChildStdout>,
+}
+
+#[derive(Clone)]
+struct RuntimePathsState {
+  workspace_root: PathBuf,
+  scripts_dir: PathBuf,
+  worker_path: PathBuf,
+  node_bin: PathBuf,
+  node_modules_dir: Option<PathBuf>,
 }
 
 impl Drop for BuildOrchestratorState {
@@ -234,8 +251,21 @@ fn open_external_url(url: String) -> Result<(), String> {
 }
 
 #[tauri::command]
+fn get_runtime_info(runtime: tauri::State<RuntimePathsState>) -> RuntimeInfo {
+  let app_version = env!("CARGO_PKG_VERSION").to_string();
+  let tauri_version = detect_tauri_version_from_lock();
+  let node_version = detect_node_version(&runtime.node_bin);
+  RuntimeInfo {
+    app_version,
+    tauri_version,
+    node_version,
+  }
+}
+
+#[tauri::command]
 fn build_styles(
   state: tauri::State<BuildOrchestratorState>,
+  runtime: tauri::State<RuntimePathsState>,
   projects_path: String,
   project_name: String,
   project_data: Option<Value>,
@@ -246,12 +276,13 @@ fn build_styles(
     project_name,
     config,
   };
-  run_build_orchestrated(state.inner(), BuildKind::Styles, payload)
+  run_build_orchestrated(state.inner(), runtime.inner(), BuildKind::Styles, payload)
 }
 
 #[tauri::command]
 fn build_images(
   state: tauri::State<BuildOrchestratorState>,
+  runtime: tauri::State<RuntimePathsState>,
   projects_path: String,
   project_name: String,
   project_data: Option<Value>,
@@ -262,7 +293,7 @@ fn build_images(
     project_name,
     config,
   };
-  run_build_orchestrated(state.inner(), BuildKind::Images, payload)
+  run_build_orchestrated(state.inner(), runtime.inner(), BuildKind::Images, payload)
 }
 
 #[tauri::command]
@@ -778,6 +809,7 @@ fn spawn_resource_stats_emitter(app: tauri::AppHandle) {
 
 fn run_node_script(
   state: &BuildOrchestratorState,
+  runtime: &RuntimePathsState,
   script_name: &str,
   payload: &BuildPayload,
 ) -> Result<String, String> {
@@ -785,7 +817,7 @@ fn run_node_script(
   let mut last_error: Option<String> = None;
 
   for attempt in 0..=WORKER_RETRIES {
-    match run_node_script_with_worker(state, script_name, payload) {
+    match run_node_script_with_worker(state, runtime, script_name, payload) {
       Ok(output) => return Ok(output),
       Err(error) => {
         last_error = Some(error.clone());
@@ -798,7 +830,7 @@ fn run_node_script(
     }
   }
 
-  match run_node_script_once(script_name, payload) {
+  match run_node_script_once(runtime, script_name, payload) {
     Ok(output) => Ok(output),
     Err(fallback_error) => {
       if let Some(worker_error) = last_error {
@@ -816,15 +848,11 @@ fn run_node_script(
 
 fn run_node_script_with_worker(
   state: &BuildOrchestratorState,
+  runtime: &RuntimePathsState,
   script_name: &str,
   payload: &BuildPayload,
 ) -> Result<String, String> {
-  let workspace_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-    .parent()
-    .ok_or("Не найден корень workspace")?
-    .to_path_buf();
-
-  let worker_path = workspace_root.join("scripts").join("build-worker.mjs");
+  let worker_path = &runtime.worker_path;
   if !worker_path.exists() {
     return Err(format!("Не найден скрипт {}", worker_path.display()));
   }
@@ -834,7 +862,7 @@ fn run_node_script_with_worker(
     .lock()
     .map_err(|_| "Ошибка блокировки worker pool".to_string())?;
   if !workers.contains_key(script_name) {
-    let spawned = spawn_node_worker(&workspace_root, &worker_path)?;
+    let spawned = spawn_node_worker(runtime)?;
     workers.insert(script_name.to_string(), spawned);
   }
   let worker = workers
@@ -847,7 +875,7 @@ fn run_node_script_with_worker(
     .map_err(|e| e.to_string())?
     .is_some()
   {
-    *worker = spawn_node_worker(&workspace_root, &worker_path)?;
+    *worker = spawn_node_worker(runtime)?;
   }
 
   let request = serde_json::json!({
@@ -858,7 +886,7 @@ fn run_node_script_with_worker(
   let request_line = serde_json::to_string(&request).map_err(|e| e.to_string())?;
 
   if writeln!(worker.stdin, "{}", request_line).is_err() || worker.stdin.flush().is_err() {
-    *worker = spawn_node_worker(&workspace_root, &worker_path)?;
+    *worker = spawn_node_worker(runtime)?;
     writeln!(worker.stdin, "{}", request_line).map_err(|e| e.to_string())?;
     worker.stdin.flush().map_err(|e| e.to_string())?;
   }
@@ -866,7 +894,7 @@ fn run_node_script_with_worker(
   let mut line = String::new();
   let read = worker.stdout.read_line(&mut line).map_err(|e| e.to_string())?;
   if read == 0 {
-    *worker = spawn_node_worker(&workspace_root, &worker_path)?;
+    *worker = spawn_node_worker(runtime)?;
     writeln!(worker.stdin, "{}", request_line).map_err(|e| e.to_string())?;
     worker.stdin.flush().map_err(|e| e.to_string())?;
     line.clear();
@@ -895,15 +923,18 @@ fn run_node_script_with_worker(
   Err(message)
 }
 
-fn spawn_node_worker(workspace_root: &Path, worker_path: &Path) -> Result<NodeWorker, String> {
-  let mut child = Command::new("node")
-    .arg(worker_path)
-    .current_dir(workspace_root)
+fn spawn_node_worker(runtime: &RuntimePathsState) -> Result<NodeWorker, String> {
+  let mut cmd = Command::new(&runtime.node_bin);
+  cmd.arg(&runtime.worker_path).current_dir(&runtime.workspace_root);
+  if let Some(node_modules_dir) = &runtime.node_modules_dir {
+    cmd.env("NODE_PATH", node_modules_dir);
+  }
+  let mut child = cmd
     .stdin(Stdio::piped())
     .stdout(Stdio::piped())
     .stderr(Stdio::null())
     .spawn()
-    .map_err(|e| format!("Ошибка запуска worker: {}", e))?;
+    .map_err(|e| format!("Ошибка запуска worker ({}): {}", runtime.node_bin.display(), e))?;
 
   let stdin = child.stdin.take().ok_or("Не удалось открыть stdin worker")?;
   let stdout = child.stdout.take().ok_or("Не удалось открыть stdout worker")?;
@@ -914,23 +945,28 @@ fn spawn_node_worker(workspace_root: &Path, worker_path: &Path) -> Result<NodeWo
   })
 }
 
-fn run_node_script_once(script_name: &str, payload: &BuildPayload) -> Result<String, String> {
-  let workspace_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-    .parent()
-    .ok_or("Не найден корень workspace")?
-    .to_path_buf();
-  let script_path = workspace_root.join("scripts").join(script_name);
+fn run_node_script_once(
+  runtime: &RuntimePathsState,
+  script_name: &str,
+  payload: &BuildPayload,
+) -> Result<String, String> {
+  let script_path = runtime.scripts_dir.join(script_name);
   if !script_path.exists() {
     return Err(format!("Не найден скрипт {}", script_path.display()));
   }
 
   let payload_json = serde_json::to_string(payload).map_err(|e| e.to_string())?;
-  let output = Command::new("node")
+  let mut cmd = Command::new(&runtime.node_bin);
+  cmd
     .arg(script_path)
     .arg(payload_json)
-    .current_dir(workspace_root)
+    .current_dir(&runtime.workspace_root);
+  if let Some(node_modules_dir) = &runtime.node_modules_dir {
+    cmd.env("NODE_PATH", node_modules_dir);
+  }
+  let output = cmd
     .output()
-    .map_err(|e| format!("Ошибка запуска node: {}", e))?;
+    .map_err(|e| format!("Ошибка запуска node ({}): {}", runtime.node_bin.display(), e))?;
   let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
   let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
   if !output.status.success() {
@@ -1411,6 +1447,7 @@ fn cache_file_is_stale(file: &Path) -> bool {
 
 fn run_build_orchestrated(
   state: &BuildOrchestratorState,
+  runtime: &RuntimePathsState,
   kind: BuildKind,
   payload: BuildPayload,
 ) -> Result<String, String> {
@@ -1447,13 +1484,13 @@ fn run_build_orchestrated(
 
     let run_result = (|| -> Result<(), String> {
       if run_images {
-        let out = run_node_script(state, "build-images.mjs", &payload)?;
+        let out = run_node_script(state, runtime, "build-images.mjs", &payload)?;
         if !out.is_empty() {
           outputs.push(out);
         }
       }
       if run_styles {
-        let out = run_node_script(state, "build-css.mjs", &payload)?;
+        let out = run_node_script(state, runtime, "build-css.mjs", &payload)?;
         if !out.is_empty() {
           outputs.push(out);
         }
@@ -1662,6 +1699,138 @@ fn build_project_link(name: &str, data: Option<&Value>) -> Option<String> {
   Some(format!("http://{}", link.replace("//", "/")))
 }
 
+fn detect_tauri_version_from_lock() -> String {
+  let lock = include_str!("../Cargo.lock");
+  let mut in_tauri_pkg = false;
+  for line in lock.lines() {
+    let trimmed = line.trim();
+    if trimmed == "[[package]]" {
+      in_tauri_pkg = false;
+      continue;
+    }
+    if trimmed == r#"name = "tauri""# {
+      in_tauri_pkg = true;
+      continue;
+    }
+    if in_tauri_pkg && trimmed.starts_with("version = ") {
+      return trimmed
+        .trim_start_matches("version = ")
+        .trim_matches('"')
+        .to_string();
+    }
+  }
+  "unknown".to_string()
+}
+
+fn detect_node_version(node_bin: &Path) -> String {
+  let output = Command::new(node_bin).arg("-v").output();
+  match output {
+    Ok(out) if out.status.success() => String::from_utf8_lossy(&out.stdout).trim().to_string(),
+    _ => "unknown".to_string(),
+  }
+}
+
+fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
+  let workspace_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+    .parent()
+    .map(Path::to_path_buf)
+    .unwrap_or_else(|| PathBuf::from("."));
+  let dev_scripts_dir = workspace_root.join("scripts");
+
+  let resource_dir = app.path().resource_dir().ok();
+  let resource_scripts_dir = resource_dir.as_ref().map(|r| r.join("scripts"));
+  let scripts_dir = resource_scripts_dir
+    .as_ref()
+    .filter(|p| p.exists())
+    .cloned()
+    .unwrap_or(dev_scripts_dir);
+  let worker_path = scripts_dir.join("build-worker.mjs");
+
+  let mut node_candidates: Vec<PathBuf> = Vec::new();
+  let sidecar_name = sidecar_node_name();
+  if let Some(resource_root) = resource_dir.as_ref() {
+    node_candidates.push(resource_root.join(&sidecar_name));
+    node_candidates.push(resource_root.join("binaries").join(&sidecar_name));
+    for rel in runtime_node_relative_candidates() {
+      node_candidates.push(resource_root.join(rel));
+    }
+  }
+  node_candidates.push(workspace_root.join("src-tauri").join("binaries").join(&sidecar_name));
+  for rel in runtime_node_relative_candidates() {
+    node_candidates.push(workspace_root.join("src-tauri").join(rel));
+  }
+  let node_bin = node_candidates
+    .into_iter()
+    .find(|p| p.exists())
+    .unwrap_or_else(|| PathBuf::from("node"));
+
+  let node_modules_dir = resource_dir
+    .as_ref()
+    .map(|r| r.join("runtime-node").join("node_modules"))
+    .filter(|p| p.exists())
+    .or_else(|| {
+      let fallback = workspace_root.join("node_modules");
+      if fallback.exists() {
+        Some(fallback)
+      } else {
+        None
+      }
+    });
+
+  RuntimePathsState {
+    workspace_root,
+    scripts_dir,
+    worker_path,
+    node_bin,
+    node_modules_dir,
+  }
+}
+
+fn runtime_node_relative_candidates() -> Vec<PathBuf> {
+  let mut rel = Vec::<PathBuf>::new();
+  #[cfg(target_os = "windows")]
+  {
+    rel.push(PathBuf::from("runtime-node/win-x64/node.exe"));
+    rel.push(PathBuf::from("runtime-node/node.exe"));
+  }
+  #[cfg(target_os = "linux")]
+  {
+    rel.push(PathBuf::from("runtime-node/linux-x64/node"));
+    rel.push(PathBuf::from("runtime-node/node"));
+  }
+  #[cfg(target_os = "macos")]
+  {
+    if std::env::consts::ARCH == "aarch64" {
+      rel.push(PathBuf::from("runtime-node/macos-arm64/node"));
+      rel.push(PathBuf::from("runtime-node/macos-x64/node"));
+    } else {
+      rel.push(PathBuf::from("runtime-node/macos-x64/node"));
+      rel.push(PathBuf::from("runtime-node/macos-arm64/node"));
+    }
+    rel.push(PathBuf::from("runtime-node/node"));
+  }
+  rel
+}
+
+fn sidecar_node_name() -> String {
+  let triple = if cfg!(target_os = "windows") {
+    "x86_64-pc-windows-msvc"
+  } else if cfg!(target_os = "macos") {
+    if std::env::consts::ARCH == "aarch64" {
+      "aarch64-apple-darwin"
+    } else {
+      "x86_64-apple-darwin"
+    }
+  } else {
+    "x86_64-unknown-linux-gnu"
+  };
+  if cfg!(target_os = "windows") {
+    format!("node-{}.exe", triple)
+  } else {
+    format!("node-{}", triple)
+  }
+}
+
 fn main() {
   tauri::Builder::default()
     .plugin(tauri_plugin_window_state::Builder::default().build())
@@ -1670,6 +1839,7 @@ fn main() {
     .manage(ProjectsCacheState::default())
     .manage(BuildOrchestratorState::default())
     .setup(|app| {
+      app.manage(resolve_runtime_paths(app.handle()));
       spawn_resource_stats_emitter(app.handle().clone());
       Ok(())
     })
@@ -1681,6 +1851,7 @@ fn main() {
       get_git_branch,
       open_in_explorer,
       open_external_url,
+      get_runtime_info,
       build_styles,
       build_images,
       project_watch_snapshot,

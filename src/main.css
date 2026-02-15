@@ -91,6 +91,55 @@ body.Page {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
+.Hero__runtime {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.RuntimeItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(44, 49, 60, 0.72);
+  font-size: 0.8rem;
+}
+
+.RuntimeItem__icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  border: 1px solid var(--line-strong);
+  display: inline-block;
+}
+
+.RuntimeItem__icon--app {
+  background: linear-gradient(180deg, rgba(97, 175, 239, 0.9), rgba(97, 175, 239, 0.5));
+}
+
+.RuntimeItem__icon--tauri {
+  background: linear-gradient(180deg, rgba(229, 192, 123, 0.9), rgba(229, 192, 123, 0.5));
+}
+
+.RuntimeItem__icon--node {
+  background: linear-gradient(180deg, rgba(152, 195, 121, 0.9), rgba(152, 195, 121, 0.5));
+}
+
+.RuntimeItem__label {
+  color: var(--text-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-size: 0.7rem;
+}
+
+.RuntimeItem__value {
+  color: var(--text);
+  font-weight: 700;
+}
+
 .Stat {
   padding: 11px 13px;
   border: 1px solid var(--line);

@@ -44,6 +44,9 @@ const ui = {
   cpuUsage: document.querySelector('#cpuUsage'),
   memoryUsage: document.querySelector('#memoryUsage'),
   watcherStatus: document.querySelector('#watcherStatus'),
+  runtimeAppVersion: document.querySelector('#runtimeAppVersion'),
+  runtimeTauriVersion: document.querySelector('#runtimeTauriVersion'),
+  runtimeNodeVersion: document.querySelector('#runtimeNodeVersion'),
 };
 
 function setProjectsPanelVisible(visible) {
@@ -120,12 +123,32 @@ async function init() {
   startWatchStatusTicker();
   state.windowFocused = document.hasFocus();
   startResourceUpdates();
+  await loadRuntimeInfo();
 
   const savedPath = localStorage.getItem('projectsPath');
   if (savedPath) {
     await setProjectsPath(savedPath, false);
   } else {
     await chooseProjectsPath();
+  }
+}
+
+async function loadRuntimeInfo() {
+  try {
+    const info = await invokeWithPolicy('get_runtime_info', {}, { timeoutMs: 5000 });
+    if (ui.runtimeAppVersion) {
+      ui.runtimeAppVersion.textContent = String(info?.app_version || '--');
+    }
+    if (ui.runtimeTauriVersion) {
+      ui.runtimeTauriVersion.textContent = String(info?.tauri_version || '--');
+    }
+    if (ui.runtimeNodeVersion) {
+      ui.runtimeNodeVersion.textContent = String(info?.node_version || '--');
+    }
+  } catch {
+    if (ui.runtimeAppVersion) ui.runtimeAppVersion.textContent = '--';
+    if (ui.runtimeTauriVersion) ui.runtimeTauriVersion.textContent = '--';
+    if (ui.runtimeNodeVersion) ui.runtimeNodeVersion.textContent = '--';
   }
 }
 

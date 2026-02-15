@@ -9,6 +9,10 @@ pnpm-debug.log*
 dist/
 src-tauri/target/
 src-tauri/gen/
+src-tauri/binaries/node-*
+src-tauri/runtime-node/node_modules/*
+!src-tauri/runtime-node/node_modules/
+!src-tauri/runtime-node/node_modules/.gitkeep
 
 # IDE / OS
 .idea/
@@ -19,3 +23,5 @@ Thumbs.db
 # Local env
 .env
 .env.local
+.npm-cache/
+.tmp-smoke/
