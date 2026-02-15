@@ -1741,11 +1741,22 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
     script_candidates.push(resource_root.join("scripts"));
     script_candidates.push(resource_root.clone());
   }
-  script_candidates.push(dev_workspace_root.join("scripts"));
+  if cfg!(debug_assertions) {
+    script_candidates.push(dev_workspace_root.join("scripts"));
+  }
   let scripts_dir = script_candidates
     .into_iter()
     .find(|dir| dir.join("build-worker.mjs").exists())
-    .unwrap_or_else(|| dev_workspace_root.join("scripts"));
+    .unwrap_or_else(|| {
+      if cfg!(debug_assertions) {
+        dev_workspace_root.join("scripts")
+      } else {
+        resource_dir
+          .as_ref()
+          .map(|r| r.join("scripts"))
+          .unwrap_or_else(|| PathBuf::from("scripts"))
+      }
+    });
   let worker_path = scripts_dir.join("build-worker.mjs");
 
   // Use runtime-located cwd first, then dev workspace.
@@ -1773,19 +1784,29 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
       node_candidates.push(resource_root.join(rel));
     }
   }
-  node_candidates.push(
-    dev_workspace_root
-      .join("src-tauri")
-      .join("binaries")
-      .join(&sidecar_name),
-  );
-  for rel in runtime_node_relative_candidates() {
-    node_candidates.push(dev_workspace_root.join("src-tauri").join(rel));
+  if cfg!(debug_assertions) {
+    node_candidates.push(
+      dev_workspace_root
+        .join("src-tauri")
+        .join("binaries")
+        .join(&sidecar_name),
+    );
+    for rel in runtime_node_relative_candidates() {
+      node_candidates.push(dev_workspace_root.join("src-tauri").join(rel));
+    }
   }
-  let node_bin = node_candidates
+  let sidecar_found = node_candidates
     .into_iter()
-    .find(|p| p.exists())
-    .unwrap_or_else(|| PathBuf::from("node"));
+    .find(|p| p.exists());
+  let node_bin = if let Some(found) = sidecar_found {
+    found
+  } else if cfg!(debug_assertions) {
+    PathBuf::from("node")
+  } else if let Some(resource_root) = resource_dir.as_ref() {
+    resource_root.join(&sidecar_name)
+  } else {
+    PathBuf::from(&sidecar_name)
+  };
 
   let node_modules_dir = resource_dir
     .as_ref()
@@ -1798,9 +1819,13 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
         .filter(|p| p.exists())
     })
     .or_else(|| {
-      let fallback = dev_workspace_root.join("node_modules");
-      if fallback.exists() {
-        Some(fallback)
+      if cfg!(debug_assertions) {
+        let fallback = dev_workspace_root.join("node_modules");
+        if fallback.exists() {
+          Some(fallback)
+        } else {
+          None
+        }
       } else {
         None
       }
