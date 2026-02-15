@@ -101,18 +101,32 @@ jobs:
 
           test -f "${APP_ROOT}/runtime-node/scripts/build-worker.mjs"
           test -f "${APP_ROOT}/runtime-node/scripts/build-css.mjs"
-          test -f "${APP_ROOT}/runtime-node/linux-x64/node"
           test -d "${APP_ROOT}/runtime-node/node_modules/intcss"
+
+          RUNTIME_NODE_A="${APP_ROOT}/runtime-node/linux-x64/node"
+          RUNTIME_NODE_B="${APP_ROOT}/runtime-node/node"
 
           SIDECAR_A="${APP_ROOT}/node-x86_64-unknown-linux-gnu"
           SIDECAR_B="${APP_ROOT}/binaries/node-x86_64-unknown-linux-gnu"
-          if [ -f "${SIDECAR_A}" ]; then
-            echo "Sidecar found at ${SIDECAR_A}"
+
+          NODE_FOUND=""
+          if [ -f "${RUNTIME_NODE_A}" ]; then
+            NODE_FOUND="${RUNTIME_NODE_A}"
+          elif [ -f "${RUNTIME_NODE_B}" ]; then
+            NODE_FOUND="${RUNTIME_NODE_B}"
+          elif [ -f "${SIDECAR_A}" ]; then
+            NODE_FOUND="${SIDECAR_A}"
           elif [ -f "${SIDECAR_B}" ]; then
-            echo "Sidecar found at ${SIDECAR_B}"
+            NODE_FOUND="${SIDECAR_B}"
+          fi
+
+          if [ -n "${NODE_FOUND}" ]; then
+            echo "Node binary found at ${NODE_FOUND}"
           else
-            echo "Warning: sidecar not found in expected locations under ${APP_ROOT}"
+            echo "Node binary not found in expected locations under ${APP_ROOT}"
+            find "${APP_ROOT}/runtime-node" -maxdepth 5 -type f | sed -n '1,300p'
             find "${APP_ROOT}" -maxdepth 4 -type f | sed -n '1,300p'
+            exit 1
           fi
 
       - name: Upload bundle artifacts
