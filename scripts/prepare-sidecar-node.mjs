@@ -83,32 +83,76 @@ function copyRuntimeNodeModules() {
     return 'full';
   }
 
-  const minimalPackages = [
+  const minimalRootPackages = [
     'intcss',
     'postcss5',
     'assets',
-    'postcss',
-    'postcss-import',
-    'postcss-url',
-    'postcss-data-packer',
-    'postcss-svg',
-    'postcss-svg-fallback',
-    'postcss-extend',
-    'postcss-advanced-variables',
-    'postcss-conditionals',
-    'postcss-assets',
-    'postcss-axis',
-    'postcss-property-lookup',
-    'postcss-strip-units',
   ];
 
-  for (const pkgName of minimalPackages) {
-    const from = path.join(sourceNodeModulesDir, pkgName);
-    const to = path.join(runtimeModulesDir, pkgName);
-    if (!fs.existsSync(from)) continue;
+  const packageSet = collectRuntimePackageClosure(minimalRootPackages);
+  for (const pkgName of packageSet) {
+    const from = resolvePackageDir(sourceNodeModulesDir, pkgName);
+    const to = resolvePackageDir(runtimeModulesDir, pkgName);
+    if (!from || !fs.existsSync(from)) continue;
+    ensureDir(path.dirname(to));
     fs.cpSync(from, to, { recursive: true, dereference: true });
   }
-  return 'minimal';
+  return `minimal (${packageSet.size} packages)`;
+}
+
+function collectRuntimePackageClosure(rootPackages) {
+  const queue = [...new Set(rootPackages)];
+  const rootSet = new Set(queue);
+  const visited = new Set();
+  const missingRoots = [];
+
+  while (queue.length > 0) {
+    const pkgName = queue.shift();
+    if (!pkgName || visited.has(pkgName)) continue;
+
+    const pkgDir = resolvePackageDir(sourceNodeModulesDir, pkgName);
+    if (!pkgDir || !fs.existsSync(pkgDir)) {
+      if (rootSet.has(pkgName)) {
+        missingRoots.push(pkgName);
+      }
+      continue;
+    }
+
+    visited.add(pkgName);
+
+    const pkgJsonPath = path.join(pkgDir, 'package.json');
+    if (!fs.existsSync(pkgJsonPath)) continue;
+
+    let pkgJson;
+    try {
+      pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf8'));
+    } catch {
+      continue;
+    }
+
+    const deps = Object.keys(pkgJson.dependencies || {});
+    const optionalDeps = Object.keys(pkgJson.optionalDependencies || {});
+
+    for (const dep of [...deps, ...optionalDeps]) {
+      if (!visited.has(dep)) queue.push(dep);
+    }
+  }
+
+  if (missingRoots.length > 0) {
+    console.warn(`Minimal runtime: missing root packages: ${missingRoots.join(', ')}`);
+  }
+
+  return visited;
+}
+
+function resolvePackageDir(nodeModulesRoot, pkgName) {
+  if (!pkgName) return null;
+  if (pkgName.startsWith('@')) {
+    const [scope, name] = pkgName.split('/');
+    if (!scope || !name) return null;
+    return path.join(nodeModulesRoot, scope, name);
+  }
+  return path.join(nodeModulesRoot, pkgName);
 }
 
 function copyRuntimeScripts() {

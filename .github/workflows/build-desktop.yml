@@ -58,7 +58,7 @@ jobs:
             rpm
 
       - name: Prepare sidecar Node
-        run: npm run prepare:sidecar-node
+        run: npm run prepare:sidecar-node:minimal
 
       - name: Verify prepared sidecar
         shell: bash
