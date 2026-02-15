@@ -151,6 +151,7 @@ struct RuntimePathsState {
   worker_path: PathBuf,
   script_candidates: Vec<PathBuf>,
   node_bin: PathBuf,
+  node_candidates: Vec<PathBuf>,
   sidecar_candidates: Vec<PathBuf>,
   node_modules_dir: Option<PathBuf>,
 }
@@ -1828,16 +1829,36 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
         .join(&sidecar_name),
     );
   }
-  let sidecar_found = sidecar_candidates.iter().find(|p| p.exists()).cloned();
-  let node_bin = if let Some(found) = sidecar_found {
-    found
-  } else if cfg!(debug_assertions) {
-    PathBuf::from("node")
-  } else if let Some(resource_root) = resource_dir.as_ref() {
-    resource_root.join(&sidecar_name)
-  } else {
-    PathBuf::from(&sidecar_name)
-  };
+  let mut node_candidates: Vec<PathBuf> = Vec::new();
+  if let Some(resource_root) = resource_dir.as_ref() {
+    for rel in runtime_node_relative_candidates() {
+      node_candidates.push(resource_root.join(&rel));
+      node_candidates.push(resource_root.join("resources").join(&rel));
+    }
+  }
+  node_candidates.extend(sidecar_candidates.iter().cloned());
+  if cfg!(debug_assertions) {
+    node_candidates.push(PathBuf::from("node"));
+  }
+
+  let node_bin = node_candidates
+    .iter()
+    .find(|p| p.exists())
+    .cloned()
+    .or_else(|| {
+      if cfg!(debug_assertions) {
+        Some(PathBuf::from("node"))
+      } else {
+        None
+      }
+    })
+    .unwrap_or_else(|| {
+      if let Some(resource_root) = resource_dir.as_ref() {
+        resource_root.join(&sidecar_name)
+      } else {
+        PathBuf::from(&sidecar_name)
+      }
+    });
 
   let node_modules_dir = resource_dir
     .as_ref()
@@ -1869,6 +1890,7 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
     worker_path,
     script_candidates,
     node_bin,
+    node_candidates,
     sidecar_candidates,
     node_modules_dir,
   }
@@ -1900,9 +1922,15 @@ fn format_runtime_diagnostics(runtime: &RuntimePathsState) -> String {
     .map(|p| format!("- {}", fmt_path_line(p)))
     .collect::<Vec<String>>()
     .join("\n");
+  let node_candidates = runtime
+    .node_candidates
+    .iter()
+    .map(|p| format!("- {}", fmt_path_line(p)))
+    .collect::<Vec<String>>()
+    .join("\n");
 
   format!(
-    "Диагностика runtime:\nresource_dir: {}\nworkspace_root: {}\nscripts_dir: {}\nworker_path: {}\nnode_bin: {}\nnode_modules: {}\nscript_candidates:\n{}\nsidecar_candidates:\n{}",
+    "Диагностика runtime:\nresource_dir: {}\nworkspace_root: {}\nscripts_dir: {}\nworker_path: {}\nnode_bin: {}\nnode_modules: {}\nscript_candidates:\n{}\nnode_candidates:\n{}\nsidecar_candidates:\n{}",
     resource_dir,
     runtime.workspace_root.display(),
     runtime.scripts_dir.display(),
@@ -1918,12 +1946,43 @@ fn format_runtime_diagnostics(runtime: &RuntimePathsState) -> String {
     } else {
       script_candidates
     },
+    if node_candidates.is_empty() {
+      "<none>".to_string()
+    } else {
+      node_candidates
+    },
     if sidecar_candidates.is_empty() {
       "<none>".to_string()
     } else {
       sidecar_candidates
     }
   )
+}
+
+fn runtime_node_relative_candidates() -> Vec<PathBuf> {
+  let mut rel = Vec::<PathBuf>::new();
+  #[cfg(target_os = "windows")]
+  {
+    rel.push(PathBuf::from("runtime-node/win-x64/node.exe"));
+    rel.push(PathBuf::from("runtime-node/node.exe"));
+  }
+  #[cfg(target_os = "linux")]
+  {
+    rel.push(PathBuf::from("runtime-node/linux-x64/node"));
+    rel.push(PathBuf::from("runtime-node/node"));
+  }
+  #[cfg(target_os = "macos")]
+  {
+    if std::env::consts::ARCH == "aarch64" {
+      rel.push(PathBuf::from("runtime-node/macos-arm64/node"));
+      rel.push(PathBuf::from("runtime-node/macos-x64/node"));
+    } else {
+      rel.push(PathBuf::from("runtime-node/macos-x64/node"));
+      rel.push(PathBuf::from("runtime-node/macos-arm64/node"));
+    }
+    rel.push(PathBuf::from("runtime-node/node"));
+  }
+  rel
 }
 
 fn sidecar_node_name() -> String {

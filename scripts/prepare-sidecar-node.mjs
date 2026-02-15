@@ -34,6 +34,14 @@ function sidecarBinaryName(triple) {
   return process.platform === 'win32' ? `node-${triple}.exe` : `node-${triple}`;
 }
 
+function runtimeNodeRelPath() {
+  if (process.platform === 'linux' && process.arch === 'x64') return path.join('linux-x64', 'node');
+  if (process.platform === 'win32' && process.arch === 'x64') return path.join('win-x64', 'node.exe');
+  if (process.platform === 'darwin' && process.arch === 'arm64') return path.join('macos-arm64', 'node');
+  if (process.platform === 'darwin' && process.arch === 'x64') return path.join('macos-x64', 'node');
+  throw new Error(`Unsupported platform/arch for runtime-node layout: ${process.platform}/${process.arch}`);
+}
+
 function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
 }
@@ -51,7 +59,23 @@ function copyNodeBinary() {
   if (process.platform !== 'win32') {
     fs.chmodSync(destPath, 0o755);
   }
-  return { triple, destName, destPath };
+  const runtimeNodePath = path.join(runtimeRoot, runtimeNodeRelPath());
+  ensureDir(path.dirname(runtimeNodePath));
+  fs.rmSync(runtimeNodePath, { force: true });
+  fs.copyFileSync(sourceNodeBin, runtimeNodePath);
+  if (process.platform !== 'win32') {
+    fs.chmodSync(runtimeNodePath, 0o755);
+  }
+
+  const runtimeCompatPath = path.join(runtimeRoot, process.platform === 'win32' ? 'node.exe' : 'node');
+  ensureDir(path.dirname(runtimeCompatPath));
+  fs.rmSync(runtimeCompatPath, { force: true });
+  fs.copyFileSync(sourceNodeBin, runtimeCompatPath);
+  if (process.platform !== 'win32') {
+    fs.chmodSync(runtimeCompatPath, 0o755);
+  }
+
+  return { triple, destName, destPath, runtimeNodePath, runtimeCompatPath };
 }
 
 function shouldSkipEntry(srcPath) {
@@ -119,7 +143,7 @@ function copyRuntimeScripts() {
 }
 
 function main() {
-  const { triple, destPath } = copyNodeBinary();
+  const { triple, destPath, runtimeNodePath, runtimeCompatPath } = copyNodeBinary();
   const copiedScripts = copyRuntimeScripts();
   let mode = 'skipped';
   if (!skipNodeModulesCopy) {
@@ -127,6 +151,8 @@ function main() {
   }
 
   console.log(`Sidecar Node prepared: ${destPath}`);
+  console.log(`Runtime Node prepared: ${runtimeNodePath}`);
+  console.log(`Runtime Node compat prepared: ${runtimeCompatPath}`);
   console.log(`Runtime scripts copied: ${copiedScripts}`);
   console.log(`Source Node binary: ${sourceNodeBin}`);
   console.log(`Target triple: ${triple}`);
