@@ -1761,16 +1761,10 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
     .map(Path::to_path_buf)
     .unwrap_or_else(|| PathBuf::from("."));
   let resource_dir = app.path().resource_dir().ok();
-  let mut script_candidates: Vec<PathBuf> = Vec::new();
-  if let Some(resource_root) = resource_dir.as_ref() {
-    script_candidates.push(resource_root.join("scripts"));
-    script_candidates.push(resource_root.clone());
-    script_candidates.push(resource_root.join("resources"));
-    script_candidates.push(resource_root.join("resources").join("scripts"));
-    if let Some(found_dir) = find_dir_with_file(resource_root, "build-worker.mjs", 3) {
-      script_candidates.push(found_dir);
-    }
-  }
+  let mut script_candidates: Vec<PathBuf> = resource_dir
+    .as_ref()
+    .map(|r| vec![r.join("scripts")])
+    .unwrap_or_default();
   if cfg!(debug_assertions) {
     script_candidates.push(dev_workspace_root.join("scripts"));
   }
@@ -1790,7 +1784,6 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
     });
   let worker_path = scripts_dir.join("build-worker.mjs");
 
-  // Use runtime-located cwd first, then dev workspace.
   let workspace_root = scripts_dir
     .parent()
     .map(Path::to_path_buf)
@@ -1802,28 +1795,17 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
     if let Some(exe_dir) = exe.parent() {
       node_candidates.push(exe_dir.join(&sidecar_name));
       node_candidates.push(exe_dir.join("binaries").join(&sidecar_name));
-      if let Some(parent) = exe_dir.parent() {
-        node_candidates.push(parent.join("Resources").join(&sidecar_name));
-        node_candidates.push(parent.join("Resources").join("binaries").join(&sidecar_name));
+      if cfg!(target_os = "macos") {
+        if let Some(parent) = exe_dir.parent() {
+          node_candidates.push(parent.join("Resources").join(&sidecar_name));
+          node_candidates.push(parent.join("Resources").join("binaries").join(&sidecar_name));
+        }
       }
     }
   }
   if let Some(resource_root) = resource_dir.as_ref() {
     node_candidates.push(resource_root.join(&sidecar_name));
     node_candidates.push(resource_root.join("binaries").join(&sidecar_name));
-    node_candidates.push(resource_root.join("resources").join(&sidecar_name));
-    node_candidates.push(
-      resource_root
-        .join("resources")
-        .join("binaries")
-        .join(&sidecar_name),
-    );
-    if let Some(found_sidecar) = find_file_recursive(resource_root, &sidecar_name, 3) {
-      node_candidates.push(found_sidecar);
-    }
-    for rel in runtime_node_relative_candidates() {
-      node_candidates.push(resource_root.join(rel));
-    }
   }
   if cfg!(debug_assertions) {
     node_candidates.push(
@@ -1832,9 +1814,6 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
         .join("binaries")
         .join(&sidecar_name),
     );
-    for rel in runtime_node_relative_candidates() {
-      node_candidates.push(dev_workspace_root.join("src-tauri").join(rel));
-    }
   }
   let sidecar_found = node_candidates.iter().find(|p| p.exists()).cloned();
   let node_bin = if let Some(found) = sidecar_found {
@@ -1851,18 +1830,6 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
     .as_ref()
     .map(|r| r.join("runtime-node").join("node_modules"))
     .filter(|p| p.exists())
-    .or_else(|| {
-      resource_dir
-        .as_ref()
-        .map(|r| r.join("resources").join("runtime-node").join("node_modules"))
-        .filter(|p| p.exists())
-    })
-    .or_else(|| {
-      resource_dir
-        .as_ref()
-        .map(|r| r.join("node_modules"))
-        .filter(|p| p.exists())
-    })
     .or_else(|| {
       if cfg!(debug_assertions) {
         let fallback = dev_workspace_root.join("node_modules");
@@ -1938,66 +1905,6 @@ fn format_runtime_diagnostics(runtime: &RuntimePathsState) -> String {
       node_candidates
     }
   )
-}
-
-fn find_dir_with_file(root: &Path, file_name: &str, max_depth: usize) -> Option<PathBuf> {
-  let file = find_file_recursive(root, file_name, max_depth)?;
-  file.parent().map(Path::to_path_buf)
-}
-
-fn find_file_recursive(root: &Path, file_name: &str, max_depth: usize) -> Option<PathBuf> {
-  let mut stack = vec![(root.to_path_buf(), 0usize)];
-  while let Some((dir, depth)) = stack.pop() {
-    let Ok(read_dir) = fs::read_dir(&dir) else {
-      continue;
-    };
-    for entry in read_dir.flatten() {
-      let path = entry.path();
-      if path
-        .file_name()
-        .and_then(|n| n.to_str())
-        .map(|n| n == file_name)
-        .unwrap_or(false)
-      {
-        return Some(path);
-      }
-      if depth < max_depth {
-        let Ok(ft) = entry.file_type() else {
-          continue;
-        };
-        if ft.is_dir() {
-          stack.push((path, depth + 1));
-        }
-      }
-    }
-  }
-  None
-}
-
-fn runtime_node_relative_candidates() -> Vec<PathBuf> {
-  let mut rel = Vec::<PathBuf>::new();
-  #[cfg(target_os = "windows")]
-  {
-    rel.push(PathBuf::from("runtime-node/win-x64/node.exe"));
-    rel.push(PathBuf::from("runtime-node/node.exe"));
-  }
-  #[cfg(target_os = "linux")]
-  {
-    rel.push(PathBuf::from("runtime-node/linux-x64/node"));
-    rel.push(PathBuf::from("runtime-node/node"));
-  }
-  #[cfg(target_os = "macos")]
-  {
-    if std::env::consts::ARCH == "aarch64" {
-      rel.push(PathBuf::from("runtime-node/macos-arm64/node"));
-      rel.push(PathBuf::from("runtime-node/macos-x64/node"));
-    } else {
-      rel.push(PathBuf::from("runtime-node/macos-x64/node"));
-      rel.push(PathBuf::from("runtime-node/macos-arm64/node"));
-    }
-    rel.push(PathBuf::from("runtime-node/node"));
-  }
-  rel
 }
 
 fn sidecar_node_name() -> String {

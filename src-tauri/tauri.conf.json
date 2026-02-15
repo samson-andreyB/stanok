@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Stanok",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "identifier": "ru.stanok.desktop",
   "build": {
     "beforeDevCommand": "npm run dev:web",
@@ -30,8 +30,7 @@
     ],
     "resources": [
       "../scripts",
-      "../scripts/**/*",
-      "runtime-node/**/*"
+      "runtime-node/node_modules/**/*"
     ],
     "icon": [
       "icons/icon.ico",
