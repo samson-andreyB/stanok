@@ -9,6 +9,8 @@ const tauriRoot = path.join(repoRoot, 'src-tauri');
 const binariesDir = path.join(tauriRoot, 'binaries');
 const runtimeRoot = path.join(tauriRoot, 'runtime-node');
 const runtimeModulesDir = path.join(runtimeRoot, 'node_modules');
+const runtimeScriptsDir = path.join(runtimeRoot, 'scripts');
+const sourceScriptsDir = path.join(repoRoot, 'scripts');
 const sourceNodeModulesDir = path.join(repoRoot, 'node_modules');
 const sourceNodeBin = process.env.STANOK_NODE_BIN || process.execPath;
 
@@ -32,6 +34,14 @@ function sidecarBinaryName(triple) {
   return process.platform === 'win32' ? `node-${triple}.exe` : `node-${triple}`;
 }
 
+function runtimeNodeRelPath() {
+  if (process.platform === 'linux' && process.arch === 'x64') return path.join('linux-x64', 'node');
+  if (process.platform === 'win32' && process.arch === 'x64') return path.join('win-x64', 'node.exe');
+  if (process.platform === 'darwin' && process.arch === 'arm64') return path.join('macos-arm64', 'node');
+  if (process.platform === 'darwin' && process.arch === 'x64') return path.join('macos-x64', 'node');
+  throw new Error(`Unsupported platform/arch for runtime-node layout: ${process.platform}/${process.arch}`);
+}
+
 function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
 }
@@ -49,7 +59,14 @@ function copyNodeBinary() {
   if (process.platform !== 'win32') {
     fs.chmodSync(destPath, 0o755);
   }
-  return { triple, destName, destPath };
+  const runtimeNodePath = path.join(runtimeRoot, runtimeNodeRelPath());
+  ensureDir(path.dirname(runtimeNodePath));
+  fs.rmSync(runtimeNodePath, { force: true });
+  fs.copyFileSync(sourceNodeBin, runtimeNodePath);
+  if (process.platform !== 'win32') {
+    fs.chmodSync(runtimeNodePath, 0o755);
+  }
+  return { triple, destName, destPath, runtimeNodePath };
 }
 
 function shouldSkipEntry(srcPath) {
@@ -106,14 +123,27 @@ function copyRuntimeNodeModules() {
   return 'minimal';
 }
 
+function copyRuntimeScripts() {
+  if (!fs.existsSync(sourceScriptsDir)) {
+    throw new Error(`Source scripts dir not found: ${sourceScriptsDir}`);
+  }
+  ensureDir(runtimeRoot);
+  fs.rmSync(runtimeScriptsDir, { recursive: true, force: true });
+  fs.cpSync(sourceScriptsDir, runtimeScriptsDir, { recursive: true, dereference: true });
+  return runtimeScriptsDir;
+}
+
 function main() {
-  const { triple, destPath } = copyNodeBinary();
+  const { triple, destPath, runtimeNodePath } = copyNodeBinary();
+  const copiedScripts = copyRuntimeScripts();
   let mode = 'skipped';
   if (!skipNodeModulesCopy) {
     mode = copyRuntimeNodeModules();
   }
 
   console.log(`Sidecar Node prepared: ${destPath}`);
+  console.log(`Runtime Node prepared: ${runtimeNodePath}`);
+  console.log(`Runtime scripts copied: ${copiedScripts}`);
   console.log(`Source Node binary: ${sourceNodeBin}`);
   console.log(`Target triple: ${triple}`);
   if (!skipNodeModulesCopy) {

@@ -1763,8 +1763,10 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
   let resource_dir = app.path().resource_dir().ok();
   let mut script_candidates: Vec<PathBuf> = Vec::new();
   if let Some(resource_root) = resource_dir.as_ref() {
+    script_candidates.push(resource_root.join("runtime-node").join("scripts"));
     script_candidates.push(resource_root.join("scripts"));
     script_candidates.push(resource_root.clone());
+    script_candidates.push(resource_root.join("resources").join("runtime-node").join("scripts"));
     script_candidates.push(resource_root.join("resources").join("scripts"));
     script_candidates.push(resource_root.join("resources"));
   }
@@ -1808,6 +1810,10 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
     }
   }
   if let Some(resource_root) = resource_dir.as_ref() {
+    for rel in runtime_node_relative_candidates() {
+      node_candidates.push(resource_root.join(&rel));
+      node_candidates.push(resource_root.join("resources").join(&rel));
+    }
     node_candidates.push(resource_root.join(&sidecar_name));
     node_candidates.push(resource_root.join("binaries").join(&sidecar_name));
     node_candidates.push(resource_root.join("resources").join(&sidecar_name));
@@ -1841,6 +1847,12 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
     .as_ref()
     .map(|r| r.join("runtime-node").join("node_modules"))
     .filter(|p| p.exists())
+    .or_else(|| {
+      resource_dir
+        .as_ref()
+        .map(|r| r.join("resources").join("runtime-node").join("node_modules"))
+        .filter(|p| p.exists())
+    })
     .or_else(|| {
       if cfg!(debug_assertions) {
         let fallback = dev_workspace_root.join("node_modules");
@@ -1935,6 +1947,32 @@ fn sidecar_node_name() -> String {
   } else {
     format!("node-{}", triple)
   }
+}
+
+fn runtime_node_relative_candidates() -> Vec<PathBuf> {
+  let mut rel = Vec::<PathBuf>::new();
+  #[cfg(target_os = "windows")]
+  {
+    rel.push(PathBuf::from("runtime-node/win-x64/node.exe"));
+    rel.push(PathBuf::from("runtime-node/node.exe"));
+  }
+  #[cfg(target_os = "linux")]
+  {
+    rel.push(PathBuf::from("runtime-node/linux-x64/node"));
+    rel.push(PathBuf::from("runtime-node/node"));
+  }
+  #[cfg(target_os = "macos")]
+  {
+    if std::env::consts::ARCH == "aarch64" {
+      rel.push(PathBuf::from("runtime-node/macos-arm64/node"));
+      rel.push(PathBuf::from("runtime-node/macos-x64/node"));
+    } else {
+      rel.push(PathBuf::from("runtime-node/macos-x64/node"));
+      rel.push(PathBuf::from("runtime-node/macos-arm64/node"));
+    }
+    rel.push(PathBuf::from("runtime-node/node"));
+  }
+  rel
 }
 
 fn main() {
