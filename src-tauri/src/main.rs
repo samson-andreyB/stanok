@@ -145,10 +145,13 @@ struct NodeWorker {
 
 #[derive(Clone)]
 struct RuntimePathsState {
+  resource_dir: Option<PathBuf>,
   workspace_root: PathBuf,
   scripts_dir: PathBuf,
   worker_path: PathBuf,
+  script_candidates: Vec<PathBuf>,
   node_bin: PathBuf,
+  node_candidates: Vec<PathBuf>,
   node_modules_dir: Option<PathBuf>,
 }
 
@@ -854,7 +857,11 @@ fn run_node_script_with_worker(
 ) -> Result<String, String> {
   let worker_path = &runtime.worker_path;
   if !worker_path.exists() {
-    return Err(format!("Не найден скрипт {}", worker_path.display()));
+    return Err(format!(
+      "Не найден скрипт {}\n{}",
+      worker_path.display(),
+      format_runtime_diagnostics(runtime)
+    ));
   }
 
   let mut workers = state
@@ -934,7 +941,14 @@ fn spawn_node_worker(runtime: &RuntimePathsState) -> Result<NodeWorker, String> 
     .stdout(Stdio::piped())
     .stderr(Stdio::null())
     .spawn()
-    .map_err(|e| format!("Ошибка запуска worker ({}): {}", runtime.node_bin.display(), e))?;
+    .map_err(|e| {
+      format!(
+        "Ошибка запуска worker ({}): {}\n{}",
+        runtime.node_bin.display(),
+        e,
+        format_runtime_diagnostics(runtime)
+      )
+    })?;
 
   let stdin = child.stdin.take().ok_or("Не удалось открыть stdin worker")?;
   let stdout = child.stdout.take().ok_or("Не удалось открыть stdout worker")?;
@@ -952,7 +966,11 @@ fn run_node_script_once(
 ) -> Result<String, String> {
   let script_path = runtime.scripts_dir.join(script_name);
   if !script_path.exists() {
-    return Err(format!("Не найден скрипт {}", script_path.display()));
+    return Err(format!(
+      "Не найден скрипт {}\n{}",
+      script_path.display(),
+      format_runtime_diagnostics(runtime)
+    ));
   }
 
   let payload_json = serde_json::to_string(payload).map_err(|e| e.to_string())?;
@@ -966,7 +984,14 @@ fn run_node_script_once(
   }
   let output = cmd
     .output()
-    .map_err(|e| format!("Ошибка запуска node ({}): {}", runtime.node_bin.display(), e))?;
+    .map_err(|e| {
+      format!(
+        "Ошибка запуска node ({}): {}\n{}",
+        runtime.node_bin.display(),
+        e,
+        format_runtime_diagnostics(runtime)
+      )
+    })?;
   let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
   let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
   if !output.status.success() {
@@ -1750,8 +1775,9 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
     script_candidates.push(dev_workspace_root.join("scripts"));
   }
   let scripts_dir = script_candidates
-    .into_iter()
+    .iter()
     .find(|dir| dir.join("build-worker.mjs").exists())
+    .cloned()
     .unwrap_or_else(|| {
       if cfg!(debug_assertions) {
         dev_workspace_root.join("scripts")
@@ -1810,9 +1836,7 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
       node_candidates.push(dev_workspace_root.join("src-tauri").join(rel));
     }
   }
-  let sidecar_found = node_candidates
-    .into_iter()
-    .find(|p| p.exists());
+  let sidecar_found = node_candidates.iter().find(|p| p.exists()).cloned();
   let node_bin = if let Some(found) = sidecar_found {
     found
   } else if cfg!(debug_assertions) {
@@ -1853,12 +1877,67 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
     });
 
   RuntimePathsState {
+    resource_dir,
     workspace_root,
     scripts_dir,
     worker_path,
+    script_candidates,
     node_bin,
+    node_candidates,
     node_modules_dir,
   }
+}
+
+fn format_runtime_diagnostics(runtime: &RuntimePathsState) -> String {
+  fn fmt_path_line(path: &Path) -> String {
+    format!(
+      "{} [{}]",
+      path.display(),
+      if path.exists() { "exists" } else { "missing" }
+    )
+  }
+  let resource_dir = runtime
+    .resource_dir
+    .as_ref()
+    .map(|p| p.display().to_string())
+    .unwrap_or_else(|| "<none>".to_string());
+
+  let script_candidates = runtime
+    .script_candidates
+    .iter()
+    .map(|p| format!("- {}", fmt_path_line(p)))
+    .collect::<Vec<String>>()
+    .join("\n");
+  let node_candidates = runtime
+    .node_candidates
+    .iter()
+    .map(|p| format!("- {}", fmt_path_line(p)))
+    .collect::<Vec<String>>()
+    .join("\n");
+
+  format!(
+    "Диагностика runtime:\nresource_dir: {}\nworkspace_root: {}\nscripts_dir: {}\nworker_path: {}\nnode_bin: {}\nnode_modules: {}\nscript_candidates:\n{}\nnode_candidates:\n{}",
+    resource_dir,
+    runtime.workspace_root.display(),
+    runtime.scripts_dir.display(),
+    fmt_path_line(&runtime.worker_path),
+    fmt_path_line(&runtime.node_bin),
+    runtime
+      .node_modules_dir
+      .as_ref()
+      .map(|p| fmt_path_line(p))
+      .unwrap_or_else(|| "<none>".to_string()),
+    if script_candidates.is_empty() {
+      "<none>".to_string()
+    } else {
+      script_candidates
+    },
+    if node_candidates.is_empty() {
+      "<none>".to_string()
+    } else {
+      node_candidates
+    }
+  )
 }
 
 fn find_dir_with_file(root: &Path, file_name: &str, max_depth: usize) -> Option<PathBuf> {
