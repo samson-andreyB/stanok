@@ -65,6 +65,36 @@ jobs:
       - name: Build app bundles
         run: npx tauri build --bundles ${{ matrix.bundle }}
 
+      - name: Audit bundled runtime files (Linux)
+        if: matrix.os == 'ubuntu-22.04'
+        shell: bash
+        run: |
+          set -euo pipefail
+          APPDIR="$(find src-tauri/target/release/bundle -type d -name 'Stanok.AppDir' | head -n 1 || true)"
+          if [ -z "${APPDIR}" ]; then
+            echo "Stanok.AppDir not found"
+            find src-tauri/target/release/bundle -maxdepth 4 -type d | sed -n '1,200p'
+            exit 1
+          fi
+
+          echo "Inspecting AppDir: ${APPDIR}"
+          test -f "${APPDIR}/usr/lib/Stanok/runtime-node/scripts/build-worker.mjs"
+          test -f "${APPDIR}/usr/lib/Stanok/runtime-node/scripts/build-css.mjs"
+          test -f "${APPDIR}/usr/lib/Stanok/runtime-node/linux-x64/node"
+          test -d "${APPDIR}/usr/lib/Stanok/runtime-node/node_modules/intcss"
+
+          SIDECAR_A="${APPDIR}/usr/lib/Stanok/node-x86_64-unknown-linux-gnu"
+          SIDECAR_B="${APPDIR}/usr/lib/Stanok/binaries/node-x86_64-unknown-linux-gnu"
+          if [ -f "${SIDECAR_A}" ]; then
+            echo "Sidecar found at ${SIDECAR_A}"
+          elif [ -f "${SIDECAR_B}" ]; then
+            echo "Sidecar found at ${SIDECAR_B}"
+          else
+            echo "Sidecar not found in expected locations"
+            find "${APPDIR}/usr/lib/Stanok" -maxdepth 3 -type f | sed -n '1,200p'
+            exit 1
+          fi
+
       - name: Upload bundle artifacts
         uses: actions/upload-artifact@v4
         with:
