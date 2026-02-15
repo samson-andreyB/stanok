@@ -1799,10 +1799,20 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
   if let Ok(exe) = env::current_exe() {
     let exe = exe.canonicalize().unwrap_or(exe);
     if let Some(exe_dir) = exe.parent() {
+      if cfg!(target_os = "windows") {
+        node_candidates.push(exe_dir.join("node.exe"));
+      } else {
+        node_candidates.push(exe_dir.join("node"));
+      }
       sidecar_dirs.push(exe_dir.to_path_buf());
       sidecar_dirs.push(exe_dir.join("binaries"));
       if cfg!(target_os = "macos") {
         if let Some(parent) = exe_dir.parent() {
+          if cfg!(target_os = "windows") {
+            node_candidates.push(parent.join("Resources").join("node.exe"));
+          } else {
+            node_candidates.push(parent.join("Resources").join("node"));
+          }
           sidecar_dirs.push(parent.join("Resources"));
           sidecar_dirs.push(parent.join("Resources").join("binaries"));
         }
@@ -1810,6 +1820,13 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
     }
   }
   if let Some(resource_root) = resource_dir.as_ref() {
+    if cfg!(target_os = "windows") {
+      node_candidates.push(resource_root.join("node.exe"));
+      node_candidates.push(resource_root.join("resources").join("node.exe"));
+    } else {
+      node_candidates.push(resource_root.join("node"));
+      node_candidates.push(resource_root.join("resources").join("node"));
+    }
     sidecar_dirs.push(resource_root.clone());
     sidecar_dirs.push(resource_root.join("binaries"));
     sidecar_dirs.push(resource_root.join("resources"));
@@ -1949,9 +1966,10 @@ fn is_sidecar_node_binary(path: &Path) -> bool {
   };
 
   if cfg!(target_os = "windows") {
-    name.starts_with("node-") && name.ends_with(".exe")
+    name.eq_ignore_ascii_case("node.exe")
+      || (name.starts_with("node-") && name.ends_with(".exe"))
   } else {
-    name.starts_with("node-") && !name.ends_with(".exe")
+    name == "node" || (name.starts_with("node-") && !name.ends_with(".exe"))
   }
 }
 

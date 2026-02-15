@@ -91,7 +91,7 @@ jobs:
           echo "Inspecting RPM: ${RPM_FILE}"
           rpm -qlp "${RPM_FILE}" | sed -n '1,400p'
           echo "Filtered runtime lines:"
-          rpm -qlp "${RPM_FILE}" | rg -n "node-|runtime-node/scripts|runtime-node/node_modules/intcss|/usr/bin/stanok" -S || true
+          rpm -qlp "${RPM_FILE}" | grep -En "node-|/usr/bin/node|runtime-node/scripts|runtime-node/node_modules/intcss|/usr/bin/stanok" || true
 
       - name: Upload bundle artifacts
         uses: actions/upload-artifact@v4
