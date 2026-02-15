@@ -1761,10 +1761,13 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
     .map(Path::to_path_buf)
     .unwrap_or_else(|| PathBuf::from("."));
   let resource_dir = app.path().resource_dir().ok();
-  let mut script_candidates: Vec<PathBuf> = resource_dir
-    .as_ref()
-    .map(|r| vec![r.join("scripts")])
-    .unwrap_or_default();
+  let mut script_candidates: Vec<PathBuf> = Vec::new();
+  if let Some(resource_root) = resource_dir.as_ref() {
+    script_candidates.push(resource_root.join("scripts"));
+    script_candidates.push(resource_root.clone());
+    script_candidates.push(resource_root.join("resources").join("scripts"));
+    script_candidates.push(resource_root.join("resources"));
+  }
   if cfg!(debug_assertions) {
     script_candidates.push(dev_workspace_root.join("scripts"));
   }
@@ -1792,6 +1795,7 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
   let mut node_candidates: Vec<PathBuf> = Vec::new();
   let sidecar_name = sidecar_node_name();
   if let Ok(exe) = env::current_exe() {
+    let exe = exe.canonicalize().unwrap_or(exe);
     if let Some(exe_dir) = exe.parent() {
       node_candidates.push(exe_dir.join(&sidecar_name));
       node_candidates.push(exe_dir.join("binaries").join(&sidecar_name));
@@ -1806,6 +1810,13 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
   if let Some(resource_root) = resource_dir.as_ref() {
     node_candidates.push(resource_root.join(&sidecar_name));
     node_candidates.push(resource_root.join("binaries").join(&sidecar_name));
+    node_candidates.push(resource_root.join("resources").join(&sidecar_name));
+    node_candidates.push(
+      resource_root
+        .join("resources")
+        .join("binaries")
+        .join(&sidecar_name),
+    );
   }
   if cfg!(debug_assertions) {
     node_candidates.push(
