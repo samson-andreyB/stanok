@@ -76,7 +76,7 @@ export async function runBuild(payloadInput) {
     ? payload.runtime_paths
     : null;
   projectDir = runtimePaths?.project_dir || resolveProjectDir(payload.projects_path, payload.project_name, payload.config.nest);
-  projectDir = normalizeWindowsDrivePath(projectDir);
+  projectDir = normalizePathForPlatform(projectDir);
   lastDebugContext = {
     projects_path: payload.projects_path,
     project_name: payload.project_name,
@@ -89,8 +89,12 @@ export async function runBuild(payloadInput) {
   process.chdir(projectDir);
 
   root = runtimePaths?.root || normalizeRoot(payload.config.root);
-  styleDir = path.normalize(runtimePaths?.style_dir || path.join(projectDir, root, payload.config.style || 'css'));
-  imgDir = path.normalize(runtimePaths?.img_dir || path.join(projectDir, root, payload.config.img || 'img'));
+  styleDir = normalizePathForPlatform(
+    path.normalize(runtimePaths?.style_dir || path.join(projectDir, root, payload.config.style || 'css')),
+  );
+  imgDir = normalizePathForPlatform(
+    path.normalize(runtimePaths?.img_dir || path.join(projectDir, root, payload.config.img || 'img')),
+  );
   layoutsDir = runtimePaths?.layouts_dir || payload.config.layouts || '_layouts';
   libDir = runtimePaths?.lib_dir || payload.config.lib || '../lib';
   browsers =
@@ -98,9 +102,16 @@ export async function runBuild(payloadInput) {
       ? payload.config.browsers
       : ['last 5 versions', 'Chrome 27', 'ff 12', 'ie 8', 'ie 9', 'opera 12'];
 
-  bPath = path.normalize(runtimePaths?.b_path || path.join(projectDir, root, layoutsDir, 'src'));
+  bPath = normalizePathForPlatform(
+    path.normalize(runtimePaths?.b_path || path.join(projectDir, root, layoutsDir, 'src')),
+  );
   pathToProjectsRoot = runtimePaths?.path_to_projects_root || buildPathToProjectsRoot(payload.config.nest);
-  srcDir = runtimePaths?.src_dir || path.join(styleDir, 'src');
+  srcDir = normalizePathForPlatform(runtimePaths?.src_dir || path.join(styleDir, 'src'));
+  ensureValidBuildPath('projectDir', projectDir);
+  ensureValidBuildPath('styleDir', styleDir);
+  ensureValidBuildPath('imgDir', imgDir);
+  ensureValidBuildPath('bPath', bPath);
+  ensureValidBuildPath('srcDir', srcDir);
   Object.assign(lastDebugContext, {
     cwd: process.cwd(),
     platform: process.platform,
@@ -164,15 +175,44 @@ function buildPathToProjectsRoot(nest) {
   return '../'.repeat(level);
 }
 
-function normalizeWindowsDrivePath(value) {
-  const p = String(value || '').trim();
+function normalizePathForPlatform(value) {
+  const raw = String(value || '').trim();
+  if (process.platform !== 'win32') {
+    return raw;
+  }
+  return normalizeWindowsPath(raw);
+}
+
+function normalizeWindowsPath(value) {
+  let p = String(value || '').trim().replaceAll('/', '\\');
+  if (!p) return p;
+
+  if (p.startsWith('\\\\?\\')) {
+    const body = normalizeWindowsPath(p.slice(4));
+    return `\\\\?\\${body}`;
+  }
+
+  if (/^[A-Za-z]\\/.test(p)) {
+    p = `${p[0]}:${p.slice(1)}`;
+  }
   if (/^[A-Za-z]:$/.test(p)) {
     return `${p}\\`;
   }
-  if (/^[A-Za-z]:[\\/]$/.test(p)) {
-    return `${p[0]}:\\`;
+  if (/^[A-Za-z]:[^\\]/.test(p)) {
+    p = `${p.slice(0, 2)}\\${p.slice(2)}`;
   }
+
   return p;
+}
+
+function ensureValidBuildPath(label, value) {
+  const p = String(value || '').trim();
+  if (!p) {
+    throw new Error(`Пустой путь (${label})`);
+  }
+  if (process.platform === 'win32' && /^[A-Za-z]:\\?$/.test(p)) {
+    throw new Error(`Некорректный Windows путь (${label}): ${p}`);
+  }
 }
 
 function normalizePayload(payloadInput) {

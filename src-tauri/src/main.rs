@@ -3,12 +3,15 @@
 use notify::{Config as NotifyConfig, RecommendedWatcher, RecursiveMode, Watcher};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use std::ffi::OsStr;
 use std::collections::HashMap;
 use std::env;
 use std::fs;
 use std::hash::{DefaultHasher, Hash, Hasher};
 use std::path::{Path, PathBuf};
 use std::process::Command;
+#[cfg(target_os = "windows")]
+use std::os::windows::process::CommandExt;
 use std::sync::{
   Arc,
   Mutex,
@@ -163,6 +166,11 @@ struct RuntimePathsState {
   node_modules_dir: Option<PathBuf>,
 }
 
+#[derive(Clone)]
+struct RuntimeInfoState {
+  info: RuntimeInfo,
+}
+
 #[derive(Clone, Copy)]
 enum BuildKind {
   Styles,
@@ -170,6 +178,21 @@ enum BuildKind {
 }
 
 const PROJECTS_CACHE_TTL_SECS: u64 = 60 * 60;
+#[cfg(target_os = "windows")]
+const CREATE_NO_WINDOW: u32 = 0x08000000;
+
+fn command_with_platform_defaults<S: AsRef<OsStr>>(program: S) -> Command {
+  #[cfg(target_os = "windows")]
+  {
+    let mut cmd = Command::new(program);
+    cmd.creation_flags(CREATE_NO_WINDOW);
+    return cmd;
+  }
+  #[cfg(not(target_os = "windows"))]
+  {
+    Command::new(program)
+  }
+}
 
 #[tauri::command]
 fn choose_projects_path() -> Option<String> {
@@ -238,7 +261,7 @@ fn get_git_branch(repo_path: String) -> Result<String, String> {
 
   let mut last_err: Option<String> = None;
   for candidate in candidates {
-    match Command::new(&candidate)
+    match command_with_platform_defaults(&candidate)
       .arg("-C")
       .arg(&repo_path)
       .arg("rev-parse")
@@ -279,15 +302,8 @@ fn open_external_url(url: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn get_runtime_info(runtime: tauri::State<RuntimePathsState>) -> RuntimeInfo {
-  let app_version = env!("CARGO_PKG_VERSION").to_string();
-  let tauri_version = detect_tauri_version_from_lock();
-  let node_version = detect_node_version(&runtime.node_bin);
-  RuntimeInfo {
-    app_version,
-    tauri_version,
-    node_version,
-  }
+fn get_runtime_info(runtime_info: tauri::State<RuntimeInfoState>) -> RuntimeInfo {
+  runtime_info.info.clone()
 }
 
 #[tauri::command]
@@ -886,7 +902,7 @@ fn run_node_script_via_rust_worker(
   }
 
   let payload_json = serde_json::to_string(payload).map_err(|e| e.to_string())?;
-  let mut cmd = Command::new(&runtime.node_bin);
+  let mut cmd = command_with_platform_defaults(&runtime.node_bin);
   cmd.arg(&script_path);
   cmd.arg(payload_json);
   cmd.current_dir(&runtime.workspace_root);
@@ -1169,12 +1185,63 @@ fn normalize_projects_path(projects_path: &str) -> PathBuf {
   {
     let trimmed = projects_path.trim();
     let bytes = trimmed.as_bytes();
+    if bytes.len() >= 2 && bytes[0].is_ascii_alphabetic() && (bytes[1] == b'\\' || bytes[1] == b'/') {
+      return PathBuf::from(format!("{}:{}", &trimmed[0..1], &trimmed[1..]));
+    }
     if bytes.len() == 2 && bytes[0].is_ascii_alphabetic() && bytes[1] == b':' {
       return PathBuf::from(format!("{trimmed}\\"));
+    }
+    if bytes.len() >= 3
+      && bytes[0].is_ascii_alphabetic()
+      && bytes[1] == b':'
+      && bytes[2] != b'\\'
+      && bytes[2] != b'/'
+    {
+      return PathBuf::from(format!("{}:\\{}", &trimmed[0..1], &trimmed[2..]));
     }
   }
 
   PathBuf::from(projects_path)
+}
+
+fn normalize_windows_path_string(value: String) -> String {
+  #[cfg(target_os = "windows")]
+  {
+    let mut s = value.trim().replace('/', "\\");
+    let bytes = s.as_bytes();
+    if bytes.len() >= 2 && bytes[0].is_ascii_alphabetic() && bytes[1] == b'\\' {
+      s = format!("{}:{}", &s[0..1], &s[1..]);
+    }
+
+    let bytes = s.as_bytes();
+    if bytes.len() == 2 && bytes[0].is_ascii_alphabetic() && bytes[1] == b':' {
+      s.push('\\');
+    } else if bytes.len() >= 3
+      && bytes[0].is_ascii_alphabetic()
+      && bytes[1] == b':'
+      && bytes[2] != b'\\'
+      && bytes[2] != b'/'
+    {
+      s.insert(2, '\\');
+    }
+
+    if let Some(rest) = s.strip_prefix(r"\\?\") {
+      let rb = rest.as_bytes();
+      if rb.len() >= 3
+        && rb[0].is_ascii_alphabetic()
+        && rb[1] == b':'
+        && rb[2] != b'\\'
+        && rb[2] != b'/'
+      {
+        return format!(r"\\?\{}:\{}", &rest[0..1], &rest[2..]);
+      }
+      return format!(r"\\?\{}", rest);
+    }
+
+    return s;
+  }
+
+  value
 }
 
 #[cfg(target_os = "windows")]
@@ -1629,15 +1696,17 @@ fn build_runtime_paths(payload: &BuildPayload) -> BuildRuntimePaths {
     .to_string();
 
   BuildRuntimePaths {
-    project_dir: project_dir.to_string_lossy().to_string(),
+    project_dir: normalize_windows_path_string(project_dir.to_string_lossy().to_string()),
     root,
-    style_dir: style_dir.clone(),
-    img_dir,
+    style_dir: normalize_windows_path_string(style_dir.clone()),
+    img_dir: normalize_windows_path_string(img_dir),
     layouts_dir: layouts_dir_name,
     lib_dir: lib_dir_name,
-    b_path,
+    b_path: normalize_windows_path_string(b_path),
     path_to_projects_root: build_path_to_projects_root(&payload.config.nest),
-    src_dir: Path::new(&style_dir).join("src").to_string_lossy().to_string(),
+    src_dir: normalize_windows_path_string(
+      Path::new(&style_dir).join("src").to_string_lossy().to_string()
+    ),
     root_rel: normalize_rel(&payload.config.root),
     img_rel: normalize_rel(&img_dir_name),
   }
@@ -1924,7 +1993,7 @@ fn detect_tauri_version_from_lock() -> String {
 }
 
 fn detect_node_version(node_bin: &Path) -> String {
-  let output = Command::new(node_bin).arg("-v").output();
+  let output = command_with_platform_defaults(node_bin).arg("-v").output();
   match output {
     Ok(out) if out.status.success() => String::from_utf8_lossy(&out.stdout).trim().to_string(),
     _ => "unknown".to_string(),
@@ -2179,7 +2248,14 @@ fn main() {
     .manage(ProjectsCacheState::default())
     .manage(BuildOrchestratorState::default())
     .setup(|app| {
-      app.manage(resolve_runtime_paths(app.handle()));
+      let runtime = resolve_runtime_paths(app.handle());
+      let runtime_info = RuntimeInfo {
+        app_version: env!("CARGO_PKG_VERSION").to_string(),
+        tauri_version: detect_tauri_version_from_lock(),
+        node_version: detect_node_version(&runtime.node_bin),
+      };
+      app.manage(runtime);
+      app.manage(RuntimeInfoState { info: runtime_info });
       spawn_resource_stats_emitter(app.handle().clone());
       Ok(())
     })

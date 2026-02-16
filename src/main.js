@@ -118,12 +118,12 @@ init().catch((error) => {
 async function init() {
   patchConsole();
   bindEvents();
+  void loadRuntimeInfo();
   await setupBranchEvents();
   await setupProjectWatchEvents();
   startWatchStatusTicker();
   state.windowFocused = document.hasFocus();
   startResourceUpdates();
-  await loadRuntimeInfo();
 
   const savedPath = localStorage.getItem('projectsPath');
   if (savedPath) {
