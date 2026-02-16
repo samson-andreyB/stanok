@@ -7,9 +7,9 @@
 - `Tauri 2` (`@tauri-apps/api`, `@tauri-apps/cli`, `tauri`, `tauri-build`)
 - `Vite 5` (фронтенд)
 - Сборка проектных стилей: `intcss` + `postcss@5` (`scripts/build-css.mjs`)
-- Сборка изображений: `scripts/build-images.mjs`
+- Сборка изображений: Rust backend (`src-tauri/src/main.rs`)
 - Файловые watcher'ы: `notify` (Rust), с fallback на polling
-- Оркестрация сборки: Rust backend (`src-tauri/src/main.rs`) + Node CLI scripts (`build-css.mjs`, `build-images.mjs`)
+- Оркестрация сборки: Rust backend (`src-tauri/src/main.rs`) + Node CLI script (`build-css.mjs`)
 
 ## Разработка
 
@@ -57,17 +57,17 @@ npm run build:linux:rpm
 ## Релиз Через GitHub Actions
 
 В репозитории есть workflow для десктоп-сборок:
-- `.github/workflows/build-desktop-linux.yml` (`Build Desktop (Linux RPM)`)
 - `.github/workflows/build-desktop-linux.yml` (`Build Desktop (Linux)`)
 - `.github/workflows/build-desktop-windows.yml` (`Build Desktop (Windows)`)
 - `.github/workflows/build-desktop-macos.yml` (`Build Desktop (macOS)`)
+- `.github/workflows/release.yml` (`Release Desktop`)
 
 Как собрать:
 
 1. Открыть `Actions` и выбрать нужный workflow по платформе.
 2. Нажать `Run workflow`.
 3. Скачать артефакт:
-- `stanok-linux` (`rpm`)
+- `stanok-linux` (`deb`, `rpm`)
 - `stanok-windows` (`nsis`, `msi`)
 - `stanok-macos` (`app`, `dmg`)
 

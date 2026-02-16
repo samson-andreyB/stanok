@@ -41,15 +41,12 @@ jobs:
         run: |
           set -euo pipefail
           test -f src-tauri/runtime-node/scripts/build-css.mjs
-          test -f src-tauri/runtime-node/scripts/build-images.mjs
           test -d src-tauri/runtime-node/node_modules/intcss
           test -f src-tauri/binaries/node-x86_64-pc-windows-msvc.exe
 
           NODE_BIN="src-tauri/binaries/node-x86_64-pc-windows-msvc.exe"
           NODE_PATH="src-tauri/runtime-node/node_modules" \
             "${NODE_BIN}" --check "src-tauri/runtime-node/scripts/build-css.mjs"
-          NODE_PATH="src-tauri/runtime-node/node_modules" \
-            "${NODE_BIN}" --check "src-tauri/runtime-node/scripts/build-images.mjs"
 
       - name: Build app bundles
         env:

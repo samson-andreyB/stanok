@@ -1,5 +1,14 @@
 # Release Notes
 
+## 2.4.0 (2026-02-16)
+
+### Что изменилось
+
+- Сборка изображений полностью переведена на Rust backend.
+- Удалён runtime-скрипт `scripts/build-images.mjs`.
+- Обновлена упаковка runtime-скриптов: оставлены `build-css.mjs` и `path-utils.mjs`.
+- Обновлены manual CI-проверки под Rust image pipeline (без проверки `build-images.mjs`).
+
 ## 2.3.0 (2026-02-16)
 
 ### Что изменилось

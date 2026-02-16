@@ -1380,7 +1380,7 @@ fn run_build_orchestrated(
 
     let run_result = (|| -> Result<(), String> {
       if run_images {
-        let out = run_node_script(state, runtime, "build-images.mjs", &payload)?;
+        let out = run_images_rust(&payload)?;
         if !out.is_empty() {
           outputs.push(out);
         }
@@ -1426,6 +1426,96 @@ fn run_build_orchestrated(
   } else {
     Ok(outputs.join("\n"))
   }
+}
+
+fn run_images_rust(payload: &BuildPayload) -> Result<String, String> {
+  let project_dir = resolve_project_dir(&payload.projects_path, &payload.project_name, &payload.config.nest);
+  let root = normalize_rel(&payload.config.root);
+  let root_path = if root.is_empty() {
+    project_dir
+  } else {
+    PathBuf::from(project_dir).join(root)
+  };
+
+  let img_dir = if payload.config.img.is_empty() {
+    "img".to_string()
+  } else {
+    payload.config.img.clone()
+  };
+
+  let src_dir = root_path.join(&img_dir).join("src");
+  let dest_dir = root_path.join(&img_dir).join("dest");
+  fs::create_dir_all(&dest_dir).map_err(|e| format!("Ошибка создания папки {}: {}", dest_dir.display(), e))?;
+
+  if !src_dir.exists() {
+    return Ok("Изображения обработаны: 0 файл(ов)".to_string());
+  }
+
+  let mut copied: u64 = 0;
+  let mut stack = vec![src_dir.clone()];
+  const ALLOWED_EXT: [&str; 5] = ["gif", "jpg", "jpeg", "png", "svg"];
+
+  while let Some(current) = stack.pop() {
+    let entries = fs::read_dir(&current).map_err(|e| format!("Ошибка чтения папки {}: {}", current.display(), e))?;
+    for entry in entries {
+      let entry = entry.map_err(|e| e.to_string())?;
+      let file_type = entry.file_type().map_err(|e| e.to_string())?;
+      let path = entry.path();
+
+      if file_type.is_dir() {
+        stack.push(path);
+        continue;
+      }
+      if !file_type.is_file() {
+        continue;
+      }
+
+      let ext = path
+        .extension()
+        .and_then(|e| e.to_str())
+        .unwrap_or_default()
+        .to_ascii_lowercase();
+      if !ALLOWED_EXT.contains(&ext.as_str()) {
+        continue;
+      }
+
+      let rel = path
+        .strip_prefix(&src_dir)
+        .map_err(|e| e.to_string())?;
+      let target = dest_dir.join(rel);
+      if let Some(parent) = target.parent() {
+        fs::create_dir_all(parent)
+          .map_err(|e| format!("Ошибка создания папки {}: {}", parent.display(), e))?;
+      }
+
+      let src_meta = fs::metadata(&path).map_err(|e| format!("Ошибка чтения файла {}: {}", path.display(), e))?;
+      let src_modified = src_meta
+        .modified()
+        .map_err(|e| format!("Ошибка mtime файла {}: {}", path.display(), e))?;
+
+      let should_copy = match fs::metadata(&target) {
+        Ok(dst_meta) => match dst_meta.modified() {
+          Ok(dst_modified) => src_modified > dst_modified,
+          Err(_) => true,
+        },
+        Err(_) => true,
+      };
+
+      if should_copy {
+        fs::copy(&path, &target).map_err(|e| {
+          format!(
+            "Ошибка копирования {} -> {}: {}",
+            path.display(),
+            target.display(),
+            e
+          )
+        })?;
+        copied += 1;
+      }
+    }
+  }
+
+  Ok(format!("Изображения обработаны: {} файл(ов)", copied))
 }
 
 fn should_skip_dir(path: &Path) -> bool {
@@ -1642,7 +1732,7 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
   }
   let scripts_dir = script_candidates
     .iter()
-    .find(|dir| dir.join("build-css.mjs").exists() && dir.join("build-images.mjs").exists())
+    .find(|dir| dir.join("build-css.mjs").exists())
     .cloned()
     .unwrap_or_else(|| {
       if cfg!(debug_assertions) {
@@ -2009,6 +2099,69 @@ mod tests {
     )
     .expect("third snapshot");
     assert_ne!(second.img, third.img);
+
+    let _ = fs::remove_dir_all(root);
+  }
+
+  #[test]
+  fn run_images_rust_copies_only_supported_files() {
+    let uniq = SystemTime::now()
+      .duration_since(UNIX_EPOCH)
+      .unwrap_or_default()
+      .as_nanos();
+    let root = std::env::temp_dir().join(format!("stanok-images-test-{}", uniq));
+    let project_dir = root.join("demo").join("assets").join("img").join("src");
+    fs::create_dir_all(&project_dir).expect("create src dir");
+
+    fs::write(project_dir.join("a.png"), "png").expect("write png");
+    fs::write(project_dir.join("b.svg"), "<svg/>").expect("write svg");
+    fs::write(project_dir.join("readme.txt"), "skip").expect("write txt");
+
+    let payload = BuildPayload {
+      projects_path: root.to_string_lossy().to_string(),
+      project_name: "demo/main".to_string(),
+      config: build_config_from_project_data(Some(&json!({}))),
+    };
+
+    let out = run_images_rust(&payload).expect("run images");
+    assert_eq!(out, "Изображения обработаны: 2 файл(ов)");
+
+    let dest = root.join("demo").join("assets").join("img").join("dest");
+    assert!(dest.join("a.png").exists());
+    assert!(dest.join("b.svg").exists());
+    assert!(!dest.join("readme.txt").exists());
+
+    let _ = fs::remove_dir_all(root);
+  }
+
+  #[test]
+  fn run_images_rust_is_incremental_by_mtime() {
+    let uniq = SystemTime::now()
+      .duration_since(UNIX_EPOCH)
+      .unwrap_or_default()
+      .as_nanos();
+    let root = std::env::temp_dir().join(format!("stanok-images-incremental-{}", uniq));
+    let src = root.join("demo").join("assets").join("img").join("src");
+    fs::create_dir_all(&src).expect("create src");
+    let img = src.join("only.jpg");
+    fs::write(&img, "v1").expect("write v1");
+
+    let payload = BuildPayload {
+      projects_path: root.to_string_lossy().to_string(),
+      project_name: "demo/main".to_string(),
+      config: build_config_from_project_data(Some(&json!({}))),
+    };
+
+    let first = run_images_rust(&payload).expect("first run");
+    assert_eq!(first, "Изображения обработаны: 1 файл(ов)");
+
+    let second = run_images_rust(&payload).expect("second run");
+    assert_eq!(second, "Изображения обработаны: 0 файл(ов)");
+
+    std::thread::sleep(Duration::from_millis(15));
+    fs::write(&img, "v2").expect("write v2");
+    let third = run_images_rust(&payload).expect("third run");
+    assert_eq!(third, "Изображения обработаны: 1 файл(ов)");
 
     let _ = fs::remove_dir_all(root);
   }

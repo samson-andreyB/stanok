@@ -26,25 +26,6 @@ function baseConfig() {
   };
 }
 
-test('build-images copies changed file', async () => {
-  const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'stanok-smoke-'));
-  const group = path.join(tmp, 'demo');
-  const srcImg = path.join(group, 'assets', 'img', 'src');
-  await fs.mkdir(srcImg, { recursive: true });
-  await fs.writeFile(path.join(srcImg, 'x.png'), 'png');
-
-  const res = runNodeScript(path.join('scripts', 'build-images.mjs'), {
-    projects_path: tmp,
-    project_name: 'demo/main',
-    config: baseConfig(),
-  });
-
-  assert.equal(res.status, 0, res.stderr);
-  const destFile = path.join(group, 'assets', 'img', 'dest', 'x.png');
-  const copied = await fs.readFile(destFile, 'utf8');
-  assert.equal(copied, 'png');
-});
-
 test('build-css prints compact error for invalid css', async () => {
   const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'stanok-smoke-'));
   const group = path.join(tmp, 'demo');
