@@ -5,6 +5,17 @@
   "windows": ["main"],
   "permissions": [
     "core:default",
-    "shell:default"
+    {
+      "identifier": "shell:allow-spawn",
+      "allow": [{ "name": "node", "sidecar": true, "args": true }]
+    },
+    {
+      "identifier": "shell:allow-kill",
+      "allow": [{ "name": "node", "sidecar": true, "args": true }]
+    },
+    {
+      "identifier": "shell:allow-stdin-write",
+      "allow": [{ "name": "node", "sidecar": true, "args": true }]
+    }
   ]
 }

@@ -1,6 +1,6 @@
 [package]
 name = "stanok"
-version = "2.0.7"
+version = "2.0.8"
 description = "Stanok on Tauri"
 authors = ["you"]
 license = "MIT"
