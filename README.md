@@ -41,10 +41,24 @@ STANOK_RUN_E2E=1 npm run test:e2e
 npm run build
 ```
 
+Linux (локально, deb + rpm):
+
+```bash
+npm run build:linux
+```
+
+Отдельно:
+
+```bash
+npm run build:linux:deb
+npm run build:linux:rpm
+```
+
 ## Релиз Через GitHub Actions
 
 В репозитории есть workflow для десктоп-сборок:
 - `.github/workflows/build-desktop-linux.yml` (`Build Desktop (Linux RPM)`)
+- `.github/workflows/build-desktop-linux.yml` (`Build Desktop (Linux)`)
 - `.github/workflows/build-desktop-windows.yml` (`Build Desktop (Windows)`)
 - `.github/workflows/build-desktop-macos.yml` (`Build Desktop (macOS)`)
 

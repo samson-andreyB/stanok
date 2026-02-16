@@ -1,4 +1,4 @@
-name: Build Desktop (Linux RPM)
+name: Build Desktop (Linux)
 
 on:
   workflow_dispatch:
@@ -8,15 +8,7 @@ on:
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: ubuntu-22.04
-            bundle: 'rpm'
-            artifact_name: 'stanok-linux'
-
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout
@@ -46,7 +38,6 @@ jobs:
         run: npm ci
 
       - name: Install Linux system packages
-        if: matrix.os == 'ubuntu-22.04'
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -58,10 +49,9 @@ jobs:
             rpm
 
       - name: Build app bundles
-        run: npx tauri build --bundles ${{ matrix.bundle }}
+        run: npx tauri build --bundles deb,rpm
 
       - name: Validate runtime modules inside RPM
-        if: matrix.os == 'ubuntu-22.04'
         shell: bash
         run: |
           set -euo pipefail
@@ -122,7 +112,6 @@ jobs:
             "/usr/lib64/Stanok/binaries/node-x86_64-unknown-linux-gnu"
 
       - name: Smoke test installed RPM runtime
-        if: matrix.os == 'ubuntu-22.04'
         shell: bash
         run: |
           set -euo pipefail
@@ -182,9 +171,98 @@ jobs:
             fail "Failed to remove RPM package after smoke"
           }
 
+      - name: Validate runtime modules inside DEB
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          fail() {
+            echo "VALIDATION ERROR: $1"
+            exit 1
+          }
+
+          DEB_FILE="$(find src-tauri/target/release/bundle -type f -name '*.deb' | head -n 1 || true)"
+          [ -n "${DEB_FILE}" ] || fail "DEB file not found"
+          DEB_ABS="$(realpath "${DEB_FILE}")"
+          echo "Inspecting DEB manifest: ${DEB_ABS}"
+          DEB_LIST="$(dpkg-deb -c "${DEB_ABS}" | awk '{print $6}' | sed 's#^\./#/#')"
+          [ -n "${DEB_LIST}" ] || fail "Failed to read DEB file list"
+
+          has_path() {
+            grep -Fqx "$1" <<< "${DEB_LIST}"
+          }
+
+          assert_any_path() {
+            local label="$1"
+            shift
+            for p in "$@"; do
+              if has_path "$p"; then
+                echo "${label}: found ${p}"
+                return 0
+              fi
+            done
+            echo "${label}: not found"
+            printf '%s\n' "${DEB_LIST}" | sed -n '1,400p'
+            fail "${label} missing in DEB"
+          }
+
+          assert_any_path "build-worker.mjs" "/usr/lib/Stanok/runtime-node/scripts/build-worker.mjs"
+          assert_any_path "build-css.mjs" "/usr/lib/Stanok/runtime-node/scripts/build-css.mjs"
+          assert_any_path "intcss package" \
+            "/usr/lib/Stanok/runtime-node/node_modules/intcss/index.js" \
+            "/usr/lib/Stanok/runtime-node/node_modules/intcss/package.json"
+          assert_any_path "sidecar node binary" \
+            "/usr/lib/Stanok/node-x86_64-unknown-linux-gnu" \
+            "/usr/lib/Stanok/binaries/node-x86_64-unknown-linux-gnu" \
+            "/usr/bin/node"
+
+      - name: Smoke test extracted DEB runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          fail() {
+            echo "SMOKE ERROR: $1"
+            exit 1
+          }
+
+          DEB_FILE="$(find src-tauri/target/release/bundle -type f -name '*.deb' | head -n 1 || true)"
+          [ -n "${DEB_FILE}" ] || fail "DEB file not found"
+          DEB_ABS="$(realpath "${DEB_FILE}")"
+          EXTRACT_DIR="$(mktemp -d)"
+          dpkg-deb -x "${DEB_ABS}" "${EXTRACT_DIR}"
+
+          APP_ROOT="${EXTRACT_DIR}/usr/lib/Stanok"
+          [ -d "${APP_ROOT}" ] || fail "Extracted app root not found in DEB"
+          test -f "${APP_ROOT}/runtime-node/scripts/build-worker.mjs" || fail "build-worker.mjs missing"
+          test -f "${APP_ROOT}/runtime-node/scripts/build-css.mjs" || fail "build-css.mjs missing"
+          test -d "${APP_ROOT}/runtime-node/node_modules/intcss" || fail "intcss missing"
+
+          NODE_BIN=""
+          for candidate in \
+            "${APP_ROOT}/node-x86_64-unknown-linux-gnu" \
+            "${APP_ROOT}/binaries/node-x86_64-unknown-linux-gnu" \
+            "/usr/bin/node"; do
+            if [ -x "${candidate}" ]; then
+              NODE_BIN="${candidate}"
+              break
+            fi
+          done
+          [ -n "${NODE_BIN}" ] || fail "Node binary not found for DEB smoke"
+          "${NODE_BIN}" -v
+
+          NODE_PATH="${APP_ROOT}/runtime-node/node_modules" \
+            "${NODE_BIN}" --input-type=module -e "import { pathToFileURL } from 'node:url'; import(pathToFileURL(process.argv[1]).href).then(() => console.log('OK worker import')).catch((e) => { console.error(e); process.exit(1); });" \
+            "${APP_ROOT}/runtime-node/scripts/build-worker.mjs" \
+            || fail "Worker import failed on extracted DEB"
+
+          NODE_PATH="${APP_ROOT}/runtime-node/node_modules" \
+            "${NODE_BIN}" --check "${APP_ROOT}/runtime-node/scripts/build-css.mjs" \
+            || fail "build-css syntax check failed on extracted DEB"
+
       - name: Upload bundle artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.artifact_name }}
+          name: stanok-linux
           path: src-tauri/target/release/bundle/
           if-no-files-found: error
