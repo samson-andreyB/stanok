@@ -852,9 +852,9 @@ fn run_node_script_with_worker(
   let worker_path = &runtime.worker_path;
   if !worker_path.exists() {
     return Err(format!(
-      "Не найден скрипт {}\n{}",
+      "Не найден скрипт {}{}",
       worker_path.display(),
-      format_runtime_diagnostics(runtime)
+      optional_runtime_diagnostics(runtime)
     ));
   }
 
@@ -968,9 +968,9 @@ fn spawn_node_worker(runtime: &RuntimePathsState) -> Result<NodeWorker, String> 
     .sidecar("node")
     .map_err(|e| {
       format!(
-        "Ошибка подготовки sidecar node: {}\n{}",
+        "Ошибка подготовки sidecar node: {}{}",
         e,
-        format_runtime_diagnostics(runtime)
+        optional_runtime_diagnostics(runtime)
       )
     })?
     .arg(&runtime.worker_path)
@@ -982,10 +982,10 @@ fn spawn_node_worker(runtime: &RuntimePathsState) -> Result<NodeWorker, String> 
 
   let (events, child) = cmd.spawn().map_err(|e| {
     format!(
-      "Ошибка запуска worker ({}): {}\n{}",
+      "Ошибка запуска worker ({}): {}{}",
       runtime.node_bin.display(),
       e,
-      format_runtime_diagnostics(runtime)
+      optional_runtime_diagnostics(runtime)
     )
   })?;
 
@@ -1931,6 +1931,21 @@ fn format_runtime_diagnostics(runtime: &RuntimePathsState) -> String {
   )
 }
 
+fn show_runtime_diagnostics() -> bool {
+  cfg!(debug_assertions)
+    || env::var("STANOK_RUNTIME_DEBUG")
+      .map(|v| matches!(v.as_str(), "1" | "true" | "TRUE" | "yes" | "YES"))
+      .unwrap_or(false)
+}
+
+fn optional_runtime_diagnostics(runtime: &RuntimePathsState) -> String {
+  if show_runtime_diagnostics() {
+    format!("\n{}", format_runtime_diagnostics(runtime))
+  } else {
+    String::new()
+  }
+}
+
 fn enrich_runtime_module_error(
   message: &str,
   runtime: &RuntimePathsState,
@@ -1975,10 +1990,10 @@ fn enrich_runtime_module_error(
   }
 
   format!(
-    "{}\nПроверка модулей:\n{}\n{}",
+    "{}\nПроверка модулей:\n{}{}",
     message,
     probe_lines.join("\n"),
-    format_runtime_diagnostics(runtime)
+    optional_runtime_diagnostics(runtime)
   )
 }
 

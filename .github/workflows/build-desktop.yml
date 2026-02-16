@@ -121,6 +121,68 @@ jobs:
             "/usr/lib64/Stanok/node-x86_64-unknown-linux-gnu" \
             "/usr/lib64/Stanok/binaries/node-x86_64-unknown-linux-gnu"
 
+      - name: Smoke test installed RPM runtime
+        if: matrix.os == 'ubuntu-22.04'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          fail() {
+            echo "SMOKE ERROR: $1"
+            exit 1
+          }
+
+          RPM_FILE="$(find src-tauri/target/release/bundle -type f -name '*.rpm' | head -n 1 || true)"
+          [ -n "${RPM_FILE}" ] || fail "RPM not found after build"
+          RPM_ABS="$(realpath "${RPM_FILE}")"
+          PKG_NAME="$(rpm -qp --queryformat '%{NAME}' "${RPM_ABS}" || true)"
+          [ -n "${PKG_NAME}" ] || fail "Unable to detect RPM package name"
+
+          sudo rpm -ivh --nosignature --nodeps "${RPM_ABS}" >/tmp/stanok-rpm-install.log 2>&1 \
+            || { cat /tmp/stanok-rpm-install.log; fail "Failed to install RPM"; }
+
+          APP_ROOT=""
+          if [ -d /usr/lib/Stanok ]; then
+            APP_ROOT="/usr/lib/Stanok"
+          elif [ -d /usr/lib64/Stanok ]; then
+            APP_ROOT="/usr/lib64/Stanok"
+          else
+            fail "Installed app root not found"
+          fi
+
+          test -f "${APP_ROOT}/runtime-node/scripts/build-worker.mjs" || fail "build-worker.mjs missing"
+          test -f "${APP_ROOT}/runtime-node/scripts/build-css.mjs" || fail "build-css.mjs missing"
+          test -d "${APP_ROOT}/runtime-node/node_modules/intcss" || fail "intcss missing"
+
+          NODE_BIN=""
+          for candidate in \
+            "${APP_ROOT}/node-x86_64-unknown-linux-gnu" \
+            "${APP_ROOT}/binaries/node-x86_64-unknown-linux-gnu" \
+            "/usr/bin/node"; do
+            if [ -x "${candidate}" ]; then
+              NODE_BIN="${candidate}"
+              break
+            fi
+          done
+          [ -n "${NODE_BIN}" ] || fail "Node binary not found after install"
+          echo "Smoke node binary: ${NODE_BIN}"
+          "${NODE_BIN}" -v
+
+          NODE_PATH="${APP_ROOT}/runtime-node/node_modules" \
+            "${NODE_BIN}" --input-type=module -e "import { pathToFileURL } from 'node:url'; import(pathToFileURL(process.argv[1]).href).then(() => console.log('OK worker import')).catch((e) => { console.error(e); process.exit(1); });" \
+            "${APP_ROOT}/runtime-node/scripts/build-worker.mjs" \
+            || fail "Worker import failed on installed RPM"
+
+          NODE_PATH="${APP_ROOT}/runtime-node/node_modules" \
+            "${NODE_BIN}" --input-type=module -e "import { pathToFileURL } from 'node:url'; import(pathToFileURL(process.argv[1]).href).then(() => console.log('OK build-css import')).catch((e) => { console.error(e); process.exit(1); });" \
+            "${APP_ROOT}/runtime-node/scripts/build-css.mjs" \
+            || fail "build-css import failed on installed RPM"
+
+          sudo rpm -e "${PKG_NAME}" >/tmp/stanok-rpm-remove.log 2>&1 || {
+            cat /tmp/stanok-rpm-remove.log
+            fail "Failed to remove RPM package after smoke"
+          }
+
       - name: Upload bundle artifacts
         uses: actions/upload-artifact@v4
         with:

@@ -46,20 +46,25 @@ npm run build
 В репозитории есть workflow для десктоп-сборок:
 - `.github/workflows/build-desktop.yml`
 
-Как собрать Windows/macOS/Linux:
+Как собрать Linux RPM:
 
-1. Открыть `Actions` -> `Build Desktop (Windows + macOS + Linux)`.
+1. Открыть `Actions` -> `Build Desktop (Linux RPM)`.
 2. Нажать `Run workflow`.
-3. Скачать артефакты:
-- `stanok-windows` (`msi`, `nsis`)
-- `stanok-macos` (`app`, `dmg`)
-- `stanok-linux` (`deb`, `rpm`)
+3. Скачать артефакт `stanok-linux` (`rpm`).
 
 ## Примечания
 
-- Для работы приложения нужны `node`, `cargo/rustc`, `cc`, `pkg-config`, `git`.
+- Для работы приложения нужны `cargo/rustc`, `cc`, `pkg-config`, `git`.
+- Runtime `node` поставляется вместе с приложением (sidecar + `runtime-node`).
 - Проверка окружения: `npm run doctor`.
 - Кэш списка проектов хранится в `~/.cache/stanok` (или `$XDG_CACHE_HOME/stanok`) и живет `1 час`.
+
+## Node Version Policy
+
+- Единый источник версии Node: файл `.nvmrc`.
+- CI (`actions/setup-node`) использует `node-version-file: .nvmrc`.
+- Скрипт `prepare:sidecar-node` кладет в runtime ту же версию Node, что выбрана в окружении сборки.
+- Менять major-версию Node только отдельным PR с прогоном `workflow` и smoke-проверкой RPM.
 
 ## Platform Notes
 
