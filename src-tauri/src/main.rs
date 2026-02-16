@@ -892,7 +892,7 @@ fn run_node_script_via_rust_worker(
   script_name: &str,
   payload: &BuildPayload,
 ) -> Result<String, String> {
-  let script_path = runtime.scripts_dir.join(script_name);
+  let script_path = strip_windows_verbatim_prefix(runtime.scripts_dir.join(script_name));
   if !script_path.exists() {
     return Err(format!(
       "Не найден скрипт {}{}",
@@ -902,18 +902,19 @@ fn run_node_script_via_rust_worker(
   }
 
   let payload_json = serde_json::to_string(payload).map_err(|e| e.to_string())?;
-  let mut cmd = command_with_platform_defaults(&runtime.node_bin);
+  let node_bin = strip_windows_verbatim_prefix(runtime.node_bin.clone());
+  let mut cmd = command_with_platform_defaults(&node_bin);
   cmd.arg(&script_path);
   cmd.arg(payload_json);
-  cmd.current_dir(&runtime.workspace_root);
+  cmd.current_dir(strip_windows_verbatim_prefix(runtime.workspace_root.clone()));
   if let Some(node_modules_dir) = &runtime.node_modules_dir {
-    cmd.env("NODE_PATH", node_modules_dir);
+    cmd.env("NODE_PATH", strip_windows_verbatim_prefix(node_modules_dir.clone()));
   }
 
   let output = cmd.output().map_err(|e| {
     format!(
       "Ошибка запуска node ({}): {}{}",
-      runtime.node_bin.display(),
+      node_bin.display(),
       e,
       optional_runtime_diagnostics(runtime)
     )
@@ -1993,10 +1994,29 @@ fn detect_tauri_version_from_lock() -> String {
 }
 
 fn detect_node_version(node_bin: &Path) -> String {
-  let output = command_with_platform_defaults(node_bin).arg("-v").output();
+  let output = command_with_platform_defaults(strip_windows_verbatim_prefix(node_bin)).arg("-v").output();
   match output {
     Ok(out) if out.status.success() => String::from_utf8_lossy(&out.stdout).trim().to_string(),
     _ => "unknown".to_string(),
+  }
+}
+
+fn strip_windows_verbatim_prefix(path: impl Into<PathBuf>) -> PathBuf {
+  let path = path.into();
+  #[cfg(target_os = "windows")]
+  {
+    let raw = path.to_string_lossy().to_string();
+    if let Some(rest) = raw.strip_prefix(r"\\?\UNC\") {
+      return PathBuf::from(format!(r"\\{}", rest));
+    }
+    if let Some(rest) = raw.strip_prefix(r"\\?\") {
+      return PathBuf::from(rest);
+    }
+    return path;
+  }
+  #[cfg(not(target_os = "windows"))]
+  {
+    path
   }
 }
 
