@@ -183,7 +183,7 @@ function copyRuntimeScripts() {
   ensureDir(runtimeRoot);
   fs.rmSync(runtimeScriptsDir, { recursive: true, force: true });
   ensureDir(runtimeScriptsDir);
-  const runtimeScripts = ['build-css.mjs', 'path-utils.mjs'];
+  const runtimeScripts = ['build-css.mjs'];
   for (const fileName of runtimeScripts) {
     const from = path.join(sourceScriptsDir, fileName);
     const to = path.join(runtimeScriptsDir, fileName);

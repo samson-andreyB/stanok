@@ -55,6 +55,23 @@ struct BuildPayload {
   projects_path: String,
   project_name: String,
   config: BuildConfig,
+  #[serde(default)]
+  runtime_paths: Option<BuildRuntimePaths>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct BuildRuntimePaths {
+  project_dir: String,
+  root: String,
+  style_dir: String,
+  img_dir: String,
+  layouts_dir: String,
+  lib_dir: String,
+  b_path: String,
+  path_to_projects_root: String,
+  src_dir: String,
+  root_rel: String,
+  img_rel: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -257,6 +274,7 @@ fn build_styles(
     projects_path,
     project_name,
     config,
+    runtime_paths: None,
   };
   run_build_orchestrated(state.inner(), runtime.inner(), BuildKind::Styles, payload)
 }
@@ -274,6 +292,7 @@ fn build_images(
     projects_path,
     project_name,
     config,
+    runtime_paths: None,
   };
   run_build_orchestrated(state.inner(), runtime.inner(), BuildKind::Images, payload)
 }
@@ -1386,7 +1405,9 @@ fn run_build_orchestrated(
         }
       }
       if run_styles {
-        let out = run_node_script(state, runtime, "build-css.mjs", &payload)?;
+        let mut styles_payload = payload.clone();
+        styles_payload.runtime_paths = Some(build_runtime_paths(&styles_payload));
+        let out = run_node_script(state, runtime, "build-css.mjs", &styles_payload)?;
         if !out.is_empty() {
           outputs.push(out);
         }
@@ -1425,6 +1446,86 @@ fn run_build_orchestrated(
     Ok("Сборка завершена".to_string())
   } else {
     Ok(outputs.join("\n"))
+  }
+}
+
+fn normalize_root_for_css(root: &str) -> String {
+  if root.is_empty() {
+    return String::new();
+  }
+  let rel = normalize_rel(root);
+  if rel.is_empty() {
+    "assets/".to_string()
+  } else {
+    format!("{rel}/")
+  }
+}
+
+fn build_path_to_projects_root(nest: &str) -> String {
+  let n = normalize_rel(nest);
+  if n.is_empty() {
+    return String::new();
+  }
+  let level = n
+    .split(['/', '\\'])
+    .filter(|part| !part.is_empty())
+    .count();
+  "../".repeat(level)
+}
+
+fn build_runtime_paths(payload: &BuildPayload) -> BuildRuntimePaths {
+  let project_dir = resolve_project_dir(&payload.projects_path, &payload.project_name, &payload.config.nest);
+  let root = normalize_root_for_css(&payload.config.root);
+  let style_dir_name = if payload.config.style.is_empty() {
+    "css".to_string()
+  } else {
+    payload.config.style.clone()
+  };
+  let img_dir_name = if payload.config.img.is_empty() {
+    "img".to_string()
+  } else {
+    payload.config.img.clone()
+  };
+  let layouts_dir_name = if payload.config.layouts.is_empty() {
+    "_layouts".to_string()
+  } else {
+    payload.config.layouts.clone()
+  };
+  let lib_dir_name = if payload.config.lib.is_empty() {
+    "../lib".to_string()
+  } else {
+    payload.config.lib.clone()
+  };
+
+  let style_dir = Path::new(&project_dir)
+    .join(&root)
+    .join(&style_dir_name)
+    .to_string_lossy()
+    .to_string();
+  let img_dir = Path::new(&project_dir)
+    .join(&root)
+    .join(&img_dir_name)
+    .to_string_lossy()
+    .to_string();
+  let b_path = Path::new(&project_dir)
+    .join(&root)
+    .join(&layouts_dir_name)
+    .join("src")
+    .to_string_lossy()
+    .to_string();
+
+  BuildRuntimePaths {
+    project_dir: project_dir.to_string_lossy().to_string(),
+    root,
+    style_dir: style_dir.clone(),
+    img_dir,
+    layouts_dir: layouts_dir_name,
+    lib_dir: lib_dir_name,
+    b_path,
+    path_to_projects_root: build_path_to_projects_root(&payload.config.nest),
+    src_dir: Path::new(&style_dir).join("src").to_string_lossy().to_string(),
+    root_rel: normalize_rel(&payload.config.root),
+    img_rel: normalize_rel(&img_dir_name),
   }
 }
 
@@ -2053,6 +2154,22 @@ mod tests {
   }
 
   #[test]
+  fn normalize_root_for_css_matches_js_contract() {
+    assert_eq!(normalize_root_for_css(""), "");
+    assert_eq!(normalize_root_for_css("/"), "assets/");
+    assert_eq!(normalize_root_for_css("assets"), "assets/");
+    assert_eq!(normalize_root_for_css("/custom/root/"), "custom/root/");
+  }
+
+  #[test]
+  fn build_path_to_projects_root_matches_js_contract() {
+    assert_eq!(build_path_to_projects_root(""), "");
+    assert_eq!(build_path_to_projects_root("nested"), "../");
+    assert_eq!(build_path_to_projects_root("a/b"), "../../");
+    assert_eq!(build_path_to_projects_root("/a\\b/"), "../../");
+  }
+
+  #[test]
   fn watch_snapshot_detects_css_and_img_changes() {
     let uniq = SystemTime::now()
       .duration_since(UNIX_EPOCH)
@@ -2121,6 +2238,7 @@ mod tests {
       projects_path: root.to_string_lossy().to_string(),
       project_name: "demo/main".to_string(),
       config: build_config_from_project_data(Some(&json!({}))),
+      runtime_paths: None,
     };
 
     let out = run_images_rust(&payload).expect("run images");
@@ -2150,6 +2268,7 @@ mod tests {
       projects_path: root.to_string_lossy().to_string(),
       project_name: "demo/main".to_string(),
       config: build_config_from_project_data(Some(&json!({}))),
+      runtime_paths: None,
     };
 
     let first = run_images_rust(&payload).expect("first run");

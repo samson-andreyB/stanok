@@ -3,12 +3,6 @@ import path from 'node:path';
 import os from 'node:os';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
-import {
-  buildPathToProjectsRoot,
-  normalizeRel,
-  normalizeRoot,
-  resolveProjectDir,
-} from './path-utils.mjs';
 
 const scriptFile = fileURLToPath(import.meta.url);
 const scriptDir = path.dirname(scriptFile);
@@ -77,24 +71,27 @@ const enableSvgFallback = process.env.STANOK_ENABLE_SVG_FALLBACK === '1';
 
 export async function runBuild(payloadInput) {
   payload = normalizePayload(payloadInput);
-  projectDir = resolveProjectDir(payload.projects_path, payload.project_name, payload.config.nest);
+  const runtimePaths = payload.runtime_paths && typeof payload.runtime_paths === 'object'
+    ? payload.runtime_paths
+    : null;
+  projectDir = runtimePaths?.project_dir || resolveProjectDir(payload.projects_path, payload.project_name, payload.config.nest);
   process.chdir(projectDir);
 
-  root = normalizeRoot(payload.config.root);
-  styleDir = path.normalize(path.join(projectDir, root, payload.config.style || 'css'));
-  imgDir = path.normalize(path.join(projectDir, root, payload.config.img || 'img'));
-  layoutsDir = payload.config.layouts || '_layouts';
-  libDir = payload.config.lib || '../lib';
+  root = runtimePaths?.root || normalizeRoot(payload.config.root);
+  styleDir = path.normalize(runtimePaths?.style_dir || path.join(projectDir, root, payload.config.style || 'css'));
+  imgDir = path.normalize(runtimePaths?.img_dir || path.join(projectDir, root, payload.config.img || 'img'));
+  layoutsDir = runtimePaths?.layouts_dir || payload.config.layouts || '_layouts';
+  libDir = runtimePaths?.lib_dir || payload.config.lib || '../lib';
   browsers =
     Array.isArray(payload.config.browsers) && payload.config.browsers.length
       ? payload.config.browsers
       : ['last 5 versions', 'Chrome 27', 'ff 12', 'ie 8', 'ie 9', 'opera 12'];
 
-  bPath = path.normalize(path.join(projectDir, root, layoutsDir, 'src'));
-  pathToProjectsRoot = buildPathToProjectsRoot(payload.config.nest);
-  srcDir = path.join(styleDir, 'src');
-  const rootRel = normalizeRel(payload.config.root || '');
-  const imgRel = normalizeRel(payload.config.img || 'img');
+  bPath = path.normalize(runtimePaths?.b_path || path.join(projectDir, root, layoutsDir, 'src'));
+  pathToProjectsRoot = runtimePaths?.path_to_projects_root || buildPathToProjectsRoot(payload.config.nest);
+  srcDir = runtimePaths?.src_dir || path.join(styleDir, 'src');
+  const rootRel = runtimePaths?.root_rel || normalizeRel(payload.config.root || '');
+  const imgRel = runtimePaths?.img_rel || normalizeRel(payload.config.img || 'img');
   fallbackUrlPrefix = (`/${rootRel}/${imgRel}/svg_fallback/`).replace(/\/+/g, '/');
 
   try {
@@ -121,6 +118,29 @@ export async function runBuild(payloadInput) {
   await runWithConcurrency(styles, maxWorkers, processStyle);
 
   return `Стили обработаны: ${styles.length} файл(ов)`;
+}
+
+function normalizeRel(value) {
+  return String(value || '').replace(/^[/\\]+/, '').replace(/[/\\]+$/, '');
+}
+
+function normalizeRoot(rootValue) {
+  if (rootValue === '') return '';
+  const rel = normalizeRel(rootValue);
+  return rel ? `${rel}/` : 'assets/';
+}
+
+function resolveProjectDir(projectsPath, projectName, nest) {
+  const group = String(projectName).split('/')[0];
+  const nestPath = normalizeRel(nest || '');
+  return nestPath ? path.join(projectsPath, group, nestPath) : path.join(projectsPath, group);
+}
+
+function buildPathToProjectsRoot(nest) {
+  const n = normalizeRel(nest);
+  if (!n) return '';
+  const level = n.split(/[\\/]/).length;
+  return '../'.repeat(level);
 }
 
 function normalizePayload(payloadInput) {
