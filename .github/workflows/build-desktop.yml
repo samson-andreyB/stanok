@@ -50,31 +50,58 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
+            cpio \
             libwebkit2gtk-4.1-dev \
             libgtk-3-dev \
             libsoup-3.0-dev \
             libayatana-appindicator3-dev \
             librsvg2-dev \
-            rpm
-
-      - name: Prepare sidecar Node
-        run: npm run prepare:sidecar-node:minimal
-
-      - name: Verify prepared sidecar
-        shell: bash
-        run: |
-          set -euo pipefail
-          SIDECAR="src-tauri/binaries/node-x86_64-unknown-linux-gnu"
-          if [ ! -f "${SIDECAR}" ]; then
-            echo "Prepared sidecar missing: ${SIDECAR}"
-            find src-tauri/binaries -maxdepth 2 -type f | sed -n '1,200p' || true
-            exit 1
-          fi
-          echo "Prepared sidecar: ${SIDECAR}"
-          "${SIDECAR}" -v
+            rpm \
+            rpm2cpio
 
       - name: Build app bundles
         run: npx tauri build --bundles ${{ matrix.bundle }}
+
+      - name: Validate runtime modules inside RPM
+        if: matrix.os == 'ubuntu-22.04'
+        shell: bash
+        run: |
+          set -euo pipefail
+          RPM_FILE="$(find src-tauri/target/release/bundle -type f -name '*.rpm' | head -n 1 || true)"
+          if [ -z "${RPM_FILE}" ]; then
+            echo "RPM not found after build"
+            find src-tauri/target/release/bundle -maxdepth 6 -type f | sed -n '1,300p'
+            exit 1
+          fi
+
+          AUDIT_DIR="$(mktemp -d)"
+          RPM_ABS="$(realpath "${RPM_FILE}")"
+          (cd "${AUDIT_DIR}" && rpm2cpio "${RPM_ABS}" | cpio -idm --quiet)
+
+          APP_ROOT=""
+          for candidate in \
+            "${AUDIT_DIR}/usr/lib/Stanok" \
+            "${AUDIT_DIR}/usr/lib64/Stanok"; do
+            if [ -d "${candidate}" ]; then
+              APP_ROOT="${candidate}"
+              break
+            fi
+          done
+          if [ -z "${APP_ROOT}" ]; then
+            echo "Stanok app root not found inside RPM"
+            find "${AUDIT_DIR}" -maxdepth 8 -type d | sed -n '1,300p'
+            exit 1
+          fi
+
+          WORKER="${APP_ROOT}/runtime-node/scripts/build-worker.mjs"
+          BUILD_CSS="${APP_ROOT}/runtime-node/scripts/build-css.mjs"
+          INTCSS_PKG="${APP_ROOT}/runtime-node/node_modules/intcss/package.json"
+          test -f "${WORKER}"
+          test -f "${BUILD_CSS}"
+          test -f "${INTCSS_PKG}"
+
+          node --input-type=module -e "import { pathToFileURL } from 'node:url'; import(pathToFileURL(process.argv[1]).href).then(() => console.log('OK worker import')).catch((e) => { console.error(e); process.exit(1); });" "${WORKER}"
+          node --input-type=module -e "import { pathToFileURL } from 'node:url'; import(pathToFileURL(process.argv[1]).href).then(() => console.log('OK build-css import')).catch((e) => { console.error(e); process.exit(1); });" "${BUILD_CSS}"
 
       - name: Debug RPM contents
         if: matrix.os == 'ubuntu-22.04'

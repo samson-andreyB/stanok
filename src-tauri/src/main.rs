@@ -838,7 +838,9 @@ fn run_node_script(
   match run_node_script_once(runtime, script_name, payload) {
     Ok(output) => Ok(output),
     Err(fallback_error) => {
+      let fallback_error = enrich_runtime_module_error(&fallback_error, runtime, script_name);
       if let Some(worker_error) = last_error {
+        let worker_error = enrich_runtime_module_error(&worker_error, runtime, script_name);
         if worker_error.trim() == fallback_error.trim() {
           Err(fallback_error)
         } else {
@@ -923,7 +925,7 @@ fn run_node_script_with_worker(
     .and_then(Value::as_str)
     .map(compact_script_error)
     .unwrap_or_else(|| "Ошибка сборки".to_string());
-  Err(message)
+  Err(enrich_runtime_module_error(&message, runtime, script_name))
 }
 
 fn read_worker_response(worker: &mut NodeWorker) -> Result<String, String> {
@@ -1191,10 +1193,16 @@ fn sleep_with_stop(stop: &AtomicBool, total_ms: u64) {
 }
 
 fn is_noise_stderr_line(line: &str) -> bool {
+  let trimmed = line.trim_start();
   line.is_empty()
     || line == "{"
     || line == "}"
     || line == "^"
+    || trimmed.starts_with("throw new Error(")
+    || trimmed.starts_with("const ")
+    || trimmed.starts_with("let ")
+    || trimmed.starts_with("var ")
+    || trimmed.starts_with("import ")
     || line.starts_with("at ")
     || line.starts_with("node:")
     || line.starts_with("Node.js")
@@ -2007,6 +2015,57 @@ fn format_runtime_diagnostics(runtime: &RuntimePathsState) -> String {
     } else {
       node_candidates
     }
+  )
+}
+
+fn enrich_runtime_module_error(
+  message: &str,
+  runtime: &RuntimePathsState,
+  script_name: &str,
+) -> String {
+  let lowered = message.to_ascii_lowercase();
+  let is_module_error = lowered.contains("не найден модуль")
+    || lowered.contains("cannot find module")
+    || lowered.contains("error: cannot find module");
+  if !is_module_error {
+    return message.to_string();
+  }
+
+  let script_path = runtime.scripts_dir.join(script_name);
+  let mut probe_lines = vec![
+    format!(
+      "script: {} [{}]",
+      script_path.display(),
+      if script_path.exists() {
+        "exists"
+      } else {
+        "missing"
+      }
+    ),
+  ];
+
+  if let Some(node_modules_dir) = &runtime.node_modules_dir {
+    let intcss = node_modules_dir.join("intcss").join("package.json");
+    let postcss5 = node_modules_dir.join("postcss5").join("package.json");
+    probe_lines.push(format!(
+      "intcss: {} [{}]",
+      intcss.display(),
+      if intcss.exists() { "exists" } else { "missing" }
+    ));
+    probe_lines.push(format!(
+      "postcss5: {} [{}]",
+      postcss5.display(),
+      if postcss5.exists() { "exists" } else { "missing" }
+    ));
+  } else {
+    probe_lines.push("node_modules_dir: <none>".to_string());
+  }
+
+  format!(
+    "{}\nПроверка модулей:\n{}\n{}",
+    message,
+    probe_lines.join("\n"),
+    format_runtime_diagnostics(runtime)
   )
 }
 

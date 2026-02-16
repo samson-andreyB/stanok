@@ -10,15 +10,33 @@ import {
   resolveProjectDir,
 } from './path-utils.mjs';
 
+const scriptFile = fileURLToPath(import.meta.url);
+const scriptDir = path.dirname(scriptFile);
+const runtimeNodeModulesDir = path.resolve(scriptDir, '..', 'node_modules');
 const require = createRequire(import.meta.url);
 const intcss = requireOrThrow('intcss', 'Не найден модуль intcss. Выполни npm install перед запуском сборки.');
 const postcss = resolvePostcss();
 
 function requireOrThrow(moduleName, message) {
   try {
-    return require(moduleName);
-  } catch {
-    throw new Error(message);
+    const resolved = require.resolve(moduleName, {
+      paths: [runtimeNodeModulesDir, process.cwd()],
+    });
+    return require(resolved);
+  } catch (error) {
+    const details =
+      error && typeof error === 'object'
+        ? String(error.message || error.stack || error)
+        : String(error);
+    const isDirectMissing =
+      error &&
+      typeof error === 'object' &&
+      error.code === 'MODULE_NOT_FOUND' &&
+      details.includes(`'${moduleName}'`);
+    if (isDirectMissing) {
+      throw new Error(`${message} Причина: ${details}`);
+    }
+    throw new Error(`Ошибка загрузки модуля ${moduleName}. Причина: ${details}`);
   }
 }
 

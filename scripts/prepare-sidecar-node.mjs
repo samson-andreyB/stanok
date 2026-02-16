@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -13,6 +14,7 @@ const runtimeScriptsDir = path.join(runtimeRoot, 'scripts');
 const sourceScriptsDir = path.join(repoRoot, 'scripts');
 const sourceNodeModulesDir = path.join(repoRoot, 'node_modules');
 const sourceNodeBin = process.env.STANOK_NODE_BIN || process.execPath;
+const require = createRequire(import.meta.url);
 
 const args = new Set(process.argv.slice(2));
 const copyFullNodeModules = !args.has('--minimal');
@@ -89,38 +91,45 @@ function copyRuntimeNodeModules() {
     'assets',
   ];
 
-  const packageSet = collectRuntimePackageClosure(minimalRootPackages);
-  for (const pkgName of packageSet) {
-    const from = resolvePackageDir(sourceNodeModulesDir, pkgName);
-    const to = resolvePackageDir(runtimeModulesDir, pkgName);
-    if (!from || !fs.existsSync(from)) continue;
+  const packageDirs = collectRuntimePackageClosure(minimalRootPackages);
+  for (const from of packageDirs) {
+    const rel = path.relative(sourceNodeModulesDir, from);
+    if (!rel || rel.startsWith('..')) continue;
+    const to = path.join(runtimeModulesDir, rel);
     ensureDir(path.dirname(to));
     fs.cpSync(from, to, { recursive: true, dereference: true });
   }
-  return `minimal (${packageSet.size} packages)`;
+  return `minimal (${packageDirs.size} packages)`;
 }
 
 function collectRuntimePackageClosure(rootPackages) {
-  const queue = [...new Set(rootPackages)];
-  const rootSet = new Set(queue);
+  const queue = [...new Set(rootPackages)].map((pkgName) => ({
+    pkgName,
+    fromDir: sourceNodeModulesDir,
+    isRoot: true,
+  }));
   const visited = new Set();
   const missingRoots = [];
+  const resolvedDirs = new Set();
 
   while (queue.length > 0) {
-    const pkgName = queue.shift();
-    if (!pkgName || visited.has(pkgName)) continue;
+    const { pkgName, fromDir, isRoot } = queue.shift();
+    if (!pkgName) continue;
 
-    const pkgDir = resolvePackageDir(sourceNodeModulesDir, pkgName);
+    const pkgDir = resolvePackageDirFrom(pkgName, fromDir);
     if (!pkgDir || !fs.existsSync(pkgDir)) {
-      if (rootSet.has(pkgName)) {
+      if (isRoot) {
         missingRoots.push(pkgName);
       }
       continue;
     }
 
-    visited.add(pkgName);
+    const pkgDirReal = fs.realpathSync(pkgDir);
+    if (visited.has(pkgDirReal)) continue;
+    visited.add(pkgDirReal);
+    resolvedDirs.add(pkgDirReal);
 
-    const pkgJsonPath = path.join(pkgDir, 'package.json');
+    const pkgJsonPath = path.join(pkgDirReal, 'package.json');
     if (!fs.existsSync(pkgJsonPath)) continue;
 
     let pkgJson;
@@ -134,7 +143,11 @@ function collectRuntimePackageClosure(rootPackages) {
     const optionalDeps = Object.keys(pkgJson.optionalDependencies || {});
 
     for (const dep of [...deps, ...optionalDeps]) {
-      if (!visited.has(dep)) queue.push(dep);
+      queue.push({
+        pkgName: dep,
+        fromDir: pkgDirReal,
+        isRoot: false,
+      });
     }
   }
 
@@ -144,17 +157,25 @@ function collectRuntimePackageClosure(rootPackages) {
     );
   }
 
-  return visited;
+  return resolvedDirs;
 }
 
-function resolvePackageDir(nodeModulesRoot, pkgName) {
+function resolvePackageDirFrom(pkgName, fromDir) {
   if (!pkgName) return null;
-  if (pkgName.startsWith('@')) {
-    const [scope, name] = pkgName.split('/');
-    if (!scope || !name) return null;
-    return path.join(nodeModulesRoot, scope, name);
+  try {
+    const pkgJsonPath = require.resolve(`${pkgName}/package.json`, {
+      paths: [fromDir, sourceNodeModulesDir],
+    });
+    return path.dirname(pkgJsonPath);
+  } catch {
+    // Fallback: direct path under root node_modules.
+    if (pkgName.startsWith('@')) {
+      const [scope, name] = pkgName.split('/');
+      if (!scope || !name) return null;
+      return path.join(sourceNodeModulesDir, scope, name);
+    }
+    return path.join(sourceNodeModulesDir, pkgName);
   }
-  return path.join(nodeModulesRoot, pkgName);
 }
 
 function copyRuntimeScripts() {
