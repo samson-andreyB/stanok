@@ -313,13 +313,19 @@ jobs:
           for candidate in \
             "${APP_ROOT}/node-x86_64-unknown-linux-gnu" \
             "${APP_ROOT}/binaries/node-x86_64-unknown-linux-gnu" \
+            "${APP_ROOT}/resources/node-x86_64-unknown-linux-gnu" \
+            "${APP_ROOT}/resources/binaries/node-x86_64-unknown-linux-gnu" \
             "/usr/bin/node"; do
-            if [ -x "${candidate}" ]; then
+            if [ -f "${candidate}" ] || [ -x "${candidate}" ]; then
               NODE_BIN="${candidate}"
               break
             fi
           done
+          if [ -z "${NODE_BIN}" ]; then
+            NODE_BIN="$(command -v node || true)"
+          fi
           [ -n "${NODE_BIN}" ] || fail "Node binary not found for DEB smoke"
+          chmod +x "${NODE_BIN}" || true
           "${NODE_BIN}" -v
 
           NODE_PATH="${RUNTIME_ROOT}/node_modules" \
