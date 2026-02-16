@@ -93,14 +93,26 @@ jobs:
           for candidate in \
             "${RES_DIR}/node-${{ matrix.target }}" \
             "${RES_DIR}/binaries/node-${{ matrix.target }}" \
-            "${APP_DIR}/Contents/MacOS/node-${{ matrix.target }}"; do
+            "${APP_DIR}/Contents/MacOS/node-${{ matrix.target }}" \
+            "${RES_DIR}/node" \
+            "${RES_DIR}/binaries/node" \
+            "${APP_DIR}/Contents/MacOS/node"; do
             if [ -f "${candidate}" ]; then
               SIDECAR="${candidate}"
               break
             fi
           done
-          [ -n "${SIDECAR}" ] || { echo "Sidecar node not found in app bundle"; exit 1; }
+          if [ -z "${SIDECAR}" ]; then
+            SIDECAR="$(find "${APP_DIR}/Contents" -maxdepth 5 -type f \( -name 'node' -o -name 'node-*' \) | head -n 1 || true)"
+          fi
+          if [ -z "${SIDECAR}" ]; then
+            echo "Sidecar node not found in app bundle"
+            echo "App bundle files (first 300):"
+            find "${APP_DIR}/Contents" -maxdepth 5 -type f | sed -n '1,300p'
+            exit 1
+          fi
           chmod +x "${SIDECAR}"
+          echo "Resolved sidecar: ${SIDECAR}"
           "${SIDECAR}" -v
 
       - name: Upload bundle artifacts
