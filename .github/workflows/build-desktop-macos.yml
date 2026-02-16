@@ -89,28 +89,17 @@ jobs:
           test -f "${RES_DIR}/runtime-node/scripts/build-css.mjs"
           test -d "${RES_DIR}/runtime-node/node_modules/intcss"
 
-          SIDECAR=""
-          for candidate in \
-            "${RES_DIR}/node-${{ matrix.target }}" \
-            "${RES_DIR}/binaries/node-${{ matrix.target }}" \
-            "${APP_DIR}/Contents/MacOS/node-${{ matrix.target }}" \
-            "${RES_DIR}/node" \
-            "${RES_DIR}/binaries/node" \
-            "${APP_DIR}/Contents/MacOS/node"; do
-            if [ -f "${candidate}" ]; then
-              SIDECAR="${candidate}"
-              break
-            fi
-          done
-          if [ -z "${SIDECAR}" ]; then
-            SIDECAR="$(find "${APP_DIR}/Contents" -maxdepth 5 -type f \( -name 'node' -o -name 'node-*' \) | head -n 1 || true)"
-          fi
-          if [ -z "${SIDECAR}" ]; then
-            echo "Sidecar node not found in app bundle"
+          MATCHES="$(find "${APP_DIR}/Contents" -type f \( -name "node-${{ matrix.target }}" -o -name "node" \) | sed '/^$/d' || true)"
+          COUNT="$(printf '%s\n' "${MATCHES}" | sed '/^$/d' | wc -l | tr -d ' ')"
+          if [ "${COUNT}" -ne 1 ]; then
+            echo "Expected exactly one sidecar node, got ${COUNT}"
+            echo "Matches:"
+            printf '%s\n' "${MATCHES}"
             echo "App bundle files (first 300):"
             find "${APP_DIR}/Contents" -maxdepth 5 -type f | sed -n '1,300p'
             exit 1
           fi
+          SIDECAR="$(printf '%s\n' "${MATCHES}" | head -n 1)"
           chmod +x "${SIDECAR}"
           echo "Resolved sidecar: ${SIDECAR}"
           "${SIDECAR}" -v
