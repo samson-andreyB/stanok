@@ -121,7 +121,9 @@ jobs:
             "/usr/lib/Stanok/runtime-node/scripts/build-css.mjs" \
             "/usr/lib64/Stanok/runtime-node/scripts/build-css.mjs"
           assert_any_path "intcss package" \
+            "/usr/lib/Stanok/runtime-node/node_modules/intcss/index.js" \
             "/usr/lib/Stanok/runtime-node/node_modules/intcss/package.json" \
+            "/usr/lib64/Stanok/runtime-node/node_modules/intcss/index.js" \
             "/usr/lib64/Stanok/runtime-node/node_modules/intcss/package.json"
           assert_any_path "sidecar node binary" \
             "/usr/bin/node" \
