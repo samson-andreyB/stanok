@@ -3,19 +3,5 @@
   "identifier": "default",
   "description": "Default capability",
   "windows": ["main"],
-  "permissions": [
-    "core:default",
-    {
-      "identifier": "shell:allow-spawn",
-      "allow": [{ "name": "node", "sidecar": true, "args": true }]
-    },
-    {
-      "identifier": "shell:allow-kill",
-      "allow": [{ "name": "node", "sidecar": true, "args": true }]
-    },
-    {
-      "identifier": "shell:allow-stdin-write",
-      "allow": [{ "name": "node", "sidecar": true, "args": true }]
-    }
-  ]
+  "permissions": ["core:default"]
 }

@@ -182,7 +182,16 @@ function copyRuntimeScripts() {
   }
   ensureDir(runtimeRoot);
   fs.rmSync(runtimeScriptsDir, { recursive: true, force: true });
-  fs.cpSync(sourceScriptsDir, runtimeScriptsDir, { recursive: true, dereference: true });
+  ensureDir(runtimeScriptsDir);
+  const runtimeScripts = ['build-css.mjs', 'build-images.mjs', 'path-utils.mjs'];
+  for (const fileName of runtimeScripts) {
+    const from = path.join(sourceScriptsDir, fileName);
+    const to = path.join(runtimeScriptsDir, fileName);
+    if (!fs.existsSync(from)) {
+      throw new Error(`Required runtime script not found: ${from}`);
+    }
+    fs.copyFileSync(from, to);
+  }
   return runtimeScriptsDir;
 }
 

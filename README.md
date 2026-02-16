@@ -9,7 +9,7 @@
 - Сборка проектных стилей: `intcss` + `postcss@5` (`scripts/build-css.mjs`)
 - Сборка изображений: `scripts/build-images.mjs`
 - Файловые watcher'ы: `notify` (Rust), с fallback на polling
-- Build worker: `scripts/build-worker.mjs` (persistent Node process)
+- Оркестрация сборки: Rust backend (`src-tauri/src/main.rs`) + Node CLI scripts (`build-css.mjs`, `build-images.mjs`)
 
 ## Разработка
 

@@ -57,17 +57,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -f src-tauri/runtime-node/scripts/build-worker.mjs
           test -f src-tauri/runtime-node/scripts/build-css.mjs
+          test -f src-tauri/runtime-node/scripts/build-images.mjs
           test -d src-tauri/runtime-node/node_modules/intcss
           test -f "src-tauri/binaries/node-${{ matrix.target }}"
           NODE_BIN="src-tauri/binaries/node-${{ matrix.target }}"
           chmod +x "${NODE_BIN}"
           NODE_PATH="src-tauri/runtime-node/node_modules" \
-            "${NODE_BIN}" --input-type=module -e "import { pathToFileURL } from 'node:url'; import(pathToFileURL(process.argv[1]).href).then(() => console.log('OK worker import')).catch((e) => { console.error(e); process.exit(1); });" \
-            "src-tauri/runtime-node/scripts/build-worker.mjs"
-          NODE_PATH="src-tauri/runtime-node/node_modules" \
             "${NODE_BIN}" --check "src-tauri/runtime-node/scripts/build-css.mjs"
+          NODE_PATH="src-tauri/runtime-node/node_modules" \
+            "${NODE_BIN}" --check "src-tauri/runtime-node/scripts/build-images.mjs"
 
       - name: Build app bundles
         env:
@@ -84,8 +83,8 @@ jobs:
           [ -n "${APP_DIR}" ] || { echo "macOS .app bundle not found"; exit 1; }
 
           RES_DIR="${APP_DIR}/Contents/Resources"
-          test -f "${RES_DIR}/runtime-node/scripts/build-worker.mjs"
           test -f "${RES_DIR}/runtime-node/scripts/build-css.mjs"
+          test -f "${RES_DIR}/runtime-node/scripts/build-images.mjs"
           test -d "${RES_DIR}/runtime-node/node_modules/intcss"
 
           MATCHES="$(find "${APP_DIR}/Contents" -type f \( -name "node-${{ matrix.target }}" -o -name "node" \) | sed '/^$/d' || true)"

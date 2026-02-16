@@ -97,9 +97,9 @@ jobs:
             fail "${label} missing in RPM"
           }
 
-          assert_any_path "build-worker.mjs" \
-            "/usr/lib/Stanok/runtime-node/scripts/build-worker.mjs" \
-            "/usr/lib64/Stanok/runtime-node/scripts/build-worker.mjs"
+          assert_any_path "build-images.mjs" \
+            "/usr/lib/Stanok/runtime-node/scripts/build-images.mjs" \
+            "/usr/lib64/Stanok/runtime-node/scripts/build-images.mjs"
           assert_any_path "build-css.mjs" \
             "/usr/lib/Stanok/runtime-node/scripts/build-css.mjs" \
             "/usr/lib64/Stanok/runtime-node/scripts/build-css.mjs"
@@ -174,7 +174,7 @@ jobs:
             fail "Installed app root not found"
           fi
 
-          test -f "${APP_ROOT}/runtime-node/scripts/build-worker.mjs" || fail "build-worker.mjs missing"
+          test -f "${APP_ROOT}/runtime-node/scripts/build-images.mjs" || fail "build-images.mjs missing"
           test -f "${APP_ROOT}/runtime-node/scripts/build-css.mjs" || fail "build-css.mjs missing"
           test -d "${APP_ROOT}/runtime-node/node_modules/intcss" || fail "intcss missing"
 
@@ -185,9 +185,8 @@ jobs:
           "${NODE_BIN}" -v
 
           NODE_PATH="${APP_ROOT}/runtime-node/node_modules" \
-            "${NODE_BIN}" --input-type=module -e "import { pathToFileURL } from 'node:url'; import(pathToFileURL(process.argv[1]).href).then(() => console.log('OK worker import')).catch((e) => { console.error(e); process.exit(1); });" \
-            "${APP_ROOT}/runtime-node/scripts/build-worker.mjs" \
-            || fail "Worker import failed on installed RPM"
+            "${NODE_BIN}" --check "${APP_ROOT}/runtime-node/scripts/build-images.mjs" \
+            || fail "build-images syntax check failed on installed RPM"
 
           NODE_PATH="${APP_ROOT}/runtime-node/node_modules" \
             "${NODE_BIN}" --check "${APP_ROOT}/runtime-node/scripts/build-css.mjs" \
@@ -234,15 +233,15 @@ jobs:
             fail "${label} missing in DEB"
           }
 
-          assert_any_path "build-worker.mjs" \
-            "/usr/lib/Stanok/runtime-node/scripts/build-worker.mjs" \
-            "/usr/lib/stanok/runtime-node/scripts/build-worker.mjs" \
-            "/usr/lib/Stanok/resources/runtime-node/scripts/build-worker.mjs" \
-            "/usr/lib/stanok/resources/runtime-node/scripts/build-worker.mjs" \
-            "/usr/lib64/Stanok/runtime-node/scripts/build-worker.mjs" \
-            "/usr/lib64/stanok/runtime-node/scripts/build-worker.mjs" \
-            "/usr/lib64/Stanok/resources/runtime-node/scripts/build-worker.mjs" \
-            "/usr/lib64/stanok/resources/runtime-node/scripts/build-worker.mjs"
+          assert_any_path "build-images.mjs" \
+            "/usr/lib/Stanok/runtime-node/scripts/build-images.mjs" \
+            "/usr/lib/stanok/runtime-node/scripts/build-images.mjs" \
+            "/usr/lib/Stanok/resources/runtime-node/scripts/build-images.mjs" \
+            "/usr/lib/stanok/resources/runtime-node/scripts/build-images.mjs" \
+            "/usr/lib64/Stanok/runtime-node/scripts/build-images.mjs" \
+            "/usr/lib64/stanok/runtime-node/scripts/build-images.mjs" \
+            "/usr/lib64/Stanok/resources/runtime-node/scripts/build-images.mjs" \
+            "/usr/lib64/stanok/resources/runtime-node/scripts/build-images.mjs"
           assert_any_path "build-css.mjs" \
             "/usr/lib/Stanok/runtime-node/scripts/build-css.mjs" \
             "/usr/lib/stanok/runtime-node/scripts/build-css.mjs" \
@@ -358,7 +357,7 @@ jobs:
           done
           [ -n "${RUNTIME_ROOT}" ] || fail "runtime-node root not found in extracted DEB"
 
-          test -f "${RUNTIME_ROOT}/scripts/build-worker.mjs" || fail "build-worker.mjs missing"
+          test -f "${RUNTIME_ROOT}/scripts/build-images.mjs" || fail "build-images.mjs missing"
           test -f "${RUNTIME_ROOT}/scripts/build-css.mjs" || fail "build-css.mjs missing"
           test -d "${RUNTIME_ROOT}/node_modules/intcss" || fail "intcss missing"
 
@@ -369,9 +368,8 @@ jobs:
           "${NODE_BIN}" -v
 
           NODE_PATH="${RUNTIME_ROOT}/node_modules" \
-            "${NODE_BIN}" --input-type=module -e "import { pathToFileURL } from 'node:url'; import(pathToFileURL(process.argv[1]).href).then(() => console.log('OK worker import')).catch((e) => { console.error(e); process.exit(1); });" \
-            "${RUNTIME_ROOT}/scripts/build-worker.mjs" \
-            || fail "Worker import failed on extracted DEB"
+            "${NODE_BIN}" --check "${RUNTIME_ROOT}/scripts/build-images.mjs" \
+            || fail "build-images syntax check failed on extracted DEB"
 
           NODE_PATH="${RUNTIME_ROOT}/node_modules" \
             "${NODE_BIN}" --check "${RUNTIME_ROOT}/scripts/build-css.mjs" \
