@@ -126,6 +126,34 @@ jobs:
             exit 1
           }
 
+          resolve_node_bin() {
+            local app_root="$1"
+            local matches=""
+            local candidate=""
+            for candidate in \
+              "${app_root}/node-x86_64-unknown-linux-gnu" \
+              "${app_root}/binaries/node-x86_64-unknown-linux-gnu" \
+              "${app_root}/resources/node-x86_64-unknown-linux-gnu" \
+              "${app_root}/resources/binaries/node-x86_64-unknown-linux-gnu" \
+              "/usr/bin/node"; do
+              if [ -f "${candidate}" ]; then
+                matches="${matches}${candidate}"$'\n'
+              fi
+            done
+            matches="$(printf '%s' "${matches}" | sed '/^$/d' || true)"
+            local count
+            count="$(printf '%s\n' "${matches}" | sed '/^$/d' | wc -l | tr -d ' ')"
+            if [ "${count}" -ne 1 ]; then
+              echo "Expected exactly one sidecar node candidate, got ${count}"
+              echo "Matches:"
+              printf '%s\n' "${matches}"
+              echo "App root files (first 300):"
+              find "${app_root}" -maxdepth 5 -type f | sed -n '1,300p'
+              return 1
+            fi
+            printf '%s\n' "${matches}" | head -n 1
+          }
+
           RPM_FILE="$(find src-tauri/target/release/bundle -type f -name '*.rpm' | head -n 1 || true)"
           [ -n "${RPM_FILE}" ] || fail "RPM not found after build"
           RPM_ABS="$(realpath "${RPM_FILE}")"
@@ -148,17 +176,9 @@ jobs:
           test -f "${APP_ROOT}/runtime-node/scripts/build-css.mjs" || fail "build-css.mjs missing"
           test -d "${APP_ROOT}/runtime-node/node_modules/intcss" || fail "intcss missing"
 
-          NODE_BIN=""
-          for candidate in \
-            "${APP_ROOT}/node-x86_64-unknown-linux-gnu" \
-            "${APP_ROOT}/binaries/node-x86_64-unknown-linux-gnu" \
-            "/usr/bin/node"; do
-            if [ -x "${candidate}" ]; then
-              NODE_BIN="${candidate}"
-              break
-            fi
-          done
+          NODE_BIN="$(resolve_node_bin "${APP_ROOT}")" || fail "Node binary resolution failed for RPM smoke"
           [ -n "${NODE_BIN}" ] || fail "Node binary not found after install"
+          echo "Resolved node binary: ${NODE_BIN}"
           echo "Smoke node binary: ${NODE_BIN}"
           "${NODE_BIN}" -v
 
@@ -276,6 +296,34 @@ jobs:
             exit 1
           }
 
+          resolve_node_bin() {
+            local app_root="$1"
+            local matches=""
+            local candidate=""
+            for candidate in \
+              "${app_root}/node-x86_64-unknown-linux-gnu" \
+              "${app_root}/binaries/node-x86_64-unknown-linux-gnu" \
+              "${app_root}/resources/node-x86_64-unknown-linux-gnu" \
+              "${app_root}/resources/binaries/node-x86_64-unknown-linux-gnu" \
+              "/usr/bin/node"; do
+              if [ -f "${candidate}" ]; then
+                matches="${matches}${candidate}"$'\n'
+              fi
+            done
+            matches="$(printf '%s' "${matches}" | sed '/^$/d' || true)"
+            local count
+            count="$(printf '%s\n' "${matches}" | sed '/^$/d' | wc -l | tr -d ' ')"
+            if [ "${count}" -ne 1 ]; then
+              echo "Expected exactly one sidecar node candidate, got ${count}"
+              echo "Matches:"
+              printf '%s\n' "${matches}"
+              echo "App root files (first 300):"
+              find "${app_root}" -maxdepth 5 -type f | sed -n '1,300p'
+              return 1
+            fi
+            printf '%s\n' "${matches}" | head -n 1
+          }
+
           DEB_FILE="$(find src-tauri/target/release/bundle -type f -name '*.deb' | head -n 1 || true)"
           [ -n "${DEB_FILE}" ] || fail "DEB file not found"
           DEB_ABS="$(realpath "${DEB_FILE}")"
@@ -309,22 +357,9 @@ jobs:
           test -f "${RUNTIME_ROOT}/scripts/build-css.mjs" || fail "build-css.mjs missing"
           test -d "${RUNTIME_ROOT}/node_modules/intcss" || fail "intcss missing"
 
-          NODE_BIN=""
-          for candidate in \
-            "${APP_ROOT}/node-x86_64-unknown-linux-gnu" \
-            "${APP_ROOT}/binaries/node-x86_64-unknown-linux-gnu" \
-            "${APP_ROOT}/resources/node-x86_64-unknown-linux-gnu" \
-            "${APP_ROOT}/resources/binaries/node-x86_64-unknown-linux-gnu" \
-            "/usr/bin/node"; do
-            if [ -f "${candidate}" ] || [ -x "${candidate}" ]; then
-              NODE_BIN="${candidate}"
-              break
-            fi
-          done
-          if [ -z "${NODE_BIN}" ]; then
-            NODE_BIN="$(command -v node || true)"
-          fi
+          NODE_BIN="$(resolve_node_bin "${APP_ROOT}")" || fail "Node binary resolution failed for DEB smoke"
           [ -n "${NODE_BIN}" ] || fail "Node binary not found for DEB smoke"
+          echo "Resolved node binary: ${NODE_BIN}"
           chmod +x "${NODE_BIN}" || true
           "${NODE_BIN}" -v
 
