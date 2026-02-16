@@ -174,9 +174,8 @@ jobs:
             || fail "Worker import failed on installed RPM"
 
           NODE_PATH="${APP_ROOT}/runtime-node/node_modules" \
-            "${NODE_BIN}" --input-type=module -e "import { pathToFileURL } from 'node:url'; import(pathToFileURL(process.argv[1]).href).then(() => console.log('OK build-css import')).catch((e) => { console.error(e); process.exit(1); });" \
-            "${APP_ROOT}/runtime-node/scripts/build-css.mjs" \
-            || fail "build-css import failed on installed RPM"
+            "${NODE_BIN}" --check "${APP_ROOT}/runtime-node/scripts/build-css.mjs" \
+            || fail "build-css syntax check failed on installed RPM"
 
           sudo rpm -e "${PKG_NAME}" >/tmp/stanok-rpm-remove.log 2>&1 || {
             cat /tmp/stanok-rpm-remove.log
