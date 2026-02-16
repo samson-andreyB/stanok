@@ -62,14 +62,14 @@ jobs:
           RPM_FILE="$(find src-tauri/target/release/bundle -type f -name '*.rpm' | head -n 1 || true)"
           [ -n "${RPM_FILE}" ] || { echo "RPM not found"; exit 1; }
           RPM_LIST="$(rpm -qlp "${RPM_FILE}" | sed 's#^\./#/#')"
-          echo "${RPM_LIST}" | grep -Eq "^/usr/.*/runtime-node/scripts/build-css\\.mjs$|^/usr/lib/Stanok/runtime-node/scripts/build-css\\.mjs$|^/usr/lib64/Stanok/runtime-node/scripts/build-css\\.mjs$"
-          echo "${RPM_LIST}" | grep -Eq "^/usr/bin/node$|^/usr/.*/node-x86_64-unknown-linux-gnu$|^/usr/.*/binaries/node-x86_64-unknown-linux-gnu$"
+          grep -Eq "^/usr/.*/runtime-node/scripts/build-css\\.mjs$|^/usr/lib/Stanok/runtime-node/scripts/build-css\\.mjs$|^/usr/lib64/Stanok/runtime-node/scripts/build-css\\.mjs$" <<< "${RPM_LIST}"
+          grep -Eq "^/usr/bin/node$|^/usr/.*/node-x86_64-unknown-linux-gnu$|^/usr/.*/binaries/node-x86_64-unknown-linux-gnu$" <<< "${RPM_LIST}"
 
           DEB_FILE="$(find src-tauri/target/release/bundle -type f -name '*.deb' | head -n 1 || true)"
           [ -n "${DEB_FILE}" ] || { echo "DEB not found"; exit 1; }
           DEB_LIST="$(dpkg-deb -c "${DEB_FILE}" | awk '{print $6}' | sed -e 's#^\./#/#' -e 's#^usr/#/usr/#')"
-          echo "${DEB_LIST}" | grep -Eq "^/usr/.*/runtime-node/scripts/build-css\\.mjs$"
-          echo "${DEB_LIST}" | grep -Eq "^/usr/bin/node$|^/usr/.*/node-x86_64-unknown-linux-gnu$|^/usr/.*/binaries/node-x86_64-unknown-linux-gnu$"
+          grep -Eq "^/usr/.*/runtime-node/scripts/build-css\\.mjs$" <<< "${DEB_LIST}"
+          grep -Eq "^/usr/bin/node$|^/usr/.*/node-x86_64-unknown-linux-gnu$|^/usr/.*/binaries/node-x86_64-unknown-linux-gnu$" <<< "${DEB_LIST}"
 
       - name: Upload Linux artifacts
         uses: actions/upload-artifact@v4
