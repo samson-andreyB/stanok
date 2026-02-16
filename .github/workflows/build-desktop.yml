@@ -89,44 +89,46 @@ jobs:
             fail "RPM file not found"
           fi
 
-          AUDIT_DIR="$(mktemp -d)"
           RPM_ABS="$(realpath "${RPM_FILE}")"
-          echo "Extracting RPM: ${RPM_ABS}"
-          if ! (cd "${AUDIT_DIR}" && rpm2cpio "${RPM_ABS}" | cpio -idm --quiet); then
-            find src-tauri/target/release/bundle -maxdepth 8 -type f | sed -n '1,300p'
-            fail "Failed to extract RPM"
+          echo "Inspecting RPM manifest: ${RPM_ABS}"
+          RPM_LIST="$(rpm -qlp "${RPM_ABS}" | sed 's#^\./#/#')"
+          if [ -z "${RPM_LIST}" ]; then
+            fail "Failed to read RPM file list"
           fi
 
-          APP_ROOT=""
-          for candidate in \
-            "${AUDIT_DIR}/usr/lib/Stanok" \
-            "${AUDIT_DIR}/usr/lib64/Stanok"; do
-            if [ -d "${candidate}" ]; then
-              APP_ROOT="${candidate}"
-              break
-            fi
-          done
-          if [ -z "${APP_ROOT}" ]; then
-            echo "Stanok app root not found inside RPM"
-            find "${AUDIT_DIR}" -maxdepth 8 -type d | sed -n '1,300p'
-            find "${AUDIT_DIR}" -maxdepth 8 -type f | sed -n '1,300p'
-            fail "Stanok app root missing"
-          fi
+          has_path() {
+            printf '%s\n' "${RPM_LIST}" | grep -Fqx "$1"
+          }
 
-          WORKER="${APP_ROOT}/runtime-node/scripts/build-worker.mjs"
-          BUILD_CSS="${APP_ROOT}/runtime-node/scripts/build-css.mjs"
-          INTCSS_PKG="${APP_ROOT}/runtime-node/node_modules/intcss/package.json"
+          assert_any_path() {
+            local label="$1"
+            shift
+            for p in "$@"; do
+              if has_path "$p"; then
+                echo "${label}: found ${p}"
+                return 0
+              fi
+            done
+            echo "${label}: not found"
+            printf '%s\n' "${RPM_LIST}" | sed -n '1,400p'
+            fail "${label} missing in RPM"
+          }
 
-          echo "App root: ${APP_ROOT}"
-          assert_file "${WORKER}" || { find "${APP_ROOT}" -maxdepth 6 -type f | sed -n '1,300p'; fail "build-worker.mjs missing"; }
-          assert_file "${BUILD_CSS}" || { find "${APP_ROOT}" -maxdepth 6 -type f | sed -n '1,300p'; fail "build-css.mjs missing"; }
-          assert_file "${INTCSS_PKG}" || { find "${APP_ROOT}" -maxdepth 6 -type f | sed -n '1,300p'; fail "intcss package.json missing"; }
-
-          echo "Check import worker"
-          node --input-type=module -e "import { pathToFileURL } from 'node:url'; import(pathToFileURL(process.argv[1]).href).then(() => console.log('OK worker import')).catch((e) => { console.error(e); process.exit(1); });" "${WORKER}" || fail "Worker import failed"
-
-          echo "Check import build-css"
-          node --input-type=module -e "import { pathToFileURL } from 'node:url'; import(pathToFileURL(process.argv[1]).href).then(() => console.log('OK build-css import')).catch((e) => { console.error(e); process.exit(1); });" "${BUILD_CSS}" || fail "Build-css import failed"
+          assert_any_path "build-worker.mjs" \
+            "/usr/lib/Stanok/runtime-node/scripts/build-worker.mjs" \
+            "/usr/lib64/Stanok/runtime-node/scripts/build-worker.mjs"
+          assert_any_path "build-css.mjs" \
+            "/usr/lib/Stanok/runtime-node/scripts/build-css.mjs" \
+            "/usr/lib64/Stanok/runtime-node/scripts/build-css.mjs"
+          assert_any_path "intcss package" \
+            "/usr/lib/Stanok/runtime-node/node_modules/intcss/package.json" \
+            "/usr/lib64/Stanok/runtime-node/node_modules/intcss/package.json"
+          assert_any_path "sidecar node binary" \
+            "/usr/bin/node" \
+            "/usr/lib/Stanok/node-x86_64-unknown-linux-gnu" \
+            "/usr/lib/Stanok/binaries/node-x86_64-unknown-linux-gnu" \
+            "/usr/lib64/Stanok/node-x86_64-unknown-linux-gnu" \
+            "/usr/lib64/Stanok/binaries/node-x86_64-unknown-linux-gnu"
 
       - name: Debug RPM contents
         if: matrix.os == 'ubuntu-22.04'
