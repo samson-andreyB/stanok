@@ -54,6 +54,23 @@ jobs:
           STANOK_TARGET_TRIPLE: x86_64-unknown-linux-gnu
         run: npx tauri build --bundles deb,rpm
 
+      - name: Validate sidecar/runtime in Linux packages
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          RPM_FILE="$(find src-tauri/target/release/bundle -type f -name '*.rpm' | head -n 1 || true)"
+          [ -n "${RPM_FILE}" ] || { echo "RPM not found"; exit 1; }
+          RPM_LIST="$(rpm -qlp "${RPM_FILE}" | sed 's#^\./#/#')"
+          echo "${RPM_LIST}" | grep -Eq "^/usr/.*/runtime-node/scripts/build-css\\.mjs$|^/usr/lib/Stanok/runtime-node/scripts/build-css\\.mjs$|^/usr/lib64/Stanok/runtime-node/scripts/build-css\\.mjs$"
+          echo "${RPM_LIST}" | grep -Eq "^/usr/bin/node$|^/usr/.*/node-x86_64-unknown-linux-gnu$|^/usr/.*/binaries/node-x86_64-unknown-linux-gnu$"
+
+          DEB_FILE="$(find src-tauri/target/release/bundle -type f -name '*.deb' | head -n 1 || true)"
+          [ -n "${DEB_FILE}" ] || { echo "DEB not found"; exit 1; }
+          DEB_LIST="$(dpkg-deb -c "${DEB_FILE}" | awk '{print $6}' | sed -e 's#^\./#/#' -e 's#^usr/#/usr/#')"
+          echo "${DEB_LIST}" | grep -Eq "^/usr/.*/runtime-node/scripts/build-css\\.mjs$"
+          echo "${DEB_LIST}" | grep -Eq "^/usr/bin/node$|^/usr/.*/node-x86_64-unknown-linux-gnu$|^/usr/.*/binaries/node-x86_64-unknown-linux-gnu$"
+
       - name: Upload Linux artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -101,10 +118,35 @@ jobs:
           STANOK_TARGET_TRIPLE: ${{ matrix.target }}
         run: npm run prepare:sidecar-node
 
+      - name: Validate prepared sidecar/runtime (macOS)
+        shell: bash
+        run: |
+          set -euo pipefail
+          NODE_BIN="src-tauri/binaries/node-${{ matrix.target }}"
+          test -f "${NODE_BIN}"
+          test -f src-tauri/runtime-node/scripts/build-css.mjs
+          test -d src-tauri/runtime-node/node_modules/intcss
+          chmod +x "${NODE_BIN}"
+          NODE_PATH="src-tauri/runtime-node/node_modules" "${NODE_BIN}" --check "src-tauri/runtime-node/scripts/build-css.mjs"
+
       - name: Build app bundles
         env:
           STANOK_TARGET_TRIPLE: ${{ matrix.target }}
         run: npx tauri build --target ${{ matrix.target }} --bundles app,dmg
+
+      - name: Validate sidecar/runtime in macOS app bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP_DIR="$(find src-tauri/target/${{ matrix.target }}/release/bundle/macos -type d -name '*.app' | head -n 1 || true)"
+          [ -n "${APP_DIR}" ] || APP_DIR="$(find src-tauri/target/release/bundle/macos -type d -name '*.app' | head -n 1 || true)"
+          [ -n "${APP_DIR}" ] || { echo "macOS .app bundle not found"; exit 1; }
+          RES_DIR="${APP_DIR}/Contents/Resources"
+          test -f "${RES_DIR}/runtime-node/scripts/build-css.mjs"
+          test -d "${RES_DIR}/runtime-node/node_modules/intcss"
+          MATCHES="$(find "${APP_DIR}/Contents" -type f \( -name "node-${{ matrix.target }}" -o -name "node" \) | sed '/^$/d' || true)"
+          COUNT="$(printf '%s\n' "${MATCHES}" | sed '/^$/d' | wc -l | tr -d ' ')"
+          [ "${COUNT}" -eq 1 ] || { echo "Expected exactly one sidecar node, got ${COUNT}"; printf '%s\n' "${MATCHES}"; exit 1; }
 
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
@@ -143,6 +185,16 @@ jobs:
 
       - name: Prepare sidecar Node
         run: npm run prepare:sidecar-node
+
+      - name: Validate prepared sidecar/runtime (Windows)
+        shell: bash
+        run: |
+          set -euo pipefail
+          NODE_BIN="src-tauri/binaries/node-x86_64-pc-windows-msvc.exe"
+          test -f "${NODE_BIN}"
+          test -f src-tauri/runtime-node/scripts/build-css.mjs
+          test -d src-tauri/runtime-node/node_modules/intcss
+          NODE_PATH="src-tauri/runtime-node/node_modules" "${NODE_BIN}" --check "src-tauri/runtime-node/scripts/build-css.mjs"
 
       - name: Build app bundles
         env:

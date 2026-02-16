@@ -516,16 +516,28 @@ async function chooseProjectsPath() {
 }
 
 async function setProjectsPath(path, save) {
-  state.projectsPath = path;
-  ui.projectsPathInfo.textContent = path;
+  const normalizedPath = normalizeProjectsPath(path);
+  state.projectsPath = normalizedPath;
+  ui.projectsPathInfo.textContent = normalizedPath;
   const loadSeq = ++state.projectsLoadSeq;
 
   if (save) {
-    localStorage.setItem('projectsPath', path);
+    localStorage.setItem('projectsPath', normalizedPath);
   }
 
-  await restoreProjectsFromCache(path, loadSeq);
+  await restoreProjectsFromCache(normalizedPath, loadSeq);
   await loadProjects(loadSeq);
+}
+
+function normalizeProjectsPath(value) {
+  const path = String(value || '').trim();
+  if (/^[A-Za-z]:$/.test(path)) {
+    return `${path}\\`;
+  }
+  if (/^[A-Za-z]:[\\/]$/.test(path)) {
+    return `${path[0]}:\\`;
+  }
+  return path;
 }
 
 async function loadProjects(loadSeq = ++state.projectsLoadSeq) {

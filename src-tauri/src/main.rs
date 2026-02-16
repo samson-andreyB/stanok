@@ -1077,12 +1077,25 @@ fn looks_like_file_diagnostic(line: &str) -> bool {
 
 fn resolve_project_dir(projects_path: &str, project_name: &str, nest: &str) -> PathBuf {
   let group = project_name.split('/').next().unwrap_or_default();
-  let mut path = PathBuf::from(projects_path).join(group);
+  let mut path = normalize_projects_path(projects_path).join(group);
   let nest_clean = normalize_rel(nest);
   if !nest_clean.is_empty() {
     path = path.join(nest_clean);
   }
   path
+}
+
+fn normalize_projects_path(projects_path: &str) -> PathBuf {
+  #[cfg(target_os = "windows")]
+  {
+    let trimmed = projects_path.trim();
+    let bytes = trimmed.as_bytes();
+    if bytes.len() == 2 && bytes[0].is_ascii_alphabetic() && bytes[1] == b':' {
+      return PathBuf::from(format!("{trimmed}\\"));
+    }
+  }
+
+  PathBuf::from(projects_path)
 }
 
 fn normalize_rel(value: &str) -> String {
@@ -1253,7 +1266,8 @@ fn resolve_watch_paths(projects_path: &str, project_name: &str, config: &BuildCo
 }
 
 fn scan_projects(projects_path: &str) -> Result<ProjectsResponse, String> {
-  let base = Path::new(projects_path);
+  let base_buf = normalize_projects_path(projects_path);
+  let base = base_buf.as_path();
   if !base.exists() {
     return Err(format!("Путь не найден: {}", projects_path));
   }
@@ -1883,28 +1897,11 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
       }
     }
   }
-  if cfg!(debug_assertions) {
-    node_candidates.push(PathBuf::from("node"));
-  }
-
   let node_bin = node_candidates
     .iter()
     .find(|p| p.exists())
     .cloned()
-    .or_else(|| {
-      if cfg!(debug_assertions) {
-        Some(PathBuf::from("node"))
-      } else {
-        None
-      }
-    })
-    .unwrap_or_else(|| {
-      if cfg!(debug_assertions) {
-        PathBuf::from("node")
-      } else {
-        PathBuf::from("node-sidecar-missing")
-      }
-    });
+    .unwrap_or_else(|| PathBuf::from("node-sidecar-missing"));
 
   let node_modules_dir = resource_dir
     .as_ref()
