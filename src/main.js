@@ -135,7 +135,11 @@ async function init() {
 
 async function loadRuntimeInfo() {
   try {
-    const info = await invokeWithPolicy('get_runtime_info', {}, { timeoutMs: 5000 });
+    const info = await invokeWithPolicy('get_runtime_info', {}, {
+      timeoutMs: 15000,
+      retries: 2,
+      retryDelayMs: 350,
+    });
     if (ui.runtimeAppVersion) {
       ui.runtimeAppVersion.textContent = String(info?.app_version || '--');
     }
@@ -145,10 +149,14 @@ async function loadRuntimeInfo() {
     if (ui.runtimeNodeVersion) {
       ui.runtimeNodeVersion.textContent = String(info?.node_version || '--');
     }
-  } catch {
+  } catch (error) {
     if (ui.runtimeAppVersion) ui.runtimeAppVersion.textContent = '--';
     if (ui.runtimeTauriVersion) ui.runtimeTauriVersion.textContent = '--';
     if (ui.runtimeNodeVersion) ui.runtimeNodeVersion.textContent = '--';
+    addLog(`Ошибка загрузки runtime info: ${String(error)}`, 'warn');
+    window.setTimeout(() => {
+      loadRuntimeInfo().catch(() => {});
+    }, 5000);
   }
 }
 

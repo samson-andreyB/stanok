@@ -223,20 +223,49 @@ fn refresh_projects_cache(
 
 #[tauri::command]
 fn get_git_branch(repo_path: String) -> Result<String, String> {
-  let output = Command::new("git")
-    .arg("-C")
-    .arg(repo_path)
-    .arg("rev-parse")
-    .arg("--abbrev-ref")
-    .arg("HEAD")
-    .output()
-    .map_err(|e| format!("Не удалось запустить git: {}", e))?;
+  let repo_path = normalize_projects_path(&repo_path)
+    .to_string_lossy()
+    .to_string();
 
-  if !output.status.success() {
-    return Ok(String::new());
+  #[cfg(target_os = "windows")]
+  let candidates: Vec<PathBuf> = {
+    let mut all = vec![PathBuf::from("git"), PathBuf::from("git.exe")];
+    all.extend(windows_git_candidates());
+    all
+  };
+  #[cfg(not(target_os = "windows"))]
+  let candidates: Vec<PathBuf> = vec![PathBuf::from("git"), PathBuf::from("git.exe")];
+
+  let mut last_err: Option<String> = None;
+  for candidate in candidates {
+    match Command::new(&candidate)
+      .arg("-C")
+      .arg(&repo_path)
+      .arg("rev-parse")
+      .arg("--abbrev-ref")
+      .arg("HEAD")
+      .output()
+    {
+      Ok(output) => {
+        if output.status.success() {
+          return Ok(String::from_utf8_lossy(&output.stdout).trim().to_string());
+        }
+        last_err = Some(String::from_utf8_lossy(&output.stderr).trim().to_string());
+      }
+      Err(error) => {
+        last_err = Some(format!("{}: {}", candidate.display(), error));
+      }
+    }
   }
 
-  Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
+  if cfg!(debug_assertions) {
+    Err(format!(
+      "Не удалось определить git branch: {}",
+      last_err.unwrap_or_else(|| "unknown error".to_string())
+    ))
+  } else {
+    Ok(String::new())
+  }
 }
 
 #[tauri::command]
@@ -559,10 +588,11 @@ fn run_branch_watch_event_loop(
   projects_path: &str,
   groups: &[String],
 ) {
+  let projects_root = normalize_projects_path(projects_path);
   let repo_entries: Vec<(String, String, Option<PathBuf>)> = groups
     .iter()
     .map(|group| {
-      let repo_path = PathBuf::from(projects_path).join(group).to_string_lossy().to_string();
+      let repo_path = projects_root.join(group).to_string_lossy().to_string();
       let watch_target = resolve_git_watch_target(&repo_path);
       (group.clone(), repo_path, watch_target)
     })
@@ -628,10 +658,11 @@ fn run_branch_watch_polling_loop(
   projects_path: &str,
   groups: &[String],
 ) {
+  let projects_root = normalize_projects_path(projects_path);
   let repo_entries: Vec<(String, String, Option<PathBuf>)> = groups
     .iter()
     .map(|group| {
-      let repo_path = PathBuf::from(projects_path).join(group).to_string_lossy().to_string();
+      let repo_path = projects_root.join(group).to_string_lossy().to_string();
       (group.clone(), repo_path, None)
     })
     .collect();
@@ -886,7 +917,49 @@ fn run_node_script_via_rust_worker(
     format!("{stderr}\n{stdout}")
   };
   let message = compact_script_error(&combined);
+  let message = enrich_fs_path_error(&message, payload, runtime, script_name);
   Err(enrich_runtime_module_error(&message, runtime, script_name))
+}
+
+fn enrich_fs_path_error(
+  message: &str,
+  payload: &BuildPayload,
+  runtime: &RuntimePathsState,
+  script_name: &str,
+) -> String {
+  let lowered = message.to_ascii_lowercase();
+  let is_fs_path_error = lowered.contains("eisdir")
+    || lowered.contains("enotdir")
+    || lowered.contains("enoent")
+    || lowered.contains("eperm")
+    || lowered.contains("illegal operation on a directory");
+  if !is_fs_path_error {
+    return message.to_string();
+  }
+
+  let mut lines = vec![
+    message.to_string(),
+    "--- rust invoke context ---".to_string(),
+    format!("script_name: {}", script_name),
+    format!("projects_path: {}", payload.projects_path),
+    format!("project_name: {}", payload.project_name),
+    format!("config.nest: {}", payload.config.nest),
+    format!("config.root: {}", payload.config.root),
+  ];
+
+  if let Some(paths) = &payload.runtime_paths {
+    lines.push(format!("runtime.project_dir: {}", paths.project_dir));
+    lines.push(format!("runtime.src_dir: {}", paths.src_dir));
+    lines.push(format!("runtime.style_dir: {}", paths.style_dir));
+    lines.push(format!("runtime.img_dir: {}", paths.img_dir));
+  } else {
+    lines.push("runtime_paths: <none>".to_string());
+  }
+
+  lines.push(format!("node_bin: {}", runtime.node_bin.display()));
+  lines.push(format!("scripts_dir: {}", runtime.scripts_dir.display()));
+  lines.push("--- end rust invoke context ---".to_string());
+  lines.join("\n")
 }
 
 fn is_retryable_worker_error(error: &str) -> bool {
@@ -1076,8 +1149,14 @@ fn looks_like_file_diagnostic(line: &str) -> bool {
 }
 
 fn resolve_project_dir(projects_path: &str, project_name: &str, nest: &str) -> PathBuf {
-  let group = project_name.split('/').next().unwrap_or_default();
-  let mut path = normalize_projects_path(projects_path).join(group);
+  let group = project_name
+    .split('/')
+    .find(|part| !part.trim().is_empty())
+    .unwrap_or_default();
+  let mut path = normalize_projects_path(projects_path);
+  if !group.is_empty() {
+    path = path.join(group);
+  }
   let nest_clean = normalize_rel(nest);
   if !nest_clean.is_empty() {
     path = path.join(nest_clean);
@@ -1096,6 +1175,27 @@ fn normalize_projects_path(projects_path: &str) -> PathBuf {
   }
 
   PathBuf::from(projects_path)
+}
+
+#[cfg(target_os = "windows")]
+fn windows_git_candidates() -> Vec<PathBuf> {
+  let mut out = Vec::new();
+  let mut roots = Vec::new();
+  if let Ok(v) = env::var("ProgramFiles") {
+    roots.push(PathBuf::from(v));
+  }
+  if let Ok(v) = env::var("ProgramFiles(x86)") {
+    roots.push(PathBuf::from(v));
+  }
+  if let Ok(v) = env::var("LOCALAPPDATA") {
+    roots.push(PathBuf::from(v).join("Programs"));
+  }
+
+  for root in roots {
+    out.push(root.join("Git").join("cmd").join("git.exe"));
+    out.push(root.join("Git").join("bin").join("git.exe"));
+  }
+  out
 }
 
 fn normalize_rel(value: &str) -> String {
