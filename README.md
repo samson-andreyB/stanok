@@ -44,13 +44,18 @@ npm run build
 ## Релиз Через GitHub Actions
 
 В репозитории есть workflow для десктоп-сборок:
-- `.github/workflows/build-desktop.yml`
+- `.github/workflows/build-desktop.yml` (`Build Desktop (Linux RPM)`)
+- `.github/workflows/build-desktop-windows.yml` (`Build Desktop (Windows)`)
+- `.github/workflows/build-desktop-macos.yml` (`Build Desktop (macOS)`)
 
-Как собрать Linux RPM:
+Как собрать:
 
-1. Открыть `Actions` -> `Build Desktop (Linux RPM)`.
+1. Открыть `Actions` и выбрать нужный workflow по платформе.
 2. Нажать `Run workflow`.
-3. Скачать артефакт `stanok-linux` (`rpm`).
+3. Скачать артефакт:
+- `stanok-linux` (`rpm`)
+- `stanok-windows` (`nsis`, `msi`)
+- `stanok-macos` (`app`, `dmg`)
 
 ## Примечания
 

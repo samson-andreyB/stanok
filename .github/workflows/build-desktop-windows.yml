@@ -1,0 +1,75 @@
+name: Build Desktop (Windows)
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Verify Node Version
+        run: node -v
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install dependencies
+        env:
+          PHANTOMJS_SKIP_DOWNLOAD: 'true'
+          npm_config_phantomjs_skip_download: 'true'
+          npm_config_tmp: ${{ runner.temp }}
+          TMPDIR: ${{ runner.temp }}
+          TMP: ${{ runner.temp }}
+          TEMP: ${{ runner.temp }}
+          npm_config_cache: ${{ runner.temp }}\\.npm-cache
+        run: npm ci
+
+      - name: Prepare sidecar Node
+        run: npm run prepare:sidecar-node
+
+      - name: Validate prepared runtime (Windows)
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f src-tauri/runtime-node/scripts/build-worker.mjs
+          test -f src-tauri/runtime-node/scripts/build-css.mjs
+          test -d src-tauri/runtime-node/node_modules/intcss
+          test -f src-tauri/binaries/node-x86_64-pc-windows-msvc.exe
+
+          NODE_BIN="src-tauri/binaries/node-x86_64-pc-windows-msvc.exe"
+          NODE_PATH="src-tauri/runtime-node/node_modules" \
+            "${NODE_BIN}" --input-type=module -e "import { pathToFileURL } from 'node:url'; import(pathToFileURL(process.argv[1]).href).then(() => console.log('OK worker import')).catch((e) => { console.error(e); process.exit(1); });" \
+            "src-tauri/runtime-node/scripts/build-worker.mjs"
+          NODE_PATH="src-tauri/runtime-node/node_modules" \
+            "${NODE_BIN}" --check "src-tauri/runtime-node/scripts/build-css.mjs"
+
+      - name: Build app bundles
+        run: npx tauri build --bundles nsis,msi
+
+      - name: Validate built bundle artifacts (Windows)
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$(find src-tauri/target/release/bundle -type f -name '*.exe' -o -name '*.msi' | head -n 1)"
+          find src-tauri/target/release/bundle -maxdepth 5 -type f \( -name '*.exe' -o -name '*.msi' \) | sed -n '1,200p'
+
+      - name: Upload bundle artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: stanok-windows
+          path: src-tauri/target/release/bundle/
+          if-no-files-found: error
+
