@@ -91,15 +91,14 @@ function copyRuntimeNodeModules() {
     'assets',
   ];
 
-  const packageDirs = collectRuntimePackageClosure(minimalRootPackages);
-  for (const from of packageDirs) {
-    const rel = path.relative(sourceNodeModulesDir, from);
-    if (!rel || rel.startsWith('..')) continue;
-    const to = path.join(runtimeModulesDir, rel);
+  const packageMap = collectRuntimePackageClosure(minimalRootPackages);
+  for (const [pkgName, from] of packageMap.entries()) {
+    const to = resolvePackageDir(runtimeModulesDir, pkgName);
+    if (!to) continue;
     ensureDir(path.dirname(to));
     fs.cpSync(from, to, { recursive: true, dereference: true });
   }
-  return `minimal (${packageDirs.size} packages)`;
+  return `minimal (${packageMap.size} packages)`;
 }
 
 function collectRuntimePackageClosure(rootPackages) {
@@ -109,8 +108,8 @@ function collectRuntimePackageClosure(rootPackages) {
     isRoot: true,
   }));
   const visited = new Set();
+  const packageMap = new Map();
   const missingRoots = [];
-  const resolvedDirs = new Set();
 
   while (queue.length > 0) {
     const { pkgName, fromDir, isRoot } = queue.shift();
@@ -127,7 +126,9 @@ function collectRuntimePackageClosure(rootPackages) {
     const pkgDirReal = fs.realpathSync(pkgDir);
     if (visited.has(pkgDirReal)) continue;
     visited.add(pkgDirReal);
-    resolvedDirs.add(pkgDirReal);
+    if (!packageMap.has(pkgName)) {
+      packageMap.set(pkgName, pkgDirReal);
+    }
 
     const pkgJsonPath = path.join(pkgDirReal, 'package.json');
     if (!fs.existsSync(pkgJsonPath)) continue;
@@ -157,7 +158,7 @@ function collectRuntimePackageClosure(rootPackages) {
     );
   }
 
-  return resolvedDirs;
+  return packageMap;
 }
 
 function resolvePackageDirFrom(pkgName, fromDir) {
@@ -176,6 +177,16 @@ function resolvePackageDirFrom(pkgName, fromDir) {
     }
     return path.join(sourceNodeModulesDir, pkgName);
   }
+}
+
+function resolvePackageDir(nodeModulesRoot, pkgName) {
+  if (!pkgName) return null;
+  if (pkgName.startsWith('@')) {
+    const [scope, name] = pkgName.split('/');
+    if (!scope || !name) return null;
+    return path.join(nodeModulesRoot, scope, name);
+  }
+  return path.join(nodeModulesRoot, pkgName);
 }
 
 function copyRuntimeScripts() {
