@@ -312,7 +312,16 @@ function formatBuildError(error) {
     return baseMessage;
   }
 
+  if (!shouldShowFsDebugContext()) {
+    return baseMessage;
+  }
+
   return `${baseMessage}\n${formatFsDebugContext(error, lastDebugContext)}`;
+}
+
+function shouldShowFsDebugContext() {
+  const value = String(process.env.STANOK_RUNTIME_DEBUG || '').trim().toLowerCase();
+  return value === '1' || value === 'true' || value === 'yes';
 }
 
 function formatBuildErrorBase(error) {
