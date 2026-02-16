@@ -1,0 +1,187 @@
+name: Release Desktop
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Verify Node Version
+        run: node -v
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install dependencies
+        env:
+          PHANTOMJS_SKIP_DOWNLOAD: "true"
+          npm_config_phantomjs_skip_download: "true"
+          npm_config_tmp: ${{ runner.temp }}
+          TMPDIR: ${{ runner.temp }}
+          TMP: ${{ runner.temp }}
+          TEMP: ${{ runner.temp }}
+          npm_config_cache: ${{ runner.temp }}/.npm-cache
+        run: npm ci
+
+      - name: Install Linux system packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libgtk-3-dev \
+            libsoup-3.0-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            rpm
+
+      - name: Build app bundles
+        env:
+          STANOK_TARGET_TRIPLE: x86_64-unknown-linux-gnu
+        run: npx tauri build --bundles deb,rpm
+
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: stanok-linux-release
+          path: src-tauri/target/release/bundle/
+          if-no-files-found: error
+
+  build-macos:
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: aarch64-apple-darwin
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Verify Node Version
+        run: node -v
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install dependencies
+        env:
+          PHANTOMJS_SKIP_DOWNLOAD: "true"
+          npm_config_phantomjs_skip_download: "true"
+          npm_config_tmp: ${{ runner.temp }}
+          TMPDIR: ${{ runner.temp }}
+          TMP: ${{ runner.temp }}
+          TEMP: ${{ runner.temp }}
+          npm_config_cache: ${{ runner.temp }}/.npm-cache
+        run: npm ci
+
+      - name: Prepare sidecar Node
+        env:
+          STANOK_TARGET_TRIPLE: ${{ matrix.target }}
+        run: npm run prepare:sidecar-node
+
+      - name: Build app bundles
+        env:
+          STANOK_TARGET_TRIPLE: ${{ matrix.target }}
+        run: npx tauri build --target ${{ matrix.target }} --bundles app,dmg
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: stanok-macos-release
+          path: src-tauri/target/**/release/bundle/
+          if-no-files-found: error
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Verify Node Version
+        run: node -v
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install dependencies
+        env:
+          PHANTOMJS_SKIP_DOWNLOAD: "true"
+          npm_config_phantomjs_skip_download: "true"
+          npm_config_tmp: ${{ runner.temp }}
+          TMPDIR: ${{ runner.temp }}
+          TMP: ${{ runner.temp }}
+          TEMP: ${{ runner.temp }}
+          npm_config_cache: ${{ runner.temp }}\\.npm-cache
+        run: npm ci
+
+      - name: Prepare sidecar Node
+        run: npm run prepare:sidecar-node
+
+      - name: Build app bundles
+        env:
+          STANOK_TARGET_TRIPLE: x86_64-pc-windows-msvc
+        run: npx tauri build --bundles nsis,msi
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: stanok-windows-release
+          path: src-tauri/target/release/bundle/
+          if-no-files-found: error
+
+  publish-release:
+    runs-on: ubuntu-22.04
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs:
+      - build-linux
+      - build-macos
+      - build-windows
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Stanok ${{ github.ref_name }}
+          body_path: RELEASE_NOTES.md
+          files: |
+            release-assets/**/*.rpm
+            release-assets/**/*.deb
+            release-assets/**/*.dmg
+            release-assets/**/*.msi
+            release-assets/**/*.exe
+          fail_on_unmatched_files: true
