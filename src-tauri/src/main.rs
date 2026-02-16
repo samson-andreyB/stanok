@@ -3,12 +3,15 @@
 use notify::{Config as NotifyConfig, RecommendedWatcher, RecursiveMode, Watcher};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use std::ffi::OsStr;
 use std::collections::HashMap;
 use std::env;
 use std::fs;
 use std::hash::{DefaultHasher, Hash, Hasher};
 use std::path::{Path, PathBuf};
 use std::process::Command;
+#[cfg(target_os = "windows")]
+use std::os::windows::process::CommandExt;
 use std::sync::{
   Arc,
   Mutex,
@@ -163,6 +166,11 @@ struct RuntimePathsState {
   node_modules_dir: Option<PathBuf>,
 }
 
+#[derive(Clone)]
+struct RuntimeInfoState {
+  info: RuntimeInfo,
+}
+
 #[derive(Clone, Copy)]
 enum BuildKind {
   Styles,
@@ -170,6 +178,21 @@ enum BuildKind {
 }
 
 const PROJECTS_CACHE_TTL_SECS: u64 = 60 * 60;
+#[cfg(target_os = "windows")]
+const CREATE_NO_WINDOW: u32 = 0x08000000;
+
+fn command_with_platform_defaults<S: AsRef<OsStr>>(program: S) -> Command {
+  #[cfg(target_os = "windows")]
+  {
+    let mut cmd = Command::new(program);
+    cmd.creation_flags(CREATE_NO_WINDOW);
+    return cmd;
+  }
+  #[cfg(not(target_os = "windows"))]
+  {
+    Command::new(program)
+  }
+}
 
 #[tauri::command]
 fn choose_projects_path() -> Option<String> {
@@ -223,20 +246,49 @@ fn refresh_projects_cache(
 
 #[tauri::command]
 fn get_git_branch(repo_path: String) -> Result<String, String> {
-  let output = Command::new("git")
-    .arg("-C")
-    .arg(repo_path)
-    .arg("rev-parse")
-    .arg("--abbrev-ref")
-    .arg("HEAD")
-    .output()
-    .map_err(|e| format!("Не удалось запустить git: {}", e))?;
+  let repo_path = normalize_projects_path(&repo_path)
+    .to_string_lossy()
+    .to_string();
 
-  if !output.status.success() {
-    return Ok(String::new());
+  #[cfg(target_os = "windows")]
+  let candidates: Vec<PathBuf> = {
+    let mut all = vec![PathBuf::from("git"), PathBuf::from("git.exe")];
+    all.extend(windows_git_candidates());
+    all
+  };
+  #[cfg(not(target_os = "windows"))]
+  let candidates: Vec<PathBuf> = vec![PathBuf::from("git"), PathBuf::from("git.exe")];
+
+  let mut last_err: Option<String> = None;
+  for candidate in candidates {
+    match command_with_platform_defaults(&candidate)
+      .arg("-C")
+      .arg(&repo_path)
+      .arg("rev-parse")
+      .arg("--abbrev-ref")
+      .arg("HEAD")
+      .output()
+    {
+      Ok(output) => {
+        if output.status.success() {
+          return Ok(String::from_utf8_lossy(&output.stdout).trim().to_string());
+        }
+        last_err = Some(String::from_utf8_lossy(&output.stderr).trim().to_string());
+      }
+      Err(error) => {
+        last_err = Some(format!("{}: {}", candidate.display(), error));
+      }
+    }
   }
 
-  Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
+  if cfg!(debug_assertions) {
+    Err(format!(
+      "Не удалось определить git branch: {}",
+      last_err.unwrap_or_else(|| "unknown error".to_string())
+    ))
+  } else {
+    Ok(String::new())
+  }
 }
 
 #[tauri::command]
@@ -250,15 +302,8 @@ fn open_external_url(url: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn get_runtime_info(runtime: tauri::State<RuntimePathsState>) -> RuntimeInfo {
-  let app_version = env!("CARGO_PKG_VERSION").to_string();
-  let tauri_version = detect_tauri_version_from_lock();
-  let node_version = detect_node_version(&runtime.node_bin);
-  RuntimeInfo {
-    app_version,
-    tauri_version,
-    node_version,
-  }
+fn get_runtime_info(runtime_info: tauri::State<RuntimeInfoState>) -> RuntimeInfo {
+  runtime_info.info.clone()
 }
 
 #[tauri::command]
@@ -559,10 +604,11 @@ fn run_branch_watch_event_loop(
   projects_path: &str,
   groups: &[String],
 ) {
+  let projects_root = normalize_projects_path(projects_path);
   let repo_entries: Vec<(String, String, Option<PathBuf>)> = groups
     .iter()
     .map(|group| {
-      let repo_path = PathBuf::from(projects_path).join(group).to_string_lossy().to_string();
+      let repo_path = projects_root.join(group).to_string_lossy().to_string();
       let watch_target = resolve_git_watch_target(&repo_path);
       (group.clone(), repo_path, watch_target)
     })
@@ -628,10 +674,11 @@ fn run_branch_watch_polling_loop(
   projects_path: &str,
   groups: &[String],
 ) {
+  let projects_root = normalize_projects_path(projects_path);
   let repo_entries: Vec<(String, String, Option<PathBuf>)> = groups
     .iter()
     .map(|group| {
-      let repo_path = PathBuf::from(projects_path).join(group).to_string_lossy().to_string();
+      let repo_path = projects_root.join(group).to_string_lossy().to_string();
       (group.clone(), repo_path, None)
     })
     .collect();
@@ -845,7 +892,7 @@ fn run_node_script_via_rust_worker(
   script_name: &str,
   payload: &BuildPayload,
 ) -> Result<String, String> {
-  let script_path = runtime.scripts_dir.join(script_name);
+  let script_path = strip_windows_verbatim_prefix(runtime.scripts_dir.join(script_name));
   if !script_path.exists() {
     return Err(format!(
       "Не найден скрипт {}{}",
@@ -855,18 +902,19 @@ fn run_node_script_via_rust_worker(
   }
 
   let payload_json = serde_json::to_string(payload).map_err(|e| e.to_string())?;
-  let mut cmd = Command::new(&runtime.node_bin);
+  let node_bin = strip_windows_verbatim_prefix(runtime.node_bin.clone());
+  let mut cmd = command_with_platform_defaults(&node_bin);
   cmd.arg(&script_path);
   cmd.arg(payload_json);
-  cmd.current_dir(&runtime.workspace_root);
+  cmd.current_dir(strip_windows_verbatim_prefix(runtime.workspace_root.clone()));
   if let Some(node_modules_dir) = &runtime.node_modules_dir {
-    cmd.env("NODE_PATH", node_modules_dir);
+    cmd.env("NODE_PATH", strip_windows_verbatim_prefix(node_modules_dir.clone()));
   }
 
   let output = cmd.output().map_err(|e| {
     format!(
       "Ошибка запуска node ({}): {}{}",
-      runtime.node_bin.display(),
+      node_bin.display(),
       e,
       optional_runtime_diagnostics(runtime)
     )
@@ -886,7 +934,49 @@ fn run_node_script_via_rust_worker(
     format!("{stderr}\n{stdout}")
   };
   let message = compact_script_error(&combined);
+  let message = enrich_fs_path_error(&message, payload, runtime, script_name);
   Err(enrich_runtime_module_error(&message, runtime, script_name))
+}
+
+fn enrich_fs_path_error(
+  message: &str,
+  payload: &BuildPayload,
+  runtime: &RuntimePathsState,
+  script_name: &str,
+) -> String {
+  let lowered = message.to_ascii_lowercase();
+  let is_fs_path_error = lowered.contains("eisdir")
+    || lowered.contains("enotdir")
+    || lowered.contains("enoent")
+    || lowered.contains("eperm")
+    || lowered.contains("illegal operation on a directory");
+  if !is_fs_path_error {
+    return message.to_string();
+  }
+
+  let mut lines = vec![
+    message.to_string(),
+    "--- rust invoke context ---".to_string(),
+    format!("script_name: {}", script_name),
+    format!("projects_path: {}", payload.projects_path),
+    format!("project_name: {}", payload.project_name),
+    format!("config.nest: {}", payload.config.nest),
+    format!("config.root: {}", payload.config.root),
+  ];
+
+  if let Some(paths) = &payload.runtime_paths {
+    lines.push(format!("runtime.project_dir: {}", paths.project_dir));
+    lines.push(format!("runtime.src_dir: {}", paths.src_dir));
+    lines.push(format!("runtime.style_dir: {}", paths.style_dir));
+    lines.push(format!("runtime.img_dir: {}", paths.img_dir));
+  } else {
+    lines.push("runtime_paths: <none>".to_string());
+  }
+
+  lines.push(format!("node_bin: {}", runtime.node_bin.display()));
+  lines.push(format!("scripts_dir: {}", runtime.scripts_dir.display()));
+  lines.push("--- end rust invoke context ---".to_string());
+  lines.join("\n")
 }
 
 fn is_retryable_worker_error(error: &str) -> bool {
@@ -1076,13 +1166,104 @@ fn looks_like_file_diagnostic(line: &str) -> bool {
 }
 
 fn resolve_project_dir(projects_path: &str, project_name: &str, nest: &str) -> PathBuf {
-  let group = project_name.split('/').next().unwrap_or_default();
-  let mut path = PathBuf::from(projects_path).join(group);
+  let group = project_name
+    .split('/')
+    .find(|part| !part.trim().is_empty())
+    .unwrap_or_default();
+  let mut path = normalize_projects_path(projects_path);
+  if !group.is_empty() {
+    path = path.join(group);
+  }
   let nest_clean = normalize_rel(nest);
   if !nest_clean.is_empty() {
     path = path.join(nest_clean);
   }
   path
+}
+
+fn normalize_projects_path(projects_path: &str) -> PathBuf {
+  #[cfg(target_os = "windows")]
+  {
+    let trimmed = projects_path.trim();
+    let bytes = trimmed.as_bytes();
+    if bytes.len() >= 2 && bytes[0].is_ascii_alphabetic() && (bytes[1] == b'\\' || bytes[1] == b'/') {
+      return PathBuf::from(format!("{}:{}", &trimmed[0..1], &trimmed[1..]));
+    }
+    if bytes.len() == 2 && bytes[0].is_ascii_alphabetic() && bytes[1] == b':' {
+      return PathBuf::from(format!("{trimmed}\\"));
+    }
+    if bytes.len() >= 3
+      && bytes[0].is_ascii_alphabetic()
+      && bytes[1] == b':'
+      && bytes[2] != b'\\'
+      && bytes[2] != b'/'
+    {
+      return PathBuf::from(format!("{}:\\{}", &trimmed[0..1], &trimmed[2..]));
+    }
+  }
+
+  PathBuf::from(projects_path)
+}
+
+fn normalize_windows_path_string(value: String) -> String {
+  #[cfg(target_os = "windows")]
+  {
+    let mut s = value.trim().replace('/', "\\");
+    let bytes = s.as_bytes();
+    if bytes.len() >= 2 && bytes[0].is_ascii_alphabetic() && bytes[1] == b'\\' {
+      s = format!("{}:{}", &s[0..1], &s[1..]);
+    }
+
+    let bytes = s.as_bytes();
+    if bytes.len() == 2 && bytes[0].is_ascii_alphabetic() && bytes[1] == b':' {
+      s.push('\\');
+    } else if bytes.len() >= 3
+      && bytes[0].is_ascii_alphabetic()
+      && bytes[1] == b':'
+      && bytes[2] != b'\\'
+      && bytes[2] != b'/'
+    {
+      s.insert(2, '\\');
+    }
+
+    if let Some(rest) = s.strip_prefix(r"\\?\") {
+      let rb = rest.as_bytes();
+      if rb.len() >= 3
+        && rb[0].is_ascii_alphabetic()
+        && rb[1] == b':'
+        && rb[2] != b'\\'
+        && rb[2] != b'/'
+      {
+        return format!(r"\\?\{}:\{}", &rest[0..1], &rest[2..]);
+      }
+      return format!(r"\\?\{}", rest);
+    }
+
+    return s;
+  }
+
+  value
+}
+
+#[cfg(target_os = "windows")]
+fn windows_git_candidates() -> Vec<PathBuf> {
+  let mut out = Vec::new();
+  let mut roots = Vec::new();
+  if let Ok(v) = env::var("ProgramFiles") {
+    roots.push(PathBuf::from(v));
+  }
+  if let Ok(v) = env::var("ProgramFiles(x86)") {
+    roots.push(PathBuf::from(v));
+  }
+  if let Ok(v) = env::var("LOCALAPPDATA") {
+    roots.push(PathBuf::from(v).join("Programs"));
+  }
+
+  for root in roots {
+    out.push(root.join("Git").join("cmd").join("git.exe"));
+    out.push(root.join("Git").join("bin").join("git.exe"));
+  }
+  out
 }
 
 fn normalize_rel(value: &str) -> String {
@@ -1253,7 +1434,8 @@ fn resolve_watch_paths(projects_path: &str, project_name: &str, config: &BuildCo
 }
 
 fn scan_projects(projects_path: &str) -> Result<ProjectsResponse, String> {
-  let base = Path::new(projects_path);
+  let base_buf = normalize_projects_path(projects_path);
+  let base = base_buf.as_path();
   if !base.exists() {
     return Err(format!("Путь не найден: {}", projects_path));
   }
@@ -1515,15 +1697,17 @@ fn build_runtime_paths(payload: &BuildPayload) -> BuildRuntimePaths {
     .to_string();
 
   BuildRuntimePaths {
-    project_dir: project_dir.to_string_lossy().to_string(),
+    project_dir: normalize_windows_path_string(project_dir.to_string_lossy().to_string()),
     root,
-    style_dir: style_dir.clone(),
-    img_dir,
+    style_dir: normalize_windows_path_string(style_dir.clone()),
+    img_dir: normalize_windows_path_string(img_dir),
     layouts_dir: layouts_dir_name,
     lib_dir: lib_dir_name,
-    b_path,
+    b_path: normalize_windows_path_string(b_path),
     path_to_projects_root: build_path_to_projects_root(&payload.config.nest),
-    src_dir: Path::new(&style_dir).join("src").to_string_lossy().to_string(),
+    src_dir: normalize_windows_path_string(
+      Path::new(&style_dir).join("src").to_string_lossy().to_string()
+    ),
     root_rel: normalize_rel(&payload.config.root),
     img_rel: normalize_rel(&img_dir_name),
   }
@@ -1810,10 +1994,29 @@ fn detect_tauri_version_from_lock() -> String {
 }
 
 fn detect_node_version(node_bin: &Path) -> String {
-  let output = Command::new(node_bin).arg("-v").output();
+  let output = command_with_platform_defaults(strip_windows_verbatim_prefix(node_bin)).arg("-v").output();
   match output {
     Ok(out) if out.status.success() => String::from_utf8_lossy(&out.stdout).trim().to_string(),
     _ => "unknown".to_string(),
+  }
+}
+
+fn strip_windows_verbatim_prefix(path: impl Into<PathBuf>) -> PathBuf {
+  let path = path.into();
+  #[cfg(target_os = "windows")]
+  {
+    let raw = path.to_string_lossy().to_string();
+    if let Some(rest) = raw.strip_prefix(r"\\?\UNC\") {
+      return PathBuf::from(format!(r"\\{}", rest));
+    }
+    if let Some(rest) = raw.strip_prefix(r"\\?\") {
+      return PathBuf::from(rest);
+    }
+    return path;
+  }
+  #[cfg(not(target_os = "windows"))]
+  {
+    path
   }
 }
 
@@ -1883,28 +2086,11 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
       }
     }
   }
-  if cfg!(debug_assertions) {
-    node_candidates.push(PathBuf::from("node"));
-  }
-
   let node_bin = node_candidates
     .iter()
     .find(|p| p.exists())
     .cloned()
-    .or_else(|| {
-      if cfg!(debug_assertions) {
-        Some(PathBuf::from("node"))
-      } else {
-        None
-      }
-    })
-    .unwrap_or_else(|| {
-      if cfg!(debug_assertions) {
-        PathBuf::from("node")
-      } else {
-        PathBuf::from("node-sidecar-missing")
-      }
-    });
+    .unwrap_or_else(|| PathBuf::from("node-sidecar-missing"));
 
   let node_modules_dir = resource_dir
     .as_ref()
@@ -2082,7 +2268,14 @@ fn main() {
     .manage(ProjectsCacheState::default())
     .manage(BuildOrchestratorState::default())
     .setup(|app| {
-      app.manage(resolve_runtime_paths(app.handle()));
+      let runtime = resolve_runtime_paths(app.handle());
+      let runtime_info = RuntimeInfo {
+        app_version: env!("CARGO_PKG_VERSION").to_string(),
+        tauri_version: detect_tauri_version_from_lock(),
+        node_version: detect_node_version(&runtime.node_bin),
+      };
+      app.manage(runtime);
+      app.manage(RuntimeInfoState { info: runtime_info });
       spawn_resource_stats_emitter(app.handle().clone());
       Ok(())
     })

@@ -118,12 +118,12 @@ init().catch((error) => {
 async function init() {
   patchConsole();
   bindEvents();
+  void loadRuntimeInfo();
   await setupBranchEvents();
   await setupProjectWatchEvents();
   startWatchStatusTicker();
   state.windowFocused = document.hasFocus();
   startResourceUpdates();
-  await loadRuntimeInfo();
 
   const savedPath = localStorage.getItem('projectsPath');
   if (savedPath) {
@@ -135,7 +135,11 @@ async function init() {
 
 async function loadRuntimeInfo() {
   try {
-    const info = await invokeWithPolicy('get_runtime_info', {}, { timeoutMs: 5000 });
+    const info = await invokeWithPolicy('get_runtime_info', {}, {
+      timeoutMs: 15000,
+      retries: 2,
+      retryDelayMs: 350,
+    });
     if (ui.runtimeAppVersion) {
       ui.runtimeAppVersion.textContent = String(info?.app_version || '--');
     }
@@ -145,10 +149,14 @@ async function loadRuntimeInfo() {
     if (ui.runtimeNodeVersion) {
       ui.runtimeNodeVersion.textContent = String(info?.node_version || '--');
     }
-  } catch {
+  } catch (error) {
     if (ui.runtimeAppVersion) ui.runtimeAppVersion.textContent = '--';
     if (ui.runtimeTauriVersion) ui.runtimeTauriVersion.textContent = '--';
     if (ui.runtimeNodeVersion) ui.runtimeNodeVersion.textContent = '--';
+    addLog(`Ошибка загрузки runtime info: ${String(error)}`, 'warn');
+    window.setTimeout(() => {
+      loadRuntimeInfo().catch(() => {});
+    }, 5000);
   }
 }
 
@@ -516,16 +524,28 @@ async function chooseProjectsPath() {
 }
 
 async function setProjectsPath(path, save) {
-  state.projectsPath = path;
-  ui.projectsPathInfo.textContent = path;
+  const normalizedPath = normalizeProjectsPath(path);
+  state.projectsPath = normalizedPath;
+  ui.projectsPathInfo.textContent = normalizedPath;
   const loadSeq = ++state.projectsLoadSeq;
 
   if (save) {
-    localStorage.setItem('projectsPath', path);
+    localStorage.setItem('projectsPath', normalizedPath);
   }
 
-  await restoreProjectsFromCache(path, loadSeq);
+  await restoreProjectsFromCache(normalizedPath, loadSeq);
   await loadProjects(loadSeq);
+}
+
+function normalizeProjectsPath(value) {
+  const path = String(value || '').trim();
+  if (/^[A-Za-z]:$/.test(path)) {
+    return `${path}\\`;
+  }
+  if (/^[A-Za-z]:[\\/]$/.test(path)) {
+    return `${path[0]}:\\`;
+  }
+  return path;
 }
 
 async function loadProjects(loadSeq = ++state.projectsLoadSeq) {
