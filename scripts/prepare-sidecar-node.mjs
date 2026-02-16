@@ -17,7 +17,6 @@ const sourceNodeBin = process.env.STANOK_NODE_BIN || process.execPath;
 const require = createRequire(import.meta.url);
 
 const args = new Set(process.argv.slice(2));
-const copyFullNodeModules = !args.has('--minimal');
 const skipNodeModulesCopy = args.has('--skip-node-modules');
 
 function detectTargetTriple() {
@@ -59,14 +58,6 @@ function copyNodeBinary() {
   return { triple, destPath };
 }
 
-function shouldSkipEntry(srcPath) {
-  const basename = path.basename(srcPath);
-  if (basename === '.cache') return true;
-  if (basename === '.vite') return true;
-  if (basename === '.bin') return true;
-  return false;
-}
-
 function copyRuntimeNodeModules() {
   if (!fs.existsSync(sourceNodeModulesDir)) {
     throw new Error(`Source node_modules not found: ${sourceNodeModulesDir}`);
@@ -76,29 +67,20 @@ function copyRuntimeNodeModules() {
   fs.rmSync(runtimeModulesDir, { recursive: true, force: true });
   ensureDir(runtimeModulesDir);
 
-  if (copyFullNodeModules) {
-    fs.cpSync(sourceNodeModulesDir, runtimeModulesDir, {
-      recursive: true,
-      dereference: true,
-      filter: (src) => !shouldSkipEntry(src),
-    });
-    return 'full';
-  }
-
-  const minimalRootPackages = [
+  const rootPackages = [
     'intcss',
     'postcss5',
     'assets',
   ];
 
-  const packageMap = collectRuntimePackageClosure(minimalRootPackages);
+  const packageMap = collectRuntimePackageClosure(rootPackages);
   for (const [pkgName, from] of packageMap.entries()) {
     const to = resolvePackageDir(runtimeModulesDir, pkgName);
     if (!to) continue;
     ensureDir(path.dirname(to));
     fs.cpSync(from, to, { recursive: true, dereference: true });
   }
-  return `minimal (${packageMap.size} packages)`;
+  return `runtime (${packageMap.size} packages)`;
 }
 
 function collectRuntimePackageClosure(rootPackages) {

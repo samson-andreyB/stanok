@@ -50,14 +50,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            cpio \
             libwebkit2gtk-4.1-dev \
             libgtk-3-dev \
             libsoup-3.0-dev \
             libayatana-appindicator3-dev \
             librsvg2-dev \
-            rpm \
-            rpm2cpio
+            rpm
 
       - name: Build app bundles
         run: npx tauri build --bundles ${{ matrix.bundle }}
@@ -71,15 +69,6 @@ jobs:
           fail() {
             echo "VALIDATION ERROR: $1"
             exit 1
-          }
-
-          assert_file() {
-            local file="$1"
-            if [ ! -f "${file}" ]; then
-              echo "Missing file: ${file}"
-              return 1
-            fi
-            return 0
           }
 
           RPM_FILE="$(find src-tauri/target/release/bundle -type f -name '*.rpm' | head -n 1 || true)"
@@ -131,38 +120,6 @@ jobs:
             "/usr/lib/Stanok/binaries/node-x86_64-unknown-linux-gnu" \
             "/usr/lib64/Stanok/node-x86_64-unknown-linux-gnu" \
             "/usr/lib64/Stanok/binaries/node-x86_64-unknown-linux-gnu"
-
-      - name: Debug RPM contents
-        if: matrix.os == 'ubuntu-22.04'
-        shell: bash
-        run: |
-          set -euo pipefail
-          RPM_FILE="$(find src-tauri/target/release/bundle -type f -name '*.rpm' | head -n 1 || true)"
-          if [ -z "${RPM_FILE}" ]; then
-            echo "RPM not found after build"
-            find src-tauri/target/release/bundle -maxdepth 6 -type f | sed -n '1,300p'
-            exit 1
-          fi
-          echo "Inspecting RPM: ${RPM_FILE}"
-          rpm -qlp "${RPM_FILE}" | sed -n '1,400p'
-          echo "Filtered runtime lines:"
-          rpm -qlp "${RPM_FILE}" | grep -En "node-|/usr/bin/node|runtime-node/scripts|runtime-node/node_modules/intcss|/usr/bin/stanok" || true
-
-      - name: Print RPM size
-        if: matrix.os == 'ubuntu-22.04'
-        shell: bash
-        run: |
-          set -euo pipefail
-          RPM_FILE="$(find src-tauri/target/release/bundle -type f -name '*.rpm' | head -n 1 || true)"
-          if [ -z "${RPM_FILE}" ]; then
-            echo "RPM not found"
-            find src-tauri/target/release/bundle -maxdepth 6 -type f | sed -n '1,300p'
-            exit 1
-          fi
-          echo "RPM file:"
-          ls -lh "${RPM_FILE}"
-          echo "RPM bytes:"
-          stat -c '%s' "${RPM_FILE}"
 
       - name: Upload bundle artifacts
         uses: actions/upload-artifact@v4

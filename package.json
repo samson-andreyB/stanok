@@ -1,6 +1,6 @@
 {
   "name": "stanok",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "private": true,
   "description": "Станок на Tauri",
   "scripts": {
@@ -9,7 +9,6 @@
     "dev": "node scripts/dev.mjs",
     "build": "tauri build",
     "prepare:sidecar-node": "node scripts/prepare-sidecar-node.mjs",
-    "prepare:sidecar-node:minimal": "node scripts/prepare-sidecar-node.mjs --minimal",
     "prepare:runtime-node": "npm run prepare:sidecar-node",
     "doctor": "node scripts/doctor.mjs",
     "test:unit": "cargo test --manifest-path src-tauri/Cargo.toml",

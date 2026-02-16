@@ -835,22 +835,12 @@ fn run_node_script(
     }
   }
 
-  match run_node_script_once(runtime, script_name, payload) {
-    Ok(output) => Ok(output),
-    Err(fallback_error) => {
-      let fallback_error = enrich_runtime_module_error(&fallback_error, runtime, script_name);
-      if let Some(worker_error) = last_error {
-        let worker_error = enrich_runtime_module_error(&worker_error, runtime, script_name);
-        if worker_error.trim() == fallback_error.trim() {
-          Err(fallback_error)
-        } else {
-          Err(format!("{}\n{}", worker_error, fallback_error))
-        }
-      } else {
-        Err(fallback_error)
-      }
-    }
-  }
+  let worker_error = last_error.unwrap_or_else(|| "Ошибка запуска worker".to_string());
+  Err(enrich_runtime_module_error(
+    &worker_error,
+    runtime,
+    script_name,
+  ))
 }
 
 fn run_node_script_with_worker(
@@ -1004,60 +994,6 @@ fn spawn_node_worker(runtime: &RuntimePathsState) -> Result<NodeWorker, String> 
     events,
     stdout_buffer: Vec::new(),
   })
-}
-
-fn run_node_script_once(
-  runtime: &RuntimePathsState,
-  script_name: &str,
-  payload: &BuildPayload,
-) -> Result<String, String> {
-  let script_path = runtime.scripts_dir.join(script_name);
-  if !script_path.exists() {
-    return Err(format!(
-      "Не найден скрипт {}\n{}",
-      script_path.display(),
-      format_runtime_diagnostics(runtime)
-    ));
-  }
-
-  let payload_json = serde_json::to_string(payload).map_err(|e| e.to_string())?;
-  let mut cmd = runtime
-    .app_handle
-    .shell()
-    .sidecar("node")
-    .map_err(|e| {
-      format!(
-        "Ошибка подготовки sidecar node: {}\n{}",
-        e,
-        format_runtime_diagnostics(runtime)
-      )
-    })?
-    .arg(script_path)
-    .arg(payload_json)
-    .current_dir(&runtime.workspace_root);
-  if let Some(node_modules_dir) = &runtime.node_modules_dir {
-    cmd = cmd.env("NODE_PATH", node_modules_dir);
-  }
-  let output = tauri::async_runtime::block_on(cmd.output())
-    .map_err(|e| {
-      format!(
-        "Ошибка запуска node ({}): {}\n{}",
-        runtime.node_bin.display(),
-        e,
-        format_runtime_diagnostics(runtime)
-      )
-    })?;
-  let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
-  let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
-  if !output.status.success() {
-    let message = if !stderr.is_empty() {
-      compact_script_error(&stderr)
-    } else {
-      "Ошибка сборки".to_string()
-    };
-    return Err(message);
-  }
-  Ok(stdout)
 }
 
 fn is_retryable_worker_error(error: &str) -> bool {
@@ -1825,11 +1761,7 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
   let mut script_candidates: Vec<PathBuf> = Vec::new();
   if let Some(resource_root) = resource_dir.as_ref() {
     script_candidates.push(resource_root.join("runtime-node").join("scripts"));
-    script_candidates.push(resource_root.join("scripts"));
-    script_candidates.push(resource_root.clone());
     script_candidates.push(resource_root.join("resources").join("runtime-node").join("scripts"));
-    script_candidates.push(resource_root.join("resources").join("scripts"));
-    script_candidates.push(resource_root.join("resources"));
   }
   if cfg!(debug_assertions) {
     script_candidates.push(dev_workspace_root.join("scripts"));
@@ -1844,7 +1776,7 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
       } else {
         resource_dir
           .as_ref()
-          .map(|r| r.join("scripts"))
+          .map(|r| r.join("runtime-node").join("scripts"))
           .unwrap_or_else(|| PathBuf::from("scripts"))
       }
     });
@@ -1883,15 +1815,11 @@ fn resolve_runtime_paths(app: &tauri::AppHandle) -> RuntimePathsState {
   if let Some(resource_root) = resource_dir.as_ref() {
     if cfg!(target_os = "windows") {
       node_candidates.push(resource_root.join("node.exe"));
-      node_candidates.push(resource_root.join("resources").join("node.exe"));
     } else {
       node_candidates.push(resource_root.join("node"));
-      node_candidates.push(resource_root.join("resources").join("node"));
     }
     sidecar_dirs.push(resource_root.clone());
     sidecar_dirs.push(resource_root.join("binaries"));
-    sidecar_dirs.push(resource_root.join("resources"));
-    sidecar_dirs.push(resource_root.join("resources").join("binaries"));
   }
   if cfg!(debug_assertions) {
     sidecar_dirs.push(dev_workspace_root.join("src-tauri").join("binaries"));
