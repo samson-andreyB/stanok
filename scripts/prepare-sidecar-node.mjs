@@ -20,6 +20,11 @@ const args = new Set(process.argv.slice(2));
 const skipNodeModulesCopy = args.has('--skip-node-modules');
 
 function detectTargetTriple() {
+  const forcedTriple = process.env.STANOK_TARGET_TRIPLE;
+  if (forcedTriple && forcedTriple.trim()) {
+    return forcedTriple.trim();
+  }
+
   const arch = process.arch;
   const platform = process.platform;
 

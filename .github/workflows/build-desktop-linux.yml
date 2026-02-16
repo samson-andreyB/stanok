@@ -6,6 +6,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -49,6 +52,8 @@ jobs:
             rpm
 
       - name: Build app bundles
+        env:
+          STANOK_TARGET_TRIPLE: x86_64-unknown-linux-gnu
         run: npx tauri build --bundles deb,rpm
 
       - name: Validate runtime modules inside RPM
@@ -206,14 +211,34 @@ jobs:
             fail "${label} missing in DEB"
           }
 
-          assert_any_path "build-worker.mjs" "/usr/lib/Stanok/runtime-node/scripts/build-worker.mjs"
-          assert_any_path "build-css.mjs" "/usr/lib/Stanok/runtime-node/scripts/build-css.mjs"
+          assert_any_path "build-worker.mjs" \
+            "/usr/lib/Stanok/runtime-node/scripts/build-worker.mjs" \
+            "/usr/lib/stanok/runtime-node/scripts/build-worker.mjs" \
+            "/usr/lib64/Stanok/runtime-node/scripts/build-worker.mjs" \
+            "/usr/lib64/stanok/runtime-node/scripts/build-worker.mjs"
+          assert_any_path "build-css.mjs" \
+            "/usr/lib/Stanok/runtime-node/scripts/build-css.mjs" \
+            "/usr/lib/stanok/runtime-node/scripts/build-css.mjs" \
+            "/usr/lib64/Stanok/runtime-node/scripts/build-css.mjs" \
+            "/usr/lib64/stanok/runtime-node/scripts/build-css.mjs"
           assert_any_path "intcss package" \
             "/usr/lib/Stanok/runtime-node/node_modules/intcss/index.js" \
-            "/usr/lib/Stanok/runtime-node/node_modules/intcss/package.json"
+            "/usr/lib/Stanok/runtime-node/node_modules/intcss/package.json" \
+            "/usr/lib/stanok/runtime-node/node_modules/intcss/index.js" \
+            "/usr/lib/stanok/runtime-node/node_modules/intcss/package.json" \
+            "/usr/lib64/Stanok/runtime-node/node_modules/intcss/index.js" \
+            "/usr/lib64/Stanok/runtime-node/node_modules/intcss/package.json" \
+            "/usr/lib64/stanok/runtime-node/node_modules/intcss/index.js" \
+            "/usr/lib64/stanok/runtime-node/node_modules/intcss/package.json"
           assert_any_path "sidecar node binary" \
             "/usr/lib/Stanok/node-x86_64-unknown-linux-gnu" \
             "/usr/lib/Stanok/binaries/node-x86_64-unknown-linux-gnu" \
+            "/usr/lib/stanok/node-x86_64-unknown-linux-gnu" \
+            "/usr/lib/stanok/binaries/node-x86_64-unknown-linux-gnu" \
+            "/usr/lib64/Stanok/node-x86_64-unknown-linux-gnu" \
+            "/usr/lib64/Stanok/binaries/node-x86_64-unknown-linux-gnu" \
+            "/usr/lib64/stanok/node-x86_64-unknown-linux-gnu" \
+            "/usr/lib64/stanok/binaries/node-x86_64-unknown-linux-gnu" \
             "/usr/bin/node"
 
       - name: Smoke test extracted DEB runtime
@@ -232,7 +257,17 @@ jobs:
           EXTRACT_DIR="$(mktemp -d)"
           dpkg-deb -x "${DEB_ABS}" "${EXTRACT_DIR}"
 
-          APP_ROOT="${EXTRACT_DIR}/usr/lib/Stanok"
+          APP_ROOT=""
+          for candidate in \
+            "${EXTRACT_DIR}/usr/lib/Stanok" \
+            "${EXTRACT_DIR}/usr/lib/stanok" \
+            "${EXTRACT_DIR}/usr/lib64/Stanok" \
+            "${EXTRACT_DIR}/usr/lib64/stanok"; do
+            if [ -d "${candidate}" ]; then
+              APP_ROOT="${candidate}"
+              break
+            fi
+          done
           [ -d "${APP_ROOT}" ] || fail "Extracted app root not found in DEB"
           test -f "${APP_ROOT}/runtime-node/scripts/build-worker.mjs" || fail "build-worker.mjs missing"
           test -f "${APP_ROOT}/runtime-node/scripts/build-css.mjs" || fail "build-css.mjs missing"
@@ -266,3 +301,12 @@ jobs:
           name: stanok-linux
           path: src-tauri/target/release/bundle/
           if-no-files-found: error
+
+      - name: Publish release assets (Linux)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            src-tauri/target/release/bundle/**/*.rpm
+            src-tauri/target/release/bundle/**/*.deb
+          fail_on_unmatched_files: true
