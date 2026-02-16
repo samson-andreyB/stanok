@@ -44,7 +44,7 @@ npm run build
 ## Релиз Через GitHub Actions
 
 В репозитории есть workflow для десктоп-сборок:
-- `.github/workflows/build-desktop.yml` (`Build Desktop (Linux RPM)`)
+- `.github/workflows/build-desktop-linux.yml` (`Build Desktop (Linux RPM)`)
 - `.github/workflows/build-desktop-windows.yml` (`Build Desktop (Windows)`)
 - `.github/workflows/build-desktop-macos.yml` (`Build Desktop (macOS)`)
 
