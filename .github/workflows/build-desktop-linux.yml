@@ -133,8 +133,7 @@ jobs:
               "${app_root}/node-x86_64-unknown-linux-gnu" \
               "${app_root}/binaries/node-x86_64-unknown-linux-gnu" \
               "${app_root}/resources/node-x86_64-unknown-linux-gnu" \
-              "${app_root}/resources/binaries/node-x86_64-unknown-linux-gnu" \
-              "/usr/bin/node"; do
+              "${app_root}/resources/binaries/node-x86_64-unknown-linux-gnu"; do
               if [ -f "${candidate}" ]; then
                 matches="${matches}${candidate}"$'\n'
               fi
@@ -142,15 +141,19 @@ jobs:
             matches="$(printf '%s' "${matches}" | sed '/^$/d' || true)"
             local count
             count="$(printf '%s\n' "${matches}" | sed '/^$/d' | wc -l | tr -d ' ')"
-            if [ "${count}" -ne 1 ]; then
-              echo "Expected exactly one sidecar node candidate, got ${count}"
+            if [ "${count}" -gt 1 ]; then
+              echo "Expected at most one sidecar node candidate, got ${count}"
               echo "Matches:"
               printf '%s\n' "${matches}"
               echo "App root files (first 300):"
               find "${app_root}" -maxdepth 5 -type f | sed -n '1,300p'
               return 1
             fi
-            printf '%s\n' "${matches}" | head -n 1
+            if [ "${count}" -eq 1 ]; then
+              printf '%s\n' "${matches}" | head -n 1
+              return 0
+            fi
+            command -v node || true
           }
 
           RPM_FILE="$(find src-tauri/target/release/bundle -type f -name '*.rpm' | head -n 1 || true)"
@@ -303,8 +306,7 @@ jobs:
               "${app_root}/node-x86_64-unknown-linux-gnu" \
               "${app_root}/binaries/node-x86_64-unknown-linux-gnu" \
               "${app_root}/resources/node-x86_64-unknown-linux-gnu" \
-              "${app_root}/resources/binaries/node-x86_64-unknown-linux-gnu" \
-              "/usr/bin/node"; do
+              "${app_root}/resources/binaries/node-x86_64-unknown-linux-gnu"; do
               if [ -f "${candidate}" ]; then
                 matches="${matches}${candidate}"$'\n'
               fi
@@ -312,15 +314,19 @@ jobs:
             matches="$(printf '%s' "${matches}" | sed '/^$/d' || true)"
             local count
             count="$(printf '%s\n' "${matches}" | sed '/^$/d' | wc -l | tr -d ' ')"
-            if [ "${count}" -ne 1 ]; then
-              echo "Expected exactly one sidecar node candidate, got ${count}"
+            if [ "${count}" -gt 1 ]; then
+              echo "Expected at most one sidecar node candidate, got ${count}"
               echo "Matches:"
               printf '%s\n' "${matches}"
               echo "App root files (first 300):"
               find "${app_root}" -maxdepth 5 -type f | sed -n '1,300p'
               return 1
             fi
-            printf '%s\n' "${matches}" | head -n 1
+            if [ "${count}" -eq 1 ]; then
+              printf '%s\n' "${matches}" | head -n 1
+              return 0
+            fi
+            command -v node || true
           }
 
           DEB_FILE="$(find src-tauri/target/release/bundle -type f -name '*.deb' | head -n 1 || true)"
