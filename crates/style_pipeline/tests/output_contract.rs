@@ -168,3 +168,67 @@ fn accepts_browserslist_query_in_targets() {
     let result = compile(CompileRequest { cwd, config: cfg });
     assert!(result.is_ok(), "valid browserslist query should be accepted");
 }
+
+#[test]
+fn resolves_imports_from_entry_dir_and_import_roots() {
+    let cwd = temp_dir("imports_roots");
+    let src_dir = cwd.join("assets/css/src");
+    std::fs::create_dir_all(src_dir.join("modules")).expect("src modules dir should exist");
+    std::fs::create_dir_all(cwd.join("shared/styles/lib")).expect("shared lib dir should exist");
+
+    std::fs::write(
+        src_dir.join("_main.css"),
+        "@import 'modules/_local';\n@import 'lib/_helpers';\n",
+    )
+    .expect("entry should be written");
+    std::fs::write(src_dir.join("modules/_local.css"), ".local { color: red; }\n")
+        .expect("local import should be written");
+    std::fs::write(cwd.join("shared/styles/lib/_helpers.css"), ".helper { display: block; }\n")
+        .expect("root import should be written");
+
+    let mut cfg = PipelineConfig::default();
+    cfg.out_dir = PathBuf::from("assets/css");
+    cfg.source_maps = SourceMapMode::None;
+    cfg.import_roots = vec![PathBuf::from("shared/styles")];
+
+    compile(CompileRequest {
+        cwd: cwd.clone(),
+        config: cfg,
+    })
+    .expect("compile should succeed");
+
+    let css = std::fs::read_to_string(cwd.join("assets/css/main.css")).expect("css output should exist");
+    assert!(css.contains(".local"), "local imported CSS should be included");
+    assert!(css.contains(".helper"), "import from root path should be included");
+}
+
+#[test]
+fn legacy_url_rewrite_applies_to_imported_content() {
+    let cwd = temp_dir("import_url_rewrite");
+    let src_dir = cwd.join("assets/css/src");
+    std::fs::create_dir_all(src_dir.join("modules")).expect("src modules dir should exist");
+
+    std::fs::write(src_dir.join("_main.css"), "@import 'modules/_feature';\n")
+        .expect("entry should be written");
+    std::fs::write(
+        src_dir.join("modules/_feature.css"),
+        ".icon { background-image: url(icon.svg); }\n",
+    )
+    .expect("imported css should be written");
+
+    let mut cfg = PipelineConfig::default();
+    cfg.out_dir = PathBuf::from("assets/css");
+    cfg.source_maps = SourceMapMode::None;
+
+    compile(CompileRequest {
+        cwd: cwd.clone(),
+        config: cfg,
+    })
+    .expect("compile should succeed");
+
+    let css = std::fs::read_to_string(cwd.join("assets/css/main.css")).expect("css output should exist");
+    assert!(
+        css.contains("/assets/css/src/modules/icon.svg"),
+        "rewritten URL should use project-root absolute path"
+    );
+}

@@ -7,3 +7,4 @@ edition = "2021"
 lightningcss = { version = "1.0.0-alpha.70", default-features = false, features = ["browserslist", "sourcemap"] }
 parcel_sourcemap = "2.1.1"
 serde_json = "1.0"
+regex = "1.11"
