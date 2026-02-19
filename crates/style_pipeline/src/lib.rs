@@ -566,6 +566,7 @@ fn preprocess_entry_source(req: &CompileRequest, entry_abs: &Path) -> Result<Str
     if matches!(req.config.compatibility, CompatibilityMode::LegacyCompatible) {
         source = apply_legacy_variable_substitution(&source);
         source = apply_legacy_mixins(&source);
+        source = apply_legacy_nested_selectors(&source);
     }
     Ok(source)
 }
@@ -821,6 +822,185 @@ fn apply_legacy_mixins(content: &str) -> String {
         without_defs = expanded;
     }
     without_defs
+}
+
+fn apply_legacy_nested_selectors(content: &str) -> String {
+    flatten_css_level(content)
+}
+
+fn flatten_css_level(content: &str) -> String {
+    let mut out = String::with_capacity(content.len());
+    let bytes = content.as_bytes();
+    let mut i = 0usize;
+    let mut last = 0usize;
+
+    while i < bytes.len() {
+        if bytes[i] == b'{' {
+            let prelude = content[last..i].trim();
+            if let Some((inner, end)) = parse_balanced_block(content, i) {
+                if prelude.starts_with('@') {
+                    // Keep at-rules structure, but flatten inside.
+                    out.push_str(&content[last..i]);
+                    out.push('{');
+                    out.push_str(&flatten_css_level(&inner));
+                    out.push('}');
+                } else {
+                    let selectors = split_selectors(prelude);
+                    if selectors.is_empty() {
+                        out.push_str(&content[last..end]);
+                    } else {
+                        out.push_str(&flatten_rule_block(&selectors, &inner));
+                    }
+                }
+                i = end;
+                last = end;
+                continue;
+            }
+        }
+        i += 1;
+    }
+
+    if last < content.len() {
+        out.push_str(&content[last..]);
+    }
+    out
+}
+
+fn flatten_rule_block(parent_selectors: &[String], inner: &str) -> String {
+    let mut local = String::new();
+    let mut nested_out = String::new();
+    let bytes = inner.as_bytes();
+    let mut i = 0usize;
+    let mut last = 0usize;
+
+    while i < bytes.len() {
+        if bytes[i] == b'{' {
+            let prelude = inner[last..i].trim();
+            if let Some((child_inner, end)) = parse_balanced_block(inner, i) {
+                local.push_str(&inner[last..i]);
+                if prelude.starts_with('@') {
+                    // Preserve nested at-rules in-place under current selector.
+                    local.push('{');
+                    local.push_str(&flatten_css_level(&child_inner));
+                    local.push('}');
+                } else {
+                    let child_selectors = split_selectors(prelude);
+                    if child_selectors.is_empty() {
+                        local.push('{');
+                        local.push_str(&child_inner);
+                        local.push('}');
+                    } else {
+                        let combined = combine_selectors(parent_selectors, &child_selectors);
+                        nested_out.push_str(&flatten_rule_block(&combined, &child_inner));
+                    }
+                }
+                i = end;
+                last = end;
+                continue;
+            }
+        }
+        i += 1;
+    }
+    if last < inner.len() {
+        local.push_str(&inner[last..]);
+    }
+
+    let mut out = String::new();
+    if !local.trim().is_empty() {
+        out.push_str(&parent_selectors.join(", "));
+        out.push_str(" {\n");
+        out.push_str(local.trim());
+        out.push_str("\n}\n");
+    }
+    out.push_str(&nested_out);
+    out
+}
+
+fn split_selectors(prelude: &str) -> Vec<String> {
+    let mut parts = Vec::<String>::new();
+    let mut cur = String::new();
+    let mut paren = 0i32;
+    let mut bracket = 0i32;
+    let mut in_single = false;
+    let mut in_double = false;
+    let mut escaped = false;
+
+    for ch in prelude.chars() {
+        if in_single {
+            cur.push(ch);
+            if !escaped && ch == '\'' {
+                in_single = false;
+            }
+            escaped = ch == '\\' && !escaped;
+            continue;
+        }
+        if in_double {
+            cur.push(ch);
+            if !escaped && ch == '"' {
+                in_double = false;
+            }
+            escaped = ch == '\\' && !escaped;
+            continue;
+        }
+
+        match ch {
+            '\'' => {
+                in_single = true;
+                escaped = false;
+                cur.push(ch);
+            }
+            '"' => {
+                in_double = true;
+                escaped = false;
+                cur.push(ch);
+            }
+            '(' => {
+                paren += 1;
+                cur.push(ch);
+            }
+            ')' => {
+                paren -= 1;
+                cur.push(ch);
+            }
+            '[' => {
+                bracket += 1;
+                cur.push(ch);
+            }
+            ']' => {
+                bracket -= 1;
+                cur.push(ch);
+            }
+            ',' if paren == 0 && bracket == 0 => {
+                let s = cur.trim();
+                if !s.is_empty() {
+                    parts.push(s.to_string());
+                }
+                cur.clear();
+            }
+            _ => cur.push(ch),
+        }
+    }
+    let tail = cur.trim();
+    if !tail.is_empty() {
+        parts.push(tail.to_string());
+    }
+    parts
+}
+
+fn combine_selectors(parents: &[String], children: &[String]) -> Vec<String> {
+    let mut out = Vec::<String>::new();
+    for p in parents {
+        for c in children {
+            let combined = if c.contains('&') {
+                c.replace('&', p)
+            } else {
+                format!("{p} {c}")
+            };
+            let normalized = combined.split_whitespace().collect::<Vec<_>>().join(" ");
+            out.push(normalized);
+        }
+    }
+    out
 }
 
 fn extract_legacy_mixin_definitions(content: &str) -> (String, HashMap<String, String>) {
@@ -1263,6 +1443,33 @@ mod tests {
         let input = "/* Примеси */\n@define-mixin x { &:hover { @mixin-content; } }\n.a { @mixin x { color: red; } }";
         let out = apply_legacy_mixins(input);
         assert!(out.contains("color: red;"));
+    }
+
+    #[test]
+    fn legacy_nested_expands_bem_and_context_patterns() {
+        let input = r#"
+            .Item {
+                &__box {
+                    &--truncated { max-width: 1px; }
+                }
+                .Items__list &:hover &__box { background: yellow; }
+            }
+        "#;
+        let out = apply_legacy_nested_selectors(input);
+        assert!(out.contains(".Item__box"));
+        assert!(out.contains(".Item__box--truncated"));
+        assert!(out.contains(".Items__list .Item:hover .Item__box"));
+    }
+
+    #[test]
+    fn legacy_nested_expands_double_ampersand_concat() {
+        let input = r#"
+            .Calendar {
+                &__workDay&__today { background: #f9f5da; }
+            }
+        "#;
+        let out = apply_legacy_nested_selectors(input);
+        assert!(out.contains(".Calendar__workDay.Calendar__today"));
     }
 
     #[derive(Clone)]
