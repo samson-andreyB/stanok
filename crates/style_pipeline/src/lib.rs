@@ -830,7 +830,7 @@ fn extract_legacy_mixin_definitions(content: &str) -> (String, HashMap<String, S
     let mut i = 0usize;
 
     while i < bytes.len() {
-        if content[i..].starts_with("@define-mixin") {
+        if starts_with_bytes_at(bytes, i, b"@define-mixin") {
             let mut j = i + "@define-mixin".len();
             while j < bytes.len() && bytes[j].is_ascii_whitespace() {
                 j += 1;
@@ -841,13 +841,18 @@ fn extract_legacy_mixin_definitions(content: &str) -> (String, HashMap<String, S
             {
                 j += 1;
             }
-            let name = content[name_start..j].trim();
+            let name = content.get(name_start..j).unwrap_or("").trim();
             while j < bytes.len() && bytes[j].is_ascii_whitespace() {
                 j += 1;
             }
             if name.is_empty() || j >= bytes.len() || bytes[j] != b'{' {
-                out.push(bytes[i] as char);
-                i += 1;
+                let ch = content[i..].chars().next().unwrap_or('\0');
+                if ch != '\0' {
+                    out.push(ch);
+                    i += ch.len_utf8();
+                } else {
+                    i += 1;
+                }
                 continue;
             }
 
@@ -858,8 +863,13 @@ fn extract_legacy_mixin_definitions(content: &str) -> (String, HashMap<String, S
             }
         }
 
-        out.push(bytes[i] as char);
-        i += 1;
+        let ch = content[i..].chars().next().unwrap_or('\0');
+        if ch != '\0' {
+            out.push(ch);
+            i += ch.len_utf8();
+        } else {
+            i += 1;
+        }
     }
 
     (out, mixins)
@@ -873,7 +883,7 @@ fn expand_legacy_mixin_calls(content: &str, mixins: &HashMap<String, String>) ->
     let mut i = 0usize;
 
     while i < bytes.len() {
-        if content[i..].starts_with("@mixin") {
+        if starts_with_bytes_at(bytes, i, b"@mixin") {
             let mut j = i + "@mixin".len();
             while j < bytes.len() && bytes[j].is_ascii_whitespace() {
                 j += 1;
@@ -884,10 +894,15 @@ fn expand_legacy_mixin_calls(content: &str, mixins: &HashMap<String, String>) ->
             {
                 j += 1;
             }
-            let name = content[name_start..j].trim();
+            let name = content.get(name_start..j).unwrap_or("").trim();
             if name.is_empty() {
-                out.push(bytes[i] as char);
-                i += 1;
+                let ch = content[i..].chars().next().unwrap_or('\0');
+                if ch != '\0' {
+                    out.push(ch);
+                    i += ch.len_utf8();
+                } else {
+                    i += 1;
+                }
                 continue;
             }
 
@@ -913,11 +928,23 @@ fn expand_legacy_mixin_calls(content: &str, mixins: &HashMap<String, String>) ->
             }
         }
 
-        out.push(bytes[i] as char);
-        i += 1;
+        let ch = content[i..].chars().next().unwrap_or('\0');
+        if ch != '\0' {
+            out.push(ch);
+            i += ch.len_utf8();
+        } else {
+            i += 1;
+        }
     }
 
     out
+}
+
+fn starts_with_bytes_at(haystack: &[u8], offset: usize, needle: &[u8]) -> bool {
+    haystack
+        .get(offset..)
+        .map(|tail| tail.starts_with(needle))
+        .unwrap_or(false)
 }
 
 fn parse_balanced_block(content: &str, open_brace_index: usize) -> Option<(String, usize)> {
@@ -1228,6 +1255,13 @@ mod tests {
         assert!(out.contains("&:hover"));
         assert!(out.contains("color: blue;"));
         assert!(out.contains(".b"));
+        assert!(out.contains("color: red;"));
+    }
+
+    #[test]
+    fn legacy_mixins_do_not_panic_on_utf8_comments() {
+        let input = "/* Примеси */\n@define-mixin x { &:hover { @mixin-content; } }\n.a { @mixin x { color: red; } }";
+        let out = apply_legacy_mixins(input);
         assert!(out.contains("color: red;"));
     }
 
