@@ -1600,9 +1600,19 @@ fn run_build_orchestrated(
       if run_styles {
         let mut styles_payload = payload.clone();
         styles_payload.runtime_paths = Some(build_runtime_paths(&styles_payload));
+        let explicit_engine = is_styles_engine_explicit(&styles_payload);
         let out = match resolve_styles_engine(&styles_payload) {
           StylesEngine::Legacy => run_node_script(state, runtime, "build-css.mjs", &styles_payload)?,
-          StylesEngine::Rust => run_styles_rust(&styles_payload)?,
+          StylesEngine::Rust => match run_styles_rust(&styles_payload) {
+            Ok(out) => out,
+            Err(err) => {
+              if explicit_engine {
+                return Err(err);
+              }
+              outputs.push(format!("Rust style pipeline failed, fallback to legacy: {err}"));
+              run_node_script(state, runtime, "build-css.mjs", &styles_payload)?
+            }
+          },
         };
         if !out.is_empty() {
           outputs.push(out);
@@ -1655,6 +1665,22 @@ fn resolve_styles_engine(payload: &BuildPayload) -> StylesEngine {
   }
 
   StylesEngine::Rust
+}
+
+fn is_styles_engine_explicit(payload: &BuildPayload) -> bool {
+  if payload
+    .style_engine
+    .as_deref()
+    .and_then(parse_styles_engine)
+    .is_some()
+  {
+    return true;
+  }
+  env::var("STANOK_STYLE_ENGINE")
+    .ok()
+    .as_deref()
+    .and_then(parse_styles_engine)
+    .is_some()
 }
 
 fn parse_styles_engine(value: &str) -> Option<StylesEngine> {
@@ -2513,6 +2539,38 @@ mod tests {
       runtime_paths: None,
     };
     assert_eq!(resolve_styles_engine(&payload), StylesEngine::Legacy);
+  }
+
+  #[test]
+  fn is_styles_engine_explicit_detects_payload_value() {
+    let payload = BuildPayload {
+      projects_path: "/tmp".to_string(),
+      project_name: "demo/main".to_string(),
+      config: build_config_from_project_data(Some(&json!({}))),
+      style_engine: Some("legacy".to_string()),
+      runtime_paths: None,
+    };
+    assert!(is_styles_engine_explicit(&payload));
+  }
+
+  #[test]
+  fn is_styles_engine_explicit_detects_env_value() {
+    let key = "STANOK_STYLE_ENGINE";
+    let prev = env::var(key).ok();
+    env::set_var(key, "rust");
+    let payload = BuildPayload {
+      projects_path: "/tmp".to_string(),
+      project_name: "demo/main".to_string(),
+      config: build_config_from_project_data(Some(&json!({}))),
+      style_engine: None,
+      runtime_paths: None,
+    };
+    assert!(is_styles_engine_explicit(&payload));
+    if let Some(v) = prev {
+      env::set_var(key, v);
+    } else {
+      env::remove_var(key);
+    }
   }
 
   #[test]
