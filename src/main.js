@@ -25,12 +25,16 @@ const state = {
   watchBuildInFlight: false,
   watchBuildPendingCss: false,
   watchBuildPendingImg: false,
+  styleEngineMode: 'rust',
 };
 
 const MAX_PROJECT_LOG_ENTRIES = 200;
 const MAX_GLOBAL_LOG_CHARS = 20000;
 const INVOKE_DEFAULT_TIMEOUT_MS = 12000;
 const INVOKE_BUILD_TIMEOUT_MS = 10 * 60 * 1000;
+const STYLE_ENGINE_STORAGE_KEY = 'styleEngineMode';
+const DEFAULT_STYLE_ENGINE = 'rust';
+const STYLE_ENGINE_VALUES = new Set(['rust', 'legacy']);
 
 const ui = {
   projectsPathInfo: document.querySelector('#projectsPathInfo'),
@@ -116,6 +120,7 @@ init().catch((error) => {
 });
 
 async function init() {
+  state.styleEngineMode = loadStyleEngineMode();
   patchConsole();
   bindEvents();
   void loadRuntimeInfo();
@@ -435,9 +440,27 @@ function bindEvents() {
   });
 
   document.addEventListener('click', onDocumentClick);
+  document.addEventListener('change', onDocumentChange);
   window.addEventListener('focus', handleAppStateChange);
   window.addEventListener('blur', handleAppStateChange);
   document.addEventListener('visibilitychange', handleAppStateChange);
+}
+
+function onDocumentChange(event) {
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) {
+    return;
+  }
+
+  if (!target.classList.contains('Project__styleEngineSelect')) {
+    return;
+  }
+
+  const nextMode = normalizeStyleEngine(target.value);
+  state.styleEngineMode = nextMode;
+  localStorage.setItem(STYLE_ENGINE_STORAGE_KEY, nextMode);
+  syncStyleEngineSelectors(nextMode);
+  addLog(`Режим style pipeline: ${nextMode}`);
 }
 
 function handleAppStateChange() {
@@ -675,7 +698,7 @@ function renderProject(project, id) {
 
   let result = `<div class="Project" data-project-id="${id}" data-project-name="${escapeHtml(project.name)}">`;
   result += `<div class="Project__header"><div class="Project__title">${header}</div></div>`;
-  result += `<div class="Project__wrapper Project__controls" ${hide}><button class="Project__start" type="button"></button><button class="Project__build Project__build--styles" type="button">Обработать стили</button><button class="Project__build Project__build--images" type="button">Обработать изображения</button></div>`;
+  result += `<div class="Project__wrapper Project__controls" ${hide}><button class="Project__start" type="button"></button><label class="Project__styleEngine"><span class="Project__styleEngineLabel">Styles:</span><select class="Project__styleEngineSelect"><option value="rust"${state.styleEngineMode === 'rust' ? ' selected' : ''}>rust</option><option value="legacy"${state.styleEngineMode === 'legacy' ? ' selected' : ''}>legacy</option></select></label><button class="Project__build Project__build--styles" type="button">Обработать стили</button><button class="Project__build Project__build--images" type="button">Обработать изображения</button></div>`;
 
   result += '<div class="Project__log"></div>';
   result += '</div>';
@@ -975,17 +998,28 @@ async function runProjectBuildFor(project, projectId, { startMessage, command, s
   if (projectEl) {
     projectEl.classList.add(loadingClass);
   }
+  const buildStartedAt = performance.now();
 
   try {
-    const output = await invokeWithPolicy(command, {
+    const invokeArgs = {
       projectsPath: state.projectsPath,
       projectName: project.name,
       projectData: project.data || null,
-    }, {
+    };
+    if (command === 'build_styles') {
+      invokeArgs.styleEngine = getSelectedStyleEngine(projectId);
+    }
+
+    const output = await invokeWithPolicy(command, invokeArgs, {
       timeoutMs: INVOKE_BUILD_TIMEOUT_MS,
     });
     if (typeof staleGuard !== 'function' || staleGuard()) {
-      addProjectLog(projectId, output || successMessage, 'success');
+      const elapsedMs = Math.max(0, Math.round(performance.now() - buildStartedAt));
+      const resultMessage = output || successMessage;
+      const decoratedMessage = command === 'build_styles'
+        ? `${resultMessage} (время: ${formatBuildDuration(elapsedMs)})`
+        : resultMessage;
+      addProjectLog(projectId, decoratedMessage, 'success');
     }
   } catch (error) {
     if (typeof staleGuard !== 'function' || staleGuard()) {
@@ -996,6 +1030,48 @@ async function runProjectBuildFor(project, projectId, { startMessage, command, s
       projectEl.classList.remove(loadingClass);
     }
   }
+}
+
+function formatBuildDuration(ms) {
+  if (ms < 1000) {
+    return `${ms} мс`;
+  }
+  return `${(ms / 1000).toFixed(2)} c`;
+}
+
+function loadStyleEngineMode() {
+  return normalizeStyleEngine(localStorage.getItem(STYLE_ENGINE_STORAGE_KEY));
+}
+
+function normalizeStyleEngine(value) {
+  const mode = String(value || '').trim().toLowerCase();
+  return STYLE_ENGINE_VALUES.has(mode) ? mode : DEFAULT_STYLE_ENGINE;
+}
+
+function syncStyleEngineSelectors(mode) {
+  const normalized = normalizeStyleEngine(mode);
+  document.querySelectorAll('.Project__styleEngineSelect').forEach((el) => {
+    if (el instanceof HTMLSelectElement && el.value !== normalized) {
+      el.value = normalized;
+    }
+  });
+}
+
+function getSelectedStyleEngine(projectId) {
+  if (!projectId) {
+    return state.styleEngineMode || DEFAULT_STYLE_ENGINE;
+  }
+
+  const select = document.querySelector(`.Project[data-project-id="${projectId}"] .Project__styleEngineSelect`);
+  if (!(select instanceof HTMLSelectElement)) {
+    return state.styleEngineMode || DEFAULT_STYLE_ENGINE;
+  }
+
+  const normalized = normalizeStyleEngine(select.value);
+  if (normalized !== select.value) {
+    select.value = normalized;
+  }
+  return normalized;
 }
 
 function timeNow() {

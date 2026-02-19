@@ -3,12 +3,23 @@ use std::ffi::OsStr;
 use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
+use std::time::Instant;
 
 use lightningcss::stylesheet::{MinifyOptions, ParserOptions, PrinterOptions, StyleSheet};
 use lightningcss::targets::{Browsers, Targets as LightningTargets};
 use parcel_sourcemap::SourceMap;
-use regex::Regex;
 use serde_json::json;
+
+mod legacy_nested;
+mod legacy_mixins;
+mod legacy_vars;
+mod legacy_imports;
+mod legacy_extend;
+mod legacy_resolve_dims;
+mod legacy_svg_fn;
+mod legacy_urls;
+mod preprocess_debug;
+mod svg_fallback;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Entry {
@@ -97,6 +108,16 @@ pub struct Diagnostic {
 pub struct CompileResult {
     pub artifacts: Vec<CompileArtifact>,
     pub diagnostics: Vec<Diagnostic>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct PreprocessTiming {
+    imports_ms: u128,
+    vars_ms: u128,
+    mixins_ms: u128,
+    nested_ms: u128,
+    extend_ms: u128,
+    total_ms: u128,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -270,18 +291,23 @@ pub fn compile_with_registry(
         .collect();
 
     let targets = resolve_targets(&req.config)?;
+    let mut diagnostics = Vec::<Diagnostic>::new();
     for artifact in &mut artifacts {
-        artifact.extra_outputs = compile_and_emit_entry(&req, artifact, targets, stages)?;
+        let outcome = compile_and_emit_entry(&req, artifact, targets, stages)?;
+        artifact.extra_outputs = outcome.extra_outputs;
+        diagnostics.extend(outcome.diagnostics);
     }
+
+    diagnostics.push(Diagnostic {
+        code: "PLANNED_OUTPUTS",
+        message:
+            "style_pipeline compile stub: entry discovery and output contract are implemented"
+                .to_string(),
+    });
 
     Ok(CompileResult {
         artifacts,
-        diagnostics: vec![Diagnostic {
-            code: "PLANNED_OUTPUTS",
-            message:
-                "style_pipeline compile stub: entry discovery and output contract are implemented"
-                    .to_string(),
-        }],
+        diagnostics,
     })
 }
 
@@ -409,7 +435,7 @@ fn compile_and_emit_entry(
     artifact: &CompileArtifact,
     targets: LightningTargets,
     stages: &StageRegistry,
-) -> Result<Vec<PathBuf>, PipelineError> {
+) -> Result<EntryCompileOutcome, PipelineError> {
     let input_abs = req.cwd.join(&artifact.entry);
     let css_abs = req.cwd.join(&artifact.css_path);
 
@@ -417,7 +443,8 @@ fn compile_and_emit_entry(
         cwd: &req.cwd,
         config: &req.config,
     };
-    let source = preprocess_entry_source(req, &input_abs)?;
+    let (source, timing) = preprocess_entry_source(req, &input_abs)?;
+    preprocess_debug::maybe_dump_preprocessed_source(&source);
     let source = stages.run_pre(&stage_ctx, &artifact.entry, source)?;
 
     let mut sheet = StyleSheet::parse(
@@ -428,9 +455,13 @@ fn compile_and_emit_entry(
         },
     )
     .map_err(|err| {
+        let raw = err.to_string();
+        let context = preprocess_debug::extract_parse_error_context(&source, &raw);
         PipelineError::Compile(format!(
-            "Failed to parse css '{}': {err}",
-            artifact.entry.display()
+            "Failed to parse css '{}': {}{}",
+            artifact.entry.display(),
+            raw,
+            context
         ))
     })?;
 
@@ -480,7 +511,7 @@ fn compile_and_emit_entry(
 
     write_file(&css_abs, css_code.as_bytes())?;
 
-    let extra_outputs = emit_svg_fallback_assets(req, &css_code)?;
+    let extra_outputs = svg_fallback::emit_svg_fallback_assets(req, &css_code)?;
 
     if let (Some(sm), Some(map_path)) = (source_map.as_mut(), &artifact.map_path) {
         if sm.get_sources().is_empty() {
@@ -496,243 +527,199 @@ fn compile_and_emit_entry(
         write_file(&req.cwd.join(map_path), map_json.as_bytes())?;
     }
 
-    Ok(extra_outputs)
+    Ok(EntryCompileOutcome {
+        extra_outputs,
+        diagnostics: vec![Diagnostic {
+            code: "PREPROCESS_PROFILE",
+            message: format!(
+                "{} imports={}ms vars={}ms mixins={}ms nested={}ms extend={}ms total={}ms",
+                artifact.entry.display(),
+                timing.imports_ms,
+                timing.vars_ms,
+                timing.mixins_ms,
+                timing.nested_ms,
+                timing.extend_ms,
+                timing.total_ms
+            ),
+        }],
+    })
 }
 
-fn emit_svg_fallback_assets(req: &CompileRequest, css_code: &str) -> Result<Vec<PathBuf>, PipelineError> {
-    if !req.config.asset.enable_svg_fallback {
-        return Ok(Vec::new());
-    }
-
-    let url_re = Regex::new(r#"url\(([^(]*)\)"#).expect("url regex must compile");
-    let fallback_dir = svg_fallback_dir(req);
-    let mut emitted = Vec::<PathBuf>::new();
-    let mut seen = HashSet::<PathBuf>::new();
-
-    for capture in url_re.captures_iter(css_code) {
-        let Some(m) = capture.get(1) else {
-            continue;
-        };
-        let raw = strip_quotes(m.as_str().trim());
-        let (path_part, _) = split_url_suffix(raw);
-        if !is_local_svg_path(path_part) {
-            continue;
-        }
-
-        let stem = Path::new(path_part)
-            .file_stem()
-            .and_then(|s| s.to_str())
-            .filter(|s| !s.is_empty())
-            .unwrap_or("fallback");
-        let rel = fallback_dir.join(format!("{stem}.png"));
-        if !seen.insert(rel.clone()) {
-            continue;
-        }
-
-        write_file(&req.cwd.join(&rel), b"")?;
-        emitted.push(rel);
-    }
-
-    Ok(emitted)
-}
-
-fn svg_fallback_dir(req: &CompileRequest) -> PathBuf {
-    if let Some(dir) = &req.config.asset.svg_fallback_dir {
-        return dir.clone();
-    }
-    req.config
-        .out_dir
-        .parent()
-        .map(Path::to_path_buf)
-        .unwrap_or_else(|| PathBuf::from("."))
-        .join("img")
-        .join("svg_fallback")
-}
-
-fn is_local_svg_path(path: &str) -> bool {
-    let p = path.trim();
-    if p.is_empty() {
-        return false;
-    }
-    if should_keep_url_unmodified(p) && !p.starts_with('/') {
-        return false;
-    }
-    p.to_ascii_lowercase().ends_with(".svg")
-}
-
-fn preprocess_entry_source(req: &CompileRequest, entry_abs: &Path) -> Result<String, PipelineError> {
+fn preprocess_entry_source(req: &CompileRequest, entry_abs: &Path) -> Result<(String, PreprocessTiming), PipelineError> {
+    let t_total = Instant::now();
     let mut stack = HashSet::new();
-    preprocess_source_recursive(req, entry_abs, &mut stack)
+    let t_imports = Instant::now();
+    let mut source = legacy_imports::preprocess_source_recursive(req, entry_abs, &mut stack)?;
+    let imports_ms = t_imports.elapsed().as_millis();
+    preprocess_debug::maybe_dump_pre_stage("01_after_imports.css", &source);
+
+    let mut vars_ms = 0u128;
+    let mut mixins_ms = 0u128;
+    let mut nested_ms = 0u128;
+    let mut extend_ms = 0u128;
+    if matches!(req.config.compatibility, CompatibilityMode::LegacyCompatible) {
+        let t_vars = Instant::now();
+        source = apply_legacy_variable_substitution(&source);
+        vars_ms = t_vars.elapsed().as_millis();
+        preprocess_debug::maybe_dump_pre_stage("02_after_vars.css", &source);
+
+        let t_mixins = Instant::now();
+        source = apply_legacy_mixins(&source);
+        mixins_ms = t_mixins.elapsed().as_millis();
+        preprocess_debug::maybe_dump_pre_stage("03_after_mixins.css", &source);
+
+        let t_nested = Instant::now();
+        source = apply_legacy_nested_selectors(&source);
+        nested_ms = t_nested.elapsed().as_millis();
+        preprocess_debug::maybe_dump_pre_stage("04_after_nested.css", &source);
+
+        let t_extend = Instant::now();
+        source = apply_legacy_extend_selectors(&source);
+        extend_ms = t_extend.elapsed().as_millis();
+        preprocess_debug::maybe_dump_pre_stage("05_after_extend.css", &source);
+    }
+    let total_ms = t_total.elapsed().as_millis();
+    Ok((
+        source,
+        PreprocessTiming {
+            imports_ms,
+            vars_ms,
+            mixins_ms,
+            nested_ms,
+            extend_ms,
+            total_ms,
+        },
+    ))
 }
 
-fn preprocess_source_recursive(
+pub(crate) fn apply_legacy_import_url_rewrite(req: &CompileRequest, content: &str, file_abs: &Path) -> String {
+    legacy_urls::apply_legacy_import_url_rewrite(req, content, file_abs)
+}
+
+pub(crate) fn apply_legacy_resolve_width_height(
     req: &CompileRequest,
+    content: &str,
     file_abs: &Path,
-    stack: &mut HashSet<PathBuf>,
-) -> Result<String, PipelineError> {
-    let canonical = std::fs::canonicalize(file_abs).map_err(|err| {
-        PipelineError::Resolve(format!(
-            "Failed to resolve css file '{}': {err}",
-            file_abs.display()
-        ))
-    })?;
+) -> String {
+    legacy_resolve_dims::apply_legacy_resolve_width_height(req, content, file_abs)
+}
 
-    if stack.contains(&canonical) {
-        return Err(PipelineError::Resolve(format!(
-            "Circular @import detected at '{}'",
-            file_abs.display()
-        )));
+fn apply_legacy_variable_substitution(content: &str) -> String {
+    legacy_vars::apply_legacy_variable_substitution(content)
+}
+
+fn apply_legacy_mixins(content: &str) -> String {
+    legacy_mixins::apply_legacy_mixins(content)
+}
+
+fn apply_legacy_nested_selectors(content: &str) -> String {
+    legacy_nested::apply_legacy_nested_selectors(content)
+}
+
+fn apply_legacy_extend_selectors(content: &str) -> String {
+    legacy_extend::apply_legacy_extend_selectors(content)
+}
+
+fn apply_legacy_svg_function(req: &CompileRequest, content: &str, file_abs: &Path) -> String {
+    legacy_svg_fn::apply_legacy_svg_function(req, content, file_abs)
+}
+
+pub(crate) fn parse_balanced_block(content: &str, open_brace_index: usize) -> Option<(String, usize)> {
+    let bytes = content.as_bytes();
+    if open_brace_index >= bytes.len() || bytes[open_brace_index] != b'{' {
+        return None;
     }
-    stack.insert(canonical.clone());
 
-    let mut source = std::fs::read_to_string(&canonical).map_err(|err| {
-        PipelineError::Io(format!(
-            "Failed to read css file '{}': {err}",
-            canonical.display()
-        ))
-    })?;
+    let mut depth = 0usize;
+    let mut i = open_brace_index;
+    let start = open_brace_index + 1;
+    let mut in_single = false;
+    let mut in_double = false;
+    let mut in_line_comment = false;
+    let mut in_block_comment = false;
+    let mut escaped = false;
 
-    if req.config.asset.rewrite_urls {
-        source = apply_legacy_import_url_rewrite(req, &source, &canonical);
-    }
+    while i < bytes.len() {
+        let b = bytes[i];
+        let next = bytes.get(i + 1).copied();
 
-    // Equivalent to postcss-import style flattening for simple `@import "..."` forms.
-    let import_re = Regex::new(r#"(?m)^\s*@import\s+(?:url\()?\s*["']([^"']+)["']\s*\)?\s*;\s*$"#)
-        .expect("import regex must compile");
-    let mut result = String::new();
-    let mut last = 0usize;
-
-    for capture in import_re.captures_iter(&source) {
-        let Some(m) = capture.get(0) else {
+        if in_line_comment {
+            if b == b'\n' {
+                in_line_comment = false;
+            }
+            i += 1;
             continue;
-        };
-        let Some(spec) = capture.get(1) else {
+        }
+        if in_block_comment {
+            if b == b'*' && next == Some(b'/') {
+                in_block_comment = false;
+                i += 2;
+            } else {
+                i += 1;
+            }
             continue;
-        };
+        }
 
-        result.push_str(&source[last..m.start()]);
-        let spec = spec.as_str().trim();
+        if in_single {
+            if !escaped && b == b'\'' {
+                in_single = false;
+            }
+            escaped = b == b'\\' && !escaped;
+            i += 1;
+            continue;
+        }
+        if in_double {
+            if !escaped && b == b'"' {
+                in_double = false;
+            }
+            escaped = b == b'\\' && !escaped;
+            i += 1;
+            continue;
+        }
 
-        if is_external_import(spec) {
-            result.push_str(m.as_str());
-        } else {
-            let resolved = resolve_import_path(req, canonical.parent().unwrap_or(Path::new("")), spec)?;
-            let imported = preprocess_source_recursive(req, &resolved, stack)?;
-            result.push_str(&imported);
-            if !imported.ends_with('\n') {
-                result.push('\n');
+        if b == b'/' && next == Some(b'/') {
+            in_line_comment = true;
+            i += 2;
+            continue;
+        }
+        if b == b'/' && next == Some(b'*') {
+            in_block_comment = true;
+            i += 2;
+            continue;
+        }
+
+        if b == b'\'' {
+            in_single = true;
+            escaped = false;
+            i += 1;
+            continue;
+        }
+        if b == b'"' {
+            in_double = true;
+            escaped = false;
+            i += 1;
+            continue;
+        }
+
+        if b == b'{' {
+            depth += 1;
+        } else if b == b'}' {
+            if depth == 0 {
+                return None;
+            }
+            depth -= 1;
+            if depth == 0 {
+                let inner = content[start..i].to_string();
+                return Some((inner, i + 1));
             }
         }
-        last = m.end();
-    }
-    result.push_str(&source[last..]);
-
-    stack.remove(&canonical);
-    Ok(result)
-}
-
-fn resolve_import_path(req: &CompileRequest, current_dir: &Path, spec: &str) -> Result<PathBuf, PipelineError> {
-    let mut candidates = Vec::<PathBuf>::new();
-    let spec_path = PathBuf::from(spec);
-
-    if spec_path.is_absolute() {
-        candidates.push(spec_path);
-    } else {
-        candidates.push(current_dir.join(&spec_path));
-        for root in &req.config.import_roots {
-            let abs_root = if root.is_absolute() {
-                root.clone()
-            } else {
-                req.cwd.join(root)
-            };
-            candidates.push(abs_root.join(&spec_path));
-        }
+        i += 1;
     }
 
-    for candidate in candidates {
-        if let Some(found) = candidate_with_css_extension(candidate) {
-            return Ok(found);
-        }
-    }
-
-    Err(PipelineError::Resolve(format!(
-        "Failed to resolve @import '{}'",
-        spec
-    )))
-}
-
-fn candidate_with_css_extension(candidate: PathBuf) -> Option<PathBuf> {
-    if candidate.exists() {
-        return Some(candidate);
-    }
-    if candidate.extension().is_none() {
-        let css = candidate.with_extension("css");
-        if css.exists() {
-            return Some(css);
-        }
-    }
     None
 }
 
-fn is_external_import(spec: &str) -> bool {
-    spec.starts_with("http://")
-        || spec.starts_with("https://")
-        || spec.starts_with("data:")
-        || spec.starts_with("//")
-}
-
-fn apply_legacy_import_url_rewrite(req: &CompileRequest, content: &str, file_abs: &Path) -> String {
-    // PR-07 scope: rewrite-only URL stage (no inline/filter).
-    let url_re = Regex::new(r#"url\(([^(]*)\)"#).expect("url regex must compile");
-    let cur_dir_rel = path_relative_to(&req.cwd, file_abs.parent().unwrap_or(Path::new("")));
-
-    url_re
-        .replace_all(content, |caps: &regex::Captures<'_>| {
-            let raw = caps.get(1).map(|m| m.as_str()).unwrap_or("").trim();
-            let url = strip_quotes(raw);
-            let (path_part, suffix) = split_url_suffix(url);
-
-            if should_keep_url_unmodified(path_part) {
-                return format!("url(\"{}\")", url);
-            }
-
-            let rewritten = normalize_slashes(&cur_dir_rel.join(Path::new(path_part)).to_string_lossy());
-            format!("url(\"/{}{}\")", rewritten.trim_start_matches('/'), suffix)
-        })
-        .to_string()
-}
-
-fn should_keep_url_unmodified(url: &str) -> bool {
-    let value = url.trim();
-    value.is_empty()
-        || value.starts_with("data:")
-        || value.starts_with("http://")
-        || value.starts_with("https://")
-        || value.starts_with("//")
-        || value.starts_with('/')
-        || value.starts_with('#')
-}
-
-fn split_url_suffix(url: &str) -> (&str, &str) {
-    match url.find(['?', '#']) {
-        Some(index) => (&url[..index], &url[index..]),
-        None => (url, ""),
-    }
-}
-
-fn strip_quotes(s: &str) -> &str {
-    s.trim_matches(|c| c == '\'' || c == '"' || c == ' ')
-}
-
-fn path_relative_to(base: &Path, target: &Path) -> PathBuf {
-    target.strip_prefix(base).unwrap_or(target).to_path_buf()
-}
-
-fn normalize_slashes(s: &str) -> String {
-    s.replace('\\', "/")
-}
-
-fn write_file(path: &Path, content: &[u8]) -> Result<(), PipelineError> {
+pub(crate) fn write_file(path: &Path, content: &[u8]) -> Result<(), PipelineError> {
     let parent = path.parent().ok_or_else(|| {
         PipelineError::Emit(format!(
             "Cannot determine parent directory for '{}'",
@@ -757,6 +744,11 @@ fn write_file(path: &Path, content: &[u8]) -> Result<(), PipelineError> {
             path.display()
         ))
     })
+}
+
+struct EntryCompileOutcome {
+    extra_outputs: Vec<PathBuf>,
+    diagnostics: Vec<Diagnostic>,
 }
 
 fn resolve_targets(config: &PipelineConfig) -> Result<LightningTargets, PipelineError> {
@@ -855,8 +847,11 @@ mod tests {
             result.artifacts[0].map_path,
             Some(PathBuf::from("assets/css/maps/main.css.map"))
         );
-        assert_eq!(result.diagnostics.len(), 1);
-        assert_eq!(result.diagnostics[0].code, "PLANNED_OUTPUTS");
+        assert!(result.diagnostics.iter().any(|d| d.code == "PLANNED_OUTPUTS"));
+        assert!(result
+            .diagnostics
+            .iter()
+            .any(|d| d.code == "PREPROCESS_PROFILE"));
         assert!(temp.join("assets/css/main.css").exists());
     }
 
@@ -905,6 +900,332 @@ mod tests {
         };
         let out = apply_legacy_import_url_rewrite(&req, input, &file);
         assert!(out.contains(r#"url("/assets/css/src/modules/icons/x.svg?v=1#view")"#));
+    }
+
+    #[test]
+    fn legacy_resolve_width_height_expand_from_real_png() {
+        let uniq = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("time")
+            .as_nanos();
+        let temp = std::env::temp_dir().join(format!("style-pipeline-resolve-test-{uniq}"));
+        let src = temp.join("assets/css/src");
+        let modules = src.join("modules");
+        std::fs::create_dir_all(&modules).expect("must create fixture dirs");
+
+        std::fs::write(
+            src.join("_main.css"),
+            ".a { background-image: resolve('modules/icon.png'); width: width('modules/icon.png'); height: height('modules/icon.png'); }",
+        )
+        .expect("must write fixture css");
+        // Minimal PNG bytes with IHDR 16x32.
+        std::fs::write(
+            modules.join("icon.png"),
+            b"\x89PNG\r\n\x1a\n\0\0\0\rIHDR\0\0\0\x10\0\0\0\x20\x08\x06\0\0\0",
+        )
+        .expect("must write fixture png");
+
+        let mut cfg = PipelineConfig::default();
+        cfg.out_dir = PathBuf::from("assets/css");
+        cfg.entries.push(Entry {
+            input: PathBuf::from("assets/css/src/_main.css"),
+        });
+        let req = CompileRequest {
+            cwd: temp.clone(),
+            config: cfg,
+        };
+
+        let (out, _) =
+            preprocess_entry_source(&req, &temp.join("assets/css/src/_main.css")).expect("preprocess should succeed");
+        assert!(out.contains(r#"background-image: url("/assets/css/src/modules/icon.png");"#));
+        assert!(out.contains("width: 16px;"));
+        assert!(out.contains("height: 32px;"));
+    }
+
+    #[test]
+    fn legacy_svg_function_inlines_svg_data_uri_and_applies_color_rule() {
+        let uniq = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("time")
+            .as_nanos();
+        let temp = std::env::temp_dir().join(format!("style-pipeline-svg-fn-test-{uniq}"));
+        let src = temp.join("assets/css/src");
+        let img_dest = temp.join("assets/img/dest");
+        std::fs::create_dir_all(&src).expect("must create fixture dirs");
+        std::fs::create_dir_all(&img_dest).expect("must create fixture dirs");
+
+        std::fs::write(
+            src.join("_main.css"),
+            r#".a { background-image: svg("cross_18x18", "[color]: #d0011b"); }"#,
+        )
+        .expect("must write fixture css");
+        std::fs::write(
+            img_dest.join("cross_18x18.svg"),
+            r##"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18"><path fill="#000" stroke="#000" d="M1 1L17 17"/></svg>"##,
+        )
+        .expect("must write fixture svg");
+
+        let mut cfg = PipelineConfig::default();
+        cfg.out_dir = PathBuf::from("assets/css");
+        cfg.entries.push(Entry {
+            input: PathBuf::from("assets/css/src/_main.css"),
+        });
+        let req = CompileRequest {
+            cwd: temp.clone(),
+            config: cfg,
+        };
+
+        let (out, _) =
+            preprocess_entry_source(&req, &temp.join("assets/css/src/_main.css")).expect("preprocess should succeed");
+        assert!(out.contains("data:image/svg+xml"));
+        assert!(out.contains("%23d0011b"));
+    }
+
+    #[test]
+    fn legacy_variable_substitution_removes_declarations_and_replaces_refs() {
+        let input = r#"
+            $base: #111;
+            $accent: $base;
+            .a { color: $accent; }
+            .b { border-color: $base; }
+        "#;
+        let out = apply_legacy_variable_substitution(input);
+        assert!(!out.contains("$base:"));
+        assert!(!out.contains("$accent:"));
+        assert!(out.contains(".a { color: #111; }"));
+        assert!(out.contains(".b { border-color: #111; }"));
+    }
+
+    #[test]
+    fn legacy_mixins_expand_simple_and_content_forms() {
+        let input = r#"
+            @define-mixin hocus {
+                &:hover { @mixin-content; }
+            }
+            @define-mixin link {
+                color: red;
+            }
+            .a {
+                @mixin hocus { color: blue; }
+            }
+            .b { @mixin link; }
+        "#;
+
+        let out = apply_legacy_mixins(input);
+        assert!(!out.contains("@define-mixin"));
+        assert!(!out.contains("@mixin hocus"));
+        assert!(!out.contains("@mixin link"));
+        assert!(out.contains(".a"));
+        assert!(out.contains("&:hover"));
+        assert!(out.contains("color: blue;"));
+        assert!(out.contains(".b"));
+        assert!(out.contains("color: red;"));
+    }
+
+    #[test]
+    fn legacy_mixins_do_not_panic_on_utf8_comments() {
+        let input = "/* Примеси */\n@define-mixin x { &:hover { @mixin-content; } }\n.a { @mixin x { color: red; } }";
+        let out = apply_legacy_mixins(input);
+        assert!(out.contains("color: red;"));
+    }
+
+    #[test]
+    fn legacy_nested_expands_bem_and_context_patterns() {
+        let input = r#"
+            .Item {
+                &__box {
+                    &--truncated { max-width: 1px; }
+                }
+                .Items__list &:hover &__box { background: yellow; }
+            }
+        "#;
+        let out = apply_legacy_nested_selectors(input);
+        assert!(out.contains(".Item__box"));
+        assert!(out.contains(".Item__box--truncated"));
+        assert!(out.contains(".Items__list .Item:hover .Item__box"));
+    }
+
+    #[test]
+    fn legacy_nested_expands_double_ampersand_concat() {
+        let input = r#"
+            .Calendar {
+                &__workDay&__today { background: #f9f5da; }
+            }
+        "#;
+        let out = apply_legacy_nested_selectors(input);
+        assert!(out.contains(".Calendar__workDay.Calendar__today"));
+    }
+
+    #[test]
+    fn legacy_nested_does_not_leave_dangling_selector_in_parent_block() {
+        let input = r#"
+            .Box {
+                & + & { margin-top: .5em; }
+                color: red;
+            }
+        "#;
+        let out = apply_legacy_nested_selectors(input);
+        assert!(out.contains(".Box + .Box"));
+        assert!(!out.contains(".Box {\n& + &"));
+    }
+
+    #[test]
+    fn legacy_nested_box_sample_remains_parseable() {
+        let input = r#"
+            .Box {
+                & + & {
+                    margin-top: .5em;
+                }
+
+                &--accent {
+                    background-color: #f0f4f5;
+                    padding: 15px;
+                }
+
+                &--hintWarning {
+                    background-color: #f8f3da;
+                    margin-top: 20px;
+                    padding: 10px;
+                    padding-left: 30px;
+                    background-image: resolve('warning.png');
+                    background-repeat: no-repeat;
+                    background-position: 10px 13px;
+                }
+
+                &--time {
+                    background-color: #f6ffda;
+                    color: #535c69;
+                    padding: 12px 18px;
+
+                    &:before {
+                        content: "";
+                        display: inline-block;
+                        background-image: resolve('clock_grey_b.png');
+                        vertical-align: middle;
+                        width: width('clock_grey_b.png');
+                        height: height('clock_grey_b.png');
+                        margin: -.15em 10px 0 0;
+                    }
+                }
+
+                &--showMore {
+                    padding: 12px;
+                    text-align: center;
+                }
+
+                &--task {
+                    background-color: #f8f3da;
+                    color: #e00000;
+                    display: inline-block;
+                    padding: .5em 1em;
+                    text-decoration: none;
+
+                    a:link,
+                    a:visited,
+                    a:hover {
+                        color: #e00000;
+                    }
+                }
+
+                &--info {
+                    p {
+                        margin: 0;
+                    }
+
+                    p + p {
+                        margin-top: 5px;
+                    }
+                }
+            }
+
+            .Group {
+                &--accent {
+                    background-color: #f0f4f5;
+                    padding: 15px;
+                }
+
+                .Box {
+                    display: table-cell;
+                    padding-right: 20px;
+                    vertical-align: middle;
+
+                    &:last-child {
+                        padding-right: 0;
+                    }
+                }
+            }
+        "#;
+
+        let out = apply_legacy_nested_selectors(input);
+        let parsed = StyleSheet::parse(&out, ParserOptions::default());
+        assert!(
+            parsed.is_ok(),
+            "nested output must remain parseable\n---\n{}\n---",
+            out
+        );
+    }
+
+    #[test]
+    fn legacy_extend_merges_selectors_into_target_rule() {
+        let input = r#"
+            .TBase__title {
+                font-size: 16px;
+                margin-bottom: 8px;
+            }
+
+            .TCard__hint {
+                @extend .TBase__title;
+                color: #888;
+            }
+        "#;
+
+        let out = apply_legacy_extend_selectors(input);
+        assert!(out.contains(".TBase__title, .TCard__hint"));
+        assert!(!out.contains("@extend .TBase__title"));
+        assert!(out.contains(".TCard__hint {\ncolor: #888;"));
+    }
+
+    #[test]
+    fn legacy_extend_drops_rule_when_it_only_contains_extend() {
+        let input = r#"
+            .base { display: block; }
+            .alias { @extend .base; }
+        "#;
+        let out = apply_legacy_extend_selectors(input);
+        assert!(out.contains(".base, .alias"));
+        assert!(!out.contains("@extend .base"));
+    }
+
+    #[test]
+    fn preprocess_ignores_imports_inside_comments() {
+        let temp = std::env::temp_dir().join("style_pipeline_unit_commented_imports");
+        let _ = std::fs::remove_dir_all(&temp);
+        std::fs::create_dir_all(temp.join("assets/css/src")).expect("must create fixture dir");
+        std::fs::write(
+            temp.join("assets/css/src/_main.css"),
+            "/* @import 'modules/_commented'; */\n@import 'modules/_active';\n",
+        )
+        .expect("must write entry css");
+        std::fs::create_dir_all(temp.join("assets/css/src/modules")).expect("must create modules dir");
+        std::fs::write(
+            temp.join("assets/css/src/modules/_active.css"),
+            ".ok { color: green; }\n",
+        )
+        .expect("must write active module");
+        std::fs::write(
+            temp.join("assets/css/src/modules/_commented.css"),
+            ".bad { color: red; }\n",
+        )
+        .expect("must write commented module");
+
+        let req = CompileRequest {
+            cwd: temp.clone(),
+            config: PipelineConfig::default(),
+        };
+        let (out, _timing) = preprocess_entry_source(&req, &temp.join("assets/css/src/_main.css"))
+            .expect("preprocess should succeed");
+        assert!(out.contains(".ok"));
+        assert!(!out.contains(".bad"));
     }
 
     #[derive(Clone)]

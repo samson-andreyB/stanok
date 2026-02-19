@@ -495,7 +495,38 @@ button:focus-visible,
   display: none;
 }
 
+.Project__styleEngine {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-soft);
+  font-size: 0.76rem;
+}
+
+.Project__styleEngineLabel {
+  opacity: 0.9;
+}
+
+.Project__styleEngineSelect {
+  min-width: 92px;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #232833;
+  color: var(--text-strong);
+  font: inherit;
+}
+
+.Project__styleEngineSelect:focus {
+  outline: none;
+  border-color: rgba(97, 175, 239, 0.95);
+}
+
 .Project--is-active .Project__build {
+  display: inline-flex;
+}
+
+.Project--is-active .Project__styleEngine {
   display: inline-flex;
 }
 
