@@ -2,6 +2,15 @@ name: Release Desktop
 
 on:
   workflow_dispatch:
+    inputs:
+      style_engine:
+        description: "Styles engine mode for validations"
+        required: false
+        default: legacy
+        type: choice
+        options:
+          - legacy
+          - rust
   push:
     tags:
       - "v*"
@@ -12,6 +21,8 @@ permissions:
 jobs:
   build-linux:
     runs-on: ubuntu-22.04
+    env:
+      STYLE_ENGINE: ${{ github.event_name == 'workflow_dispatch' && inputs.style_engine || 'legacy' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -49,12 +60,18 @@ jobs:
             librsvg2-dev \
             rpm
 
+      - name: Validate Rust style pipeline crates (Rust mode)
+        if: env.STYLE_ENGINE == 'rust'
+        run: cargo test -p style_pipeline -p style_pipeline_cli
+
       - name: Build app bundles
         env:
           STANOK_TARGET_TRIPLE: x86_64-unknown-linux-gnu
+          STANOK_STYLE_ENGINE: ${{ env.STYLE_ENGINE }}
         run: npx tauri build --bundles deb,rpm
 
       - name: Validate sidecar/runtime in Linux packages
+        if: env.STYLE_ENGINE == 'legacy'
         shell: bash
         run: |
           set -euo pipefail
@@ -71,6 +88,14 @@ jobs:
           grep -Eq "^/usr/.*/runtime-node/scripts/build-css\\.mjs$" <<< "${DEB_LIST}"
           grep -Eq "^/usr/bin/node$|^/usr/.*/node-x86_64-unknown-linux-gnu$|^/usr/.*/binaries/node-x86_64-unknown-linux-gnu$" <<< "${DEB_LIST}"
 
+      - name: Validate Linux package artifacts (Rust mode)
+        if: env.STYLE_ENGINE == 'rust'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$(find src-tauri/target/release/bundle -type f -name '*.rpm' | head -n 1)"
+          test -n "$(find src-tauri/target/release/bundle -type f -name '*.deb' | head -n 1)"
+
       - name: Upload Linux artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -80,6 +105,8 @@ jobs:
 
   build-macos:
     runs-on: macos-latest
+    env:
+      STYLE_ENGINE: ${{ github.event_name == 'workflow_dispatch' && inputs.style_engine || 'legacy' }}
     strategy:
       fail-fast: false
       matrix:
@@ -118,7 +145,12 @@ jobs:
           STANOK_TARGET_TRIPLE: ${{ matrix.target }}
         run: npm run prepare:sidecar-node
 
+      - name: Validate Rust style pipeline crates (Rust mode)
+        if: env.STYLE_ENGINE == 'rust'
+        run: cargo test -p style_pipeline -p style_pipeline_cli
+
       - name: Validate prepared sidecar/runtime (macOS)
+        if: env.STYLE_ENGINE == 'legacy'
         shell: bash
         run: |
           set -euo pipefail
@@ -132,9 +164,11 @@ jobs:
       - name: Build app bundles
         env:
           STANOK_TARGET_TRIPLE: ${{ matrix.target }}
+          STANOK_STYLE_ENGINE: ${{ env.STYLE_ENGINE }}
         run: npx tauri build --target ${{ matrix.target }} --bundles app,dmg
 
       - name: Validate sidecar/runtime in macOS app bundle
+        if: env.STYLE_ENGINE == 'legacy'
         shell: bash
         run: |
           set -euo pipefail
@@ -148,6 +182,15 @@ jobs:
           COUNT="$(printf '%s\n' "${MATCHES}" | sed '/^$/d' | wc -l | tr -d ' ')"
           [ "${COUNT}" -eq 1 ] || { echo "Expected exactly one sidecar node, got ${COUNT}"; printf '%s\n' "${MATCHES}"; exit 1; }
 
+      - name: Validate macOS bundle artifacts (Rust mode)
+        if: env.STYLE_ENGINE == 'rust'
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP_DIR="$(find src-tauri/target/${{ matrix.target }}/release/bundle/macos -type d -name '*.app' | head -n 1 || true)"
+          [ -n "${APP_DIR}" ] || APP_DIR="$(find src-tauri/target/release/bundle/macos -type d -name '*.app' | head -n 1 || true)"
+          [ -n "${APP_DIR}" ] || { echo "macOS .app bundle not found"; exit 1; }
+
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -157,6 +200,8 @@ jobs:
 
   build-windows:
     runs-on: windows-latest
+    env:
+      STYLE_ENGINE: ${{ github.event_name == 'workflow_dispatch' && inputs.style_engine || 'legacy' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -186,7 +231,12 @@ jobs:
       - name: Prepare sidecar Node
         run: npm run prepare:sidecar-node
 
+      - name: Validate Rust style pipeline crates (Rust mode)
+        if: env.STYLE_ENGINE == 'rust'
+        run: cargo test -p style_pipeline -p style_pipeline_cli
+
       - name: Validate prepared sidecar/runtime (Windows)
+        if: env.STYLE_ENGINE == 'legacy'
         shell: bash
         run: |
           set -euo pipefail
@@ -199,6 +249,7 @@ jobs:
       - name: Build app bundles
         env:
           STANOK_TARGET_TRIPLE: x86_64-pc-windows-msvc
+          STANOK_STYLE_ENGINE: ${{ env.STYLE_ENGINE }}
         run: npx tauri build --bundles nsis,msi
 
       - name: Upload Windows artifacts

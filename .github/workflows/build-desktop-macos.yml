@@ -2,6 +2,15 @@ name: Build Desktop (macOS)
 
 on:
   workflow_dispatch:
+    inputs:
+      style_engine:
+        description: "Styles engine mode for validations"
+        required: false
+        default: legacy
+        type: choice
+        options:
+          - legacy
+          - rust
 
 jobs:
   build:
@@ -13,6 +22,8 @@ jobs:
             target: aarch64-apple-darwin
 
     runs-on: ${{ matrix.os }}
+    env:
+      STYLE_ENGINE: ${{ github.event_name == 'workflow_dispatch' && inputs.style_engine || 'legacy' }}
 
     steps:
       - name: Checkout
@@ -47,7 +58,12 @@ jobs:
           STANOK_TARGET_TRIPLE: ${{ matrix.target }}
         run: npm run prepare:sidecar-node
 
+      - name: Validate Rust style pipeline crates (Rust mode)
+        if: env.STYLE_ENGINE == 'rust'
+        run: cargo test -p style_pipeline -p style_pipeline_cli
+
       - name: Validate prepared runtime (macOS)
+        if: env.STYLE_ENGINE == 'legacy'
         shell: bash
         run: |
           set -euo pipefail
@@ -62,9 +78,11 @@ jobs:
       - name: Build app bundles
         env:
           STANOK_TARGET_TRIPLE: ${{ matrix.target }}
+          STANOK_STYLE_ENGINE: ${{ env.STYLE_ENGINE }}
         run: npx tauri build --target ${{ matrix.target }} --bundles app,dmg
 
       - name: Validate bundled runtime files (macOS)
+        if: env.STYLE_ENGINE == 'legacy'
         shell: bash
         run: |
           set -euo pipefail
@@ -91,6 +109,15 @@ jobs:
           chmod +x "${SIDECAR}"
           echo "Resolved sidecar: ${SIDECAR}"
           "${SIDECAR}" -v
+
+      - name: Validate built bundle artifacts (macOS, Rust mode)
+        if: env.STYLE_ENGINE == 'rust'
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP_DIR="$(find src-tauri/target/${{ matrix.target }}/release/bundle/macos -type d -name '*.app' | head -n 1 || true)"
+          [ -n "${APP_DIR}" ] || APP_DIR="$(find src-tauri/target/release/bundle/macos -type d -name '*.app' | head -n 1 || true)"
+          [ -n "${APP_DIR}" ] || { echo "macOS .app bundle not found"; exit 1; }
 
       - name: Upload bundle artifacts
         uses: actions/upload-artifact@v4
