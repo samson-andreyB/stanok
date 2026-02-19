@@ -61,7 +61,11 @@ fn handle_compile(args: &[String]) -> Result<(), String> {
                 targets: Targets { query: None },
                 browserslist_query: None,
                 import_roots: Vec::new(),
-                asset: style_pipeline::AssetConfig { rewrite_urls: true },
+                asset: style_pipeline::AssetConfig {
+                    rewrite_urls: true,
+                    enable_svg_fallback: false,
+                    svg_fallback_dir: None,
+                },
                 compatibility: CompatibilityMode::LegacyCompatible,
             };
 
