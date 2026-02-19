@@ -427,29 +427,42 @@ fn is_external_import(spec: &str) -> bool {
 }
 
 fn apply_legacy_import_url_rewrite(req: &CompileRequest, content: &str, file_abs: &Path) -> String {
-    // Mirrors the current intcss import-transform behavior.
+    // PR-07 scope: rewrite-only URL stage (no inline/filter).
     let url_re = Regex::new(r#"url\(([^(]*)\)"#).expect("url regex must compile");
     let cur_dir_rel = path_relative_to(&req.cwd, file_abs.parent().unwrap_or(Path::new("")));
 
     url_re
         .replace_all(content, |caps: &regex::Captures<'_>| {
             let raw = caps.get(1).map(|m| m.as_str()).unwrap_or("").trim();
-            let mut url = strip_quotes(raw).to_string();
+            let url = strip_quotes(raw);
+            let (path_part, suffix) = split_url_suffix(url);
 
-            if keep_url_unmodified_for_legacy(&url) {
+            if should_keep_url_unmodified(path_part) {
                 return format!("url(\"{}\")", url);
             }
 
-            url = normalize_slashes(&cur_dir_rel.join(Path::new(&url)).to_string_lossy());
-            format!("url(\"/{}\")", url.trim_start_matches('/'))
+            let rewritten = normalize_slashes(&cur_dir_rel.join(Path::new(path_part)).to_string_lossy());
+            format!("url(\"/{}{}\")", rewritten.trim_start_matches('/'), suffix)
         })
         .to_string()
 }
 
-fn keep_url_unmodified_for_legacy(url: &str) -> bool {
-    // This intentionally mirrors `/[data:|^\/]/` from intcss/import-transform.js.
-    url.chars()
-        .any(|c| matches!(c, 'd' | 'a' | 't' | ':' | '|' | '^' | '/'))
+fn should_keep_url_unmodified(url: &str) -> bool {
+    let value = url.trim();
+    value.is_empty()
+        || value.starts_with("data:")
+        || value.starts_with("http://")
+        || value.starts_with("https://")
+        || value.starts_with("//")
+        || value.starts_with('/')
+        || value.starts_with('#')
+}
+
+fn split_url_suffix(url: &str) -> (&str, &str) {
+    match url.find(['?', '#']) {
+        Some(index) => (&url[..index], &url[index..]),
+        None => (url, ""),
+    }
 }
 
 fn strip_quotes(s: &str) -> &str {
@@ -601,5 +614,39 @@ mod tests {
         };
         let out = apply_legacy_import_url_rewrite(&req, input, &file);
         assert!(out.contains(r#"url("/assets/css/src/modules/icon.svg")"#));
+    }
+
+    #[test]
+    fn legacy_import_url_rewrite_keeps_data_http_and_absolute_urls() {
+        let cwd = PathBuf::from("/tmp/project");
+        let file = PathBuf::from("/tmp/project/assets/css/src/modules/_feature.css");
+        let input = r#"
+            .a { background: url(data:image/svg+xml;base64,abc); }
+            .b { background: url(https://example.com/x.png); }
+            .c { background: url(/assets/img/a.png); }
+            .d { background: url(#icon-id); }
+        "#;
+        let req = CompileRequest {
+            cwd,
+            config: PipelineConfig::default(),
+        };
+        let out = apply_legacy_import_url_rewrite(&req, input, &file);
+        assert!(out.contains(r#"url("data:image/svg+xml;base64,abc")"#));
+        assert!(out.contains(r#"url("https://example.com/x.png")"#));
+        assert!(out.contains(r#"url("/assets/img/a.png")"#));
+        assert!(out.contains(r##"url("#icon-id")"##));
+    }
+
+    #[test]
+    fn legacy_import_url_rewrite_preserves_query_and_fragment() {
+        let cwd = PathBuf::from("/tmp/project");
+        let file = PathBuf::from("/tmp/project/assets/css/src/modules/_feature.css");
+        let input = r#".a { background: url(icons/x.svg?v=1#view); }"#;
+        let req = CompileRequest {
+            cwd,
+            config: PipelineConfig::default(),
+        };
+        let out = apply_legacy_import_url_rewrite(&req, input, &file);
+        assert!(out.contains(r#"url("/assets/css/src/modules/icons/x.svg?v=1#view")"#));
     }
 }
