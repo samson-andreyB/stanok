@@ -197,6 +197,37 @@
 - Effort:
   - S
 
+## PR-14A: Переключение default на Rust + fallback
+
+- Scope:
+  - Переключить default engine на `rust`.
+  - Сохранить fallback на `legacy` при ошибках Rust pipeline.
+- Acceptance criteria:
+  - В приложении по умолчанию используется `rust`.
+  - При ошибках Rust сборка не ломается, выполняется fallback на `legacy`.
+- Tests:
+  - Smoke/regression проверки режима default + fallback.
+- Effort:
+  - S
+
+## PR-14B: Стабилизация default rust режима (soak + scope freeze)
+
+- Status:
+  - В работе.
+- Scope:
+  - Зафиксировать compatibility scope для текущего окна deprecation.
+  - Доработать тестовую матрицу претрансформов (imports/vars/mixins/nested/extend/resolve/svg).
+  - Стабилизировать поведение fallback и диагностик в soak периоде.
+- Acceptance criteria:
+  - Rust режим остается default, при ошибках сохраняется безопасный fallback.
+  - Явно зафиксированы out-of-scope кейсы текущей итерации (`postcss-conditionals`, расширенный SVG DSL вне базового `svg("name", "[color]/[fill]/[stroke]")`).
+  - Тесты претрансформов покрывают согласованный compatibility scope.
+- Tests:
+  - Unit/integration тесты по всем поддерживаемым претрансформам.
+  - Негативные кейсы для out-of-scope синтаксиса с понятной диагностикой/fallback.
+- Effort:
+  - M
+
 ## PR-15: Очистка legacy
 
 - Scope:
@@ -215,7 +246,7 @@
 2. PR-06/07/07A/08 параллельно после PR-05
 3. PR-09/10 могут стартовать после PR-02, финализируются после PR-06/07/07A/08
 4. PR-11 после parity-critical stages
-5. PR-12 -> PR-13 -> PR-14 -> PR-15
+5. PR-12 -> PR-13 -> PR-14 -> PR-14B -> PR-15
 
 ## Примечания по источнику evidence
 

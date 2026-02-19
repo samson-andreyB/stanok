@@ -997,6 +997,23 @@ mod tests {
     }
 
     #[test]
+    fn legacy_variable_substitution_strips_default_flags_from_values() {
+        let input = r#"
+            $spaceBase: 1.5em !default;
+            .m-t-half {
+                margin-top: calc($spaceBase * .5);
+            }
+            .m-t-1 {
+                margin-top: $spaceBase;
+            }
+        "#;
+        let out = apply_legacy_variable_substitution(input);
+        assert!(!out.contains("!default"));
+        assert!(out.contains("margin-top: calc(1.5em * .5);"));
+        assert!(out.contains("margin-top: 1.5em;"));
+    }
+
+    #[test]
     fn legacy_mixins_expand_simple_and_content_forms() {
         let input = r#"
             @define-mixin hocus {
@@ -1067,6 +1084,60 @@ mod tests {
         let out = apply_legacy_nested_selectors(input);
         assert!(out.contains(".Box + .Box"));
         assert!(!out.contains(".Box {\n& + &"));
+    }
+
+    #[test]
+    fn legacy_nested_keeps_parent_context_inside_media() {
+        let input = r#"
+            .TCard {
+                @media (max-width: 768px) {
+                    &__text:is(.Ctx__btn .Profile .TCard) {
+                        display: none;
+                    }
+
+                    &__number:is(.Ctx__btn .Profile .TCard) {
+                        display: block;
+                    }
+                }
+            }
+        "#;
+        let out = apply_legacy_nested_selectors(input);
+        assert!(out.contains(".TCard__text:is(.Ctx__btn .Profile .TCard)"));
+        assert!(out.contains(".TCard__number:is(.Ctx__btn .Profile .TCard)"));
+        assert!(!out.contains("\n__text:is("));
+        assert!(!out.contains("\n__number:is("));
+    }
+
+    #[test]
+    fn legacy_nested_media_with_local_decls_and_child_selector_stays_valid() {
+        let input = r#"
+            .DemoDoc--unified {
+                .DemoSheet,
+                .DemoDoc__wrapper {
+                    padding: 60px;
+
+                    @media screen {
+                        width: 210mm;
+                        height: 297mm;
+
+                        &.DemoSheet--landscape {
+                            .DemoSheet {
+                                width: 297mm;
+                                height: 210mm;
+                            }
+                        }
+                    }
+                }
+            }
+        "#;
+        let out = apply_legacy_nested_selectors(input);
+        assert!(!out.contains(", width: 210mm;"));
+        let parsed = StyleSheet::parse(&out, ParserOptions::default());
+        assert!(
+            parsed.is_ok(),
+            "nested output must remain parseable for media/local-decls case\n---\n{}\n---",
+            out
+        );
     }
 
     #[test]
@@ -1168,21 +1239,21 @@ mod tests {
     #[test]
     fn legacy_extend_merges_selectors_into_target_rule() {
         let input = r#"
-            .TBase__title {
+            .BaseTitle {
                 font-size: 16px;
                 margin-bottom: 8px;
             }
 
-            .TCard__hint {
-                @extend .TBase__title;
+            .CardHint {
+                @extend .BaseTitle;
                 color: #888;
             }
         "#;
 
         let out = apply_legacy_extend_selectors(input);
-        assert!(out.contains(".TBase__title, .TCard__hint"));
-        assert!(!out.contains("@extend .TBase__title"));
-        assert!(out.contains(".TCard__hint {\ncolor: #888;"));
+        assert!(out.contains(".BaseTitle, .CardHint"));
+        assert!(!out.contains("@extend .BaseTitle"));
+        assert!(out.contains(".CardHint {\ncolor: #888;"));
     }
 
     #[test]
@@ -1226,6 +1297,42 @@ mod tests {
             .expect("preprocess should succeed");
         assert!(out.contains(".ok"));
         assert!(!out.contains(".bad"));
+    }
+
+    #[test]
+    fn preprocess_resolves_lib_alias_from_import_roots() {
+        let temp = std::env::temp_dir().join("style_pipeline_unit_import_lib_alias");
+        let _ = std::fs::remove_dir_all(&temp);
+
+        std::fs::create_dir_all(temp.join("assets/css/src")).expect("must create src dir");
+        std::fs::create_dir_all(temp.join("vendor/polki/styles/postcss/lib"))
+            .expect("must create lib dir");
+
+        std::fs::write(
+            temp.join("assets/css/src/_main.css"),
+            "@import 'lib/_helpers';\n.Case { color: #111; }\n",
+        )
+        .expect("must write entry");
+        std::fs::write(
+            temp.join("vendor/polki/styles/postcss/lib/_helpers.css"),
+            ".Helper { display: block; }\n",
+        )
+        .expect("must write helper");
+
+        let mut cfg = PipelineConfig::default();
+        cfg.out_dir = PathBuf::from("assets/css");
+        cfg.import_roots = vec![PathBuf::from("vendor/polki/styles/postcss")];
+        let req = CompileRequest {
+            cwd: temp.clone(),
+            config: cfg,
+        };
+
+        let (out, _timing) = preprocess_entry_source(&req, &temp.join("assets/css/src/_main.css"))
+            .expect("preprocess should resolve lib alias");
+        assert!(out.contains(".Helper"));
+        assert!(out.contains("display: block;"));
+        assert!(out.contains(".Case"));
+        assert!(out.contains("color: #111;"));
     }
 
     #[derive(Clone)]
