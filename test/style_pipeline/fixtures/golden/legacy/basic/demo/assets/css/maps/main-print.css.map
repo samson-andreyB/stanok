@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/_main-print.css"],"names":[],"mappings":"AAAA;EACE;IACE,aAAa;GACd;CACF","file":"../main-print.css","sourcesContent":["@media print {\n  .A {\n    color: black;\n  }\n}\n"]}

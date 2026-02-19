@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/_main.css"],"names":[],"mappings":"AAAA;EACE,WAAW;CACZ;;AAED;EACE,eAAe;CAChB","file":"../main.css","sourcesContent":[".A {\n  color: red;\n}\n\n.B {\n  display: block;\n}\n"]}

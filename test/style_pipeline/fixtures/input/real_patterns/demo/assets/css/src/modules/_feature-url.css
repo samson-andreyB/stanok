@@ -1,0 +1,9 @@
+.Attachments {
+  &__item:before {
+    background: url('/img/desk/icons/file-types.png') no-repeat;
+  }
+}
+
+.Page--authorization {
+  background: url('/assets/img/misc/pattern-brands.svg') 50% 50% no-repeat #536071;
+}
