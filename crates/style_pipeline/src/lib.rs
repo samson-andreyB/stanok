@@ -12,6 +12,7 @@ use serde_json::json;
 
 mod legacy_nested;
 mod legacy_mixins;
+mod legacy_axis;
 mod legacy_vars;
 mod legacy_imports;
 mod legacy_extend;
@@ -115,6 +116,7 @@ struct PreprocessTiming {
     imports_ms: u128,
     vars_ms: u128,
     mixins_ms: u128,
+    axis_ms: u128,
     nested_ms: u128,
     extend_ms: u128,
     total_ms: u128,
@@ -532,11 +534,12 @@ fn compile_and_emit_entry(
         diagnostics: vec![Diagnostic {
             code: "PREPROCESS_PROFILE",
             message: format!(
-                "{} imports={}ms vars={}ms mixins={}ms nested={}ms extend={}ms total={}ms",
+                "{} imports={}ms vars={}ms mixins={}ms axis={}ms nested={}ms extend={}ms total={}ms",
                 artifact.entry.display(),
                 timing.imports_ms,
                 timing.vars_ms,
                 timing.mixins_ms,
+                timing.axis_ms,
                 timing.nested_ms,
                 timing.extend_ms,
                 timing.total_ms
@@ -555,6 +558,7 @@ fn preprocess_entry_source(req: &CompileRequest, entry_abs: &Path) -> Result<(St
 
     let mut vars_ms = 0u128;
     let mut mixins_ms = 0u128;
+    let mut axis_ms = 0u128;
     let mut nested_ms = 0u128;
     let mut extend_ms = 0u128;
     if matches!(req.config.compatibility, CompatibilityMode::LegacyCompatible) {
@@ -568,15 +572,20 @@ fn preprocess_entry_source(req: &CompileRequest, entry_abs: &Path) -> Result<(St
         mixins_ms = t_mixins.elapsed().as_millis();
         preprocess_debug::maybe_dump_pre_stage("03_after_mixins.css", &source);
 
+        let t_axis = Instant::now();
+        source = apply_legacy_axis_shorthands(&source);
+        axis_ms = t_axis.elapsed().as_millis();
+        preprocess_debug::maybe_dump_pre_stage("04_after_axis.css", &source);
+
         let t_nested = Instant::now();
         source = apply_legacy_nested_selectors(&source);
         nested_ms = t_nested.elapsed().as_millis();
-        preprocess_debug::maybe_dump_pre_stage("04_after_nested.css", &source);
+        preprocess_debug::maybe_dump_pre_stage("05_after_nested.css", &source);
 
         let t_extend = Instant::now();
         source = apply_legacy_extend_selectors(&source);
         extend_ms = t_extend.elapsed().as_millis();
-        preprocess_debug::maybe_dump_pre_stage("05_after_extend.css", &source);
+        preprocess_debug::maybe_dump_pre_stage("06_after_extend.css", &source);
     }
     let total_ms = t_total.elapsed().as_millis();
     Ok((
@@ -585,6 +594,7 @@ fn preprocess_entry_source(req: &CompileRequest, entry_abs: &Path) -> Result<(St
             imports_ms,
             vars_ms,
             mixins_ms,
+            axis_ms,
             nested_ms,
             extend_ms,
             total_ms,
@@ -610,6 +620,10 @@ fn apply_legacy_variable_substitution(content: &str) -> String {
 
 fn apply_legacy_mixins(content: &str) -> String {
     legacy_mixins::apply_legacy_mixins(content)
+}
+
+fn apply_legacy_axis_shorthands(content: &str) -> String {
+    legacy_axis::apply_legacy_axis_shorthands(content)
 }
 
 fn apply_legacy_nested_selectors(content: &str) -> String {
@@ -638,6 +652,8 @@ pub(crate) fn parse_balanced_block(content: &str, open_brace_index: usize) -> Op
     let mut in_line_comment = false;
     let mut in_block_comment = false;
     let mut escaped = false;
+    let mut paren = 0i32;
+    let mut bracket = 0i32;
 
     while i < bytes.len() {
         let b = bytes[i];
@@ -697,6 +713,39 @@ pub(crate) fn parse_balanced_block(content: &str, open_brace_index: usize) -> Op
         if b == b'"' {
             in_double = true;
             escaped = false;
+            i += 1;
+            continue;
+        }
+
+        match b {
+            b'(' => {
+                paren += 1;
+                i += 1;
+                continue;
+            }
+            b')' => {
+                if paren > 0 {
+                    paren -= 1;
+                }
+                i += 1;
+                continue;
+            }
+            b'[' => {
+                bracket += 1;
+                i += 1;
+                continue;
+            }
+            b']' => {
+                if bracket > 0 {
+                    bracket -= 1;
+                }
+                i += 1;
+                continue;
+            }
+            _ => {}
+        }
+
+        if (paren > 0 || bracket > 0) && (b == b'{' || b == b'}') {
             i += 1;
             continue;
         }
@@ -943,6 +992,44 @@ mod tests {
     }
 
     #[test]
+    fn legacy_resolve_width_height_normalizes_calc_unary_minus_with_dimension_function() {
+        let uniq = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("time")
+            .as_nanos();
+        let temp = std::env::temp_dir().join(format!("style-pipeline-resolve-calc-test-{uniq}"));
+        let src = temp.join("assets/css/src");
+        let modules = src.join("modules");
+        std::fs::create_dir_all(&modules).expect("must create fixture dirs");
+
+        std::fs::write(
+            src.join("_main.css"),
+            ".a { margin-top: calc(- height('modules/icon.png') / 2); }",
+        )
+        .expect("must write fixture css");
+        // Minimal PNG bytes with IHDR 16x32.
+        std::fs::write(
+            modules.join("icon.png"),
+            b"\x89PNG\r\n\x1a\n\0\0\0\rIHDR\0\0\0\x10\0\0\0\x20\x08\x06\0\0\0",
+        )
+        .expect("must write fixture png");
+
+        let mut cfg = PipelineConfig::default();
+        cfg.out_dir = PathBuf::from("assets/css");
+        cfg.entries.push(Entry {
+            input: PathBuf::from("assets/css/src/_main.css"),
+        });
+        let req = CompileRequest {
+            cwd: temp.clone(),
+            config: cfg,
+        };
+
+        let (out, _) =
+            preprocess_entry_source(&req, &temp.join("assets/css/src/_main.css")).expect("preprocess should succeed");
+        assert!(out.contains("margin-top: calc(-32px / 2);"));
+    }
+
+    #[test]
     fn legacy_svg_function_inlines_svg_data_uri_and_applies_color_rule() {
         let uniq = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
@@ -1044,6 +1131,48 @@ mod tests {
         let input = "/* Примеси */\n@define-mixin x { &:hover { @mixin-content; } }\n.a { @mixin x { color: red; } }";
         let out = apply_legacy_mixins(input);
         assert!(out.contains("color: red;"));
+    }
+
+    #[test]
+    fn legacy_axis_shorthands_expand_x_and_y_properties() {
+        let input = r#"
+            .Box {
+                padding-x: 10px;
+                margin-y: 4px;
+                border-x: 1px solid #000;
+                border-color-y: red;
+                border-x-color: transparent;
+                border-y-width: 2px;
+            }
+        "#;
+        let out = apply_legacy_axis_shorthands(input);
+        assert!(out.contains("padding-left: 10px;"));
+        assert!(out.contains("padding-right: 10px;"));
+        assert!(out.contains("margin-top: 4px;"));
+        assert!(out.contains("margin-bottom: 4px;"));
+        assert!(out.contains("border-left: 1px solid #000;"));
+        assert!(out.contains("border-right: 1px solid #000;"));
+        assert!(out.contains("border-top-color: red;"));
+        assert!(out.contains("border-bottom-color: red;"));
+        assert!(out.contains("border-left-color: transparent;"));
+        assert!(out.contains("border-right-color: transparent;"));
+        assert!(out.contains("border-top-width: 2px;"));
+        assert!(out.contains("border-bottom-width: 2px;"));
+    }
+
+    #[test]
+    fn legacy_axis_shorthands_do_not_touch_unrelated_css_properties() {
+        let input = r#"
+            .Box {
+                background-position-x: 10px;
+                background-position-y: 20px;
+            }
+        "#;
+        let out = apply_legacy_axis_shorthands(input);
+        assert!(out.contains("background-position-x: 10px;"));
+        assert!(out.contains("background-position-y: 20px;"));
+        assert!(!out.contains("background-position-left"));
+        assert!(!out.contains("background-position-top"));
     }
 
     #[test]
@@ -1234,6 +1363,50 @@ mod tests {
             "nested output must remain parseable\n---\n{}\n---",
             out
         );
+    }
+
+    #[test]
+    fn legacy_nested_keeps_comma_group_under_id_parent_without_selector_leakage() {
+        let input = r#"
+            .Upload__btn:before {
+                content: "";
+            }
+            #menu-root {
+                .menu-item:not(.--default),
+                .menu-section {
+                    display: none;
+                }
+            }
+        "#;
+
+        let out = apply_legacy_nested_selectors(input);
+        assert!(out.contains(
+            "#menu-root .menu-item:not(.--default), #menu-root .menu-section"
+        ));
+        assert!(!out.contains(
+            ".Upload__btn #menu-root .menu-item:not(.--default)"
+        ));
+    }
+
+    #[test]
+    fn legacy_nested_ignores_braces_inside_url_data_values() {
+        let input = r#"
+            .Upload__btn {
+                background-image: url(data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><style>.a{fill:red}</style></svg>);
+            }
+
+            #menu-root {
+                .menu-item:not(.--default),
+                .menu-section {
+                    display: none;
+                }
+            }
+        "#;
+
+        let out = apply_legacy_nested_selectors(input);
+        assert!(out.contains("#menu-root .menu-item:not(.--default), #menu-root .menu-section"));
+        assert!(!out.contains(".Upload__btn #menu-root"));
+        assert!(!out.contains(".Upload__btn utf8"));
     }
 
     #[test]

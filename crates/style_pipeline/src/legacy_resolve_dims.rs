@@ -37,12 +37,14 @@ pub(crate) fn apply_legacy_resolve_width_height(
         })
         .to_string();
 
-    height_re()
+    let out = height_re()
         .replace_all(&out, |caps: &regex::Captures<'_>| {
             let raw = quoted_arg_from_caps(caps);
             dimension_call_result(req, file_abs, &raw, false).unwrap_or_else(|| caps[0].to_string())
         })
-        .to_string()
+        .to_string();
+
+    normalize_calc_unary_minus(&out)
 }
 
 fn resolve_re() -> &'static Regex {
@@ -143,6 +145,49 @@ fn image_dimensions(path: &Path) -> Option<(u32, u32)> {
         "svg" => svg_dimensions(path),
         _ => None,
     }
+}
+
+fn normalize_calc_unary_minus(content: &str) -> String {
+    calc_re()
+        .replace_all(content, |caps: &regex::Captures<'_>| {
+            let expr = caps.get(1).map(|m| m.as_str()).unwrap_or_default();
+            format!("calc({})", normalize_unary_minus_expr(expr))
+        })
+        .to_string()
+}
+
+fn calc_re() -> &'static Regex {
+    static RE: OnceLock<Regex> = OnceLock::new();
+    RE.get_or_init(|| Regex::new(r#"calc\(([^)]*)\)"#).expect("calc regex must compile"))
+}
+
+fn normalize_unary_minus_expr(expr: &str) -> String {
+    let chars: Vec<char> = expr.chars().collect();
+    let mut out = String::with_capacity(expr.len());
+    let mut i = 0usize;
+
+    while i < chars.len() {
+        if chars[i] == '-' {
+            let prev_sig = out.chars().rev().find(|c| !c.is_whitespace());
+            let is_unary = matches!(prev_sig, None | Some('(') | Some('+') | Some('-') | Some('*') | Some('/') | Some(','));
+            if is_unary {
+                let mut j = i + 1;
+                while j < chars.len() && chars[j].is_whitespace() {
+                    j += 1;
+                }
+                if j < chars.len() && (chars[j].is_ascii_digit() || chars[j] == '.') {
+                    out.push('-');
+                    i = j;
+                    continue;
+                }
+            }
+        }
+
+        out.push(chars[i]);
+        i += 1;
+    }
+
+    out
 }
 
 fn png_dimensions(path: &Path) -> Option<(u32, u32)> {
