@@ -310,3 +310,77 @@ fn data_uri_stays_in_main_output_and_no_data_css_artifact_is_emitted() {
         "separate _data.css sourcemap must not be emitted"
     );
 }
+
+#[test]
+fn svg_fallback_stage_is_disabled_by_default() {
+    let cwd = temp_dir("svg_fallback_default_off");
+    let src_dir = cwd.join("assets/css/src");
+    std::fs::create_dir_all(&src_dir).expect("src dir should exist");
+
+    std::fs::write(
+        src_dir.join("_main.css"),
+        r#".a { background: url("/assets/img/icons/a.svg"); }"#,
+    )
+    .expect("entry css should be written");
+
+    let mut cfg = PipelineConfig::default();
+    cfg.out_dir = PathBuf::from("assets/css");
+    cfg.source_maps = SourceMapMode::None;
+
+    let result = compile(CompileRequest {
+        cwd: cwd.clone(),
+        config: cfg,
+    })
+    .expect("compile should succeed");
+
+    assert_eq!(result.artifacts.len(), 1);
+    assert!(
+        result.artifacts[0].extra_outputs.is_empty(),
+        "no fallback outputs expected when stage is disabled"
+    );
+    assert!(
+        !cwd.join("assets/img/svg_fallback/a.png").exists(),
+        "fallback artifact must not be created by default"
+    );
+}
+
+#[test]
+fn svg_fallback_stage_emits_expected_files_when_enabled() {
+    let cwd = temp_dir("svg_fallback_on");
+    let src_dir = cwd.join("assets/css/src");
+    std::fs::create_dir_all(&src_dir).expect("src dir should exist");
+
+    std::fs::write(
+        src_dir.join("_main.css"),
+        r#"
+        .a { background: url("/assets/img/icons/a.svg"); }
+        .b { mask-image: url("/assets/img/icons/b.svg?x=1#id"); }
+    "#,
+    )
+    .expect("entry css should be written");
+
+    let mut cfg = PipelineConfig::default();
+    cfg.out_dir = PathBuf::from("assets/css");
+    cfg.source_maps = SourceMapMode::None;
+    cfg.asset.enable_svg_fallback = true;
+
+    let result = compile(CompileRequest {
+        cwd: cwd.clone(),
+        config: cfg,
+    })
+    .expect("compile should succeed");
+
+    assert_eq!(result.artifacts.len(), 1);
+    assert!(
+        result.artifacts[0]
+            .extra_outputs
+            .contains(&PathBuf::from("assets/img/svg_fallback/a.png"))
+    );
+    assert!(
+        result.artifacts[0]
+            .extra_outputs
+            .contains(&PathBuf::from("assets/img/svg_fallback/b.png"))
+    );
+    assert!(cwd.join("assets/img/svg_fallback/a.png").exists());
+    assert!(cwd.join("assets/img/svg_fallback/b.png").exists());
+}

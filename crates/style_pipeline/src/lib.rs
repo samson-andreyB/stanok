@@ -29,6 +29,8 @@ pub struct Targets {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AssetConfig {
     pub rewrite_urls: bool,
+    pub enable_svg_fallback: bool,
+    pub svg_fallback_dir: Option<PathBuf>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -60,7 +62,11 @@ impl Default for PipelineConfig {
             targets: Targets { query: None },
             browserslist_query: None,
             import_roots: Vec::new(),
-            asset: AssetConfig { rewrite_urls: true },
+            asset: AssetConfig {
+                rewrite_urls: true,
+                enable_svg_fallback: false,
+                svg_fallback_dir: None,
+            },
             compatibility: CompatibilityMode::LegacyCompatible,
         }
     }
@@ -129,7 +135,7 @@ pub fn compile(req: CompileRequest) -> Result<CompileResult, PipelineError> {
         ));
     }
 
-    let artifacts: Vec<CompileArtifact> = entries
+    let mut artifacts: Vec<CompileArtifact> = entries
         .iter()
         .map(|entry| CompileArtifact {
             entry: entry.input.clone(),
@@ -140,8 +146,8 @@ pub fn compile(req: CompileRequest) -> Result<CompileResult, PipelineError> {
         .collect();
 
     let targets = resolve_targets(&req.config)?;
-    for artifact in &artifacts {
-        compile_and_emit_entry(&req, artifact, targets)?;
+    for artifact in &mut artifacts {
+        artifact.extra_outputs = compile_and_emit_entry(&req, artifact, targets)?;
     }
 
     Ok(CompileResult {
@@ -223,7 +229,7 @@ fn compile_and_emit_entry(
     req: &CompileRequest,
     artifact: &CompileArtifact,
     targets: LightningTargets,
-) -> Result<(), PipelineError> {
+) -> Result<Vec<PathBuf>, PipelineError> {
     let input_abs = req.cwd.join(&artifact.entry);
     let css_abs = req.cwd.join(&artifact.css_path);
 
@@ -288,6 +294,8 @@ fn compile_and_emit_entry(
 
     write_file(&css_abs, css_code.as_bytes())?;
 
+    let extra_outputs = emit_svg_fallback_assets(req, &css_code)?;
+
     if let (Some(sm), Some(map_path)) = (source_map.as_mut(), &artifact.map_path) {
         if sm.get_sources().is_empty() {
             sm.add_empty_map(&artifact.entry.display().to_string(), &source, 0)
@@ -302,7 +310,68 @@ fn compile_and_emit_entry(
         write_file(&req.cwd.join(map_path), map_json.as_bytes())?;
     }
 
-    Ok(())
+    Ok(extra_outputs)
+}
+
+fn emit_svg_fallback_assets(req: &CompileRequest, css_code: &str) -> Result<Vec<PathBuf>, PipelineError> {
+    if !req.config.asset.enable_svg_fallback {
+        return Ok(Vec::new());
+    }
+
+    let url_re = Regex::new(r#"url\(([^(]*)\)"#).expect("url regex must compile");
+    let fallback_dir = svg_fallback_dir(req);
+    let mut emitted = Vec::<PathBuf>::new();
+    let mut seen = HashSet::<PathBuf>::new();
+
+    for capture in url_re.captures_iter(css_code) {
+        let Some(m) = capture.get(1) else {
+            continue;
+        };
+        let raw = strip_quotes(m.as_str().trim());
+        let (path_part, _) = split_url_suffix(raw);
+        if !is_local_svg_path(path_part) {
+            continue;
+        }
+
+        let stem = Path::new(path_part)
+            .file_stem()
+            .and_then(|s| s.to_str())
+            .filter(|s| !s.is_empty())
+            .unwrap_or("fallback");
+        let rel = fallback_dir.join(format!("{stem}.png"));
+        if !seen.insert(rel.clone()) {
+            continue;
+        }
+
+        write_file(&req.cwd.join(&rel), b"")?;
+        emitted.push(rel);
+    }
+
+    Ok(emitted)
+}
+
+fn svg_fallback_dir(req: &CompileRequest) -> PathBuf {
+    if let Some(dir) = &req.config.asset.svg_fallback_dir {
+        return dir.clone();
+    }
+    req.config
+        .out_dir
+        .parent()
+        .map(Path::to_path_buf)
+        .unwrap_or_else(|| PathBuf::from("."))
+        .join("img")
+        .join("svg_fallback")
+}
+
+fn is_local_svg_path(path: &str) -> bool {
+    let p = path.trim();
+    if p.is_empty() {
+        return false;
+    }
+    if should_keep_url_unmodified(p) && !p.starts_with('/') {
+        return false;
+    }
+    p.to_ascii_lowercase().ends_with(".svg")
 }
 
 fn preprocess_entry_source(req: &CompileRequest, entry_abs: &Path) -> Result<String, PipelineError> {
@@ -564,6 +633,8 @@ mod tests {
         assert_eq!(cfg.minify, false);
         assert_eq!(cfg.compatibility, CompatibilityMode::LegacyCompatible);
         assert_eq!(cfg.asset.rewrite_urls, true);
+        assert_eq!(cfg.asset.enable_svg_fallback, false);
+        assert_eq!(cfg.asset.svg_fallback_dir, None);
     }
 
     #[test]
