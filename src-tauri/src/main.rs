@@ -1910,12 +1910,27 @@ fn run_styles_rust(payload: &BuildPayload) -> Result<String, String> {
 
   let req = style_pipeline::CompileRequest { cwd, config };
   let result = style_pipeline::compile(req)
-    .map_err(|e| format!("Rust style pipeline failed: {e}"))?;
+    .map_err(|e| format_rust_style_error(&e.to_string()))?;
 
   Ok(format!(
     "Сборка стилей (rust) завершена: {} файлов",
     result.artifacts.len()
   ))
+}
+
+fn format_rust_style_error(raw: &str) -> String {
+  let mut msg = format!("Rust style pipeline failed: {raw}");
+  if is_probably_nested_syntax_error(raw) {
+    msg.push_str(
+      " [hint: вероятно используется legacy nested-синтаксис с '&' (например '&__', '&--', '.x &:hover'). Сейчас этот кейс обрабатывается через fallback на legacy pipeline.]",
+    );
+  }
+  msg
+}
+
+fn is_probably_nested_syntax_error(raw: &str) -> bool {
+  raw.contains("Unexpected token Delim('&')")
+    || (raw.contains("Delim('&')") && raw.contains("Failed to parse css"))
 }
 
 fn should_skip_dir(path: &Path) -> bool {
@@ -2571,6 +2586,22 @@ mod tests {
     } else {
       env::remove_var(key);
     }
+  }
+
+  #[test]
+  fn format_rust_style_error_adds_nested_hint_for_delim_ampersand() {
+    let raw = "Failed to parse css 'x': Unexpected token Delim('&') at x:10:2";
+    let out = format_rust_style_error(raw);
+    assert!(out.contains("Rust style pipeline failed:"));
+    assert!(out.contains("legacy nested-синтаксис"));
+  }
+
+  #[test]
+  fn format_rust_style_error_keeps_plain_message_for_other_errors() {
+    let raw = "Failed to resolve @import 'lib/_helpers'";
+    let out = format_rust_style_error(raw);
+    assert!(out.contains("Rust style pipeline failed: Failed to resolve @import 'lib/_helpers'"));
+    assert!(!out.contains("legacy nested-синтаксис"));
   }
 
   #[test]
