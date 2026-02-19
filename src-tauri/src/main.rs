@@ -1647,14 +1647,14 @@ fn run_build_orchestrated(
 
 fn resolve_styles_engine(payload: &BuildPayload) -> StylesEngine {
   if let Some(engine) = payload.style_engine.as_deref() {
-    return parse_styles_engine(engine).unwrap_or(StylesEngine::Legacy);
+    return parse_styles_engine(engine).unwrap_or(StylesEngine::Rust);
   }
 
   if let Ok(engine) = env::var("STANOK_STYLE_ENGINE") {
-    return parse_styles_engine(&engine).unwrap_or(StylesEngine::Legacy);
+    return parse_styles_engine(&engine).unwrap_or(StylesEngine::Rust);
   }
 
-  StylesEngine::Legacy
+  StylesEngine::Rust
 }
 
 fn parse_styles_engine(value: &str) -> Option<StylesEngine> {
@@ -2481,6 +2481,38 @@ mod tests {
     } else {
       env::remove_var(key);
     }
+  }
+
+  #[test]
+  fn resolve_styles_engine_defaults_to_rust_when_not_set() {
+    let key = "STANOK_STYLE_ENGINE";
+    let prev = env::var(key).ok();
+    env::remove_var(key);
+
+    let payload = BuildPayload {
+      projects_path: "/tmp".to_string(),
+      project_name: "demo/main".to_string(),
+      config: build_config_from_project_data(Some(&json!({}))),
+      style_engine: None,
+      runtime_paths: None,
+    };
+    assert_eq!(resolve_styles_engine(&payload), StylesEngine::Rust);
+
+    if let Some(v) = prev {
+      env::set_var(key, v);
+    }
+  }
+
+  #[test]
+  fn resolve_styles_engine_keeps_legacy_when_explicitly_requested() {
+    let payload = BuildPayload {
+      projects_path: "/tmp".to_string(),
+      project_name: "demo/main".to_string(),
+      config: build_config_from_project_data(Some(&json!({}))),
+      style_engine: Some("legacy".to_string()),
+      runtime_paths: None,
+    };
+    assert_eq!(resolve_styles_engine(&payload), StylesEngine::Legacy);
   }
 
   #[test]
