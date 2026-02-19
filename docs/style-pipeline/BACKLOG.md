@@ -82,7 +82,7 @@
 - Effort:
   - M
 
-## PR-07: Asset stages (`url` inline)
+## PR-07: Asset stages (`url` rewrite-only)
 
 - Scope:
   - Реализовать минимальный URL rewrite stage для сохранения корректных путей (rewrite-only).
@@ -91,7 +91,10 @@
   - Базовая корректность путей `url(...)` сохраняется.
   - Inline threshold поведение не является обязательным на первом этапе.
 - Tests:
-  - Integration tests для inline thresholds.
+  - Integration tests для rewrite-only поведения:
+  - относительные `url(...)` корректно переписываются;
+  - `data:`/`http(s):`/absolute URLs не изменяются;
+  - inline/filter threshold не является обязательной частью этого этапа.
 - Effort:
   - L
 
