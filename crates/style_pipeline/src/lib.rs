@@ -1,4 +1,5 @@
-use std::path::PathBuf;
+use std::ffi::OsStr;
+use std::path::{Path, PathBuf};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Entry {
@@ -86,12 +87,14 @@ pub struct CompileResult {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PipelineError {
     InvalidConfig(String),
+    Io(String),
 }
 
 impl std::fmt::Display for PipelineError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::InvalidConfig(message) => write!(f, "{message}"),
+            Self::Io(message) => write!(f, "{message}"),
         }
     }
 }
@@ -100,27 +103,101 @@ impl std::error::Error for PipelineError {}
 
 pub fn compile(req: CompileRequest) -> Result<CompileResult, PipelineError> {
     validate_config(&req.config)?;
+    let entries = if req.config.entries.is_empty() {
+        discover_entries(&req.cwd.join(&req.config.out_dir))?
+    } else {
+        req.config.entries.clone()
+    };
+
+    if entries.is_empty() {
+        return Err(PipelineError::InvalidConfig(
+            "No entry files matching _main*.css were found in <out_dir>/src".to_string(),
+        ));
+    }
+
+    let artifacts = entries
+        .iter()
+        .map(|entry| CompileArtifact {
+            entry: entry.input.clone(),
+            css_path: output_css_path(&req.config.out_dir, &entry.input),
+            map_path: output_map_path(&req.config.out_dir, &entry.input, &req.config.source_maps),
+            extra_outputs: Vec::new(),
+        })
+        .collect();
+
     Ok(CompileResult {
-        artifacts: Vec::new(),
+        artifacts,
         diagnostics: vec![Diagnostic {
-            code: "STUB",
-            message: "style_pipeline compile stub: implementation will be added in next PRs".to_string(),
+            code: "PLANNED_OUTPUTS",
+            message:
+                "style_pipeline compile stub: entry discovery and output contract are implemented"
+                    .to_string(),
         }],
     })
 }
 
 pub fn validate_config(config: &PipelineConfig) -> Result<(), PipelineError> {
-    if config.entries.is_empty() {
-        return Err(PipelineError::InvalidConfig(
-            "Pipeline config must contain at least one entry".to_string(),
-        ));
-    }
     if config.out_dir.as_os_str().is_empty() {
         return Err(PipelineError::InvalidConfig(
             "Pipeline config must define out_dir".to_string(),
         ));
     }
     Ok(())
+}
+
+pub fn discover_entries(style_dir: &Path) -> Result<Vec<Entry>, PipelineError> {
+    let src_dir = style_dir.join("src");
+    if !src_dir.exists() {
+        return Ok(Vec::new());
+    }
+
+    let mut entries = Vec::new();
+    let read_dir = std::fs::read_dir(&src_dir).map_err(|err| {
+        PipelineError::Io(format!(
+            "Failed to read style source directory '{}': {err}",
+            src_dir.display()
+        ))
+    })?;
+
+    for dir_entry in read_dir {
+        let dir_entry = dir_entry.map_err(|err| {
+            PipelineError::Io(format!(
+                "Failed to iterate style source directory '{}': {err}",
+                src_dir.display()
+            ))
+        })?;
+        let path = dir_entry.path();
+
+        if !path.is_file() || path.extension() != Some(OsStr::new("css")) {
+            continue;
+        }
+
+        let Some(file_name) = path.file_name().and_then(|f| f.to_str()) else {
+            continue;
+        };
+
+        if file_name.starts_with("_main") {
+            entries.push(Entry { input: path });
+        }
+    }
+
+    entries.sort_by(|a, b| a.input.cmp(&b.input));
+    Ok(entries)
+}
+
+fn output_css_path(out_dir: &Path, input: &Path) -> PathBuf {
+    let file_name = input.file_name().and_then(|f| f.to_str()).unwrap_or("_main.css");
+    let output_name = file_name.strip_prefix('_').unwrap_or(file_name);
+    out_dir.join(output_name)
+}
+
+fn output_map_path(out_dir: &Path, input: &Path, source_maps: &SourceMapMode) -> Option<PathBuf> {
+    if !matches!(source_maps, SourceMapMode::External) {
+        return None;
+    }
+    let css_path = output_css_path(out_dir, input);
+    let css_name = css_path.file_name().and_then(|f| f.to_str()).unwrap_or("main.css");
+    Some(out_dir.join("maps").join(format!("{css_name}.map")))
 }
 
 #[cfg(test)]
@@ -140,17 +217,13 @@ mod tests {
     }
 
     #[test]
-    fn validate_config_rejects_empty_entries() {
+    fn validate_config_accepts_discovery_mode_without_entries() {
         let cfg = PipelineConfig::default();
-        let err = validate_config(&cfg).expect_err("entries must be required");
-        assert_eq!(
-            err,
-            PipelineError::InvalidConfig("Pipeline config must contain at least one entry".to_string())
-        );
+        validate_config(&cfg).expect("empty entries are valid when discovery mode is used");
     }
 
     #[test]
-    fn compile_returns_stub_result_for_valid_config() {
+    fn compile_returns_planned_artifacts_for_explicit_entries() {
         let mut cfg = PipelineConfig::default();
         cfg.entries.push(Entry {
             input: PathBuf::from("assets/css/src/_main.css"),
@@ -163,8 +236,13 @@ mod tests {
         })
         .expect("valid config should compile in stub mode");
 
-        assert_eq!(result.artifacts.len(), 0);
+        assert_eq!(result.artifacts.len(), 1);
+        assert_eq!(result.artifacts[0].css_path, PathBuf::from("assets/css/main.css"));
+        assert_eq!(
+            result.artifacts[0].map_path,
+            Some(PathBuf::from("assets/css/maps/main.css.map"))
+        );
         assert_eq!(result.diagnostics.len(), 1);
-        assert_eq!(result.diagnostics[0].code, "STUB");
+        assert_eq!(result.diagnostics[0].code, "PLANNED_OUTPUTS");
     }
 }
