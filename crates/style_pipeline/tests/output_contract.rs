@@ -264,3 +264,49 @@ fn url_rewrite_stage_keeps_external_data_and_absolute_urls() {
     assert!(css.contains("https://example.com/a.png"), "https url should remain unchanged");
     assert!(css.contains("/assets/img/a.png"), "absolute url should remain unchanged");
 }
+
+#[test]
+fn data_uri_stays_in_main_output_and_no_data_css_artifact_is_emitted() {
+    let cwd = temp_dir("data_inline_main");
+    let src_dir = cwd.join("assets/css/src");
+    std::fs::create_dir_all(src_dir.join("modules")).expect("src modules dir should exist");
+
+    std::fs::write(
+        src_dir.join("_main.css"),
+        "@import 'modules/_feature-data-uri';\n.main { color: red; }\n",
+    )
+    .expect("entry css should be written");
+    std::fs::write(
+        src_dir.join("modules/_feature-data-uri.css"),
+        r#".IconDataUri { background-image: url("data:image/png;base64,AAAA"); }"#,
+    )
+    .expect("feature css should be written");
+
+    let mut cfg = PipelineConfig::default();
+    cfg.out_dir = PathBuf::from("assets/css");
+    cfg.source_maps = SourceMapMode::External;
+
+    let result = compile(CompileRequest {
+        cwd: cwd.clone(),
+        config: cfg,
+    })
+    .expect("compile should succeed");
+
+    assert_eq!(result.artifacts.len(), 1);
+    let css_path = cwd.join("assets/css/main.css");
+    let css = std::fs::read_to_string(&css_path).expect("main output should exist");
+    assert!(
+        css.contains("data:image/png;base64,AAAA"),
+        "data payload from legacy data-packer path should be in main.css"
+    );
+    assert!(css.contains(".main"), "regular rules must remain in main.css");
+
+    assert!(
+        !cwd.join("assets/css/main_data.css").exists(),
+        "separate _data.css artifact must not be emitted"
+    );
+    assert!(
+        !cwd.join("assets/css/maps/main_data.css.map").exists(),
+        "separate _data.css sourcemap must not be emitted"
+    );
+}
