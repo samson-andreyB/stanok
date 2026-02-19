@@ -1,7 +1,8 @@
+use std::collections::HashSet;
 use std::ffi::OsStr;
 use std::io::Write;
-use std::collections::HashSet;
 use std::path::{Path, PathBuf};
+use std::sync::Arc;
 
 use lightningcss::stylesheet::{MinifyOptions, ParserOptions, PrinterOptions, StyleSheet};
 use lightningcss::targets::{Browsers, Targets as LightningTargets};
@@ -98,9 +99,102 @@ pub struct CompileResult {
     pub diagnostics: Vec<Diagnostic>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum StageKind {
+    Pre,
+    Post,
+}
+
+#[derive(Debug, Clone)]
+pub struct StageContext<'a> {
+    pub cwd: &'a Path,
+    pub config: &'a PipelineConfig,
+}
+
+pub trait PreTransformStage: Send + Sync {
+    fn name(&self) -> &'static str;
+    fn priority(&self) -> i32 {
+        0
+    }
+    fn run(
+        &self,
+        ctx: &StageContext<'_>,
+        entry: &Path,
+        input: String,
+    ) -> Result<String, PipelineError>;
+}
+
+pub trait PostTransformStage: Send + Sync {
+    fn name(&self) -> &'static str;
+    fn priority(&self) -> i32 {
+        0
+    }
+    fn run(
+        &self,
+        ctx: &StageContext<'_>,
+        entry: &Path,
+        output: String,
+    ) -> Result<String, PipelineError>;
+}
+
+#[derive(Default, Clone)]
+pub struct StageRegistry {
+    pre_stages: Vec<Arc<dyn PreTransformStage>>,
+    post_stages: Vec<Arc<dyn PostTransformStage>>,
+}
+
+impl StageRegistry {
+    pub fn register_pre<S>(&mut self, stage: S) -> Result<(), PipelineError>
+    where
+        S: PreTransformStage + 'static,
+    {
+        ensure_unique_stage_name(self.pre_stages.iter().map(|s| s.name()), stage.name(), StageKind::Pre)?;
+        self.pre_stages.push(Arc::new(stage));
+        self.pre_stages
+            .sort_by_key(|s| (s.priority(), s.name()));
+        Ok(())
+    }
+
+    pub fn register_post<S>(&mut self, stage: S) -> Result<(), PipelineError>
+    where
+        S: PostTransformStage + 'static,
+    {
+        ensure_unique_stage_name(self.post_stages.iter().map(|s| s.name()), stage.name(), StageKind::Post)?;
+        self.post_stages.push(Arc::new(stage));
+        self.post_stages
+            .sort_by_key(|s| (s.priority(), s.name()));
+        Ok(())
+    }
+
+    fn run_pre(
+        &self,
+        ctx: &StageContext<'_>,
+        entry: &Path,
+        mut input: String,
+    ) -> Result<String, PipelineError> {
+        for stage in &self.pre_stages {
+            input = stage.run(ctx, entry, input)?;
+        }
+        Ok(input)
+    }
+
+    fn run_post(
+        &self,
+        ctx: &StageContext<'_>,
+        entry: &Path,
+        mut output: String,
+    ) -> Result<String, PipelineError> {
+        for stage in &self.post_stages {
+            output = stage.run(ctx, entry, output)?;
+        }
+        Ok(output)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PipelineError {
     InvalidConfig(String),
+    Stage(String),
     Resolve(String),
     Io(String),
     Compile(String),
@@ -111,6 +205,7 @@ impl std::fmt::Display for PipelineError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::InvalidConfig(message) => write!(f, "{message}"),
+            Self::Stage(message) => write!(f, "{message}"),
             Self::Resolve(message) => write!(f, "{message}"),
             Self::Io(message) => write!(f, "{message}"),
             Self::Compile(message) => write!(f, "{message}"),
@@ -122,6 +217,14 @@ impl std::fmt::Display for PipelineError {
 impl std::error::Error for PipelineError {}
 
 pub fn compile(req: CompileRequest) -> Result<CompileResult, PipelineError> {
+    let stages = StageRegistry::default();
+    compile_with_registry(req, &stages)
+}
+
+pub fn compile_with_registry(
+    req: CompileRequest,
+    stages: &StageRegistry,
+) -> Result<CompileResult, PipelineError> {
     validate_config(&req.config)?;
     let entries = if req.config.entries.is_empty() {
         discover_entries(&req.cwd.join(&req.config.out_dir))?
@@ -147,7 +250,7 @@ pub fn compile(req: CompileRequest) -> Result<CompileResult, PipelineError> {
 
     let targets = resolve_targets(&req.config)?;
     for artifact in &mut artifacts {
-        artifact.extra_outputs = compile_and_emit_entry(&req, artifact, targets)?;
+        artifact.extra_outputs = compile_and_emit_entry(&req, artifact, targets, stages)?;
     }
 
     Ok(CompileResult {
@@ -159,6 +262,23 @@ pub fn compile(req: CompileRequest) -> Result<CompileResult, PipelineError> {
                     .to_string(),
         }],
     })
+}
+
+fn ensure_unique_stage_name<'a, I>(
+    existing: I,
+    candidate: &'static str,
+    kind: StageKind,
+) -> Result<(), PipelineError>
+where
+    I: Iterator<Item = &'a str>,
+{
+    if existing.into_iter().any(|name| name == candidate) {
+        return Err(PipelineError::Stage(format!(
+            "Duplicate {:?} stage name: '{}'",
+            kind, candidate
+        )));
+    }
+    Ok(())
 }
 
 pub fn validate_config(config: &PipelineConfig) -> Result<(), PipelineError> {
@@ -229,11 +349,17 @@ fn compile_and_emit_entry(
     req: &CompileRequest,
     artifact: &CompileArtifact,
     targets: LightningTargets,
+    stages: &StageRegistry,
 ) -> Result<Vec<PathBuf>, PipelineError> {
     let input_abs = req.cwd.join(&artifact.entry);
     let css_abs = req.cwd.join(&artifact.css_path);
 
+    let stage_ctx = StageContext {
+        cwd: &req.cwd,
+        config: &req.config,
+    };
     let source = preprocess_entry_source(req, &input_abs)?;
+    let source = stages.run_pre(&stage_ctx, &artifact.entry, source)?;
 
     let mut sheet = StyleSheet::parse(
         &source,
@@ -286,6 +412,7 @@ fn compile_and_emit_entry(
             ))
         })?
         .code;
+    css_code = stages.run_post(&stage_ctx, &artifact.entry, css_code)?;
 
     if let Some(map_path) = &artifact.map_path {
         let map_rel = map_rel_path(&req.config.out_dir, map_path);
@@ -719,5 +846,153 @@ mod tests {
         };
         let out = apply_legacy_import_url_rewrite(&req, input, &file);
         assert!(out.contains(r#"url("/assets/css/src/modules/icons/x.svg?v=1#view")"#));
+    }
+
+    #[derive(Clone)]
+    struct DemoPreStage {
+        name: &'static str,
+        priority: i32,
+        snippet: &'static str,
+    }
+
+    impl PreTransformStage for DemoPreStage {
+        fn name(&self) -> &'static str {
+            self.name
+        }
+        fn priority(&self) -> i32 {
+            self.priority
+        }
+        fn run(
+            &self,
+            _ctx: &StageContext<'_>,
+            _entry: &Path,
+            input: String,
+        ) -> Result<String, PipelineError> {
+            Ok(format!("{}\n{}", self.snippet, input))
+        }
+    }
+
+    #[derive(Clone)]
+    struct DemoPostStage {
+        name: &'static str,
+        priority: i32,
+        snippet: &'static str,
+    }
+
+    impl PostTransformStage for DemoPostStage {
+        fn name(&self) -> &'static str {
+            self.name
+        }
+        fn priority(&self) -> i32 {
+            self.priority
+        }
+        fn run(
+            &self,
+            _ctx: &StageContext<'_>,
+            _entry: &Path,
+            output: String,
+        ) -> Result<String, PipelineError> {
+            Ok(format!("{}\n{}", output, self.snippet))
+        }
+    }
+
+    #[test]
+    fn registry_orders_stages_by_priority_then_name() {
+        let mut registry = StageRegistry::default();
+        registry
+            .register_pre(DemoPreStage {
+                name: "z-last",
+                priority: 10,
+                snippet: ".z{}",
+            })
+            .expect("stage should register");
+        registry
+            .register_pre(DemoPreStage {
+                name: "a-first",
+                priority: 10,
+                snippet: ".a{}",
+            })
+            .expect("stage should register");
+        registry
+            .register_pre(DemoPreStage {
+                name: "prio-zero",
+                priority: 0,
+                snippet: ".p{}",
+            })
+            .expect("stage should register");
+
+        let names: Vec<&'static str> = registry.pre_stages.iter().map(|s| s.name()).collect();
+        assert_eq!(names, vec!["prio-zero", "a-first", "z-last"]);
+    }
+
+    #[test]
+    fn registry_rejects_duplicate_stage_names() {
+        let mut registry = StageRegistry::default();
+        registry
+            .register_post(DemoPostStage {
+                name: "dup",
+                priority: 0,
+                snippet: ".a{}",
+            })
+            .expect("first stage should register");
+
+        let err = registry
+            .register_post(DemoPostStage {
+                name: "dup",
+                priority: 1,
+                snippet: ".b{}",
+            })
+            .expect_err("duplicate stage names must fail");
+
+        assert_eq!(
+            err,
+            PipelineError::Stage("Duplicate Post stage name: 'dup'".to_string())
+        );
+    }
+
+    #[test]
+    fn compile_with_registry_executes_registered_stages() {
+        let temp = std::env::temp_dir().join("style_pipeline_unit_compile_with_registry");
+        let _ = std::fs::remove_dir_all(&temp);
+        std::fs::create_dir_all(temp.join("assets/css/src")).expect("must create fixture dir");
+        std::fs::write(temp.join("assets/css/src/_main.css"), ".a { color: red; }")
+            .expect("must write fixture css");
+
+        let mut cfg = PipelineConfig::default();
+        cfg.entries.push(Entry {
+            input: PathBuf::from("assets/css/src/_main.css"),
+        });
+        cfg.out_dir = PathBuf::from("assets/css");
+        cfg.source_maps = SourceMapMode::None;
+
+        let mut registry = StageRegistry::default();
+        registry
+            .register_pre(DemoPreStage {
+                name: "pre-snippet",
+                priority: 0,
+                snippet: ".from_pre { color: blue; }",
+            })
+            .expect("pre stage should register");
+        registry
+            .register_post(DemoPostStage {
+                name: "post-snippet",
+                priority: 0,
+                snippet: ".from_post { display: block; }",
+            })
+            .expect("post stage should register");
+
+        compile_with_registry(
+            CompileRequest {
+                cwd: temp.clone(),
+                config: cfg,
+            },
+            &registry,
+        )
+        .expect("compile with registry should succeed");
+
+        let css = std::fs::read_to_string(temp.join("assets/css/main.css"))
+            .expect("css output should exist");
+        assert!(css.contains(".from_pre"));
+        assert!(css.contains(".from_post"));
     }
 }
