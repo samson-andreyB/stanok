@@ -189,6 +189,14 @@ impl StageRegistry {
         }
         Ok(output)
     }
+
+    pub fn pre_stage_names(&self) -> Vec<&'static str> {
+        self.pre_stages.iter().map(|s| s.name()).collect()
+    }
+
+    pub fn post_stage_names(&self) -> Vec<&'static str> {
+        self.post_stages.iter().map(|s| s.name()).collect()
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -217,8 +225,21 @@ impl std::fmt::Display for PipelineError {
 impl std::error::Error for PipelineError {}
 
 pub fn compile(req: CompileRequest) -> Result<CompileResult, PipelineError> {
-    let stages = StageRegistry::default();
+    let stages = build_feature_registry()?;
     compile_with_registry(req, &stages)
+}
+
+pub fn build_feature_registry() -> Result<StageRegistry, PipelineError> {
+    #[allow(unused_mut)]
+    let mut stages = StageRegistry::default();
+
+    #[cfg(feature = "plugin_svg_fallback")]
+    stages.register_post(PluginSvgFallbackStage)?;
+
+    #[cfg(feature = "plugin_data_inline")]
+    stages.register_post(PluginDataInlineStage)?;
+
+    Ok(stages)
 }
 
 pub fn compile_with_registry(
@@ -279,6 +300,44 @@ where
         )));
     }
     Ok(())
+}
+
+#[cfg(feature = "plugin_svg_fallback")]
+struct PluginSvgFallbackStage;
+
+#[cfg(feature = "plugin_svg_fallback")]
+impl PostTransformStage for PluginSvgFallbackStage {
+    fn name(&self) -> &'static str {
+        "plugin_svg_fallback"
+    }
+
+    fn run(
+        &self,
+        _ctx: &StageContext<'_>,
+        _entry: &Path,
+        output: String,
+    ) -> Result<String, PipelineError> {
+        Ok(output)
+    }
+}
+
+#[cfg(feature = "plugin_data_inline")]
+struct PluginDataInlineStage;
+
+#[cfg(feature = "plugin_data_inline")]
+impl PostTransformStage for PluginDataInlineStage {
+    fn name(&self) -> &'static str {
+        "plugin_data_inline"
+    }
+
+    fn run(
+        &self,
+        _ctx: &StageContext<'_>,
+        _entry: &Path,
+        output: String,
+    ) -> Result<String, PipelineError> {
+        Ok(output)
+    }
 }
 
 pub fn validate_config(config: &PipelineConfig) -> Result<(), PipelineError> {
@@ -994,5 +1053,40 @@ mod tests {
             .expect("css output should exist");
         assert!(css.contains(".from_pre"));
         assert!(css.contains(".from_post"));
+    }
+
+    #[cfg(not(any(feature = "plugin_svg_fallback", feature = "plugin_data_inline")))]
+    #[test]
+    fn feature_registry_is_empty_without_plugin_features() {
+        let registry = build_feature_registry().expect("feature registry should build");
+        assert!(registry.pre_stage_names().is_empty());
+        assert!(registry.post_stage_names().is_empty());
+    }
+
+    #[cfg(feature = "plugin_svg_fallback")]
+    #[test]
+    fn feature_registry_includes_svg_plugin_when_enabled() {
+        let registry = build_feature_registry().expect("feature registry should build");
+        assert!(registry
+            .post_stage_names()
+            .contains(&"plugin_svg_fallback"));
+    }
+
+    #[cfg(feature = "plugin_data_inline")]
+    #[test]
+    fn feature_registry_includes_data_inline_plugin_when_enabled() {
+        let registry = build_feature_registry().expect("feature registry should build");
+        assert!(registry
+            .post_stage_names()
+            .contains(&"plugin_data_inline"));
+    }
+
+    #[cfg(all(feature = "plugin_svg_fallback", feature = "plugin_data_inline"))]
+    #[test]
+    fn feature_registry_includes_both_plugins() {
+        let registry = build_feature_registry().expect("feature registry should build");
+        let names = registry.post_stage_names();
+        assert!(names.contains(&"plugin_svg_fallback"));
+        assert!(names.contains(&"plugin_data_inline"));
     }
 }
