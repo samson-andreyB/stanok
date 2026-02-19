@@ -232,3 +232,35 @@ fn legacy_url_rewrite_applies_to_imported_content() {
         "rewritten URL should use project-root absolute path"
     );
 }
+
+#[test]
+fn url_rewrite_stage_keeps_external_data_and_absolute_urls() {
+    let cwd = temp_dir("url_rewrite_keep_cases");
+    let src_dir = cwd.join("assets/css/src");
+    std::fs::create_dir_all(&src_dir).expect("src dir should exist");
+
+    std::fs::write(
+        src_dir.join("_main.css"),
+        r#"
+        .a { background: url(data:image/png;base64,abc); }
+        .b { background: url(https://example.com/a.png); }
+        .c { background: url(/assets/img/a.png); }
+    "#,
+    )
+    .expect("entry css should be written");
+
+    let mut cfg = PipelineConfig::default();
+    cfg.out_dir = PathBuf::from("assets/css");
+    cfg.source_maps = SourceMapMode::None;
+
+    compile(CompileRequest {
+        cwd: cwd.clone(),
+        config: cfg,
+    })
+    .expect("compile should succeed");
+
+    let css = std::fs::read_to_string(cwd.join("assets/css/main.css")).expect("css output should exist");
+    assert!(css.contains("data:image/png;base64,abc"), "data url should remain unchanged");
+    assert!(css.contains("https://example.com/a.png"), "https url should remain unchanged");
+    assert!(css.contains("/assets/img/a.png"), "absolute url should remain unchanged");
+}
