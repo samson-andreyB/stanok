@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::ffi::OsStr;
 use std::io::Write;
 use std::path::{Path, PathBuf};
@@ -562,7 +562,11 @@ fn is_local_svg_path(path: &str) -> bool {
 
 fn preprocess_entry_source(req: &CompileRequest, entry_abs: &Path) -> Result<String, PipelineError> {
     let mut stack = HashSet::new();
-    preprocess_source_recursive(req, entry_abs, &mut stack)
+    let mut source = preprocess_source_recursive(req, entry_abs, &mut stack)?;
+    if matches!(req.config.compatibility, CompatibilityMode::LegacyCompatible) {
+        source = apply_legacy_variable_substitution(&source);
+    }
+    Ok(source)
 }
 
 fn preprocess_source_recursive(
@@ -730,6 +734,76 @@ fn path_relative_to(base: &Path, target: &Path) -> PathBuf {
 
 fn normalize_slashes(s: &str) -> String {
     s.replace('\\', "/")
+}
+
+fn apply_legacy_variable_substitution(content: &str) -> String {
+    let var_decl_re = Regex::new(r#"(?m)^\s*\$([A-Za-z_][A-Za-z0-9_-]*)\s*:\s*(.+?)\s*;\s*$"#)
+        .expect("legacy variable declaration regex must compile");
+    let var_ref_re =
+        Regex::new(r#"\$([A-Za-z_][A-Za-z0-9_-]*)"#).expect("legacy variable ref regex must compile");
+
+    let mut vars = HashMap::<String, String>::new();
+    for capture in var_decl_re.captures_iter(content) {
+        let Some(name) = capture.get(1).map(|m| m.as_str().to_string()) else {
+            continue;
+        };
+        let Some(value) = capture.get(2).map(|m| m.as_str().trim().to_string()) else {
+            continue;
+        };
+        vars.insert(name, value);
+    }
+
+    fn resolve_var(
+        key: &str,
+        vars: &HashMap<String, String>,
+        cache: &mut HashMap<String, String>,
+        visiting: &mut HashSet<String>,
+        ref_re: &Regex,
+    ) -> String {
+        if let Some(v) = cache.get(key) {
+            return v.clone();
+        }
+        let Some(raw) = vars.get(key) else {
+            return format!("${key}");
+        };
+        if !visiting.insert(key.to_string()) {
+            return raw.clone();
+        }
+        let resolved = ref_re
+            .replace_all(raw, |caps: &regex::Captures<'_>| {
+                let nested = caps.get(1).map(|m| m.as_str()).unwrap_or_default();
+                if nested == key {
+                    return caps.get(0).map(|m| m.as_str()).unwrap_or_default().to_string();
+                }
+                if vars.contains_key(nested) {
+                    resolve_var(nested, vars, cache, visiting, ref_re)
+                } else {
+                    caps.get(0).map(|m| m.as_str()).unwrap_or_default().to_string()
+                }
+            })
+            .to_string();
+        visiting.remove(key);
+        cache.insert(key.to_string(), resolved.clone());
+        resolved
+    }
+
+    let mut cache = HashMap::<String, String>::new();
+    let keys = vars.keys().cloned().collect::<Vec<_>>();
+    for key in keys {
+        let mut visiting = HashSet::<String>::new();
+        let _ = resolve_var(&key, &vars, &mut cache, &mut visiting, &var_ref_re);
+    }
+
+    let without_decl = var_decl_re.replace_all(content, "").to_string();
+    var_ref_re
+        .replace_all(&without_decl, |caps: &regex::Captures<'_>| {
+            let name = caps.get(1).map(|m| m.as_str()).unwrap_or_default();
+            cache
+                .get(name)
+                .cloned()
+                .unwrap_or_else(|| caps.get(0).map(|m| m.as_str()).unwrap_or_default().to_string())
+        })
+        .to_string()
 }
 
 fn write_file(path: &Path, content: &[u8]) -> Result<(), PipelineError> {
@@ -905,6 +979,21 @@ mod tests {
         };
         let out = apply_legacy_import_url_rewrite(&req, input, &file);
         assert!(out.contains(r#"url("/assets/css/src/modules/icons/x.svg?v=1#view")"#));
+    }
+
+    #[test]
+    fn legacy_variable_substitution_removes_declarations_and_replaces_refs() {
+        let input = r#"
+            $base: #111;
+            $accent: $base;
+            .a { color: $accent; }
+            .b { border-color: $base; }
+        "#;
+        let out = apply_legacy_variable_substitution(input);
+        assert!(!out.contains("$base:"));
+        assert!(!out.contains("$accent:"));
+        assert!(out.contains(".a { color: #111; }"));
+        assert!(out.contains(".b { border-color: #111; }"));
     }
 
     #[derive(Clone)]
