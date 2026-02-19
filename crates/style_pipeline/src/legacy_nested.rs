@@ -3,6 +3,10 @@ pub(crate) fn apply_legacy_nested_selectors(content: &str) -> String {
 }
 
 fn flatten_css_level(content: &str) -> String {
+    flatten_css_level_with_parents(content, &[])
+}
+
+fn flatten_css_level_with_parents(content: &str, parents: &[String]) -> String {
     let mut out = String::with_capacity(content.len());
     let bytes = content.as_bytes();
     let mut i = 0usize;
@@ -10,20 +14,42 @@ fn flatten_css_level(content: &str) -> String {
 
     while i < bytes.len() {
         if bytes[i] == b'{' {
-            let prelude = sanitize_selector_prelude(content[last..i].trim());
+            let segment = &content[last..i];
+            let (local_prefix, raw_prelude) = if parents.is_empty() {
+                ("", segment.trim())
+            } else {
+                split_local_prefix_and_prelude(segment)
+            };
+            let prelude = sanitize_selector_prelude(raw_prelude);
             if let Some((inner, end)) = crate::parse_balanced_block(content, i) {
+                if !parents.is_empty() && !local_prefix.trim().is_empty() {
+                    out.push_str(&parents.join(", "));
+                    out.push_str(" {\n");
+                    out.push_str(local_prefix.trim());
+                    out.push_str("\n}\n");
+                }
+
                 if prelude.starts_with('@') {
                     // Keep at-rules structure, but flatten inside.
-                    out.push_str(&content[last..i]);
+                    if parents.is_empty() {
+                        out.push_str(&content[last..i]);
+                    } else {
+                        out.push_str(prelude);
+                    }
                     out.push('{');
-                    out.push_str(&flatten_css_level(&inner));
+                    out.push_str(&flatten_css_level_with_parents(&inner, parents));
                     out.push('}');
                 } else {
                     let selectors = split_selectors(prelude);
                     if selectors.is_empty() {
                         out.push_str(&content[last..end]);
                     } else {
-                        out.push_str(&flatten_rule_block(&selectors, &inner));
+                        let combined = if parents.is_empty() {
+                            selectors
+                        } else {
+                            combine_selectors(parents, &selectors)
+                        };
+                        out.push_str(&flatten_rule_block(&combined, &inner));
                     }
                 }
                 i = end;
@@ -35,7 +61,15 @@ fn flatten_css_level(content: &str) -> String {
     }
 
     if last < content.len() {
-        out.push_str(&content[last..]);
+        let tail = &content[last..];
+        if parents.is_empty() {
+            out.push_str(tail);
+        } else if !tail.trim().is_empty() {
+            out.push_str(&parents.join(", "));
+            out.push_str(" {\n");
+            out.push_str(tail.trim());
+            out.push_str("\n}\n");
+        }
     }
     out
 }
@@ -58,7 +92,10 @@ fn flatten_rule_block(parent_selectors: &[String], inner: &str) -> String {
                     local.push_str(prelude);
                     // Preserve nested at-rules in-place under current selector.
                     local.push('{');
-                    local.push_str(&flatten_css_level(&child_inner));
+                    local.push_str(&flatten_css_level_with_parents(
+                        &child_inner,
+                        parent_selectors,
+                    ));
                     local.push('}');
                 } else {
                     local.push_str(local_prefix);

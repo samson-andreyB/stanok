@@ -15,7 +15,10 @@ pub(crate) fn apply_legacy_variable_substitution(content: &str) -> String {
         let Some(name) = capture.get(1).map(|m| m.as_str().to_string()) else {
             continue;
         };
-        let Some(value) = capture.get(2).map(|m| m.as_str().trim().to_string()) else {
+        let Some(value) = capture
+            .get(2)
+            .map(|m| normalize_legacy_var_value(m.as_str().trim()))
+        else {
             continue;
         };
         vars.insert(name, value);
@@ -40,6 +43,15 @@ pub(crate) fn apply_legacy_variable_substitution(content: &str) -> String {
         .to_string()
 }
 
+fn normalize_legacy_var_value(raw: &str) -> String {
+    let mut out = raw.to_string();
+    // SCSS-like flags occasionally leak from legacy sources;
+    // they are metadata and must not enter resulting CSS values.
+    out = default_flag_re().replace_all(&out, "").to_string();
+    out = global_flag_re().replace_all(&out, "").to_string();
+    out.trim().to_string()
+}
+
 fn var_decl_re() -> &'static Regex {
     static RE: OnceLock<Regex> = OnceLock::new();
     RE.get_or_init(|| {
@@ -54,6 +66,16 @@ fn var_ref_re() -> &'static Regex {
         Regex::new(r#"\$([A-Za-z_][A-Za-z0-9_-]*)"#)
             .expect("legacy variable ref regex must compile")
     })
+}
+
+fn default_flag_re() -> &'static Regex {
+    static RE: OnceLock<Regex> = OnceLock::new();
+    RE.get_or_init(|| Regex::new(r#"\s*!default\b"#).expect("default flag regex must compile"))
+}
+
+fn global_flag_re() -> &'static Regex {
+    static RE: OnceLock<Regex> = OnceLock::new();
+    RE.get_or_init(|| Regex::new(r#"\s*!global\b"#).expect("global flag regex must compile"))
 }
 
 fn resolve_var(

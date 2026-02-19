@@ -3,6 +3,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process;
 use std::collections::BTreeSet;
+use std::collections::HashSet;
 
 use serde_json::json;
 use style_pipeline::{
@@ -11,8 +12,27 @@ use style_pipeline::{
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 enum CompileMode {
-    InputOutput { input: PathBuf, output: PathBuf },
-    Config { config: PathBuf },
+    InputOutput {
+        input: PathBuf,
+        output: PathBuf,
+        import_roots: Vec<PathBuf>,
+        runtime: RuntimePathOptions,
+    },
+    Config {
+        config: PathBuf,
+        import_roots: Vec<PathBuf>,
+        runtime: RuntimePathOptions,
+    },
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+struct RuntimePathOptions {
+    project_dir: Option<PathBuf>,
+    path_to_projects_root: Option<PathBuf>,
+    lib_dir: Option<PathBuf>,
+    b_path: Option<PathBuf>,
+    layouts_dir: Option<String>,
+    root_dir: Option<PathBuf>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -54,7 +74,12 @@ fn run() -> Result<i32, String> {
 fn handle_compile(args: &[String]) -> Result<(), String> {
     let mode = parse_compile_mode(args)?;
     match mode {
-        CompileMode::InputOutput { input, output } => {
+        CompileMode::InputOutput {
+            input,
+            output,
+            import_roots,
+            runtime,
+        } => {
             if !input.exists() {
                 return Err(format!("Input file does not exist: {}", input.display()));
             }
@@ -64,6 +89,18 @@ fn handle_compile(args: &[String]) -> Result<(), String> {
                 .map(Path::to_path_buf)
                 .unwrap_or_else(|| PathBuf::from("."));
 
+            let inferred_project_dir = runtime
+                .project_dir
+                .clone()
+                .or_else(|| infer_project_dir_from_out_dir(&out_dir))
+                .or_else(|| infer_project_dir_from_input(&input))
+                .unwrap_or_else(|| env::current_dir().unwrap_or_else(|_| PathBuf::from(".")));
+            let import_roots = if import_roots.is_empty() {
+                infer_import_roots(&input, &out_dir, &inferred_project_dir, &runtime)
+            } else {
+                import_roots
+            };
+
             let cfg = PipelineConfig {
                 entries: vec![Entry { input }],
                 out_dir,
@@ -71,7 +108,7 @@ fn handle_compile(args: &[String]) -> Result<(), String> {
                 minify: false,
                 targets: Targets { query: None },
                 browserslist_query: None,
-                import_roots: Vec::new(),
+                import_roots,
                 asset: style_pipeline::AssetConfig {
                     rewrite_urls: true,
                     enable_svg_fallback: false,
@@ -81,7 +118,7 @@ fn handle_compile(args: &[String]) -> Result<(), String> {
             };
 
             let req = CompileRequest {
-                cwd: env::current_dir().map_err(|e| format!("Cannot resolve cwd: {e}"))?,
+                cwd: inferred_project_dir,
                 config: cfg,
             };
             let result = compile(req).map_err(|e| format!("Compile failed: {e}"))?;
@@ -92,7 +129,11 @@ fn handle_compile(args: &[String]) -> Result<(), String> {
             );
             Ok(())
         }
-        CompileMode::Config { config } => {
+        CompileMode::Config {
+            config,
+            import_roots,
+            runtime,
+        } => {
             let raw = fs::read_to_string(&config)
                 .map_err(|e| format!("Cannot read config {}: {e}", config.display()))?;
             if raw.trim().is_empty() {
@@ -101,15 +142,26 @@ fn handle_compile(args: &[String]) -> Result<(), String> {
 
             // Config parsing is intentionally deferred to the next PRs.
             // For now we validate readability/non-empty and run compile stub.
+            let cwd = runtime
+                .project_dir
+                .clone()
+                .unwrap_or_else(|| env::current_dir().unwrap_or_else(|_| PathBuf::from(".")));
+            let inferred_roots = if import_roots.is_empty() {
+                infer_import_roots(&cwd, &cwd, &cwd, &runtime)
+            } else {
+                import_roots
+            };
+
             let cfg = PipelineConfig {
                 entries: vec![Entry {
                     input: PathBuf::from(format!("config://{}", config.display())),
                 }],
-                out_dir: env::current_dir().map_err(|e| format!("Cannot resolve cwd: {e}"))?,
+                import_roots: inferred_roots,
+                out_dir: cwd.clone(),
                 ..PipelineConfig::default()
             };
             let req = CompileRequest {
-                cwd: env::current_dir().map_err(|e| format!("Cannot resolve cwd: {e}"))?,
+                cwd,
                 config: cfg,
             };
             let result = compile(req).map_err(|e| format!("Compile failed: {e}"))?;
@@ -158,6 +210,8 @@ fn parse_compile_mode(args: &[String]) -> Result<CompileMode, String> {
     let mut input: Option<PathBuf> = None;
     let mut output: Option<PathBuf> = None;
     let mut config: Option<PathBuf> = None;
+    let mut import_roots: Vec<PathBuf> = Vec::new();
+    let mut runtime = RuntimePathOptions::default();
 
     let mut i = 0usize;
     while i < args.len() {
@@ -177,6 +231,49 @@ fn parse_compile_mode(args: &[String]) -> Result<CompileMode, String> {
                 config = Some(PathBuf::from(value));
                 i += 2;
             }
+            "--import-root" => {
+                let value =
+                    args.get(i + 1).ok_or_else(|| "Missing value for --import-root".to_string())?;
+                import_roots.push(PathBuf::from(value));
+                i += 2;
+            }
+            "--project-dir" => {
+                let value =
+                    args.get(i + 1).ok_or_else(|| "Missing value for --project-dir".to_string())?;
+                runtime.project_dir = Some(PathBuf::from(value));
+                i += 2;
+            }
+            "--path-to-projects-root" => {
+                let value = args
+                    .get(i + 1)
+                    .ok_or_else(|| "Missing value for --path-to-projects-root".to_string())?;
+                runtime.path_to_projects_root = Some(PathBuf::from(value));
+                i += 2;
+            }
+            "--lib-dir" => {
+                let value =
+                    args.get(i + 1).ok_or_else(|| "Missing value for --lib-dir".to_string())?;
+                runtime.lib_dir = Some(PathBuf::from(value));
+                i += 2;
+            }
+            "--b-path" => {
+                let value =
+                    args.get(i + 1).ok_or_else(|| "Missing value for --b-path".to_string())?;
+                runtime.b_path = Some(PathBuf::from(value));
+                i += 2;
+            }
+            "--layouts-dir" => {
+                let value =
+                    args.get(i + 1).ok_or_else(|| "Missing value for --layouts-dir".to_string())?;
+                runtime.layouts_dir = Some(value.to_string());
+                i += 2;
+            }
+            "--root-dir" => {
+                let value =
+                    args.get(i + 1).ok_or_else(|| "Missing value for --root-dir".to_string())?;
+                runtime.root_dir = Some(PathBuf::from(value));
+                i += 2;
+            }
             unknown => return Err(format!("Unknown argument: {unknown}")),
         }
     }
@@ -185,15 +282,82 @@ fn parse_compile_mode(args: &[String]) -> Result<CompileMode, String> {
         if input.is_some() || output.is_some() {
             return Err("Do not mix --config with --input/--output".to_string());
         }
-        return Ok(CompileMode::Config { config: cfg });
+        return Ok(CompileMode::Config {
+            config: cfg,
+            import_roots,
+            runtime,
+        });
     }
 
     match (input, output) {
-        (Some(input), Some(output)) => Ok(CompileMode::InputOutput { input, output }),
+        (Some(input), Some(output)) => Ok(CompileMode::InputOutput {
+            input,
+            output,
+            import_roots,
+            runtime,
+        }),
         (Some(_), None) => Err("Missing --output".to_string()),
         (None, Some(_)) => Err("Missing --input".to_string()),
         (None, None) => Err("Either --config or --input/--output must be provided".to_string()),
     }
+}
+
+fn infer_project_dir_from_out_dir(out_dir: &Path) -> Option<PathBuf> {
+    // Expected shape: <project>/<root>/css
+    // Root is usually "assets", so parent(parent(out_dir)).
+    let parent = out_dir.parent()?;
+    parent.parent().map(|p| p.to_path_buf())
+}
+
+fn infer_project_dir_from_input(input: &Path) -> Option<PathBuf> {
+    // Expected shape: <project>/<root>/css/src/_main.css
+    input.parent()?.parent()?.parent()?.parent().map(|p| p.to_path_buf())
+}
+
+fn infer_import_roots(
+    _input: &Path,
+    out_dir: &Path,
+    project_dir: &Path,
+    runtime: &RuntimePathOptions,
+) -> Vec<PathBuf> {
+    // Keep formula aligned with app's `run_styles_rust` + `build_runtime_paths`:
+    // lib_postcss_root = project_dir + path_to_projects_root + lib_dir + styles/postcss
+    // b_root = b_path OR project_dir + root + layouts + src
+    let path_to_projects_root = runtime
+        .path_to_projects_root
+        .clone()
+        .unwrap_or_default();
+    let lib_dir = runtime
+        .lib_dir
+        .clone()
+        .unwrap_or_else(|| PathBuf::from("../lib"));
+    let lib_postcss_root = project_dir
+        .join(path_to_projects_root)
+        .join(lib_dir)
+        .join("styles")
+        .join("postcss");
+
+    let b_root = runtime.b_path.clone().unwrap_or_else(|| {
+        let layouts = runtime
+            .layouts_dir
+            .clone()
+            .unwrap_or_else(|| "_layouts".to_string());
+        let root_dir = runtime
+            .root_dir
+            .clone()
+            .unwrap_or_else(|| out_dir.parent().map(Path::to_path_buf).unwrap_or_else(|| PathBuf::from("assets")));
+        project_dir.join(root_dir).join(layouts).join("src")
+    });
+
+    let mut roots = Vec::new();
+    let mut seen = HashSet::<PathBuf>::new();
+    for root in [lib_postcss_root, b_root] {
+        let canonical = std::fs::canonicalize(&root).unwrap_or(root);
+        if seen.insert(canonical.clone()) {
+            roots.push(canonical);
+        }
+    }
+    roots
 }
 
 fn parse_compare_mode(args: &[String]) -> Result<CompareMode, String> {
@@ -434,8 +598,8 @@ fn usage(prefix: &str) -> String {
     format!(
         "{prefix}\n\
          Usage:\n\
-          style-pipeline compile --input <_mainX.css> --output <mainX.css>\n\
-          style-pipeline compile --config <style-pipeline.toml>\n\
+          style-pipeline compile --input <_mainX.css> --output <mainX.css> [--import-root <dir>]... [--project-dir <dir>] [--path-to-projects-root <rel>] [--lib-dir <rel>] [--b-path <dir>] [--layouts-dir <name>] [--root-dir <name>]\n\
+          style-pipeline compile --config <style-pipeline.toml> [--import-root <dir>]... [--project-dir <dir>] [--path-to-projects-root <rel>] [--lib-dir <rel>] [--b-path <dir>] [--layouts-dir <name>] [--root-dir <name>]\n\
           style-pipeline compare --golden-dir <dir> --actual-dir <dir> [--summary-json <file>] [--max-mismatch-pct <n>]\n\
          Exit codes:\n\
           0 success\n\
@@ -458,9 +622,15 @@ mod tests {
         ];
         let mode = parse_compile_mode(&args).expect("must parse");
         match mode {
-            CompileMode::InputOutput { input, output } => {
+            CompileMode::InputOutput {
+                input,
+                output,
+                import_roots,
+                ..
+            } => {
                 assert_eq!(input, PathBuf::from("assets/css/src/_main.css"));
                 assert_eq!(output, PathBuf::from("assets/css/main.css"));
+                assert!(import_roots.is_empty());
             }
             _ => panic!("expected input/output mode"),
         }
@@ -471,10 +641,36 @@ mod tests {
         let args = vec!["--config".to_string(), "style-pipeline.toml".to_string()];
         let mode = parse_compile_mode(&args).expect("must parse");
         match mode {
-            CompileMode::Config { config } => {
+            CompileMode::Config {
+                config,
+                import_roots,
+                ..
+            } => {
                 assert_eq!(config, PathBuf::from("style-pipeline.toml"));
+                assert!(import_roots.is_empty());
             }
             _ => panic!("expected config mode"),
+        }
+    }
+
+    #[test]
+    fn parse_compile_mode_collects_import_roots() {
+        let args = vec![
+            "--input".to_string(),
+            "assets/css/src/_main.css".to_string(),
+            "--output".to_string(),
+            "assets/css/main.css".to_string(),
+            "--import-root".to_string(),
+            "shared/styles".to_string(),
+            "--import-root".to_string(),
+            "/opt/styles".to_string(),
+        ];
+        let mode = parse_compile_mode(&args).expect("must parse");
+        match mode {
+            CompileMode::InputOutput { import_roots, .. } => {
+                assert_eq!(import_roots, vec![PathBuf::from("shared/styles"), PathBuf::from("/opt/styles")]);
+            }
+            _ => panic!("expected input/output mode"),
         }
     }
 
