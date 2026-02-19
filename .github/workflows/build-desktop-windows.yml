@@ -2,10 +2,21 @@ name: Build Desktop (Windows)
 
 on:
   workflow_dispatch:
+    inputs:
+      style_engine:
+        description: "Styles engine mode for validations"
+        required: false
+        default: legacy
+        type: choice
+        options:
+          - legacy
+          - rust
 
 jobs:
   build:
     runs-on: windows-latest
+    env:
+      STYLE_ENGINE: ${{ github.event_name == 'workflow_dispatch' && inputs.style_engine || 'legacy' }}
 
     steps:
       - name: Checkout
@@ -36,7 +47,12 @@ jobs:
       - name: Prepare sidecar Node
         run: npm run prepare:sidecar-node
 
+      - name: Validate Rust style pipeline crates (Rust mode)
+        if: env.STYLE_ENGINE == 'rust'
+        run: cargo test -p style_pipeline -p style_pipeline_cli
+
       - name: Validate prepared runtime (Windows)
+        if: env.STYLE_ENGINE == 'legacy'
         shell: bash
         run: |
           set -euo pipefail
@@ -51,6 +67,7 @@ jobs:
       - name: Build app bundles
         env:
           STANOK_TARGET_TRIPLE: x86_64-pc-windows-msvc
+          STANOK_STYLE_ENGINE: ${{ env.STYLE_ENGINE }}
         run: npx tauri build --bundles nsis,msi
 
       - name: Validate built bundle artifacts (Windows)
