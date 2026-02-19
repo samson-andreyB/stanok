@@ -551,8 +551,10 @@ fn compile_and_emit_entry(
 fn preprocess_entry_source(req: &CompileRequest, entry_abs: &Path) -> Result<(String, PreprocessTiming), PipelineError> {
     let t_total = Instant::now();
     let mut stack = HashSet::new();
+    let mut import_cache = legacy_imports::PreprocessImportCache::default();
     let t_imports = Instant::now();
-    let mut source = legacy_imports::preprocess_source_recursive(req, entry_abs, &mut stack)?;
+    let mut source =
+        legacy_imports::preprocess_source_recursive(req, entry_abs, &mut stack, &mut import_cache)?;
     let imports_ms = t_imports.elapsed().as_millis();
     preprocess_debug::maybe_dump_pre_stage("01_after_imports.css", &source);
 
