@@ -1,5 +1,11 @@
 use std::ffi::OsStr;
+use std::io::Write;
 use std::path::{Path, PathBuf};
+
+use lightningcss::stylesheet::{MinifyOptions, ParserOptions, PrinterOptions, StyleSheet};
+use lightningcss::targets::{Browsers, Targets as LightningTargets};
+use parcel_sourcemap::SourceMap;
+use serde_json::json;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Entry {
@@ -88,6 +94,8 @@ pub struct CompileResult {
 pub enum PipelineError {
     InvalidConfig(String),
     Io(String),
+    Compile(String),
+    Emit(String),
 }
 
 impl std::fmt::Display for PipelineError {
@@ -95,6 +103,8 @@ impl std::fmt::Display for PipelineError {
         match self {
             Self::InvalidConfig(message) => write!(f, "{message}"),
             Self::Io(message) => write!(f, "{message}"),
+            Self::Compile(message) => write!(f, "{message}"),
+            Self::Emit(message) => write!(f, "{message}"),
         }
     }
 }
@@ -115,7 +125,7 @@ pub fn compile(req: CompileRequest) -> Result<CompileResult, PipelineError> {
         ));
     }
 
-    let artifacts = entries
+    let artifacts: Vec<CompileArtifact> = entries
         .iter()
         .map(|entry| CompileArtifact {
             entry: entry.input.clone(),
@@ -124,6 +134,11 @@ pub fn compile(req: CompileRequest) -> Result<CompileResult, PipelineError> {
             extra_outputs: Vec::new(),
         })
         .collect();
+
+    let targets = resolve_targets(&req.config)?;
+    for artifact in &artifacts {
+        compile_and_emit_entry(&req, artifact, targets)?;
+    }
 
     Ok(CompileResult {
         artifacts,
@@ -200,6 +215,170 @@ fn output_map_path(out_dir: &Path, input: &Path, source_maps: &SourceMapMode) ->
     Some(out_dir.join("maps").join(format!("{css_name}.map")))
 }
 
+fn compile_and_emit_entry(
+    req: &CompileRequest,
+    artifact: &CompileArtifact,
+    targets: LightningTargets,
+) -> Result<(), PipelineError> {
+    let input_abs = req.cwd.join(&artifact.entry);
+    let css_abs = req.cwd.join(&artifact.css_path);
+
+    let source = std::fs::read_to_string(&input_abs).map_err(|err| {
+        PipelineError::Io(format!(
+            "Failed to read entry css '{}': {err}",
+            input_abs.display()
+        ))
+    })?;
+
+    let mut sheet = StyleSheet::parse(
+        &source,
+        ParserOptions {
+            filename: input_abs.display().to_string(),
+            ..ParserOptions::default()
+        },
+    )
+    .map_err(|err| {
+        PipelineError::Compile(format!(
+            "Failed to parse css '{}': {err}",
+            artifact.entry.display()
+        ))
+    })?;
+
+    if req.config.minify || targets.browsers.is_some() {
+        sheet
+            .minify(MinifyOptions {
+                targets,
+                ..MinifyOptions::default()
+            })
+            .map_err(|err| {
+                PipelineError::Compile(format!(
+                    "Failed to transform css '{}': {err}",
+                    artifact.entry.display()
+                ))
+            })?;
+    }
+
+    let mut source_map = match req.config.source_maps {
+        SourceMapMode::External => Some(SourceMap::new(&req.cwd.display().to_string())),
+        _ => None,
+    };
+
+    let mut to_css_options = PrinterOptions {
+        minify: req.config.minify,
+        targets,
+        ..PrinterOptions::default()
+    };
+    if let Some(sm) = source_map.as_mut() {
+        to_css_options.source_map = Some(sm);
+    }
+
+    let mut css_code = sheet
+        .to_css(to_css_options)
+        .map_err(|err| {
+            PipelineError::Compile(format!(
+                "Failed to serialize css '{}': {err}",
+                artifact.entry.display()
+            ))
+        })?
+        .code;
+
+    if let Some(map_path) = &artifact.map_path {
+        let map_rel = map_rel_path(&req.config.out_dir, map_path);
+        css_code.push_str(&format!("\n/*# sourceMappingURL={map_rel} */\n"));
+    }
+
+    write_file(&css_abs, css_code.as_bytes())?;
+
+    if let (Some(sm), Some(map_path)) = (source_map.as_mut(), &artifact.map_path) {
+        if sm.get_sources().is_empty() {
+            sm.add_empty_map(&artifact.entry.display().to_string(), &source, 0)
+                .map_err(|err| {
+                    PipelineError::Emit(format!(
+                        "Failed to generate fallback source mappings for '{}': {err}",
+                        artifact.entry.display()
+                    ))
+                })?;
+        }
+        let map_json = source_map_to_json(sm)?;
+        write_file(&req.cwd.join(map_path), map_json.as_bytes())?;
+    }
+
+    Ok(())
+}
+
+fn write_file(path: &Path, content: &[u8]) -> Result<(), PipelineError> {
+    let parent = path.parent().ok_or_else(|| {
+        PipelineError::Emit(format!(
+            "Cannot determine parent directory for '{}'",
+            path.display()
+        ))
+    })?;
+    std::fs::create_dir_all(parent).map_err(|err| {
+        PipelineError::Emit(format!(
+            "Failed to create output directory '{}': {err}",
+            parent.display()
+        ))
+    })?;
+    let mut file = std::fs::File::create(path).map_err(|err| {
+        PipelineError::Emit(format!(
+            "Failed to create output file '{}': {err}",
+            path.display()
+        ))
+    })?;
+    file.write_all(content).map_err(|err| {
+        PipelineError::Emit(format!(
+            "Failed to write output file '{}': {err}",
+            path.display()
+        ))
+    })
+}
+
+fn resolve_targets(config: &PipelineConfig) -> Result<LightningTargets, PipelineError> {
+    let query = config
+        .browserslist_query
+        .as_deref()
+        .or(config.targets.query.as_deref());
+
+    let Some(query) = query else {
+        return Ok(LightningTargets::default());
+    };
+
+    let browsers = Browsers::from_browserslist([query]).map_err(|err| {
+        PipelineError::InvalidConfig(format!(
+            "Invalid browserslist query '{query}': {err}"
+        ))
+    })?;
+
+    Ok(LightningTargets::from(browsers))
+}
+
+fn map_rel_path(out_dir: &Path, map_path: &Path) -> String {
+    map_path
+        .strip_prefix(out_dir)
+        .ok()
+        .map(|p| p.display().to_string())
+        .unwrap_or_else(|| map_path.display().to_string())
+}
+
+fn source_map_to_json(map: &mut SourceMap) -> Result<String, PipelineError> {
+    let mut mappings = Vec::new();
+    map.write_vlq(&mut mappings)
+        .map_err(|err| PipelineError::Emit(format!("Failed to generate source map mappings: {err}")))?;
+    let mappings = String::from_utf8(mappings)
+        .map_err(|err| PipelineError::Emit(format!("Invalid source map encoding: {err}")))?;
+
+    let value = json!({
+        "version": 3,
+        "sources": map.get_sources(),
+        "sourcesContent": map.get_sources_content(),
+        "names": map.get_names(),
+        "mappings": mappings,
+    });
+
+    serde_json::to_string(&value)
+        .map_err(|err| PipelineError::Emit(format!("Failed to serialize source map JSON: {err}")))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -224,6 +403,12 @@ mod tests {
 
     #[test]
     fn compile_returns_planned_artifacts_for_explicit_entries() {
+        let temp = std::env::temp_dir().join("style_pipeline_unit_compile_explicit");
+        let _ = std::fs::remove_dir_all(&temp);
+        std::fs::create_dir_all(temp.join("assets/css/src")).expect("must create fixture dir");
+        std::fs::write(temp.join("assets/css/src/_main.css"), ".a { color: red; }")
+            .expect("must write fixture css");
+
         let mut cfg = PipelineConfig::default();
         cfg.entries.push(Entry {
             input: PathBuf::from("assets/css/src/_main.css"),
@@ -231,7 +416,7 @@ mod tests {
         cfg.out_dir = PathBuf::from("assets/css");
 
         let result = compile(CompileRequest {
-            cwd: PathBuf::from("."),
+            cwd: temp.clone(),
             config: cfg,
         })
         .expect("valid config should compile in stub mode");
@@ -244,5 +429,6 @@ mod tests {
         );
         assert_eq!(result.diagnostics.len(), 1);
         assert_eq!(result.diagnostics[0].code, "PLANNED_OUTPUTS");
+        assert!(temp.join("assets/css/main.css").exists());
     }
 }

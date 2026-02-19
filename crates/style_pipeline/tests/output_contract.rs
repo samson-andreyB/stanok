@@ -1,6 +1,7 @@
 use std::path::PathBuf;
 
-use style_pipeline::{compile, CompileRequest, PipelineConfig, PipelineError, SourceMapMode};
+use serde_json::Value;
+use style_pipeline::{compile, CompileRequest, PipelineConfig, PipelineError, SourceMapMode, Targets};
 
 fn temp_dir(label: &str) -> PathBuf {
     let nanos = std::time::SystemTime::now()
@@ -76,4 +77,94 @@ fn output_map_is_absent_when_source_maps_are_not_external() {
     assert_eq!(result.artifacts.len(), 1);
     assert_eq!(result.artifacts[0].css_path, PathBuf::from("assets/css/main.css"));
     assert_eq!(result.artifacts[0].map_path, None);
+}
+
+#[test]
+fn external_sourcemap_is_written_and_valid_json() {
+    let cwd = temp_dir("external_map_valid");
+    let src_dir = cwd.join("assets/css/src");
+    std::fs::create_dir_all(&src_dir).expect("src dir should exist");
+    std::fs::write(src_dir.join("_main.css"), ".a { color: red; }\n").expect("fixture should be written");
+
+    let mut cfg = PipelineConfig::default();
+    cfg.out_dir = PathBuf::from("assets/css");
+    cfg.source_maps = SourceMapMode::External;
+
+    let result = compile(CompileRequest {
+        cwd: cwd.clone(),
+        config: cfg,
+    })
+    .expect("compile should succeed");
+
+    assert_eq!(result.artifacts.len(), 1);
+    let css_path = cwd.join(&result.artifacts[0].css_path);
+    let map_path = cwd.join(
+        result.artifacts[0]
+            .map_path
+            .clone()
+            .expect("map path should exist for external sourcemaps"),
+    );
+
+    let css = std::fs::read_to_string(css_path).expect("css output should exist");
+    assert!(
+        css.contains("sourceMappingURL=maps/main.css.map"),
+        "css should contain map annotation"
+    );
+
+    let map_raw = std::fs::read_to_string(map_path).expect("map output should exist");
+    let map_json: Value = serde_json::from_str(&map_raw).expect("map must be valid json");
+    let sources = map_json["sources"]
+        .as_array()
+        .expect("sources must be an array");
+    assert!(!sources.is_empty(), "sources should not be empty");
+    let mappings = map_json["mappings"]
+        .as_str()
+        .expect("mappings must be a string");
+    assert!(!mappings.is_empty(), "mappings should not be empty");
+}
+
+#[test]
+fn minify_option_changes_css_output_shape() {
+    let cwd = temp_dir("minify");
+    let src_dir = cwd.join("assets/css/src");
+    std::fs::create_dir_all(&src_dir).expect("src dir should exist");
+    std::fs::write(
+        src_dir.join("_main.css"),
+        ".a {\n  color: red;\n}\n.b {\n  display: block;\n}\n",
+    )
+    .expect("fixture should be written");
+
+    let mut cfg = PipelineConfig::default();
+    cfg.out_dir = PathBuf::from("assets/css");
+    cfg.source_maps = SourceMapMode::None;
+    cfg.minify = true;
+
+    compile(CompileRequest {
+        cwd: cwd.clone(),
+        config: cfg,
+    })
+    .expect("compile should succeed");
+
+    let css = std::fs::read_to_string(cwd.join("assets/css/main.css")).expect("css output should exist");
+    assert!(!css.contains('\n'), "minified output should not contain newlines");
+    assert!(css.contains(".a{color:red}"), "minified output should contain compact rule");
+}
+
+#[test]
+fn accepts_browserslist_query_in_targets() {
+    let cwd = temp_dir("targets_query");
+    let src_dir = cwd.join("assets/css/src");
+    std::fs::create_dir_all(&src_dir).expect("src dir should exist");
+    std::fs::write(src_dir.join("_main.css"), ":focus-visible { color: red; }\n")
+        .expect("fixture should be written");
+
+    let mut cfg = PipelineConfig::default();
+    cfg.out_dir = PathBuf::from("assets/css");
+    cfg.source_maps = SourceMapMode::None;
+    cfg.targets = Targets {
+        query: Some("last 2 versions".to_string()),
+    };
+
+    let result = compile(CompileRequest { cwd, config: cfg });
+    assert!(result.is_ok(), "valid browserslist query should be accepted");
 }
