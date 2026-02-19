@@ -179,6 +179,7 @@ rewrite_old_moz_gradient_tokens = true
 - `Covered by Lightning CSS`
 - `Can be removed`
 - `Needs replacement (Rust stage)`
+- `Out of scope (not migrated)`
 - `Temporary legacy`
 - `Intentional removal as separate artifact`
 
@@ -187,19 +188,19 @@ rewrite_old_moz_gradient_tokens = true
 | `postcss-import` + custom transform | import resolution + URL rewrite | `node_modules/intcss/index.js:5`, `node_modules/intcss/import-transform.js:11` | В скрипте настроены import roots (`scripts/build-css.mjs:236`) | Needs replacement | Pre-Lightning resolver + опциональная compatibility-stage для URL rewrite |
 | `postcss-mixins` | custom mixins | `node_modules/intcss/index.js:13` | Конкретных style fixture в репозитории нет; feature включен по умолчанию | Needs replacement | Pre-Lightning stage с macro-like expansion (AST/token based) |
 | `postcss-axis` | shorthand helpers | `node_modules/intcss/index.js:18` | Конкретных fixture в репозитории не найдено | Can be removed or replacement | Предпочтительно удалить; добавить опциональный compatibility plugin, если нужен реальным проектам |
-| `postcss-property-lookup` | ссылки на свойства | `node_modules/intcss/index.js:25` | Конкретных fixture в репозитории не найдено | Needs replacement | Pre-Lightning resolver зависимостей declaration |
+| `postcss-property-lookup` | ссылки на свойства | `node_modules/intcss/index.js:25` | Конкретных fixture в репозитории не найдено | Out of scope (not migrated) | Не переносится в Rust pipeline текущей итерации |
 | `postcss-assets` | helper-функции для assets | `node_modules/intcss/index.js:32` | Настроен load path (`scripts/build-css.mjs:244`) | Needs replacement | Pre-Lightning asset resolver, привязанный к `img/dest` |
 | `postcss-advanced-variables` | variables/control features | `node_modules/intcss/index.js:37` | Конкретных fixture в репозитории не найдено | Needs replacement | Pre-Lightning processor переменных |
 | `postcss-color-function` | legacy color() function | `node_modules/intcss/index.js:42` | Конкретных fixture не найдено | Covered or replacement | Предпочтительно Lightning/native color transforms; fallback pre-stage для неподдерживаемого синтаксиса |
-| `postcss-strip-units` | helper strip units | `node_modules/intcss/index.js:47` | Конкретных fixture не найдено | Needs replacement | Легковесный pre-transform |
-| `postcss-conditionals` | условный CSS | `node_modules/intcss/index.js:52` | Конкретных fixture не найдено | Needs replacement | Preprocessor-like stage (feature-gated) |
+| `postcss-strip-units` | helper strip units | `node_modules/intcss/index.js:47` | Конкретных fixture не найдено | Out of scope (not migrated) | Не переносится в Rust pipeline текущей итерации |
+| `postcss-conditionals` | условный CSS | `node_modules/intcss/index.js:52` | Конкретных fixture не найдено | Out of scope (not migrated) | Не переносится в Rust pipeline текущей итерации |
 | `postcss-nested` | nested rules | `node_modules/intcss/index.js:57` | Конкретных fixture не найдено | Covered by Lightning CSS nesting support | Использовать Lightning CSS напрямую |
 | `postcss-extend` | наследование selector'ов | `node_modules/intcss/index.js:62` | Конкретных fixture не найдено | Needs replacement | Pre-transform expansion модели `%`/extend |
 | `postcss-calc` | упрощение calc | `node_modules/intcss/index.js:67` | Конкретных fixture не найдено | Covered by Lightning CSS/minifier behaviors | Использовать Lightning CSS |
 | `postcss-svg` | helper для inline SVG | `node_modules/intcss/index.js:72` | Настроены SVG paths (`scripts/build-css.mjs:247`) | Needs replacement | Asset/SVG stage до Lightning |
 | `postcss-url` | rewrite/inlining URL | `node_modules/intcss/index.js:80` | Используются `maxSize`, `filter` (`scripts/build-css.mjs:250`) | Needs replacement | Минимальный rewrite-only stage для корректных путей; inline/filter по size-threshold только при подтвержденной необходимости (отдельный PR) |
 | `postcss-svg-fallback` | генерация PNG fallback | `node_modules/intcss/index.js:88` | Опционально по env (`scripts/build-css.mjs:71`, `scripts/build-css.mjs:283`) | Needs replacement | Отдельный опциональный stage генерации assets |
-| `postcss-color-rgba-fallback` | rgba fallback для старых браузеров | `node_modules/intcss/index.js:93` | Fixture не найдено | Can be removed or temporary legacy | Оставлять только если это требуется матрицей target |
+| `postcss-color-rgba-fallback` | rgba fallback для старых браузеров | `node_modules/intcss/index.js:93` | Fixture не найдено | Out of scope (not migrated) | Не переносится в Rust pipeline текущей итерации |
 | `autoprefixer` | вендорные префиксы по browser list | `node_modules/intcss/index.js:98` | browsers задаются из payload (`scripts/build-css.mjs:100`, `scripts/build-css.mjs:263`) | Covered by Lightning CSS | Настроить targets/browsers в Lightning |
 | `postcss-data-packer` | эмитит дополнительный `_data.css` | `node_modules/intcss/index.js:103` | custom logic destination/map (`scripts/build-css.mjs:267`) | Intentional removal as separate artifact | Post-Lightning inline stage: перенос данных в итоговый `mainX.css` без отдельного файла |
 

@@ -11,9 +11,103 @@ fn flatten_css_level_with_parents(content: &str, parents: &[String]) -> String {
     let bytes = content.as_bytes();
     let mut i = 0usize;
     let mut last = 0usize;
+    let mut in_single = false;
+    let mut in_double = false;
+    let mut in_line_comment = false;
+    let mut in_block_comment = false;
+    let mut escaped = false;
+    let mut paren = 0i32;
+    let mut bracket = 0i32;
 
     while i < bytes.len() {
-        if bytes[i] == b'{' {
+        let b = bytes[i];
+        let next = bytes.get(i + 1).copied();
+
+        if in_line_comment {
+            if b == b'\n' {
+                in_line_comment = false;
+            }
+            i += 1;
+            continue;
+        }
+        if in_block_comment {
+            if b == b'*' && next == Some(b'/') {
+                in_block_comment = false;
+                i += 2;
+            } else {
+                i += 1;
+            }
+            continue;
+        }
+        if in_single {
+            if !escaped && b == b'\'' {
+                in_single = false;
+            }
+            escaped = b == b'\\' && !escaped;
+            i += 1;
+            continue;
+        }
+        if in_double {
+            if !escaped && b == b'"' {
+                in_double = false;
+            }
+            escaped = b == b'\\' && !escaped;
+            i += 1;
+            continue;
+        }
+
+        if b == b'/' && next == Some(b'/') {
+            in_line_comment = true;
+            i += 2;
+            continue;
+        }
+        if b == b'/' && next == Some(b'*') {
+            in_block_comment = true;
+            i += 2;
+            continue;
+        }
+        if b == b'\'' {
+            in_single = true;
+            escaped = false;
+            i += 1;
+            continue;
+        }
+        if b == b'"' {
+            in_double = true;
+            escaped = false;
+            i += 1;
+            continue;
+        }
+
+        match b {
+            b'(' => {
+                paren += 1;
+                i += 1;
+                continue;
+            }
+            b')' => {
+                if paren > 0 {
+                    paren -= 1;
+                }
+                i += 1;
+                continue;
+            }
+            b'[' => {
+                bracket += 1;
+                i += 1;
+                continue;
+            }
+            b']' => {
+                if bracket > 0 {
+                    bracket -= 1;
+                }
+                i += 1;
+                continue;
+            }
+            _ => {}
+        }
+
+        if b == b'{' && paren == 0 && bracket == 0 {
             let segment = &content[last..i];
             let (local_prefix, raw_prelude) = if parents.is_empty() {
                 ("", segment.trim())
@@ -80,9 +174,103 @@ fn flatten_rule_block(parent_selectors: &[String], inner: &str) -> String {
     let bytes = inner.as_bytes();
     let mut i = 0usize;
     let mut last = 0usize;
+    let mut in_single = false;
+    let mut in_double = false;
+    let mut in_line_comment = false;
+    let mut in_block_comment = false;
+    let mut escaped = false;
+    let mut paren = 0i32;
+    let mut bracket = 0i32;
 
     while i < bytes.len() {
-        if bytes[i] == b'{' {
+        let b = bytes[i];
+        let next = bytes.get(i + 1).copied();
+
+        if in_line_comment {
+            if b == b'\n' {
+                in_line_comment = false;
+            }
+            i += 1;
+            continue;
+        }
+        if in_block_comment {
+            if b == b'*' && next == Some(b'/') {
+                in_block_comment = false;
+                i += 2;
+            } else {
+                i += 1;
+            }
+            continue;
+        }
+        if in_single {
+            if !escaped && b == b'\'' {
+                in_single = false;
+            }
+            escaped = b == b'\\' && !escaped;
+            i += 1;
+            continue;
+        }
+        if in_double {
+            if !escaped && b == b'"' {
+                in_double = false;
+            }
+            escaped = b == b'\\' && !escaped;
+            i += 1;
+            continue;
+        }
+
+        if b == b'/' && next == Some(b'/') {
+            in_line_comment = true;
+            i += 2;
+            continue;
+        }
+        if b == b'/' && next == Some(b'*') {
+            in_block_comment = true;
+            i += 2;
+            continue;
+        }
+        if b == b'\'' {
+            in_single = true;
+            escaped = false;
+            i += 1;
+            continue;
+        }
+        if b == b'"' {
+            in_double = true;
+            escaped = false;
+            i += 1;
+            continue;
+        }
+
+        match b {
+            b'(' => {
+                paren += 1;
+                i += 1;
+                continue;
+            }
+            b')' => {
+                if paren > 0 {
+                    paren -= 1;
+                }
+                i += 1;
+                continue;
+            }
+            b'[' => {
+                bracket += 1;
+                i += 1;
+                continue;
+            }
+            b']' => {
+                if bracket > 0 {
+                    bracket -= 1;
+                }
+                i += 1;
+                continue;
+            }
+            _ => {}
+        }
+
+        if b == b'{' && paren == 0 && bracket == 0 {
             let segment = &inner[last..i];
             let (local_prefix, raw_prelude) = split_local_prefix_and_prelude(segment);
             let prelude = sanitize_selector_prelude(raw_prelude);

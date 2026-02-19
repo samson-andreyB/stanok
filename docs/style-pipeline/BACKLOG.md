@@ -220,7 +220,7 @@
   - Стабилизировать поведение fallback и диагностик в soak периоде.
 - Acceptance criteria:
   - Rust режим остается default, при ошибках сохраняется безопасный fallback.
-  - Явно зафиксированы out-of-scope кейсы текущей итерации (`postcss-conditionals`, расширенный SVG DSL вне базового `svg("name", "[color]/[fill]/[stroke]")`).
+  - Явно зафиксированы out-of-scope кейсы текущей итерации (`postcss-property-lookup`, `postcss-strip-units`, `postcss-conditionals`, `postcss-color-rgba-fallback`, расширенный SVG DSL вне базового `svg("name", "[color]/[fill]/[stroke]")`).
   - Тесты претрансформов покрывают согласованный compatibility scope.
 - Tests:
   - Unit/integration тесты по всем поддерживаемым претрансформам.

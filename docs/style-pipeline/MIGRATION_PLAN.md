@@ -44,6 +44,13 @@
 17. `autoprefixer` (`node_modules/intcss/index.js:98`)
 18. `postcss-data-packer` (`node_modules/intcss/index.js:103`)
 
+### Scope freeze по плагинам (не переносим в Rust pipeline текущей итерации)
+
+- `postcss-property-lookup` (`node_modules/intcss/index.js:25`)
+- `postcss-strip-units` (`node_modules/intcss/index.js:47`)
+- `postcss-conditionals` (`node_modules/intcss/index.js:52`)
+- `postcss-color-rgba-fallback` (`node_modules/intcss/index.js:93`)
+
 ### Версии, зафиксированные в репозитории
 
 - `intcss` из git commit `034bbf...` (`package-lock.json:2031`).
@@ -191,7 +198,7 @@ Rollback:
 
 ## 4) Реестр рисков (top)
 
-1. **Риск feature parity**: `postcss-axis`, `postcss-conditionals`, `postcss-extend` вероятно требуют кастомных Rust stages.
+1. **Риск feature parity**: `postcss-axis`, `postcss-extend` вероятно требуют кастомных Rust stages.
 2. **Риск совместимости**: legacy-поведение import/url (`import-transform.js`) содержит project-specific переписывание URL.
 3. **Риск assets/URL (high)**: `postcss-url`/`postcss-assets` + `import-transform.js` могут дать несовместимое разрешение путей.
    - При ошибке: не грузятся изображения/фоновые изображения, появляются некорректные runtime URL, особенно на platform-specific путях (включая Windows path normalization).

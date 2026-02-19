@@ -60,10 +60,13 @@ fn pretransform_contract_covers_all_legacy_stages() {
                 @mixin hoverTone;
 
                 &__icon {
+                    margin-x: 4px;
+                    border-x-color: transparent;
                     background: url(tile.png);
                     background-image: resolve('icon.png');
                     width: width('icon.png');
                     height: height('icon.png');
+                    margin-top: calc(- height('icon.png') / 2);
                 }
 
                 &__glyph {
@@ -103,6 +106,11 @@ fn pretransform_contract_covers_all_legacy_stages() {
     assert!(css.contains(r#"url("/assets/css/src/modules/icon.png")"#));
     assert!(compact.contains("width:16px"));
     assert!(compact.contains("height:32px"));
+    assert!(compact.contains("margin-left:4px"));
+    assert!(compact.contains("margin-right:4px"));
+    assert!(compact.contains("border-left-color:#0000") || compact.contains("border-left-color:transparent"));
+    assert!(compact.contains("border-right-color:#0000") || compact.contains("border-right-color:transparent"));
+    assert!(compact.contains("margin-top:-16px") || compact.contains("margin-top:calc(-32px/2)"));
     assert!(css.contains("data:image/svg+xml"));
     assert!(css.contains("%23d0011b"));
 }
