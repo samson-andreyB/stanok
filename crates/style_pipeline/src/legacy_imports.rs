@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
 use std::sync::OnceLock;
 
@@ -6,17 +6,29 @@ use regex::Regex;
 
 use crate::{CompileRequest, PipelineError};
 
+#[derive(Default)]
+pub(crate) struct PreprocessImportCache {
+    source_cache: HashMap<PathBuf, String>,
+    resolve_cache: HashMap<(PathBuf, String), PathBuf>,
+    canonical_cache: HashMap<PathBuf, PathBuf>,
+}
+
 pub(crate) fn preprocess_source_recursive(
     req: &CompileRequest,
     file_abs: &Path,
     stack: &mut HashSet<PathBuf>,
+    cache: &mut PreprocessImportCache,
 ) -> Result<String, PipelineError> {
-    let canonical = std::fs::canonicalize(file_abs).map_err(|err| {
+    let canonical = canonicalize_cached(file_abs, cache).map_err(|err| {
         PipelineError::Resolve(format!(
             "Failed to resolve css file '{}': {err}",
             file_abs.display()
         ))
     })?;
+
+    if let Some(cached) = cache.source_cache.get(&canonical) {
+        return Ok(cached.clone());
+    }
 
     if stack.contains(&canonical) {
         return Err(PipelineError::Resolve(format!(
@@ -63,8 +75,13 @@ pub(crate) fn preprocess_source_recursive(
         if is_external_import(spec) {
             result.push_str(m.as_str());
         } else {
-            let resolved = resolve_import_path(req, canonical.parent().unwrap_or(Path::new("")), spec)?;
-            let imported = preprocess_source_recursive(req, &resolved, stack)?;
+            let resolved = resolve_import_path(
+                req,
+                canonical.parent().unwrap_or(Path::new("")),
+                spec,
+                cache,
+            )?;
+            let imported = preprocess_source_recursive(req, &resolved, stack, cache)?;
             result.push_str(&imported);
             if !imported.ends_with('\n') {
                 result.push('\n');
@@ -75,7 +92,18 @@ pub(crate) fn preprocess_source_recursive(
     result.push_str(&source[last..]);
 
     stack.remove(&canonical);
+    cache.source_cache.insert(canonical, result.clone());
     Ok(result)
+}
+
+fn canonicalize_cached(path: &Path, cache: &mut PreprocessImportCache) -> std::io::Result<PathBuf> {
+    let key = path.to_path_buf();
+    if let Some(cached) = cache.canonical_cache.get(&key) {
+        return Ok(cached.clone());
+    }
+    let canonical = std::fs::canonicalize(path)?;
+    cache.canonical_cache.insert(key, canonical.clone());
+    Ok(canonical)
 }
 
 fn import_re() -> &'static Regex {
@@ -174,7 +202,17 @@ fn mask_css_comments_for_import_scan(input: &str) -> String {
     String::from_utf8(out).expect("masked css bytes must remain valid utf-8")
 }
 
-fn resolve_import_path(req: &CompileRequest, current_dir: &Path, spec: &str) -> Result<PathBuf, PipelineError> {
+fn resolve_import_path(
+    req: &CompileRequest,
+    current_dir: &Path,
+    spec: &str,
+    cache: &mut PreprocessImportCache,
+) -> Result<PathBuf, PipelineError> {
+    let cache_key = (current_dir.to_path_buf(), spec.to_string());
+    if let Some(found) = cache.resolve_cache.get(&cache_key) {
+        return Ok(found.clone());
+    }
+
     let mut candidates = Vec::<PathBuf>::new();
     let spec_path = PathBuf::from(spec);
 
@@ -194,6 +232,7 @@ fn resolve_import_path(req: &CompileRequest, current_dir: &Path, spec: &str) -> 
 
     for candidate in candidates {
         if let Some(found) = candidate_with_css_extension(candidate) {
+            cache.resolve_cache.insert(cache_key, found.clone());
             return Ok(found);
         }
     }

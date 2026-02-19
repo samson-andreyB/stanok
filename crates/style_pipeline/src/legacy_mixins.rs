@@ -11,20 +11,50 @@ pub(crate) fn apply_legacy_mixins(content: &str) -> String {
     if mixins.is_empty() {
         return without_defs;
     }
+    if !without_defs.contains("@mixin") {
+        return without_defs;
+    }
 
     for _ in 0..8 {
-        let expanded = expand_legacy_mixin_calls(&without_defs, &mixins);
-        if expanded == without_defs {
+        let (expanded, changed) = expand_legacy_mixin_calls(&without_defs, &mixins);
+        if !changed {
             break;
         }
         without_defs = expanded;
+        if !without_defs.contains("@mixin") {
+            break;
+        }
     }
     without_defs
 }
 
-fn extract_legacy_mixin_definitions(content: &str) -> (String, HashMap<String, String>) {
+#[derive(Debug, Clone)]
+struct MixinDef {
+    body: String,
+    body_without_content: Option<String>,
+}
+
+impl MixinDef {
+    fn from_body(body: String) -> Self {
+        let body_without_content = if body.contains("@mixin-content") {
+            Some(mixin_content_re().replace_all(&body, "").into_owned())
+        } else {
+            None
+        };
+        Self {
+            body,
+            body_without_content,
+        }
+    }
+
+    fn has_content_placeholder(&self) -> bool {
+        self.body_without_content.is_some()
+    }
+}
+
+fn extract_legacy_mixin_definitions(content: &str) -> (String, HashMap<String, MixinDef>) {
     let mut out = String::with_capacity(content.len());
-    let mut mixins = HashMap::<String, String>::new();
+    let mut mixins = HashMap::<String, MixinDef>::new();
     let bytes = content.as_bytes();
     let mut i = 0usize;
 
@@ -56,7 +86,7 @@ fn extract_legacy_mixin_definitions(content: &str) -> (String, HashMap<String, S
             }
 
             if let Some((body, end)) = crate::parse_balanced_block(content, j) {
-                mixins.insert(name.to_string(), body);
+                mixins.insert(name.to_string(), MixinDef::from_body(body));
                 i = end;
                 continue;
             }
@@ -74,11 +104,12 @@ fn extract_legacy_mixin_definitions(content: &str) -> (String, HashMap<String, S
     (out, mixins)
 }
 
-fn expand_legacy_mixin_calls(content: &str, mixins: &HashMap<String, String>) -> String {
+fn expand_legacy_mixin_calls(content: &str, mixins: &HashMap<String, MixinDef>) -> (String, bool) {
     let mixin_content_re = mixin_content_re();
     let mut out = String::with_capacity(content.len());
     let bytes = content.as_bytes();
     let mut i = 0usize;
+    let mut changed = false;
 
     while i < bytes.len() {
         if starts_with_bytes_at(bytes, i, b"@mixin") {
@@ -108,18 +139,27 @@ fn expand_legacy_mixin_calls(content: &str, mixins: &HashMap<String, String>) ->
                 j += 1;
             }
 
-            if let Some(body) = mixins.get(name) {
+            if let Some(mixin) = mixins.get(name) {
                 if j < bytes.len() && bytes[j] == b';' {
-                    let expanded = mixin_content_re.replace_all(body, "").to_string();
-                    out.push_str(&expanded);
+                    if let Some(body) = &mixin.body_without_content {
+                        out.push_str(body);
+                    } else {
+                        out.push_str(&mixin.body);
+                    }
                     i = j + 1;
+                    changed = true;
                     continue;
                 }
                 if j < bytes.len() && bytes[j] == b'{' {
                     if let Some((inner, end)) = crate::parse_balanced_block(content, j) {
-                        let expanded = mixin_content_re.replace_all(body, inner).to_string();
-                        out.push_str(&expanded);
+                        if mixin.has_content_placeholder() {
+                            let expanded = mixin_content_re.replace_all(&mixin.body, inner).into_owned();
+                            out.push_str(&expanded);
+                        } else {
+                            out.push_str(&mixin.body);
+                        }
                         i = end;
+                        changed = true;
                         continue;
                     }
                 }
@@ -135,7 +175,7 @@ fn expand_legacy_mixin_calls(content: &str, mixins: &HashMap<String, String>) ->
         }
     }
 
-    out
+    (out, changed)
 }
 
 fn mixin_content_re() -> &'static Regex {
