@@ -565,6 +565,7 @@ fn preprocess_entry_source(req: &CompileRequest, entry_abs: &Path) -> Result<Str
     let mut source = preprocess_source_recursive(req, entry_abs, &mut stack)?;
     if matches!(req.config.compatibility, CompatibilityMode::LegacyCompatible) {
         source = apply_legacy_variable_substitution(&source);
+        source = apply_legacy_mixins(&source);
     }
     Ok(source)
 }
@@ -806,6 +807,214 @@ fn apply_legacy_variable_substitution(content: &str) -> String {
         .to_string()
 }
 
+fn apply_legacy_mixins(content: &str) -> String {
+    let (mut without_defs, mixins) = extract_legacy_mixin_definitions(content);
+    if mixins.is_empty() {
+        return without_defs;
+    }
+
+    for _ in 0..8 {
+        let expanded = expand_legacy_mixin_calls(&without_defs, &mixins);
+        if expanded == without_defs {
+            break;
+        }
+        without_defs = expanded;
+    }
+    without_defs
+}
+
+fn extract_legacy_mixin_definitions(content: &str) -> (String, HashMap<String, String>) {
+    let mut out = String::with_capacity(content.len());
+    let mut mixins = HashMap::<String, String>::new();
+    let bytes = content.as_bytes();
+    let mut i = 0usize;
+
+    while i < bytes.len() {
+        if content[i..].starts_with("@define-mixin") {
+            let mut j = i + "@define-mixin".len();
+            while j < bytes.len() && bytes[j].is_ascii_whitespace() {
+                j += 1;
+            }
+            let name_start = j;
+            while j < bytes.len()
+                && (bytes[j].is_ascii_alphanumeric() || bytes[j] == b'_' || bytes[j] == b'-')
+            {
+                j += 1;
+            }
+            let name = content[name_start..j].trim();
+            while j < bytes.len() && bytes[j].is_ascii_whitespace() {
+                j += 1;
+            }
+            if name.is_empty() || j >= bytes.len() || bytes[j] != b'{' {
+                out.push(bytes[i] as char);
+                i += 1;
+                continue;
+            }
+
+            if let Some((body, end)) = parse_balanced_block(content, j) {
+                mixins.insert(name.to_string(), body);
+                i = end;
+                continue;
+            }
+        }
+
+        out.push(bytes[i] as char);
+        i += 1;
+    }
+
+    (out, mixins)
+}
+
+fn expand_legacy_mixin_calls(content: &str, mixins: &HashMap<String, String>) -> String {
+    let mixin_content_re =
+        Regex::new(r"@mixin-content\s*;?").expect("mixin-content regex must compile");
+    let mut out = String::with_capacity(content.len());
+    let bytes = content.as_bytes();
+    let mut i = 0usize;
+
+    while i < bytes.len() {
+        if content[i..].starts_with("@mixin") {
+            let mut j = i + "@mixin".len();
+            while j < bytes.len() && bytes[j].is_ascii_whitespace() {
+                j += 1;
+            }
+            let name_start = j;
+            while j < bytes.len()
+                && (bytes[j].is_ascii_alphanumeric() || bytes[j] == b'_' || bytes[j] == b'-')
+            {
+                j += 1;
+            }
+            let name = content[name_start..j].trim();
+            if name.is_empty() {
+                out.push(bytes[i] as char);
+                i += 1;
+                continue;
+            }
+
+            while j < bytes.len() && bytes[j].is_ascii_whitespace() {
+                j += 1;
+            }
+
+            if let Some(body) = mixins.get(name) {
+                if j < bytes.len() && bytes[j] == b';' {
+                    let expanded = mixin_content_re.replace_all(body, "").to_string();
+                    out.push_str(&expanded);
+                    i = j + 1;
+                    continue;
+                }
+                if j < bytes.len() && bytes[j] == b'{' {
+                    if let Some((inner, end)) = parse_balanced_block(content, j) {
+                        let expanded = mixin_content_re.replace_all(body, inner).to_string();
+                        out.push_str(&expanded);
+                        i = end;
+                        continue;
+                    }
+                }
+            }
+        }
+
+        out.push(bytes[i] as char);
+        i += 1;
+    }
+
+    out
+}
+
+fn parse_balanced_block(content: &str, open_brace_index: usize) -> Option<(String, usize)> {
+    let bytes = content.as_bytes();
+    if open_brace_index >= bytes.len() || bytes[open_brace_index] != b'{' {
+        return None;
+    }
+
+    let mut depth = 0usize;
+    let mut i = open_brace_index;
+    let start = open_brace_index + 1;
+    let mut in_single = false;
+    let mut in_double = false;
+    let mut in_line_comment = false;
+    let mut in_block_comment = false;
+    let mut escaped = false;
+
+    while i < bytes.len() {
+        let b = bytes[i];
+        let next = bytes.get(i + 1).copied();
+
+        if in_line_comment {
+            if b == b'\n' {
+                in_line_comment = false;
+            }
+            i += 1;
+            continue;
+        }
+        if in_block_comment {
+            if b == b'*' && next == Some(b'/') {
+                in_block_comment = false;
+                i += 2;
+            } else {
+                i += 1;
+            }
+            continue;
+        }
+
+        if in_single {
+            if !escaped && b == b'\'' {
+                in_single = false;
+            }
+            escaped = b == b'\\' && !escaped;
+            i += 1;
+            continue;
+        }
+        if in_double {
+            if !escaped && b == b'"' {
+                in_double = false;
+            }
+            escaped = b == b'\\' && !escaped;
+            i += 1;
+            continue;
+        }
+
+        if b == b'/' && next == Some(b'/') {
+            in_line_comment = true;
+            i += 2;
+            continue;
+        }
+        if b == b'/' && next == Some(b'*') {
+            in_block_comment = true;
+            i += 2;
+            continue;
+        }
+
+        if b == b'\'' {
+            in_single = true;
+            escaped = false;
+            i += 1;
+            continue;
+        }
+        if b == b'"' {
+            in_double = true;
+            escaped = false;
+            i += 1;
+            continue;
+        }
+
+        if b == b'{' {
+            depth += 1;
+        } else if b == b'}' {
+            if depth == 0 {
+                return None;
+            }
+            depth -= 1;
+            if depth == 0 {
+                let inner = content[start..i].to_string();
+                return Some((inner, i + 1));
+            }
+        }
+        i += 1;
+    }
+
+    None
+}
+
 fn write_file(path: &Path, content: &[u8]) -> Result<(), PipelineError> {
     let parent = path.parent().ok_or_else(|| {
         PipelineError::Emit(format!(
@@ -994,6 +1203,32 @@ mod tests {
         assert!(!out.contains("$accent:"));
         assert!(out.contains(".a { color: #111; }"));
         assert!(out.contains(".b { border-color: #111; }"));
+    }
+
+    #[test]
+    fn legacy_mixins_expand_simple_and_content_forms() {
+        let input = r#"
+            @define-mixin hocus {
+                &:hover { @mixin-content; }
+            }
+            @define-mixin link {
+                color: red;
+            }
+            .a {
+                @mixin hocus { color: blue; }
+            }
+            .b { @mixin link; }
+        "#;
+
+        let out = apply_legacy_mixins(input);
+        assert!(!out.contains("@define-mixin"));
+        assert!(!out.contains("@mixin hocus"));
+        assert!(!out.contains("@mixin link"));
+        assert!(out.contains(".a"));
+        assert!(out.contains("&:hover"));
+        assert!(out.contains("color: blue;"));
+        assert!(out.contains(".b"));
+        assert!(out.contains("color: red;"));
     }
 
     #[derive(Clone)]
