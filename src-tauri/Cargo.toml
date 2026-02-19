@@ -20,3 +20,4 @@ open = "5"
 tauri-plugin-window-state = "2"
 notify = "6"
 sysinfo = "0.33"
+style_pipeline = { path = "../crates/style_pipeline" }

@@ -59,6 +59,8 @@ struct BuildPayload {
   project_name: String,
   config: BuildConfig,
   #[serde(default)]
+  style_engine: Option<String>,
+  #[serde(default)]
   runtime_paths: Option<BuildRuntimePaths>,
 }
 
@@ -175,6 +177,12 @@ struct RuntimeInfoState {
 enum BuildKind {
   Styles,
   Images,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum StylesEngine {
+  Legacy,
+  Rust,
 }
 
 const PROJECTS_CACHE_TTL_SECS: u64 = 60 * 60;
@@ -313,12 +321,14 @@ fn build_styles(
   projects_path: String,
   project_name: String,
   project_data: Option<Value>,
+  style_engine: Option<String>,
 ) -> Result<String, String> {
   let config = build_config_from_project_data(project_data.as_ref());
   let payload = BuildPayload {
     projects_path,
     project_name,
     config,
+    style_engine,
     runtime_paths: None,
   };
   run_build_orchestrated(state.inner(), runtime.inner(), BuildKind::Styles, payload)
@@ -337,6 +347,7 @@ fn build_images(
     projects_path,
     project_name,
     config,
+    style_engine: None,
     runtime_paths: None,
   };
   run_build_orchestrated(state.inner(), runtime.inner(), BuildKind::Images, payload)
@@ -1589,7 +1600,10 @@ fn run_build_orchestrated(
       if run_styles {
         let mut styles_payload = payload.clone();
         styles_payload.runtime_paths = Some(build_runtime_paths(&styles_payload));
-        let out = run_node_script(state, runtime, "build-css.mjs", &styles_payload)?;
+        let out = match resolve_styles_engine(&styles_payload) {
+          StylesEngine::Legacy => run_node_script(state, runtime, "build-css.mjs", &styles_payload)?,
+          StylesEngine::Rust => run_styles_rust(&styles_payload)?,
+        };
         if !out.is_empty() {
           outputs.push(out);
         }
@@ -1628,6 +1642,27 @@ fn run_build_orchestrated(
     Ok("Сборка завершена".to_string())
   } else {
     Ok(outputs.join("\n"))
+  }
+}
+
+fn resolve_styles_engine(payload: &BuildPayload) -> StylesEngine {
+  if let Some(engine) = payload.style_engine.as_deref() {
+    return parse_styles_engine(engine).unwrap_or(StylesEngine::Legacy);
+  }
+
+  if let Ok(engine) = env::var("STANOK_STYLE_ENGINE") {
+    return parse_styles_engine(&engine).unwrap_or(StylesEngine::Legacy);
+  }
+
+  StylesEngine::Legacy
+}
+
+fn parse_styles_engine(value: &str) -> Option<StylesEngine> {
+  let v = value.trim().to_ascii_lowercase();
+  match v.as_str() {
+    "legacy" | "node" => Some(StylesEngine::Legacy),
+    "rust" => Some(StylesEngine::Rust),
+    _ => None,
   }
 }
 
@@ -1801,6 +1836,60 @@ fn run_images_rust(payload: &BuildPayload) -> Result<String, String> {
   }
 
   Ok(format!("Изображения обработаны: {} файл(ов)", copied))
+}
+
+fn run_styles_rust(payload: &BuildPayload) -> Result<String, String> {
+  let runtime_paths = payload
+    .runtime_paths
+    .clone()
+    .unwrap_or_else(|| build_runtime_paths(payload));
+
+  let cwd = PathBuf::from(&runtime_paths.project_dir);
+  let out_dir = PathBuf::from(&runtime_paths.style_dir);
+  let targets_query = if payload.config.browsers.is_empty() {
+    None
+  } else {
+    Some(payload.config.browsers.join(", "))
+  };
+
+  let lib_postcss_root = PathBuf::from(&runtime_paths.project_dir)
+    .join(&runtime_paths.path_to_projects_root)
+    .join(&runtime_paths.lib_dir)
+    .join("styles")
+    .join("postcss");
+  let b_root = PathBuf::from(&runtime_paths.b_path);
+
+  let config = style_pipeline::PipelineConfig {
+    entries: Vec::new(),
+    out_dir,
+    source_maps: style_pipeline::SourceMapMode::External,
+    minify: false,
+    targets: style_pipeline::Targets {
+      query: targets_query,
+    },
+    browserslist_query: None,
+    import_roots: vec![lib_postcss_root, b_root],
+    asset: style_pipeline::AssetConfig {
+      rewrite_urls: true,
+      enable_svg_fallback: env::var("STANOK_ENABLE_SVG_FALLBACK")
+        .map(|v| {
+          let v = v.to_ascii_lowercase();
+          v == "1" || v == "true" || v == "yes"
+        })
+        .unwrap_or(false),
+      svg_fallback_dir: None,
+    },
+    compatibility: style_pipeline::CompatibilityMode::LegacyCompatible,
+  };
+
+  let req = style_pipeline::CompileRequest { cwd, config };
+  let result = style_pipeline::compile(req)
+    .map_err(|e| format!("Rust style pipeline failed: {e}"))?;
+
+  Ok(format!(
+    "Сборка стилей (rust) завершена: {} файлов",
+    result.artifacts.len()
+  ))
 }
 
 fn should_skip_dir(path: &Path) -> bool {
@@ -2363,6 +2452,38 @@ mod tests {
   }
 
   #[test]
+  fn resolve_styles_engine_prefers_payload_value() {
+    let payload = BuildPayload {
+      projects_path: "/tmp".to_string(),
+      project_name: "demo/main".to_string(),
+      config: build_config_from_project_data(Some(&json!({}))),
+      style_engine: Some("rust".to_string()),
+      runtime_paths: None,
+    };
+    assert_eq!(resolve_styles_engine(&payload), StylesEngine::Rust);
+  }
+
+  #[test]
+  fn resolve_styles_engine_reads_env_when_payload_missing() {
+    let key = "STANOK_STYLE_ENGINE";
+    let prev = env::var(key).ok();
+    env::set_var(key, "rust");
+    let payload = BuildPayload {
+      projects_path: "/tmp".to_string(),
+      project_name: "demo/main".to_string(),
+      config: build_config_from_project_data(Some(&json!({}))),
+      style_engine: None,
+      runtime_paths: None,
+    };
+    assert_eq!(resolve_styles_engine(&payload), StylesEngine::Rust);
+    if let Some(v) = prev {
+      env::set_var(key, v);
+    } else {
+      env::remove_var(key);
+    }
+  }
+
+  #[test]
   fn watch_snapshot_detects_css_and_img_changes() {
     let uniq = SystemTime::now()
       .duration_since(UNIX_EPOCH)
@@ -2431,6 +2552,7 @@ mod tests {
       projects_path: root.to_string_lossy().to_string(),
       project_name: "demo/main".to_string(),
       config: build_config_from_project_data(Some(&json!({}))),
+      style_engine: None,
       runtime_paths: None,
     };
 
@@ -2461,6 +2583,7 @@ mod tests {
       projects_path: root.to_string_lossy().to_string(),
       project_name: "demo/main".to_string(),
       config: build_config_from_project_data(Some(&json!({}))),
+      style_engine: None,
       runtime_paths: None,
     };
 
