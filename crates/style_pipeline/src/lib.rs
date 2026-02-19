@@ -1,14 +1,25 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 use std::ffi::OsStr;
 use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
+use std::time::Instant;
 
 use lightningcss::stylesheet::{MinifyOptions, ParserOptions, PrinterOptions, StyleSheet};
 use lightningcss::targets::{Browsers, Targets as LightningTargets};
 use parcel_sourcemap::SourceMap;
-use regex::Regex;
 use serde_json::json;
+
+mod legacy_nested;
+mod legacy_mixins;
+mod legacy_vars;
+mod legacy_imports;
+mod legacy_extend;
+mod legacy_resolve_dims;
+mod legacy_svg_fn;
+mod legacy_urls;
+mod preprocess_debug;
+mod svg_fallback;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Entry {
@@ -97,6 +108,16 @@ pub struct Diagnostic {
 pub struct CompileResult {
     pub artifacts: Vec<CompileArtifact>,
     pub diagnostics: Vec<Diagnostic>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct PreprocessTiming {
+    imports_ms: u128,
+    vars_ms: u128,
+    mixins_ms: u128,
+    nested_ms: u128,
+    extend_ms: u128,
+    total_ms: u128,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -270,18 +291,23 @@ pub fn compile_with_registry(
         .collect();
 
     let targets = resolve_targets(&req.config)?;
+    let mut diagnostics = Vec::<Diagnostic>::new();
     for artifact in &mut artifacts {
-        artifact.extra_outputs = compile_and_emit_entry(&req, artifact, targets, stages)?;
+        let outcome = compile_and_emit_entry(&req, artifact, targets, stages)?;
+        artifact.extra_outputs = outcome.extra_outputs;
+        diagnostics.extend(outcome.diagnostics);
     }
+
+    diagnostics.push(Diagnostic {
+        code: "PLANNED_OUTPUTS",
+        message:
+            "style_pipeline compile stub: entry discovery and output contract are implemented"
+                .to_string(),
+    });
 
     Ok(CompileResult {
         artifacts,
-        diagnostics: vec![Diagnostic {
-            code: "PLANNED_OUTPUTS",
-            message:
-                "style_pipeline compile stub: entry discovery and output contract are implemented"
-                    .to_string(),
-        }],
+        diagnostics,
     })
 }
 
@@ -409,7 +435,7 @@ fn compile_and_emit_entry(
     artifact: &CompileArtifact,
     targets: LightningTargets,
     stages: &StageRegistry,
-) -> Result<Vec<PathBuf>, PipelineError> {
+) -> Result<EntryCompileOutcome, PipelineError> {
     let input_abs = req.cwd.join(&artifact.entry);
     let css_abs = req.cwd.join(&artifact.css_path);
 
@@ -417,7 +443,8 @@ fn compile_and_emit_entry(
         cwd: &req.cwd,
         config: &req.config,
     };
-    let source = preprocess_entry_source(req, &input_abs)?;
+    let (source, timing) = preprocess_entry_source(req, &input_abs)?;
+    preprocess_debug::maybe_dump_preprocessed_source(&source);
     let source = stages.run_pre(&stage_ctx, &artifact.entry, source)?;
 
     let mut sheet = StyleSheet::parse(
@@ -428,9 +455,13 @@ fn compile_and_emit_entry(
         },
     )
     .map_err(|err| {
+        let raw = err.to_string();
+        let context = preprocess_debug::extract_parse_error_context(&source, &raw);
         PipelineError::Compile(format!(
-            "Failed to parse css '{}': {err}",
-            artifact.entry.display()
+            "Failed to parse css '{}': {}{}",
+            artifact.entry.display(),
+            raw,
+            context
         ))
     })?;
 
@@ -480,7 +511,7 @@ fn compile_and_emit_entry(
 
     write_file(&css_abs, css_code.as_bytes())?;
 
-    let extra_outputs = emit_svg_fallback_assets(req, &css_code)?;
+    let extra_outputs = svg_fallback::emit_svg_fallback_assets(req, &css_code)?;
 
     if let (Some(sm), Some(map_path)) = (source_map.as_mut(), &artifact.map_path) {
         if sm.get_sources().is_empty() {
@@ -496,638 +527,104 @@ fn compile_and_emit_entry(
         write_file(&req.cwd.join(map_path), map_json.as_bytes())?;
     }
 
-    Ok(extra_outputs)
+    Ok(EntryCompileOutcome {
+        extra_outputs,
+        diagnostics: vec![Diagnostic {
+            code: "PREPROCESS_PROFILE",
+            message: format!(
+                "{} imports={}ms vars={}ms mixins={}ms nested={}ms extend={}ms total={}ms",
+                artifact.entry.display(),
+                timing.imports_ms,
+                timing.vars_ms,
+                timing.mixins_ms,
+                timing.nested_ms,
+                timing.extend_ms,
+                timing.total_ms
+            ),
+        }],
+    })
 }
 
-fn emit_svg_fallback_assets(req: &CompileRequest, css_code: &str) -> Result<Vec<PathBuf>, PipelineError> {
-    if !req.config.asset.enable_svg_fallback {
-        return Ok(Vec::new());
-    }
-
-    let url_re = Regex::new(r#"url\(([^(]*)\)"#).expect("url regex must compile");
-    let fallback_dir = svg_fallback_dir(req);
-    let mut emitted = Vec::<PathBuf>::new();
-    let mut seen = HashSet::<PathBuf>::new();
-
-    for capture in url_re.captures_iter(css_code) {
-        let Some(m) = capture.get(1) else {
-            continue;
-        };
-        let raw = strip_quotes(m.as_str().trim());
-        let (path_part, _) = split_url_suffix(raw);
-        if !is_local_svg_path(path_part) {
-            continue;
-        }
-
-        let stem = Path::new(path_part)
-            .file_stem()
-            .and_then(|s| s.to_str())
-            .filter(|s| !s.is_empty())
-            .unwrap_or("fallback");
-        let rel = fallback_dir.join(format!("{stem}.png"));
-        if !seen.insert(rel.clone()) {
-            continue;
-        }
-
-        write_file(&req.cwd.join(&rel), b"")?;
-        emitted.push(rel);
-    }
-
-    Ok(emitted)
-}
-
-fn svg_fallback_dir(req: &CompileRequest) -> PathBuf {
-    if let Some(dir) = &req.config.asset.svg_fallback_dir {
-        return dir.clone();
-    }
-    req.config
-        .out_dir
-        .parent()
-        .map(Path::to_path_buf)
-        .unwrap_or_else(|| PathBuf::from("."))
-        .join("img")
-        .join("svg_fallback")
-}
-
-fn is_local_svg_path(path: &str) -> bool {
-    let p = path.trim();
-    if p.is_empty() {
-        return false;
-    }
-    if should_keep_url_unmodified(p) && !p.starts_with('/') {
-        return false;
-    }
-    p.to_ascii_lowercase().ends_with(".svg")
-}
-
-fn preprocess_entry_source(req: &CompileRequest, entry_abs: &Path) -> Result<String, PipelineError> {
+fn preprocess_entry_source(req: &CompileRequest, entry_abs: &Path) -> Result<(String, PreprocessTiming), PipelineError> {
+    let t_total = Instant::now();
     let mut stack = HashSet::new();
-    let mut source = preprocess_source_recursive(req, entry_abs, &mut stack)?;
+    let t_imports = Instant::now();
+    let mut source = legacy_imports::preprocess_source_recursive(req, entry_abs, &mut stack)?;
+    let imports_ms = t_imports.elapsed().as_millis();
+    preprocess_debug::maybe_dump_pre_stage("01_after_imports.css", &source);
+
+    let mut vars_ms = 0u128;
+    let mut mixins_ms = 0u128;
+    let mut nested_ms = 0u128;
+    let mut extend_ms = 0u128;
     if matches!(req.config.compatibility, CompatibilityMode::LegacyCompatible) {
+        let t_vars = Instant::now();
         source = apply_legacy_variable_substitution(&source);
+        vars_ms = t_vars.elapsed().as_millis();
+        preprocess_debug::maybe_dump_pre_stage("02_after_vars.css", &source);
+
+        let t_mixins = Instant::now();
         source = apply_legacy_mixins(&source);
+        mixins_ms = t_mixins.elapsed().as_millis();
+        preprocess_debug::maybe_dump_pre_stage("03_after_mixins.css", &source);
+
+        let t_nested = Instant::now();
         source = apply_legacy_nested_selectors(&source);
+        nested_ms = t_nested.elapsed().as_millis();
+        preprocess_debug::maybe_dump_pre_stage("04_after_nested.css", &source);
+
+        let t_extend = Instant::now();
+        source = apply_legacy_extend_selectors(&source);
+        extend_ms = t_extend.elapsed().as_millis();
+        preprocess_debug::maybe_dump_pre_stage("05_after_extend.css", &source);
     }
-    Ok(source)
+    let total_ms = t_total.elapsed().as_millis();
+    Ok((
+        source,
+        PreprocessTiming {
+            imports_ms,
+            vars_ms,
+            mixins_ms,
+            nested_ms,
+            extend_ms,
+            total_ms,
+        },
+    ))
 }
 
-fn preprocess_source_recursive(
+pub(crate) fn apply_legacy_import_url_rewrite(req: &CompileRequest, content: &str, file_abs: &Path) -> String {
+    legacy_urls::apply_legacy_import_url_rewrite(req, content, file_abs)
+}
+
+pub(crate) fn apply_legacy_resolve_width_height(
     req: &CompileRequest,
+    content: &str,
     file_abs: &Path,
-    stack: &mut HashSet<PathBuf>,
-) -> Result<String, PipelineError> {
-    let canonical = std::fs::canonicalize(file_abs).map_err(|err| {
-        PipelineError::Resolve(format!(
-            "Failed to resolve css file '{}': {err}",
-            file_abs.display()
-        ))
-    })?;
-
-    if stack.contains(&canonical) {
-        return Err(PipelineError::Resolve(format!(
-            "Circular @import detected at '{}'",
-            file_abs.display()
-        )));
-    }
-    stack.insert(canonical.clone());
-
-    let mut source = std::fs::read_to_string(&canonical).map_err(|err| {
-        PipelineError::Io(format!(
-            "Failed to read css file '{}': {err}",
-            canonical.display()
-        ))
-    })?;
-
-    if req.config.asset.rewrite_urls {
-        source = apply_legacy_import_url_rewrite(req, &source, &canonical);
-    }
-
-    // Equivalent to postcss-import style flattening for simple `@import "..."` forms.
-    let import_re = Regex::new(r#"(?m)^\s*@import\s+(?:url\()?\s*["']([^"']+)["']\s*\)?\s*;\s*$"#)
-        .expect("import regex must compile");
-    let mut result = String::new();
-    let mut last = 0usize;
-
-    for capture in import_re.captures_iter(&source) {
-        let Some(m) = capture.get(0) else {
-            continue;
-        };
-        let Some(spec) = capture.get(1) else {
-            continue;
-        };
-
-        result.push_str(&source[last..m.start()]);
-        let spec = spec.as_str().trim();
-
-        if is_external_import(spec) {
-            result.push_str(m.as_str());
-        } else {
-            let resolved = resolve_import_path(req, canonical.parent().unwrap_or(Path::new("")), spec)?;
-            let imported = preprocess_source_recursive(req, &resolved, stack)?;
-            result.push_str(&imported);
-            if !imported.ends_with('\n') {
-                result.push('\n');
-            }
-        }
-        last = m.end();
-    }
-    result.push_str(&source[last..]);
-
-    stack.remove(&canonical);
-    Ok(result)
-}
-
-fn resolve_import_path(req: &CompileRequest, current_dir: &Path, spec: &str) -> Result<PathBuf, PipelineError> {
-    let mut candidates = Vec::<PathBuf>::new();
-    let spec_path = PathBuf::from(spec);
-
-    if spec_path.is_absolute() {
-        candidates.push(spec_path);
-    } else {
-        candidates.push(current_dir.join(&spec_path));
-        for root in &req.config.import_roots {
-            let abs_root = if root.is_absolute() {
-                root.clone()
-            } else {
-                req.cwd.join(root)
-            };
-            candidates.push(abs_root.join(&spec_path));
-        }
-    }
-
-    for candidate in candidates {
-        if let Some(found) = candidate_with_css_extension(candidate) {
-            return Ok(found);
-        }
-    }
-
-    Err(PipelineError::Resolve(format!(
-        "Failed to resolve @import '{}'",
-        spec
-    )))
-}
-
-fn candidate_with_css_extension(candidate: PathBuf) -> Option<PathBuf> {
-    if candidate.exists() {
-        return Some(candidate);
-    }
-    if candidate.extension().is_none() {
-        let css = candidate.with_extension("css");
-        if css.exists() {
-            return Some(css);
-        }
-    }
-    None
-}
-
-fn is_external_import(spec: &str) -> bool {
-    spec.starts_with("http://")
-        || spec.starts_with("https://")
-        || spec.starts_with("data:")
-        || spec.starts_with("//")
-}
-
-fn apply_legacy_import_url_rewrite(req: &CompileRequest, content: &str, file_abs: &Path) -> String {
-    // PR-07 scope: rewrite-only URL stage (no inline/filter).
-    let url_re = Regex::new(r#"url\(([^(]*)\)"#).expect("url regex must compile");
-    let cur_dir_rel = path_relative_to(&req.cwd, file_abs.parent().unwrap_or(Path::new("")));
-
-    url_re
-        .replace_all(content, |caps: &regex::Captures<'_>| {
-            let raw = caps.get(1).map(|m| m.as_str()).unwrap_or("").trim();
-            let url = strip_quotes(raw);
-            let (path_part, suffix) = split_url_suffix(url);
-
-            if should_keep_url_unmodified(path_part) {
-                return format!("url(\"{}\")", url);
-            }
-
-            let rewritten = normalize_slashes(&cur_dir_rel.join(Path::new(path_part)).to_string_lossy());
-            format!("url(\"/{}{}\")", rewritten.trim_start_matches('/'), suffix)
-        })
-        .to_string()
-}
-
-fn should_keep_url_unmodified(url: &str) -> bool {
-    let value = url.trim();
-    value.is_empty()
-        || value.starts_with("data:")
-        || value.starts_with("http://")
-        || value.starts_with("https://")
-        || value.starts_with("//")
-        || value.starts_with('/')
-        || value.starts_with('#')
-}
-
-fn split_url_suffix(url: &str) -> (&str, &str) {
-    match url.find(['?', '#']) {
-        Some(index) => (&url[..index], &url[index..]),
-        None => (url, ""),
-    }
-}
-
-fn strip_quotes(s: &str) -> &str {
-    s.trim_matches(|c| c == '\'' || c == '"' || c == ' ')
-}
-
-fn path_relative_to(base: &Path, target: &Path) -> PathBuf {
-    target.strip_prefix(base).unwrap_or(target).to_path_buf()
-}
-
-fn normalize_slashes(s: &str) -> String {
-    s.replace('\\', "/")
+) -> String {
+    legacy_resolve_dims::apply_legacy_resolve_width_height(req, content, file_abs)
 }
 
 fn apply_legacy_variable_substitution(content: &str) -> String {
-    let var_decl_re = Regex::new(r#"(?m)^\s*\$([A-Za-z_][A-Za-z0-9_-]*)\s*:\s*(.+?)\s*;\s*$"#)
-        .expect("legacy variable declaration regex must compile");
-    let var_ref_re =
-        Regex::new(r#"\$([A-Za-z_][A-Za-z0-9_-]*)"#).expect("legacy variable ref regex must compile");
-
-    let mut vars = HashMap::<String, String>::new();
-    for capture in var_decl_re.captures_iter(content) {
-        let Some(name) = capture.get(1).map(|m| m.as_str().to_string()) else {
-            continue;
-        };
-        let Some(value) = capture.get(2).map(|m| m.as_str().trim().to_string()) else {
-            continue;
-        };
-        vars.insert(name, value);
-    }
-
-    fn resolve_var(
-        key: &str,
-        vars: &HashMap<String, String>,
-        cache: &mut HashMap<String, String>,
-        visiting: &mut HashSet<String>,
-        ref_re: &Regex,
-    ) -> String {
-        if let Some(v) = cache.get(key) {
-            return v.clone();
-        }
-        let Some(raw) = vars.get(key) else {
-            return format!("${key}");
-        };
-        if !visiting.insert(key.to_string()) {
-            return raw.clone();
-        }
-        let resolved = ref_re
-            .replace_all(raw, |caps: &regex::Captures<'_>| {
-                let nested = caps.get(1).map(|m| m.as_str()).unwrap_or_default();
-                if nested == key {
-                    return caps.get(0).map(|m| m.as_str()).unwrap_or_default().to_string();
-                }
-                if vars.contains_key(nested) {
-                    resolve_var(nested, vars, cache, visiting, ref_re)
-                } else {
-                    caps.get(0).map(|m| m.as_str()).unwrap_or_default().to_string()
-                }
-            })
-            .to_string();
-        visiting.remove(key);
-        cache.insert(key.to_string(), resolved.clone());
-        resolved
-    }
-
-    let mut cache = HashMap::<String, String>::new();
-    let keys = vars.keys().cloned().collect::<Vec<_>>();
-    for key in keys {
-        let mut visiting = HashSet::<String>::new();
-        let _ = resolve_var(&key, &vars, &mut cache, &mut visiting, &var_ref_re);
-    }
-
-    let without_decl = var_decl_re.replace_all(content, "").to_string();
-    var_ref_re
-        .replace_all(&without_decl, |caps: &regex::Captures<'_>| {
-            let name = caps.get(1).map(|m| m.as_str()).unwrap_or_default();
-            cache
-                .get(name)
-                .cloned()
-                .unwrap_or_else(|| caps.get(0).map(|m| m.as_str()).unwrap_or_default().to_string())
-        })
-        .to_string()
+    legacy_vars::apply_legacy_variable_substitution(content)
 }
 
 fn apply_legacy_mixins(content: &str) -> String {
-    let (mut without_defs, mixins) = extract_legacy_mixin_definitions(content);
-    if mixins.is_empty() {
-        return without_defs;
-    }
-
-    for _ in 0..8 {
-        let expanded = expand_legacy_mixin_calls(&without_defs, &mixins);
-        if expanded == without_defs {
-            break;
-        }
-        without_defs = expanded;
-    }
-    without_defs
+    legacy_mixins::apply_legacy_mixins(content)
 }
 
 fn apply_legacy_nested_selectors(content: &str) -> String {
-    flatten_css_level(content)
+    legacy_nested::apply_legacy_nested_selectors(content)
 }
 
-fn flatten_css_level(content: &str) -> String {
-    let mut out = String::with_capacity(content.len());
-    let bytes = content.as_bytes();
-    let mut i = 0usize;
-    let mut last = 0usize;
-
-    while i < bytes.len() {
-        if bytes[i] == b'{' {
-            let prelude = content[last..i].trim();
-            if let Some((inner, end)) = parse_balanced_block(content, i) {
-                if prelude.starts_with('@') {
-                    // Keep at-rules structure, but flatten inside.
-                    out.push_str(&content[last..i]);
-                    out.push('{');
-                    out.push_str(&flatten_css_level(&inner));
-                    out.push('}');
-                } else {
-                    let selectors = split_selectors(prelude);
-                    if selectors.is_empty() {
-                        out.push_str(&content[last..end]);
-                    } else {
-                        out.push_str(&flatten_rule_block(&selectors, &inner));
-                    }
-                }
-                i = end;
-                last = end;
-                continue;
-            }
-        }
-        i += 1;
-    }
-
-    if last < content.len() {
-        out.push_str(&content[last..]);
-    }
-    out
+fn apply_legacy_extend_selectors(content: &str) -> String {
+    legacy_extend::apply_legacy_extend_selectors(content)
 }
 
-fn flatten_rule_block(parent_selectors: &[String], inner: &str) -> String {
-    let mut local = String::new();
-    let mut nested_out = String::new();
-    let bytes = inner.as_bytes();
-    let mut i = 0usize;
-    let mut last = 0usize;
-
-    while i < bytes.len() {
-        if bytes[i] == b'{' {
-            let prelude = inner[last..i].trim();
-            if let Some((child_inner, end)) = parse_balanced_block(inner, i) {
-                local.push_str(&inner[last..i]);
-                if prelude.starts_with('@') {
-                    // Preserve nested at-rules in-place under current selector.
-                    local.push('{');
-                    local.push_str(&flatten_css_level(&child_inner));
-                    local.push('}');
-                } else {
-                    let child_selectors = split_selectors(prelude);
-                    if child_selectors.is_empty() {
-                        local.push('{');
-                        local.push_str(&child_inner);
-                        local.push('}');
-                    } else {
-                        let combined = combine_selectors(parent_selectors, &child_selectors);
-                        nested_out.push_str(&flatten_rule_block(&combined, &child_inner));
-                    }
-                }
-                i = end;
-                last = end;
-                continue;
-            }
-        }
-        i += 1;
-    }
-    if last < inner.len() {
-        local.push_str(&inner[last..]);
-    }
-
-    let mut out = String::new();
-    if !local.trim().is_empty() {
-        out.push_str(&parent_selectors.join(", "));
-        out.push_str(" {\n");
-        out.push_str(local.trim());
-        out.push_str("\n}\n");
-    }
-    out.push_str(&nested_out);
-    out
+fn apply_legacy_svg_function(req: &CompileRequest, content: &str, file_abs: &Path) -> String {
+    legacy_svg_fn::apply_legacy_svg_function(req, content, file_abs)
 }
 
-fn split_selectors(prelude: &str) -> Vec<String> {
-    let mut parts = Vec::<String>::new();
-    let mut cur = String::new();
-    let mut paren = 0i32;
-    let mut bracket = 0i32;
-    let mut in_single = false;
-    let mut in_double = false;
-    let mut escaped = false;
-
-    for ch in prelude.chars() {
-        if in_single {
-            cur.push(ch);
-            if !escaped && ch == '\'' {
-                in_single = false;
-            }
-            escaped = ch == '\\' && !escaped;
-            continue;
-        }
-        if in_double {
-            cur.push(ch);
-            if !escaped && ch == '"' {
-                in_double = false;
-            }
-            escaped = ch == '\\' && !escaped;
-            continue;
-        }
-
-        match ch {
-            '\'' => {
-                in_single = true;
-                escaped = false;
-                cur.push(ch);
-            }
-            '"' => {
-                in_double = true;
-                escaped = false;
-                cur.push(ch);
-            }
-            '(' => {
-                paren += 1;
-                cur.push(ch);
-            }
-            ')' => {
-                paren -= 1;
-                cur.push(ch);
-            }
-            '[' => {
-                bracket += 1;
-                cur.push(ch);
-            }
-            ']' => {
-                bracket -= 1;
-                cur.push(ch);
-            }
-            ',' if paren == 0 && bracket == 0 => {
-                let s = cur.trim();
-                if !s.is_empty() {
-                    parts.push(s.to_string());
-                }
-                cur.clear();
-            }
-            _ => cur.push(ch),
-        }
-    }
-    let tail = cur.trim();
-    if !tail.is_empty() {
-        parts.push(tail.to_string());
-    }
-    parts
-}
-
-fn combine_selectors(parents: &[String], children: &[String]) -> Vec<String> {
-    let mut out = Vec::<String>::new();
-    for p in parents {
-        for c in children {
-            let combined = if c.contains('&') {
-                c.replace('&', p)
-            } else {
-                format!("{p} {c}")
-            };
-            let normalized = combined.split_whitespace().collect::<Vec<_>>().join(" ");
-            out.push(normalized);
-        }
-    }
-    out
-}
-
-fn extract_legacy_mixin_definitions(content: &str) -> (String, HashMap<String, String>) {
-    let mut out = String::with_capacity(content.len());
-    let mut mixins = HashMap::<String, String>::new();
-    let bytes = content.as_bytes();
-    let mut i = 0usize;
-
-    while i < bytes.len() {
-        if starts_with_bytes_at(bytes, i, b"@define-mixin") {
-            let mut j = i + "@define-mixin".len();
-            while j < bytes.len() && bytes[j].is_ascii_whitespace() {
-                j += 1;
-            }
-            let name_start = j;
-            while j < bytes.len()
-                && (bytes[j].is_ascii_alphanumeric() || bytes[j] == b'_' || bytes[j] == b'-')
-            {
-                j += 1;
-            }
-            let name = content.get(name_start..j).unwrap_or("").trim();
-            while j < bytes.len() && bytes[j].is_ascii_whitespace() {
-                j += 1;
-            }
-            if name.is_empty() || j >= bytes.len() || bytes[j] != b'{' {
-                let ch = content[i..].chars().next().unwrap_or('\0');
-                if ch != '\0' {
-                    out.push(ch);
-                    i += ch.len_utf8();
-                } else {
-                    i += 1;
-                }
-                continue;
-            }
-
-            if let Some((body, end)) = parse_balanced_block(content, j) {
-                mixins.insert(name.to_string(), body);
-                i = end;
-                continue;
-            }
-        }
-
-        let ch = content[i..].chars().next().unwrap_or('\0');
-        if ch != '\0' {
-            out.push(ch);
-            i += ch.len_utf8();
-        } else {
-            i += 1;
-        }
-    }
-
-    (out, mixins)
-}
-
-fn expand_legacy_mixin_calls(content: &str, mixins: &HashMap<String, String>) -> String {
-    let mixin_content_re =
-        Regex::new(r"@mixin-content\s*;?").expect("mixin-content regex must compile");
-    let mut out = String::with_capacity(content.len());
-    let bytes = content.as_bytes();
-    let mut i = 0usize;
-
-    while i < bytes.len() {
-        if starts_with_bytes_at(bytes, i, b"@mixin") {
-            let mut j = i + "@mixin".len();
-            while j < bytes.len() && bytes[j].is_ascii_whitespace() {
-                j += 1;
-            }
-            let name_start = j;
-            while j < bytes.len()
-                && (bytes[j].is_ascii_alphanumeric() || bytes[j] == b'_' || bytes[j] == b'-')
-            {
-                j += 1;
-            }
-            let name = content.get(name_start..j).unwrap_or("").trim();
-            if name.is_empty() {
-                let ch = content[i..].chars().next().unwrap_or('\0');
-                if ch != '\0' {
-                    out.push(ch);
-                    i += ch.len_utf8();
-                } else {
-                    i += 1;
-                }
-                continue;
-            }
-
-            while j < bytes.len() && bytes[j].is_ascii_whitespace() {
-                j += 1;
-            }
-
-            if let Some(body) = mixins.get(name) {
-                if j < bytes.len() && bytes[j] == b';' {
-                    let expanded = mixin_content_re.replace_all(body, "").to_string();
-                    out.push_str(&expanded);
-                    i = j + 1;
-                    continue;
-                }
-                if j < bytes.len() && bytes[j] == b'{' {
-                    if let Some((inner, end)) = parse_balanced_block(content, j) {
-                        let expanded = mixin_content_re.replace_all(body, inner).to_string();
-                        out.push_str(&expanded);
-                        i = end;
-                        continue;
-                    }
-                }
-            }
-        }
-
-        let ch = content[i..].chars().next().unwrap_or('\0');
-        if ch != '\0' {
-            out.push(ch);
-            i += ch.len_utf8();
-        } else {
-            i += 1;
-        }
-    }
-
-    out
-}
-
-fn starts_with_bytes_at(haystack: &[u8], offset: usize, needle: &[u8]) -> bool {
-    haystack
-        .get(offset..)
-        .map(|tail| tail.starts_with(needle))
-        .unwrap_or(false)
-}
-
-fn parse_balanced_block(content: &str, open_brace_index: usize) -> Option<(String, usize)> {
+pub(crate) fn parse_balanced_block(content: &str, open_brace_index: usize) -> Option<(String, usize)> {
     let bytes = content.as_bytes();
     if open_brace_index >= bytes.len() || bytes[open_brace_index] != b'{' {
         return None;
@@ -1222,7 +719,7 @@ fn parse_balanced_block(content: &str, open_brace_index: usize) -> Option<(Strin
     None
 }
 
-fn write_file(path: &Path, content: &[u8]) -> Result<(), PipelineError> {
+pub(crate) fn write_file(path: &Path, content: &[u8]) -> Result<(), PipelineError> {
     let parent = path.parent().ok_or_else(|| {
         PipelineError::Emit(format!(
             "Cannot determine parent directory for '{}'",
@@ -1247,6 +744,11 @@ fn write_file(path: &Path, content: &[u8]) -> Result<(), PipelineError> {
             path.display()
         ))
     })
+}
+
+struct EntryCompileOutcome {
+    extra_outputs: Vec<PathBuf>,
+    diagnostics: Vec<Diagnostic>,
 }
 
 fn resolve_targets(config: &PipelineConfig) -> Result<LightningTargets, PipelineError> {
@@ -1345,8 +847,11 @@ mod tests {
             result.artifacts[0].map_path,
             Some(PathBuf::from("assets/css/maps/main.css.map"))
         );
-        assert_eq!(result.diagnostics.len(), 1);
-        assert_eq!(result.diagnostics[0].code, "PLANNED_OUTPUTS");
+        assert!(result.diagnostics.iter().any(|d| d.code == "PLANNED_OUTPUTS"));
+        assert!(result
+            .diagnostics
+            .iter()
+            .any(|d| d.code == "PREPROCESS_PROFILE"));
         assert!(temp.join("assets/css/main.css").exists());
     }
 
@@ -1395,6 +900,85 @@ mod tests {
         };
         let out = apply_legacy_import_url_rewrite(&req, input, &file);
         assert!(out.contains(r#"url("/assets/css/src/modules/icons/x.svg?v=1#view")"#));
+    }
+
+    #[test]
+    fn legacy_resolve_width_height_expand_from_real_png() {
+        let uniq = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("time")
+            .as_nanos();
+        let temp = std::env::temp_dir().join(format!("style-pipeline-resolve-test-{uniq}"));
+        let src = temp.join("assets/css/src");
+        let modules = src.join("modules");
+        std::fs::create_dir_all(&modules).expect("must create fixture dirs");
+
+        std::fs::write(
+            src.join("_main.css"),
+            ".a { background-image: resolve('modules/icon.png'); width: width('modules/icon.png'); height: height('modules/icon.png'); }",
+        )
+        .expect("must write fixture css");
+        // Minimal PNG bytes with IHDR 16x32.
+        std::fs::write(
+            modules.join("icon.png"),
+            b"\x89PNG\r\n\x1a\n\0\0\0\rIHDR\0\0\0\x10\0\0\0\x20\x08\x06\0\0\0",
+        )
+        .expect("must write fixture png");
+
+        let mut cfg = PipelineConfig::default();
+        cfg.out_dir = PathBuf::from("assets/css");
+        cfg.entries.push(Entry {
+            input: PathBuf::from("assets/css/src/_main.css"),
+        });
+        let req = CompileRequest {
+            cwd: temp.clone(),
+            config: cfg,
+        };
+
+        let (out, _) =
+            preprocess_entry_source(&req, &temp.join("assets/css/src/_main.css")).expect("preprocess should succeed");
+        assert!(out.contains(r#"background-image: url("/assets/css/src/modules/icon.png");"#));
+        assert!(out.contains("width: 16px;"));
+        assert!(out.contains("height: 32px;"));
+    }
+
+    #[test]
+    fn legacy_svg_function_inlines_svg_data_uri_and_applies_color_rule() {
+        let uniq = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("time")
+            .as_nanos();
+        let temp = std::env::temp_dir().join(format!("style-pipeline-svg-fn-test-{uniq}"));
+        let src = temp.join("assets/css/src");
+        let img_dest = temp.join("assets/img/dest");
+        std::fs::create_dir_all(&src).expect("must create fixture dirs");
+        std::fs::create_dir_all(&img_dest).expect("must create fixture dirs");
+
+        std::fs::write(
+            src.join("_main.css"),
+            r#".a { background-image: svg("cross_18x18", "[color]: #d0011b"); }"#,
+        )
+        .expect("must write fixture css");
+        std::fs::write(
+            img_dest.join("cross_18x18.svg"),
+            r##"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18"><path fill="#000" stroke="#000" d="M1 1L17 17"/></svg>"##,
+        )
+        .expect("must write fixture svg");
+
+        let mut cfg = PipelineConfig::default();
+        cfg.out_dir = PathBuf::from("assets/css");
+        cfg.entries.push(Entry {
+            input: PathBuf::from("assets/css/src/_main.css"),
+        });
+        let req = CompileRequest {
+            cwd: temp.clone(),
+            config: cfg,
+        };
+
+        let (out, _) =
+            preprocess_entry_source(&req, &temp.join("assets/css/src/_main.css")).expect("preprocess should succeed");
+        assert!(out.contains("data:image/svg+xml"));
+        assert!(out.contains("%23d0011b"));
     }
 
     #[test]
@@ -1470,6 +1054,178 @@ mod tests {
         "#;
         let out = apply_legacy_nested_selectors(input);
         assert!(out.contains(".Calendar__workDay.Calendar__today"));
+    }
+
+    #[test]
+    fn legacy_nested_does_not_leave_dangling_selector_in_parent_block() {
+        let input = r#"
+            .Box {
+                & + & { margin-top: .5em; }
+                color: red;
+            }
+        "#;
+        let out = apply_legacy_nested_selectors(input);
+        assert!(out.contains(".Box + .Box"));
+        assert!(!out.contains(".Box {\n& + &"));
+    }
+
+    #[test]
+    fn legacy_nested_box_sample_remains_parseable() {
+        let input = r#"
+            .Box {
+                & + & {
+                    margin-top: .5em;
+                }
+
+                &--accent {
+                    background-color: #f0f4f5;
+                    padding: 15px;
+                }
+
+                &--hintWarning {
+                    background-color: #f8f3da;
+                    margin-top: 20px;
+                    padding: 10px;
+                    padding-left: 30px;
+                    background-image: resolve('warning.png');
+                    background-repeat: no-repeat;
+                    background-position: 10px 13px;
+                }
+
+                &--time {
+                    background-color: #f6ffda;
+                    color: #535c69;
+                    padding: 12px 18px;
+
+                    &:before {
+                        content: "";
+                        display: inline-block;
+                        background-image: resolve('clock_grey_b.png');
+                        vertical-align: middle;
+                        width: width('clock_grey_b.png');
+                        height: height('clock_grey_b.png');
+                        margin: -.15em 10px 0 0;
+                    }
+                }
+
+                &--showMore {
+                    padding: 12px;
+                    text-align: center;
+                }
+
+                &--task {
+                    background-color: #f8f3da;
+                    color: #e00000;
+                    display: inline-block;
+                    padding: .5em 1em;
+                    text-decoration: none;
+
+                    a:link,
+                    a:visited,
+                    a:hover {
+                        color: #e00000;
+                    }
+                }
+
+                &--info {
+                    p {
+                        margin: 0;
+                    }
+
+                    p + p {
+                        margin-top: 5px;
+                    }
+                }
+            }
+
+            .Group {
+                &--accent {
+                    background-color: #f0f4f5;
+                    padding: 15px;
+                }
+
+                .Box {
+                    display: table-cell;
+                    padding-right: 20px;
+                    vertical-align: middle;
+
+                    &:last-child {
+                        padding-right: 0;
+                    }
+                }
+            }
+        "#;
+
+        let out = apply_legacy_nested_selectors(input);
+        let parsed = StyleSheet::parse(&out, ParserOptions::default());
+        assert!(
+            parsed.is_ok(),
+            "nested output must remain parseable\n---\n{}\n---",
+            out
+        );
+    }
+
+    #[test]
+    fn legacy_extend_merges_selectors_into_target_rule() {
+        let input = r#"
+            .TBase__title {
+                font-size: 16px;
+                margin-bottom: 8px;
+            }
+
+            .TCard__hint {
+                @extend .TBase__title;
+                color: #888;
+            }
+        "#;
+
+        let out = apply_legacy_extend_selectors(input);
+        assert!(out.contains(".TBase__title, .TCard__hint"));
+        assert!(!out.contains("@extend .TBase__title"));
+        assert!(out.contains(".TCard__hint {\ncolor: #888;"));
+    }
+
+    #[test]
+    fn legacy_extend_drops_rule_when_it_only_contains_extend() {
+        let input = r#"
+            .base { display: block; }
+            .alias { @extend .base; }
+        "#;
+        let out = apply_legacy_extend_selectors(input);
+        assert!(out.contains(".base, .alias"));
+        assert!(!out.contains("@extend .base"));
+    }
+
+    #[test]
+    fn preprocess_ignores_imports_inside_comments() {
+        let temp = std::env::temp_dir().join("style_pipeline_unit_commented_imports");
+        let _ = std::fs::remove_dir_all(&temp);
+        std::fs::create_dir_all(temp.join("assets/css/src")).expect("must create fixture dir");
+        std::fs::write(
+            temp.join("assets/css/src/_main.css"),
+            "/* @import 'modules/_commented'; */\n@import 'modules/_active';\n",
+        )
+        .expect("must write entry css");
+        std::fs::create_dir_all(temp.join("assets/css/src/modules")).expect("must create modules dir");
+        std::fs::write(
+            temp.join("assets/css/src/modules/_active.css"),
+            ".ok { color: green; }\n",
+        )
+        .expect("must write active module");
+        std::fs::write(
+            temp.join("assets/css/src/modules/_commented.css"),
+            ".bad { color: red; }\n",
+        )
+        .expect("must write commented module");
+
+        let req = CompileRequest {
+            cwd: temp.clone(),
+            config: PipelineConfig::default(),
+        };
+        let (out, _timing) = preprocess_entry_source(&req, &temp.join("assets/css/src/_main.css"))
+            .expect("preprocess should succeed");
+        assert!(out.contains(".ok"));
+        assert!(!out.contains(".bad"));
     }
 
     #[derive(Clone)]
