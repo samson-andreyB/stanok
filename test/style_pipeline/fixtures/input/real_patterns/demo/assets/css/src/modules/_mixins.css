@@ -1,0 +1,51 @@
+@define-mixin link {
+  color: $C_LINK;
+  border-color: currentColor;
+
+  &:hover {
+    color: $C_LINK_HOVER;
+  }
+}
+
+@define-mixin placeholder {
+  $placeholderColor: #a5a5a5;
+
+  &::-webkit-input-placeholder { color: $placeholderColor; }
+  &:-moz-placeholder { color: $placeholderColor; }
+  &::-moz-placeholder { color: $placeholderColor; }
+  &:-ms-input-placeholder { color: $placeholderColor; }
+}
+
+@define-mixin btn {
+  background-color: transparent;
+  border: none;
+  font-family: $F_OPENSANS_BOLD;
+
+  &[disabled],
+  &.disabled {
+    opacity: .5;
+  }
+}
+
+@define-mixin btnDefault {
+  @mixin btn;
+
+  &,
+  a& {
+    border: 1px solid;
+    border-radius: 2px;
+    font-size: 12px;
+    height: 36px;
+    padding: 11px 10px;
+
+    background-color: #ececee;
+    border-color: #c6cdd3;
+    color: #7a818a;
+
+    @mixin hocus {
+      background-color: #cfd4d8;
+      border-color: #c6cdd3;
+      color: #535c69;
+    }
+  }
+}

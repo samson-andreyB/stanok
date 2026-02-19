@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/modules/_feature-data-uri.css"],"names":[],"mappings":"AAAA;IACE,+IAAgJ;CACjJ","file":"../main_data.css","sourcesContent":[".IconDataUri {\n  background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2Nk+M/wHwAE/wJ/lxQeWQAAAABJRU5ErkJggg==\");\n}\n"]}

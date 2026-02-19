@@ -1,0 +1,68 @@
+[
+  {
+    "id": "basic",
+    "input_root": "test/style_pipeline/fixtures/input/basic",
+    "golden_root": "test/style_pipeline/fixtures/golden/legacy/basic",
+    "projects_path_mode": "input_root",
+    "project_name": "demo/main",
+    "env": {
+      "STANOK_CSS_WORKERS": "1",
+      "STANOK_ENABLE_SVG_FALLBACK": "0"
+    },
+    "config": {
+      "nest": "",
+      "root": "assets/",
+      "style": "css",
+      "img": "img",
+      "layouts": "_layouts",
+      "b": "src/b",
+      "html": "_html",
+      "lib": "../lib",
+      "browsers": ["last 2 versions"]
+    },
+    "required_outputs": [
+      "demo/assets/css/main.css",
+      "demo/assets/css/main-print.css"
+    ],
+    "required_maps": [
+      "demo/assets/css/maps/main.css.map",
+      "demo/assets/css/maps/main-print.css.map"
+    ],
+    "optional_extra_paths": [
+      "demo/assets/img/svg_fallback"
+    ]
+  },
+  {
+    "id": "real_patterns",
+    "input_root": "test/style_pipeline/fixtures/input/real_patterns",
+    "golden_root": "test/style_pipeline/fixtures/golden/legacy/real_patterns",
+    "projects_path_mode": "input_root",
+    "project_name": "demo/main",
+    "env": {
+      "STANOK_CSS_WORKERS": "1",
+      "STANOK_ENABLE_SVG_FALLBACK": "0"
+    },
+    "config": {
+      "nest": "",
+      "root": "assets/",
+      "style": "css",
+      "img": "img",
+      "layouts": "_layouts",
+      "b": "src/b",
+      "html": "_html",
+      "lib": "../lib",
+      "browsers": ["last 2 versions"]
+    },
+    "required_outputs": [
+      "demo/assets/css/main.css",
+      "demo/assets/css/main-desk.css"
+    ],
+    "required_maps": [
+      "demo/assets/css/maps/main.css.map",
+      "demo/assets/css/maps/main-desk.css.map"
+    ],
+    "optional_extra_paths": [
+      "demo/assets/img/svg_fallback"
+    ]
+  }
+]

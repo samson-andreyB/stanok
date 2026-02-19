@@ -1,0 +1,81 @@
+.Authorization__input {
+  border: 2px solid #d5dde0;
+  border-radius: 3px;
+}
+.Authorization__input::-webkit-input-placeholder {
+  color: #a5a5a5;
+}
+.Authorization__input:-moz-placeholder {
+  color: #a5a5a5;
+}
+.Authorization__input::-moz-placeholder {
+  color: #a5a5a5;
+}
+.Authorization__input:-ms-input-placeholder {
+  color: #a5a5a5;
+}
+.Authorization__button {
+  background-color: transparent;
+  border: none;
+  font-family: "Open Sans",Arial,sans-serif;
+}
+.Authorization__button[disabled], .Authorization__button.disabled {
+  opacity: .5;
+}
+.Authorization__button, a.Authorization__button {
+  border: 1px solid;
+  border-radius: 2px;
+  font-size: 12px;
+  height: 36px;
+  padding: 11px 10px;
+  background-color: #ececee;
+  border-color: #c6cdd3;
+  color: #7a818a;
+}
+.Authorization__button:hover, .Authorization__button.hover, .Authorization__button:focus, .Authorization__button.focus, a.Authorization__button:hover, a.Authorization__button.hover, a.Authorization__button:focus, a.Authorization__button.focus {
+  background-color: #cfd4d8;
+  border-color: #c6cdd3;
+  color: #535c69;
+}
+.Form__title, .EmployeeProfile__hint {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.Form__input, .EmployeeProfile__search {
+  border: 1px solid #ccc;
+  padding: 4px;
+}
+
+.EmployeeProfile__hint {
+  color: #888;
+}
+.Attachments__item:before {
+  background: url("/img/desk/icons/file-types.png") no-repeat;
+}
+
+.Page--authorization {
+  background: url("/assets/img/misc/pattern-brands.svg") 50% 50% no-repeat #536071;
+}
+.EmployeeProfile {
+  display: table;
+  width: 100%;
+}
+.EmployeeProfile__link {
+  color: #2f6ad9;
+  border-color: currentColor;
+}
+.EmployeeProfile__link:hover {
+  color: #1f4eb5;
+}
+@media (max-width: 640px) {
+  .EmployeeProfile {
+    display: block;
+  }
+}
+.HelperFromLib {
+  display: inline-block;
+  line-height: 1.2;
+}
+
+/*# sourceMappingURL=maps/main.css.map */

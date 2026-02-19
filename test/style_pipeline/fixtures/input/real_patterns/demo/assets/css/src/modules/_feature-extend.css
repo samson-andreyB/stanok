@@ -1,0 +1,20 @@
+.Form__title {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.Form__input {
+  border: 1px solid #ccc;
+  padding: 4px;
+}
+
+.EmployeeProfile {
+  &__hint {
+    @extend .Form__title;
+    color: #888;
+  }
+
+  &__search {
+    @extend .Form__input;
+  }
+}

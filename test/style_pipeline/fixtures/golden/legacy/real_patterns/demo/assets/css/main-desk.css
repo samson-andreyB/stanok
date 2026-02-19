@@ -1,0 +1,22 @@
+.Attachments__item:before {
+  background: url("/img/desk/icons/file-types.png") no-repeat;
+}
+
+.Page--authorization {
+  background: url("/assets/img/misc/pattern-brands.svg") 50% 50% no-repeat #536071;
+}
+.Form__title, .EmployeeProfile__hint {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.Form__input, .EmployeeProfile__search {
+  border: 1px solid #ccc;
+  padding: 4px;
+}
+
+.EmployeeProfile__hint {
+  color: #888;
+}
+
+/*# sourceMappingURL=maps/main-desk.css.map */

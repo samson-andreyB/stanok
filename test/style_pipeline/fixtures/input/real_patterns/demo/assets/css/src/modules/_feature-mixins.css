@@ -1,0 +1,11 @@
+.Authorization {
+  &__input {
+    border: 2px solid #d5dde0;
+    border-radius: 3px;
+    @mixin placeholder;
+  }
+
+  &__button {
+    @mixin btnDefault;
+  }
+}

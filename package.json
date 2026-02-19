@@ -17,7 +17,8 @@
     "test:unit": "cargo test --manifest-path src-tauri/Cargo.toml",
     "test:smoke": "node --test test/smoke/*.test.mjs",
     "test:e2e": "node --test test/e2e/*.test.mjs",
-    "test": "npm run test:unit && npm run test:smoke"
+    "test": "npm run test:unit && npm run test:smoke",
+    "test:style-pipeline": "node --test test/style_pipeline/*.test.mjs"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.0.0"

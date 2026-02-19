@@ -1,0 +1,12 @@
+.EmployeeProfile {
+  display: table;
+  width: 100%;
+
+  &__link {
+    @mixin link;
+  }
+
+  @media (max-width: $BP_MOBILE) {
+    display: block;
+  }
+}
