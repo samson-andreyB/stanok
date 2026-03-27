@@ -1,0 +1,334 @@
+/* CRM — Список компаний
+*******************************************************/
+a.crm-client-contacts-block-text-tel {
+	vertical-align: baseline;
+}
+
+
+/* Для кастомизации отображения наших сервисов
+*******************************************************/
+.s1 {
+	&--portalService {
+
+		#workarea-content {
+			background: none;
+		}
+
+		.workarea-content-paddings {
+			padding: 0;
+			height: 100%;
+		}
+	}
+
+	&--portalService&--portalCustomTheme {
+
+		.workarea-content-paddings {
+			padding-left: 0;
+			padding-right: 0;
+		}
+
+		.pagetitle {
+			padding-left: 0;
+		}
+
+		.pagetitle-item {
+			font: var(--ui-font-weight-medium) 25px / 34px var(--ui-font-family-secondary, var(--ui-font-family-open-sans));
+		}
+
+		.pagetitle-below {
+			border-top: 1px solid rgba(220,226,230,.5);
+		}
+	}
+}
+
+
+/* Логотипы
+ * НЕ ЗАБЫТЬ об авторизации, там тоже есть
+*******************************************************/
+.menu-items-header__logo::after {
+	content: none;
+}
+
+.logo-link {
+	position: relative;
+	overflow: visible;
+	background-image: svg('logo_160x26.svg', '[color]: #fff');
+	width: width('logo_160x26.svg');
+	height: height('logo_160x26.svg');
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+
+	&:after {
+		content: attr(data-branch);
+		position: absolute;
+		right: 0;
+		bottom: -18px;
+		width: 160px;
+		overflow: hidden;
+		color: #fff;
+		font-size: 13px;
+		line-height: 1.1;
+		font-family: "Arial", sans-serif;
+		text-align: right;
+		text-overflow: ellipsis;
+	}
+}
+
+.bitrix24-light-theme {
+	&.custom-test-theme {
+		--air-theme-bg-image-blurred: none;
+		background-color: #001330;
+		background-image: url("/img/themes/test/bg-dark.png");
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-attachment: fixed;
+	}
+}
+
+.bitrix24-dark-theme {
+	&.custom-test-theme {
+		--air-theme-bg-image-blurred: none;
+		background-color: #F6F9FA;
+		background-image: url("/img/themes/test/bg-light.png");
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-attachment: fixed;
+	}
+
+	.logo-link {
+		background-image: svg('logo_160x26.svg', '[color]: #555');
+
+		&:after {
+			color: #555;
+		}
+	}
+}
+
+
+/* Карточка клиента в CRM.
+ * Делаем возможность использовать выпадалки.
+ * Для этого контейнер нужно выводить на передний план.
+*******************************************************/
+.CrmEntityForeground {
+	z-index: 141;
+}
+
+
+/* Ненужные отступы у неудаляемых согласующих в заказах ИНТ. */
+.RequiredMatchingUsers {
+	.feed-add-post-destination {
+		padding-right:13px;
+	}
+}
+
+
+/* CRM - Написать письмо */
+.main-mail-form-field-from-copy-checkbox {
+	vertical-align: baseline;
+}
+
+
+/* Наведение у иконки "скопировать ссылку" в Заказах ИНТ */
+.page-link-btn:hover {
+	opacity: 1;
+}
+
+
+/* Скрываем Чат для обсуждения лида */
+.crm-entity-stream-section-live-im,
+/* Скрываем кнопки роботов в задачах */
+.tasks-counter-btn-container button.ui-btn.ui-btn-light-border.ui-btn-no-caps.ui-btn-themes.ui-btn-round.tasks-counter-btn,
+.task-detail-sidebar-item.task-detail-sidebar-item-robot,
+/* Скрываем виджет /crm/lead/kanban/ */
+.crm-kanban-item-contact-center {
+	display: none !important;
+	visibility: hidden;
+}
+
+
+/* Отступ для кнопки Создать в Youtrack в блоке task-detail-buttons */
+.task-detail-buttons {
+	.task-view-buttonset {
+		.btnDefault {
+			margin-left: 12px;
+		}
+	}
+}
+
+
+/* Отображение кнопок на узких экранах в блоке task-detail-buttons */
+@media screen and (max-width: 1390px) {
+	.task-detail {
+		.task-detail-buttons {
+			line-height: 1px;
+
+			.task-view-buttonset {
+				.ui-btn,
+				.btnDefault {
+					margin-y: 5px;
+				}
+			}
+		}
+	}
+}
+
+
+/* Журнал коммерческих документов - ссылка копирования в заголовке side-panel */
+.pagetitle {
+	.Icon {
+		width: 22px;
+		height: 32px;
+
+		&--pageLinkCopy {
+			background-position-y: 8px;
+		}
+	}
+
+	&-star + .Icon,
+	&-item + .Icon {
+		margin-left: 5px;
+	}
+}
+
+.bitrix24-light-theme .pagetitle {
+	.Icon--textCopy {
+		background-image: svg('copy_text_17x18', '[color]: #fff');
+	}
+
+	.Icon--pageLinkCopy {
+		background-image: svg('page_link_14x13', '[color]: #fff');
+	}
+}
+
+
+/* Отступ от чекбокса в создании события (Календарь) */
+.calendar-event-full-day input {
+	margin-right: 5px;
+}
+
+
+/*
+	Исправление отступов от чекбокса:
+	- Создание задачи
+	- Время главной странице
+*/
+input.crm-activity-planner-slider-header-control-checkbox,
+input.bx-im-upload-preview__control-compress-image-checkbox,
+.tm-popup-event-form-options input.checkbox,
+input.task-options-checkbox,
+input.task-edit-add-template-checkbox {
+	margin-top: 0.14em;
+	margin-right: 5px;
+}
+
+
+/*
+	Добавление задачи -> Дополнительно -> Гант -> Добавить предшествующую задачу
+	Исправление слипшихся полей
+*/
+@media screen and (max-width: 1299px) {
+	.task-options-task-other {
+		td {
+			padding: 7px;
+		}
+	}
+}
+
+
+/* Пункты меню -> свернуть/развернуть и кнопка редактирования */
+.menu-item-show-link {
+	right: 23px;
+	width: 10px;
+	padding: 0;
+
+	&:before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: svg('arrowRight_6x10.svg', '[color]: #fff') no-repeat center;
+		opacity: 0.5;
+	}
+
+	&-active {
+		&:before {
+			transform: rotate(180deg)
+		}
+	}
+}
+
+.menu-items-view-mode .menu-fav-editable-btn {
+	right: 0;
+}
+
+
+/* Профиль пользователя */
+.intranet-user-profile-column-left {
+	.intranet-user-profile-absence-int {
+		padding-top: 16px;
+		border-top: 1px solid #e8ecee;
+	}
+}
+
+.intranet-user-profile-column-right {
+	.ui-entity-editor-section-add-btn-container {
+		margin-bottom: 0;
+	}
+
+	.intranet-user-profile-grid-loadmore {
+		color: $C_LINK;
+		border-bottom-color: $C_LINK;
+
+		&:hover {
+			color: $C_LINK_HOVER;
+			border-bottom-color: $C_LINK_HOVER;
+		}
+	}
+
+	.ui-entity-editor-content-block {
+		.intranet-user-profile-grid {
+			margin-bottom: -15px;
+
+			.intranet-user-profile-grid-loadmore {
+				margin-top: 0;
+				margin-bottom: 18px;
+			}
+		}
+	}
+
+	.ui-entity-editor-section,
+	.ui-entity-editor-section-edit {
+		background: #fff;
+	}
+}
+
+
+/* Мессенджер - Скрытие "Пригласите команду" на главной чата (empty state) */
+.bx-im-embedded-chat-start__separator_text,
+.bx-im-embedded-chat-start__invite,
+.bx-im-embedded-promo-start__invite_item {
+	display: none !important;
+}
+
+
+/* Выпадающее окно с профилем пользователя в шапке - скрытие кнопок */
+.intranet-widget-skeleton-avatar__tools,
+.intranet-avatar-widget-main-tools__wrapper {
+	display: none;
+}
+
+
+/* Нажатие на стрелку в кнопке "Видеозвонок" / "Аудиозвонок" в чате - скрытие пунктов меню с телефонами */
+#bx-im-chat-header-call-menu {
+	.ui-popup-menu-item:not(.--default),
+	.ui-popup-menu-section {
+		display: none;
+	}
+}
+
+/* Наведение на строки в таблицах */
+.main-grid-row[data-nestedlinks-href] {
+	cursor: pointer;
+}

@@ -1,0 +1,7 @@
+.ErrorBox {
+	&--default {
+		padding: 90px;
+		background-color: #fff;
+		text-align: center;
+	}
+}

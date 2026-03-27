@@ -1,0 +1,950 @@
+@define-mixin ItemsFit {
+
+	.Item__box {
+		padding: .3em;
+		font-size: 90%;
+	}
+}
+
+.Items {
+	width: 100%;
+
+	&__sortArrow {
+		white-space: nowrap;
+
+		&:after {
+			content: '';
+			display: inline-block;
+			width: width('arrow_up_s.png');
+			height: height('arrow_up_s.png');
+			vertical-align: middle;
+			margin-top: -.19em;
+			margin-left: .4em;
+		}
+	}
+
+	&__sort {
+		cursor: pointer;
+
+		&:hover,
+		&--active {
+
+			&.Items__sort--asc {
+
+				.Items__sortArrow:after {
+					background-image: resolve('arrow_up_s.png');
+				}
+			}
+
+			&.Items__sort--desc {
+
+				.Items__sortArrow:after {
+					background-image: resolve('arrow_down_s.png');
+				}
+			}
+		}
+	}
+
+	&--filled {
+		background-color: #fff;
+	}
+
+	&--normalLink {
+		a {
+			color: #0069c4;
+		}
+	}
+
+	&--fs1 {
+		font-size: 14px;
+	}
+
+	&--fs13 {
+		font-size: 13px;
+	}
+
+	&--fs12 {
+		font-size: 12px;
+	}
+
+	&--topAlignment {
+		.Items__list {
+			.Item__box {
+				vertical-align: top;
+			}
+		}
+	}
+
+	&--noIndents {
+		.Item__box {
+			&:first-child {
+				padding-left: 0;
+			}
+
+			&:last-child {
+				padding-right: 0;
+			}
+		}
+	}
+}
+
+.Items th,
+.Items__header .Item__box {
+	border-bottom: 3px solid #eef2f4;
+	font-family: $F_OPENSANS_SEMIBOLD;
+	font-weight: normal;
+	font-size: 11px;
+	vertical-align: top;
+	text-transform: uppercase;
+}
+
+.Item {
+
+	&[data-nestedlinks-href] {
+		cursor: pointer;
+	}
+
+	.Items__list &__box {
+		border-bottom: 1px solid #edeef0;
+	}
+
+	.Items__list &:hover &__box {
+		background-color: #fcf9e6;
+	}
+
+	&--disable {
+		opacity: .6;
+	}
+
+	&--bold {
+		font-weight: bold;
+	}
+
+	&--error {
+		background-color: #feebeb;
+		
+		.Items__list &:hover .Item__box {
+			background-color: #fff5f5;
+		}
+	}
+
+	&__box {
+		box-sizing: border-box;
+		padding: 20px 10px;
+		text-align: left;
+
+		&:first-child {
+			padding-left: 20px;
+		}
+
+		&:last-child {
+			padding-right: 20px;
+		}
+
+		&--alignRight {
+			text-align: right;
+		}
+
+		&--alignCenter {
+			text-align: center;
+		}
+
+		&--breakWord {
+			word-break: break-word
+		}
+
+		&--narrow {
+			width: 1px;
+		}
+
+		&--wide {
+			width: 100%;
+		}
+
+		&--medium {
+			width: 50%;
+		}
+
+		&--maxWidth {
+			max-width: 200px;
+		}
+
+		&--minWidth {
+			min-width: 150px;
+		}
+
+		&--nowrap {
+			white-space: nowrap;
+		}
+
+		&--truncated {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			max-width: 1px;
+		}
+
+		&--100p {
+			width: 100%;
+		}
+
+		&--75p {
+			width: 75%;
+		}
+
+		&--50p {
+			width: 50%;
+		}
+
+		&--40p {
+			width: 40%;
+		}
+
+		&--35p {
+			width: 35%;
+		}
+
+		&--25p {
+			width: 25%;
+		}
+
+		&--20p {
+			width: 20%;
+		}
+
+		&--15p {
+			width: 15%;
+		}
+
+		&--10p {
+			width: 10%;
+		}
+
+		&--5p {
+			width: 5%;
+		}
+
+		&--1p {
+			width: 1%;
+		}
+
+		&--softNumCol {
+			color: #999;
+			width: 30px;
+		}
+
+		&--dateCol {
+			color: #999;
+			width: 84px;
+		}
+
+		&--deadlineCol {
+			color: #999;
+			width: 105px;
+		}
+
+		&--closeDateCol {
+			color: #999;
+			width: 105px;
+		}
+
+		&--deptCol {
+			width: 65px;
+		}
+
+		&--vacancyCol {
+			width: 40%;
+		}
+
+		&--requestStatusCol{
+			width: 135px;
+		}
+
+		&--relationsOrderType {
+			width: 125px;
+		}
+
+		&--relationsOrderNumber {
+			width: 170px;
+		}
+
+		&--numCol {
+			color: #999;
+			width: 30px;
+		}
+
+		&--titleCol {
+			width: 51%;
+		}
+
+		&--statusCol {
+			min-width: 120px;
+		}
+
+		&--managerCol {
+			color: #999;
+			min-width: 140px;
+		}
+
+		&--dateTimeCol {
+			color: #7f7f7f;
+			width: 150px;
+		}
+
+		&--doneCol {
+			font-weight: bold;
+			width: 210px;
+		}
+
+		&--commentCol {
+			width: 60%;
+		}
+
+		&--ratingCol {
+			min-width: 130px;
+		}
+
+		&--replacementMatrix {
+			width: 355px;
+			padding-right: 0;
+
+			.RichSelect {
+				min-width: 355px;
+			}
+		}
+
+		&--ok {
+			.Item__icon {
+				border-color: #34ae14;
+			}
+
+			&.Item__box--full {
+				.Item__icon {
+					background-color: #34ae14;
+				}
+			}
+		}
+
+		&--late {
+			.Item__icon {
+				border-color: #e00101;
+			}
+
+			&.Item__box--full {
+				.Item__icon {
+					background-color: #e00101;
+				}
+			}
+		}
+
+		&--move {
+			min-width: 20px;
+		}
+
+		&--drag {
+			min-width: 14px;
+		}
+
+		&--difficulty {
+			min-width: 16px;
+		}
+
+		&--number {
+			min-width: 32px;
+		}
+
+		&--noPaddingRigth {
+			padding-right: 0;
+		}
+
+		&--noPaddingLeft {
+			padding-left: 0;
+		}
+
+		.Icon--stage {
+			margin-left: 5px;
+			position: relative;
+			top: 1px;
+		}
+	}
+
+	&__aux {
+		display: block;
+		margin-top: 1em;
+
+		&--link {
+			margin-top: 2px;
+		}
+	}
+
+	/* Балансировщик */
+	&__balancer {
+		display: table-cell;
+		vertical-align: middle;
+		height: 70px; /* можно задать нужное значение в контексте */
+	}
+
+	&__minor {
+		margin-top: .3em;
+		color: #888;
+		font-size: 11px;
+	}
+
+	&__icon {
+		display: inline-block;
+		margin-top: -.17em;
+		vertical-align: middle;
+		box-sizing: border-box;
+		border-radius: 50%;
+		height: 1em;
+		width: 1em;
+		border: 2px solid transparent;
+	}
+}
+
+.Item__display {
+	vertical-align: middle;
+	opacity: .7;
+
+	&:hover {
+		opacity: 1;
+		cursor: pointer;
+	}
+
+	& + & {
+		margin-left: .2em;
+	}
+}
+
+.Items--narrowRows {
+	.Items__list .Item__box {
+		padding-top: 10px;
+		padding-bottom: 10px;
+	}
+
+	.Item__aux {
+		margin-top: .7em;
+	}
+}
+
+.Items__header {
+
+	.Item {
+		background-color: #fff;
+	}
+
+	&--narrow .Item__box {
+		padding-top: 8px;
+		padding-bottom: 8px;
+		font-size: 11px;
+	}
+}
+
+
+.Items--responsibleEmployees {
+
+	.Item__box--department {
+		width: 1px;
+		vertical-align: top;
+		padding-right: 40px;
+	}
+}
+
+
+.Item__control {
+	display: inline-block;
+	cursor: pointer;
+	vertical-align: middle;
+	
+	&--edit {
+		background-image: resolve('pencil.png');
+		width: width('pencil.png');
+		height: height('pencil.png');
+	}
+	
+	&--remove {
+		background-image: resolve('cross_m_grey.png');
+		width: width('cross_m_grey.png');
+		height: height('cross_m_grey.png');
+		
+		&:hover {
+			background-image: resolve('cross_m_red.png');
+		}
+	}
+}
+
+
+/* вывод группы полей формы */
+.Items--formFieldsList {
+	.Items__list {
+		display: table;
+		width: auto;
+
+		&:hover .Item:hover .Item__box {
+			background: none;
+		}
+
+		& + .pseudolink {
+			margin-top: 10px;
+		}
+
+		& + .Form__error {
+			margin-top: 0;
+
+			& + .Items__controls,
+			& + .pseudolink {
+				margin-top: 10px;
+			}
+		}
+
+		& + .Form__field {
+			margin-top: 7px;
+		}
+	}
+
+	.Items__header {
+		display: table-header-group;
+
+		& + .Items__group {
+			.Item__control--remove {
+				margin-top: 14px;
+			}
+		}
+
+		.Item__box {
+			padding-bottom: 0;
+			vertical-align: bottom;
+		}
+
+		.Form__title {
+			margin-bottom: 0;
+		}
+	}
+
+	.Items__group {
+		display: table-row-group;
+	}
+
+	.Items__header {
+		.Item__box {
+			font: inherit;
+			text-transform: none;
+		}
+	}
+
+	.Item {
+		display: table-row;
+
+		&__box {
+			display: table-cell;
+			vertical-align: top;
+			border-bottom: none;
+			padding-y: 7px;
+
+			&:first-child {
+				padding-left: 0;
+			}
+
+			&:last-child {
+				padding-right: 0;
+			}
+
+			&--formValue {
+				&:before {
+					content:'';
+					display: inline-block;
+					vertical-align: middle;
+					height: 39px;
+				}
+
+				.Form__value {
+					display: inline-block;
+					vertical-align: middle;
+				}
+			}
+
+			.Item__control--remove {
+				margin-top: 32px;
+			}
+		}
+	}
+
+	.RichSelect,
+	.Form__input {
+		width: 100%;
+	}
+
+	& + .Form__field {
+		margin-top: 20px;
+	}
+
+	.Form__field + &,
+	& + & {
+		margin-top: 10px;
+	}
+
+	.Form__field {
+		& + .Items__controls,
+		& + .Items__list {
+			margin-top: 7px;
+		}
+	}
+
+	.Plaques {
+		padding-top: 4px;
+	}
+
+	.Plaque {
+		margin-bottom: 1px;
+	}
+}
+
+.Items--commercialDocumentsJournal {
+	.Item__box {
+		vertical-align: top;
+	}
+}
+
+.Items--relationsOrder {
+	display: table;
+	width: auto;
+
+	.Items__list {
+		display: table-row-group;
+
+		.Item__box {
+			.Item__control--remove {
+				margin-top: 14px;
+			}
+		}
+	}
+}
+
+
+/* Хозяйственно-бытовые заявки */
+.Items--householdRequest {
+	.Items__list {
+		.Item__box {
+			&--status {
+				position: relative;
+				padding-left: 30px;
+
+				& + .Item__box {
+					padding-left: 20px;
+				}
+
+				.PieProgress {
+					position: absolute;
+					left: 10px;
+					top: 50%;
+					margin-top: -6px;
+				}
+			}
+		}
+	}
+}
+
+
+.Items--sortable {
+	overflow-x: hidden;
+
+	.Items__header {
+		.Item {
+			border-bottom: 3px solid #eef2f4;
+		}
+	}
+
+	.Items__list {
+		position: relative;
+
+		.Item {
+			&:hover {
+				background-color: #fcf9e6;
+
+				.Item__box {
+					background: none;
+				}
+			}
+
+			&--error {
+				&:hover {
+					background-color: #fff5f5;
+				}
+			}
+
+			& + .Item {
+				margin-top: -1px;
+				border-top: 1px solid #edeef0;
+			}
+		}
+
+		.Item__box--drag {
+			cursor: move;
+		}
+	}
+
+	.Item__box {
+		border-bottom: none;
+		vertical-align: middle;
+		box-sizing: content-box;
+		flex-shrink: 0;
+
+		&--shrink {
+			flex-shrink: 1;
+		}
+
+		&--grow {
+			flex-grow: 1;
+		}
+	}
+
+	.Item {
+		display: flex;
+		align-items: center;
+
+		&--sorting {
+			width: 100%;
+			background-color: #fff;
+			box-shadow: 0 0px 7px rgba(0,0,0,.4);
+			position: absolute;
+			border-bottom: 1px solid #edeef0;
+			border-top: 1px solid #edeef0;
+			z-index: 1;
+		}
+
+		&__drag {
+			background-image: resolve('draggable.png');
+			width: width('draggable.png');
+			height: height('draggable.png');
+			display: inline-block;
+		}
+	}
+}
+
+
+/* Панель массовых операций */
+.Items--bulkOperations {
+	border-top: 3px solid #eef2f4;
+	width: auto;
+	padding-right: 8px;
+	box-sizing: border-box;
+
+	.Items__list {
+		display: table;
+		width: 100%;
+
+		&:hover .Item:hover .Item__box {
+			background: none;
+		}
+	}
+
+	&.Items--fixed {
+		box-shadow: 0 -2px 8px rgba(83, 92, 105, .2);
+		position: fixed;
+		bottom: 0;
+		right: 81px;
+		left: 240px;
+	}
+
+	.Item {
+		display: table-row;
+
+		&__box {
+			display: table-cell;
+			vertical-align: middle;
+			border-bottom: none;
+			padding: 16px 7px 26px 7px;
+
+			&:first-child {
+				padding-left: 15px;
+			}
+
+			&--marked {
+				font-size: 11px;
+				text-align: right;
+				width: 95px;
+
+				.Form__title {
+					margin-bottom: 0;
+					font-size: 11px;
+				}
+			}
+
+			&--plaques {
+				width: 614px;
+			}
+
+			&--datePicker {
+				width: 179px;
+			}
+		}
+	}
+
+	.Plaques {
+		padding-top: 4px;
+		padding-bottom: 0px;
+		min-width: 275px;
+	}
+
+	.Plaque__label {
+		padding-top: 6px;
+		padding-bottom: 5px;
+	}
+
+	.Form {
+		&__field {
+			&--checkbox {
+				font-size: 11px;
+				min-height: 0;
+			}
+
+			&--disabled {
+				opacity: .5;
+			}
+		}
+
+		&__error {
+			position: absolute;
+			top: 100%;
+		}
+
+		&__datePicker--time {
+			.Form__input {
+				height: 36px;
+			}
+		}
+	}
+
+	.TipSelect {
+		width: 224px;
+	}
+}
+
+
+/* Задачи CRM ОПТ */
+.Items--crmTasks {
+	min-width: 830px;
+
+	.Item {
+		&--disable {
+			opacity: .6;
+
+			.Badge {
+				background-color: #666;
+			}
+		}
+	}
+
+	p {
+		margin: 0;
+
+		& + p {
+			margin-top: 8px;
+		}
+	}
+}
+
+.Items--consumableReplacement {
+	p {
+		margin: 0;
+
+		& + p {
+			margin-top: 10px;
+		}
+	}
+}
+
+.Items--consumables {
+	.Item__box {
+		&--quantity {
+			width: 85px;
+		}
+	}
+}
+
+.Items--developmentReport {
+	.Item {
+		&--total {
+			td {
+				border-top: 2px solid #eef2f4;
+				font-weight: bold;
+			}
+		}
+	}
+}
+
+.Items--ordersPrioritiesInt {
+	.Item__box {
+		&--project,
+		&--responsible {
+			min-width: 100px;
+		}
+
+		&--number {
+			display: flex;
+			align-items: center;
+
+			.Icon {
+				margin-x: 10px;
+			}
+
+			.icon.specification {
+				margin-top: 0;
+			}
+		}
+
+		@media screen and (max-width: 1400px) {
+			&--number {
+				flex-direction: column;
+				align-items: flex-start;
+
+				.Icon {
+					margin-x: 0;
+					margin-top: 5px;
+					margin-bottom: 8px;
+				}
+			}
+		}
+	}
+
+	&.Items--sortable {
+		.Item__box--drag {
+			cursor: default;
+		}
+
+		.Item--error {
+			.Item__box--drag {
+				cursor: move;
+			}
+		}
+	}
+}
+
+.Items--ordersPrioritiesErp {
+	&.Items--sortable {
+		.Item__box--drag {
+			cursor: default;
+
+			.Item__drag {
+				cursor: move;
+			}
+		}
+	}
+}
+
+.Items--withoutHighlighting .Items__list .Item:not([data-nestedLinks-href]):hover .Item__box {
+	background: none;
+}
+
+.Items--businessTrip {
+	$width: 200px;
+
+	.Form__input,
+	.Form__datePicker--time {
+		width: $width;
+	}
+
+	.Form__error {
+		max-width: $width;
+	}
+}

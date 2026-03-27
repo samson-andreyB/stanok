@@ -1,0 +1,40 @@
+/* Сообщение
+***********************************************************/
+
+.Message {
+	font-family: $F_ARIAL;
+
+	&--progress {
+		padding: 70px 0 0;
+		color: $C_LABEL;
+
+		.Message__header {
+			margin: 0 auto .55em;
+			max-width: 500px;
+			font-size: 1.1em;
+			text-align: center;
+		}
+
+		.ProgressBar {
+			margin-x: auto;
+		}
+	}
+
+	&--hint {
+		margin: 0;
+		padding: 10px 20px 9px;
+		max-width: none;
+		line-height: 18px;
+		font-size: 14px;
+		background-color: #efefef;
+		color: $C_TEXT;
+		background-repeat: no-repeat;
+
+		&.Message--success {
+			background-color: #f4fed5;
+			padding-left: 37px;
+			background-image: resolve('success.png');
+			background-position: 12px 10px;
+		}
+	}
+}

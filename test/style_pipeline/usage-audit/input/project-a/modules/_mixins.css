@@ -1,0 +1,53 @@
+/* Примеси
+***********************************************************/
+
+@define-mixin link { /* Обычная ссылка */
+	color: $C_LINK;
+	border-color: currentColor; /* применится к псевдоссылкам */
+
+	&:hover {
+		color: $C_LINK_HOVER;
+	}
+}
+
+@define-mixin linkMasked { /* Ссылка, замаскированная под текст */
+	color: inherit;
+
+	&:hover {
+		color: $C_LINK;
+	}
+}
+
+@define-mixin caret { /* Треугольничек для выпадалки */
+	display: inline-block;
+	padding: 2px;
+	height: 10px;
+	width: 10px;
+	text-align: center;
+	overflow: hidden;
+	margin-bottom: -1px;
+
+	&:after {
+		content: '';
+		display: inline-block;
+		vertical-align: middle;
+		border: 5px solid transparent;
+		border-top-color: $C_LINK;
+	}
+
+	&:hover {
+
+		&:after {
+			border-top-color: $C_LINK_HOVER;
+		}
+	}
+}
+
+@define-mixin placeholder {
+	$placeholderColor: #a5a5a5;
+
+	&::-webkit-input-placeholder { color: $placeholderColor; }
+	&:-moz-placeholder { color: $placeholderColor; }
+	&::-moz-placeholder { color: $placeholderColor; }
+	&:-ms-input-placeholder { color: $placeholderColor; }
+}

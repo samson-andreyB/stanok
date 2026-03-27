@@ -1,0 +1,78 @@
+.HelpDesk {
+	font-family: $F_OPENSANS_REGULAR;
+
+	&__box {
+		float: left;
+		height: 100%;
+
+		&--menu {
+			width: 232px;
+			background-color: #eef2f4;
+		}
+
+		&--content {
+			hr {
+				border: 1px solid #f7f7f7;
+				border-width: 1px 0 0;
+				margin: 0;
+			}
+		}
+	}
+}
+
+.HelpDeskMenu {
+	&__header {
+		border-bottom: 1px solid #e7eaec;
+		font: 22px/22px $F_OPENSANS_BOLD;
+		padding: 20px 37px;
+		margin-bottom: 20px;
+	}
+
+	&__list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	&__link {
+		display: block;
+		text-decoration: none;
+		color: #535c69;
+		padding: 5px 11px 5px 31px;
+		line-height: 25px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+
+		a&:hover {
+			background-color: #e3e8eb;
+			color: #535c69;
+		}
+	}
+
+	&__active {
+		background-color: #717a84;
+		border-radius: 13px;
+		color: #fff;
+		padding: 0 11px;
+		font-weight: bold;
+		display: inline-block;
+		margin: 5px 0;
+	}
+
+	&__list.lvl-1 &__link:not(&__active) { padding-left: 31px; }
+	&__list.lvl-2 &__link:not(&__active) { padding-left: 51px; }
+
+	& .lvl-1 &__active { margin-left: 20px; }
+	& .lvl-2 &__active { margin-left: 40px; }
+}
+
+.HelpDeskContent {
+	&__header {
+		border-bottom: 1px solid #f7f7f7;
+		font: 28px/28px $F_OPENSANS_LIGHT;
+		padding: 17px 37px;
+		text-align: center;
+	}
+}
+

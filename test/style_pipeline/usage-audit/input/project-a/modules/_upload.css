@@ -1,0 +1,100 @@
+/* Upload
+------------------------------------------------------------------------------*/
+
+.Upload {
+	display: inline-block;
+	width: 90%;
+
+	&.UploadFileContainer {
+		border: 1px dashed transparent;
+		padding: 5px;
+		margin: -5px;
+		transition: background-color .2s linear,border .2s linear;
+
+		&--highlight {
+			border-color: #bbb;
+			background: #fffcee;
+		}
+	}
+
+	&__info {
+		color: $C_AUX;
+		font-size: .9em;
+		margin-left: 10px;
+	}
+
+	&__input {
+		display: none;
+	}
+
+	&__btn {
+		@mixin btnDefault;
+		@mixin btnOutline;
+		
+		&:before {
+			content: "";
+			background-image: resolve('clip_grey.png');
+			width: width('clip_grey.png');
+			height: height('clip_grey.png');
+			display: inline-block;
+			vertical-align: middle;
+			margin-top: -.3em;
+			margin-right: .4em;
+			opacity: .7;
+		}
+		&:hover:before,
+		&.hover:before,
+		&:focus:before,
+		&.focus:before {
+			opacity: 1;
+		}
+		&:active:before,
+		&.active:before {
+			background-image: resolve('clip_white.png');
+			width: width('clip_white.png');
+			height: height('clip_white.png');
+			opacity: 1;
+		}
+	}
+
+	&__list {
+		&--ordered {
+			color: $C_AUX;
+			padding-left: 0;
+			list-style-position: inside;
+		}
+
+		color: $C_TEXT;
+		margin-bottom: 0;
+		margin-top: .5em;
+
+		&:has(.UploadFile__name:not(:empty)) {
+			margin-bottom: .5em;
+		}
+
+		& > .UploadFile:not(:last-child) {
+			margin-bottom: .3em;
+		}
+	}
+}
+
+.UploadFile {
+	&__name {
+		color: $C_LINK;
+	}
+	&__remove {
+		background-image: resolve('cross_s_grey.png');
+		width: calc(width('cross_s_grey.png') + 10px);
+		height: calc(height('cross_s_grey.png') + 10px);
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+		display: inline-block;
+		vertical-align: middle;
+		margin-top: -.2em;
+		cursor: pointer;
+	}
+	&__remove:hover,
+	&__remove.hover {
+		background-image: resolve('cross_s_red.png');
+	}
+}

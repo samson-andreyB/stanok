@@ -1,0 +1,40 @@
+$error: #d0011b;
+$bgAccent: #f0f4f5;
+
+/* цвет текста */
+$C_TEXT: #2e2e2e;
+$C_AUX: #7f7f7f;
+$C_LABEL: #535c69;
+$C_ERROR: $error;
+$C_ACCENT: $C_ERROR;
+
+/* Цвета событий в календаре */
+$absenceAll: #f2f2f2;
+$absenceVacation: #bfdb6a;
+$absenceBS: #f7dc4a;
+$absenceSick: #f6ab61;
+$absenceAbsenteeism: #ec5151;
+$absenceBusinessTrip: #eb9bbf;
+$absencePersonalCalendar: #bda3e9;
+$absenceMaternityLeave: #9bb2ec;
+$absencePregnancy: #c4d0eb;
+$absenceOther: #94efe1;
+$absenceLunch: #70a8fc;
+
+
+/* Цвета статусов сотрудников */
+$C_ONLINE: #afe22a;
+$C_OUTSIDE_OFFICE: #b2bdca;
+
+
+/* Цвет ссылок */
+$C_LINK: #2067b0;
+$C_LINK_HOVER: #4da1f8;
+
+
+/* Шрифты */
+$F_OPENSANS_LIGHT: "OpenSans-Light", Arial, Helvetica, sans-serif;
+$F_OPENSANS_REGULAR: "OpenSans-Regular", Arial, Helvetica, sans-serif;
+$F_OPENSANS_SEMIBOLD: "OpenSans-Semibold", Arial, Helvetica, sans-serif;
+$F_OPENSANS_BOLD: "OpenSans-Bold", Arial, Helvetica, sans-serif;
+$F_ARIAL: Arial, "Helvetica Neue", Helvetica, sans-serif;

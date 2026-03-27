@@ -1,0 +1,23 @@
+/* PROGRESS-BAR
+------------------------------------------------------------------*/
+
+.ProgressBar {
+
+	&--default {
+		width: 390px;
+		box-sizing: border-box;
+		border: 1px solid currentColor;
+		color: #2fc7f7;
+
+		&,
+		.ProgressBar__done {
+			border-radius: 1em;
+		}
+
+		.ProgressBar__done {
+			height: 12px;
+			margin: -1px 0 -1px -1px;
+			background-color: currentColor;
+		}
+	}
+}

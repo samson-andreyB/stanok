@@ -1,0 +1,18 @@
+.Filter {
+	display: table-cell;
+
+	&__label {
+		margin-top: -2px;
+		color: #7f7f7f;
+	}
+
+	&__value {
+		margin-top: 1px;
+		color: $C_TEXT;
+	}
+
+	&__accent {
+		border-bottom: 1px dotted currentColor;
+		cursor: help;
+	}
+}

@@ -1,0 +1,6 @@
+.Items--documentsWidget {
+	.Item__box--icon {
+		padding-right: 0;
+		width: 1px;
+	}
+}

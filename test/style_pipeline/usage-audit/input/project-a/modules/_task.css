@@ -1,0 +1,37 @@
+.Task {
+	background-color: #f8f3da;
+	padding: 15px;
+
+	& + & {
+		margin-top: .5em;
+	}
+	
+	&__group {
+		display: table;
+	}
+
+	&__box {
+		display: table-cell;
+		vertical-align: top;
+
+		&--hint {
+			padding-right: .5em;
+
+			&:after {
+				content: "";
+				background-image: resolve('warning.png');
+				width: width('warning.png');
+				height: height('warning.png');
+				display: inline-block;
+			}
+		}
+
+		&--label {
+			padding-right: .4em;
+		}
+
+		&--value {
+			color: $error;
+		}
+	}
+}

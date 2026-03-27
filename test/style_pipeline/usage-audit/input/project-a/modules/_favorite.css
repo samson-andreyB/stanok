@@ -1,0 +1,90 @@
+.Favorite {
+	position: absolute;
+	top: -1px;
+	right: -16px;
+	overflow: hidden;
+	width: 65px;
+	height: 65px;
+	
+	.Form__header & {
+		top: 100%;
+	}
+
+	&__wrapper {
+		background: transparent;
+		border: 46px solid transparent;
+		border-right: 0;
+		cursor: pointer;
+		width: 0;
+		height: 0;
+		transform: rotate(-45deg);
+		transition: all .2s linear;
+		opacity: .5;
+		position: absolute;
+		top: -30px;
+		right: -7px;
+		z-index: 1;
+
+		&:hover {
+			border-left: 46px solid #e3eaed;
+			background: #e3eaed;
+			opacity: 1;
+		}
+
+		&--active {
+			background: #f9a800;
+			border-left: 46px solid #f9a800;
+
+			.Favorite__star {
+				border-top: 6px solid #fff;
+
+				&:before,
+				&:after {
+					border-top: 6px solid #fff;
+				}
+			}
+
+			&:hover {
+				border-left: 46px solid #f9a800;
+				background: #f9a800;
+			}
+		}
+	}
+
+	&__star {
+		border-right: 8px solid transparent;
+		border-top: 6px solid #7e8690;
+		border-left: 8px solid transparent;
+		display: block;
+		width: 0;
+		height: 0;
+		margin: auto;
+		transform: rotate(45deg);
+		position: relative;
+		top: -2px;
+		left: -37px;
+
+		&:before,
+		&:after {
+			content: "";
+			border-right: 8px solid transparent;
+			border-top: 6px solid #7e8690;
+			border-left: 8px solid transparent;	
+			display: block;
+			width: 0;
+			height: 0;
+			position: absolute;
+			top: -6px;
+			left: -8px;
+		}
+
+		&:before {
+			transform: rotate(-71deg);
+			z-index: 4;
+		}
+
+		&:after {
+			transform: rotate(71deg);
+		}	
+	}
+}

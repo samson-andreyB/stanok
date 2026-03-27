@@ -1,0 +1,586 @@
+/* Печатный документ (пока что зависит от /css/main.css)
+***********************************************************/
+
+.PrintedDocuments--unified {
+	font-size: 16px;
+
+	.PrintedDocumentsButtons {
+		box-sizing: border-box;
+	}
+
+	/** Fix for Chrome issue #273306 **/
+	@media print {
+		width: 210mm;
+
+		&.PrintedSheet--landscape {
+			width: 297mm;
+		}
+	}
+
+	@media print {
+		&,
+		.Page__main,
+		.Page__wrapper {
+			height: 100%;
+		}
+
+		.PrintedDocuments__wrapper {
+			position: relative;
+		}
+	}
+
+	.PrintedSheet,
+	.PrintedDocuments__wrapper {
+		padding: 60px;
+
+		@media screen {
+			width: 210mm;
+			height: 297mm;
+
+			&.PrintedSheet--landscape {
+				.PrintedSheet {
+					width: 297mm;
+					height: 210mm;
+				}
+			}
+		}
+
+		@media print {
+			padding: 60px;
+		}
+	}
+
+	.PrintedDocuments__wrapper + .PrintedDocuments__wrapper {
+		@media screen {
+			margin-top: 30px;
+		}
+	}
+
+	.PrintedDocumentsHeader {
+		table-layout: fixed;
+	}
+
+	.PrintedDocumentsHeader__box {
+		width: 50%;
+		box-sizing: border-box;
+		text-align: left;
+	}
+
+	.PrintedDocumentsHeader__box--right {
+		@media print {
+			padding-left: 20px;
+		}
+	}
+
+	.PrintedDocumentsHeader__paragraph + .PrintedDocumentsHeader__paragraph {
+			margin-top: 1em;
+		}
+
+	.PrintedDocumentsHeader__line + .PrintedDocumentsHeader__line {
+			margin-top: 1px;
+		}
+
+	.PrintedDocumentsHeader__company {
+		font-weight: bold;
+	}
+
+	.PrintedDocumentsText {
+		margin-top: 90px;
+	}
+
+	.PrintedDocumentsText__header {
+		font-weight: bold;
+		color: #000;
+	}
+
+	.PrintedDocumentsText__paragraph {
+		font: inherit;
+
+		&--center {
+			text-align: center;
+		}
+	}
+
+	.PrintedDocumentsText__paragraph + .PrintedDocumentsText__paragraph {
+			margin-top: .7em;
+		}
+
+	.PrintedDocumentsFooter {
+		padding: 0 40px 0 60px;
+		bottom: 80px;
+
+		@media print {
+			padding: 0 50px;
+		}
+	}
+
+	.PrintedDocumentsFooter__item + .PrintedDocumentsFooter__item {
+		margin-top: 40px;
+	}
+
+	.PrintedDocumentsFooter__label {
+		margin-bottom: 20px;
+	}
+
+	.PrintedDocumentsFooter__group {
+		display: table;
+		table-layout: fixed;
+		width: 100%;
+	}
+
+	.PrintedDocumentsFooter__box {
+		vertical-align: bottom;
+	}
+
+	.PrintedDocumentsFooter__box {
+		width: auto;
+	}
+
+	.PrintedDocumentsFooter__post + .PrintedDocumentsFooter__name {
+			margin-top: .5em;
+		}
+
+	.PrintedDocument--multipage {
+		@media print {
+			padding: 0 50px;
+			font-size: 16px;
+			line-height: 1.4em;
+		}
+
+		@media screen {
+			position: relative;
+			box-sizing: content-box;
+			padding: 40px;
+			margin: 30px auto 50px;
+			width: 608px;
+			min-height: 66em;
+			font-size: 14px;
+			line-height: 1.5em;
+			background-image: resolve('line_dotted_pattern.png');
+			background-position: 0 40px;
+			background-color: #fff;
+			box-shadow: 0 10px 30px rgba(0,0,0,.1);
+
+			&:before,
+			&:after {
+				content: '';
+				display: block;
+				position: absolute;
+				left: 0;
+				width: 100%;
+				height: 40px;
+				background-color: #fff;
+			}
+
+			&:before {
+				top: 0;
+			}
+
+			&:after {
+				bottom: 1px;
+			}
+		}
+	}
+}
+
+
+
+.PrintedDocuments__impartible,
+.PrintedDocument__impartible {
+	page-break-inside: avoid;
+}
+
+
+.RequestFin {
+	.PrintedDocuments__wrapper {
+		box-sizing: content-box;
+		width: 700px;
+		height: auto;
+		min-height: 983px;
+		padding: 40px 40px 40px 30px;
+		font-size: 15px;
+
+		@media print {
+			padding: 0 20px;
+		}
+	}
+
+	h1, h4 {
+		margin: .5em 0;
+		font-size: 1em;
+	}
+
+	p {
+		margin: .5em 0;
+	}
+
+	&__header {
+		display: table;
+		width: 100%;
+	}
+
+	&__page,
+	&__title,
+	&__deadline {
+		display: table-cell;
+	}
+
+	&__page,
+	&__deadline {
+		text-align: right;
+	}
+
+	&__specs {
+		line-height: 1.8em;
+		margin-top: 10px;
+
+		.RequestFin__type,
+		.RequestFin__value {
+			display: table-cell;
+		}
+	}
+
+	&__specsItem {
+		display: table;
+		width: 100%;
+	}
+
+	&__type {
+		width: 34.33%;
+	}
+
+	&__reason {
+		margin-top: 1.8em;
+		line-height: 1.1em;
+	}
+
+	&__approval {
+		margin-top: 1.8em;
+	}
+
+	&__created {
+		margin-top: 50px;
+
+		.RequestFin__name {
+			line-height: 1.1em;
+		}
+	}
+
+	&__persons {
+		font-size: 12px;
+
+		&:after {
+			content: '';
+			display: block;
+			clear: both;
+		}
+
+		&--approval {
+			margin-top: 30px;
+		}
+
+		&--prepared {
+			margin-top: 50px;
+
+			.RequestFin__person {
+				width: 31.33%;
+				margin-right: 3%;
+			}
+		}
+	}
+
+	&__col {
+		float: left;
+		width: 31.33%;
+	}
+
+	&__col + &__col {
+		margin-left: 3%;
+	}
+
+	&__person {
+		display: inline-block;
+		vertical-align: top;
+		margin-bottom: .5em;
+		page-break-inside: avoid;
+		break-inside: avoid-column;
+	}
+
+	&__name,
+	&__title {
+		font-weight: bold;
+	}
+
+	&__value {
+		&--accent {
+			font-weight: bold;
+		}
+
+		&--sum {
+			font-size: 110%;
+		}
+	}
+
+	&__person,
+	&__action {
+		line-height: 1.5em;
+	}
+
+	&__post,
+	&__phone {
+		line-height: 1em;
+	}
+
+	&__name {
+		font-size: 15px;
+	}
+
+	&__phone {
+		margin: .2em 0;
+	}
+
+	&__agree {
+		margin-top: 5px;
+	}
+
+	&__sign {
+		display: inline-block;
+		width: 135px;
+		border-bottom: 1px solid #000;
+	}
+
+	&__comment {
+		margin-top: 1.1em;
+		font-size: 15px;
+		line-height: 1.3;
+
+		& + & {
+			margin-top: 1.65em;
+		}
+
+		p {
+			margin: .35em 0;
+		}
+
+		.RequestFin__title {
+			display: block;
+			font-size: 13px;
+			margin-top: .35em;
+		}
+
+		&--empty {
+			font-size: 15px;
+			margin-top: 1.1em;
+		}
+
+		table {
+			font-size: 13px;
+			border: 1px solid #bbb;
+			border-radius: 3px;
+			border-spacing: 0;
+			margin: .35em 0;
+		}
+
+		td {
+			border-top: 1px solid #bbb;
+			padding: 4px 8px;
+
+			&:first-child {
+				padding-left: 12px;
+			}
+
+			&:last-child {
+				padding-right: 12px;
+			}
+		}
+
+		tr:first-child {
+			td {
+				border-top: none;
+			}
+		}
+	}
+
+	&__dateTime {
+		font-size: 13px;
+		margin-left: .15em;
+	}
+
+	&__attachments {
+		margin-top: .1em;
+	}
+
+	&__attachment {
+		display: inline-block;
+		font-size: 13px;
+
+		& + & {
+			margin-left: 1.35em;
+		}
+	}
+
+	&__attachedDocument {
+		vertical-align: middle;
+		margin-right: .1em;
+		margin-top: -.3em;
+	}
+
+	&__attachedImage {
+		vertical-align: middle;
+		margin-top: -.1em;
+
+		& + & {
+			margin-left: .1em;
+		}
+	}
+
+	&__quote {
+		font-size: 15px;
+		line-height: 1.3;
+		position: relative;
+		max-width: 610px;
+		border-left: 1px solid #bbb;
+		padding-left: 6px;
+		margin-left: 14px;
+		margin-y: .65em;
+
+		&--document {
+			margin-left: 0;
+			margin-top: .2em;
+			padding-left: 10px;
+			max-width: 520px;
+		}
+
+		.RequestFin__quote {
+			margin-left: 9px;
+			margin-top: .25em;
+		}
+	}
+
+	&__quoteIcon {
+		position: absolute;
+		top: -1px;
+		left: -10px;
+	}
+}
+
+
+
+.DocumentDismissal {
+	font-family: Arial, sans-serif;
+
+	&__logo {
+		margin-bottom: 5em;
+	}
+
+	&__title {
+		margin-bottom: .85em;
+		font-size: 1.4em;
+		font-weight: bold;
+	}
+
+	&__paragraph {
+		font-size: 1.1em;
+		line-height: 1.4;
+	}
+
+	&__qrCode {
+		display: block;
+		width: 130px;
+		height: 130px;
+		margin: 4em auto;
+	}
+
+	.Instruction {
+		margin-bottom: 3em;
+
+		&__list {
+			margin-top: .45em;
+			margin-left: 0;
+			padding-left: 0;
+			list-style-position: inside;
+		}
+	}
+}
+
+
+.PrintedSheet {
+	position: relative;
+	box-sizing: border-box;
+	margin: 0;
+	overflow: hidden;
+	page-break-after: always;
+
+	@media screen {
+		margin-x: auto;
+		box-shadow: 0 10px 30px rgba(0, 0, 0, .1);
+		background-color: #fff;
+	}
+}
+
+
+.PrintedDocuments--a4 {
+	@media screen {
+		.PrintedSheet {
+			width: 210mm;
+			height: 296mm;
+		}
+
+		&.PrintedSheet--landscape {
+			.PrintedSheet {
+				width: 297mm;
+				height: 209mm;
+			}
+		}
+	}
+
+	/** Fix for Chrome issue #273306 **/
+	@media print {
+		width: 210mm;
+
+		&.PrintedSheet--landscape {
+			width: 297mm;
+		}
+	}
+}
+
+
+.PrintedDocuments--pdfPreview {
+	margin: 0;
+
+	.PrintedDocuments {
+		&Buttons {
+			padding-y: 20px;
+		}
+
+		&__wrapper {
+			padding: 0;
+			width: 100%;
+			height: calc(100vh - 81px);
+		}
+
+		&__object {
+			display: block;
+		}
+
+		&__objectMessage {
+			text-align: center;
+			max-width: 300px;
+			padding: 30px;
+			margin-x: auto;
+		}
+	}
+}
+
+
+@media print {
+	html,
+	.PrintedDocuments,
+	.PrintedDocuments__wrapper {
+		height: 100%;
+	}
+
+	.PrintedDocuments__wrapper {
+		position: relative;
+	}
+}

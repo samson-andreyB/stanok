@@ -1,0 +1,13 @@
+.TipTipContent--previousValue {
+	.TipTipContent__header {
+		color: #a3a9b1;
+		font-size: 12px;
+		line-height: 20px;
+	}
+
+	.TipTipContent__description {
+		color: #000;
+		font-size: 12px;
+		line-height: 16px;
+	}
+}

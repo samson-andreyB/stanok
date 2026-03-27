@@ -1,0 +1,24 @@
+.pseudolink--add {
+	border-bottom-width: 0;
+	cursor: pointer;
+	user-select: none;
+
+	&:before {
+		content: '';
+		display: inline-block;
+		width: width('add.png');
+		height: height('add.png');
+		margin-top: -.16em;
+		margin-right: .3em;
+		vertical-align: middle;
+		background-image: resolve('add.png');
+	}
+
+	&:hover {
+		border-bottom-width: 0;
+
+		&:before {
+			background-image: resolve('add-red.png');
+		}
+	}
+}

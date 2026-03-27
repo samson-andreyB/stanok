@@ -1,0 +1,30 @@
+/* ANIMATION
+------------------------------------------------------------------*/
+
+@keyframes Spinner {
+	0%   { transform: rotate(0deg) }
+	100% { transform: rotate(360deg) }
+}
+
+@keyframes Worm {
+	0% {
+		stroke-dasharray: 250%;
+		stroke-dashoffset: 0%;
+	}
+	25% {
+		stroke-dasharray: 250%;
+		stroke-dashoffset: -250%;
+	}
+	50% {
+		stroke-dasharray: 250%;
+		stroke-dashoffset: -500%;
+	}
+	75% {
+		stroke-dasharray: 250%;
+		stroke-dashoffset: -750%;
+	}
+	100% {
+		stroke-dasharray: 250%;
+		stroke-dashoffset: -1000%;
+	}
+}

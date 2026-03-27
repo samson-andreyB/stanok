@@ -1,0 +1,76 @@
+.ReplacementMatrix--default {
+	.ReplacementMatrix__header {
+		background-color: #FFE3AD;
+		background-image: linear-gradient(to bottom, #FFEBC4, #FFDD9C);
+	}
+
+	.ReplacementMatrix__description {
+		padding: 3px 15px 8px;
+		line-height: 1.15;
+	}
+
+	.ReplacementMatrix__field {
+		&--activity {
+			max-width: 610px;
+			width: 100%;
+		}
+	}
+
+	.ReplacementMatrix__remove {
+		cursor: pointer;
+
+		&:before {
+			content: '';
+			display: inline-block;
+			width: 15px;
+			height: 15px;
+			vertical-align: middle;
+			background-image: resolve('cross_s_grey.png');
+			background-position: 50% 50%;
+			background-repeat: no-repeat;
+		}
+
+		&:hover:before {
+			background-image: resolve('cross_s_red.png');
+		}
+	}
+
+	.ReplacementMatrix__controls {
+		padding-top: 15px;
+		padding-bottom: 25px;
+
+		.pseudolink--add {
+			font-weight: bold;
+			font-size: 13px;
+		}
+	}
+
+	.ReplacementMatrix__select {
+		position: relative;
+		display: inline-block;
+		box-sizing: border-box;
+		border: 1px solid #b9bcbe;
+		border-radius: .14em;
+		width: 298px;
+		padding: .35em;
+		padding-right: 1.4em;
+		vertical-align: middle;
+		overflow: hidden;
+		color: #5b5b5b;
+		line-height: 1.1;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		background-color: #fff;
+		cursor: pointer;
+		user-select: none;
+
+		&:after {
+			content: '';
+			position: absolute;
+			top: calc(50% - .14em);
+			right: .28em;
+			border: .35em solid transparent;
+			border-top-color: #000;
+		}
+	}
+}

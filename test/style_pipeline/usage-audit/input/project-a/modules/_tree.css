@@ -1,0 +1,70 @@
+/* Дерево
+***********************************************************/
+
+.Tree {
+	padding-left: 18px;
+	list-style: none;
+	font-size: 13px;
+	font-family: $F_ARIAL;
+	will-change: transform; /* от шевелёнки при translate в FF */
+
+	&__item {
+		position: relative;
+
+		.Tree {
+			display: none;
+		}
+	}
+
+	&__item--open {
+		
+		& > .Tree {
+			display: block;
+		}
+	}
+
+	&__itemLabel {
+		display: inline-block;
+		padding: 8px 10px;
+		border-radius: 4px;
+		user-select: none;
+		cursor: pointer;
+
+		&:hover {
+			background-color: #EDF9FC;
+		}
+	}
+
+	&__itemToggle {
+		display: block;
+		position: absolute;
+		left: -19px;
+		top: 7px;
+		width: 17px;
+		height: 17px;
+		border-radius: 50%;
+		background-image: resolve('angle_right_grey.png');
+		background-repeat: no-repeat;
+		background-position: 7px 5px; /* процентные значения дают размазню при трансформации */
+		cursor: pointer;
+		transition: transform .3s;
+
+		&:hover {
+			background-color: #f1f5f7;
+		}
+	}
+
+	&__item--active {
+
+		& > .Tree__itemLabel {
+			background-color: #dbf3f9;
+		}
+	}
+
+	&__item--open {
+
+		& > .Tree__itemToggle {
+			transform: rotate(90deg);
+		}
+	}
+}

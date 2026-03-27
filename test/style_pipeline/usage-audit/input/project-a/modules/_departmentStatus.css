@@ -1,0 +1,91 @@
+/* Панель статуса подразделения (микс с .Panel)
+***********************************************************/
+$DepartmentMediaWidth: 1440px;
+
+.DepartmentStatus {
+	font-family: $F_OPENSANS_REGULAR;
+	padding-top: 0;
+	padding-bottom: 22px;
+	margin: 0;
+	background-color: #EDF9FC;
+
+	.Panel__area {
+		word-spacing: 20px;
+	}
+
+	.Panel__item {
+		color: $C_LABEL;
+		word-spacing: normal;
+		margin: 0;
+		margin-top: 22px;
+		padding-top: 0;
+	}
+
+	&__entry {
+		position: relative;
+		padding-left: 50px;
+		background-position: 0 50%;
+		background-repeat:no-repeat;
+		height: 45px;
+
+		&:before {
+			content: '';
+			display: inline-block;
+			height: 100%;
+			vertical-align: middle;
+		}
+
+		&--total {
+			background-image: resolve('people_circle.png');
+		}
+
+		&--telework {
+			background-image: resolve('telework_circle.png');
+		}
+
+		&--outsideOffice {
+			background-image: resolve('person_circle.png');
+		}
+
+		&--new {
+			background-image: resolve('academic_cap_circle.png');
+		}
+
+		&--maternityLeave {
+			background-image: resolve('pregnant_circle.png');
+		}
+	}
+
+	&__label {
+		display: inline-block;
+		vertical-align: middle;
+		line-height: 1;
+	}
+
+	&__number {
+		display: inline-block;
+		font-size: 35px;
+	}
+
+	&__text {
+		display: inline-block;
+
+		@media screen and (max-width: $DepartmentMediaWidth) {
+			display: none;
+		}
+	}
+
+	&__icon {
+		box-sizing: border-box;
+		display: none;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 45px;
+		height: 45px;
+
+		@media screen and (max-width: $DepartmentMediaWidth) {
+			display: block;
+		}
+	}
+}

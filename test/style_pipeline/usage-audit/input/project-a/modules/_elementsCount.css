@@ -1,0 +1,42 @@
+/* Вывод общего количества записей в таблице
+
+<div class="ElementsCount">
+	Всего: <span class="ElementsCount__show pseudolink js-showRequestsCount">Показать количество</span>
+	<span class="ElementsCount__loadingIcon"></span>
+	<span class="ElementsCount__count">235</span>
+</div>
+*/
+
+.ElementsCount {
+	&__loadingIcon {
+		display: inline-block;
+		background-image: resolve('loading.gif');
+		width: width('loading.gif');
+		height: height('loading.gif');
+		vertical-align: middle;
+	}
+
+	&__count,
+	&__loadingIcon {
+		display: none;
+	}
+
+	&--loading {
+		.ElementsCount__show {
+			display: none;
+		}
+		.ElementsCount__loadingIcon {
+			display: inline-block;
+		}
+	}
+
+	&--loaded {
+		.ElementsCount__show {
+			display: none;
+		}
+		.ElementsCount__count {
+			display: inline-block;
+		}
+	}
+}
+

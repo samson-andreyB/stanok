@@ -1,0 +1,111 @@
+.Panel {
+	display: table;
+	background-color: #fff;
+	padding: 15px;
+	padding-top: 0;
+	margin-bottom: 15px; /* ^ deprecated */
+	width: 100%;
+	box-sizing: border-box;
+	cursor: default;
+
+	&__area {
+		display: table-cell;
+		vertical-align: middle;
+
+		.btn + .btn {
+			margin-left: 15px;
+		}
+
+		&--slim {
+			width: 1px;
+		}
+
+		&--aux { /* ^ auxiliary — вспомогательная */
+			text-align: right;
+
+			.Panel__item {
+				margin-right: 0;
+
+				& + .Panel__item {
+					margin-left: 30px;
+				}
+			}
+		}
+	}
+
+	&__item {
+		display: inline-block;
+		color: $C_TEXT;
+		font-size: 13px;
+		vertical-align: middle;
+		margin-right: 30px;
+		padding-top: 15px;
+	}
+
+	&__itemLabel {
+		vertical-align: middle;
+	}
+
+	.RichSelect {
+		min-width: 80px;
+	}
+
+	input[type="checkbox"] {
+		vertical-align: middle;
+		margin-top: -2px;
+	}
+
+	&__btn {
+		white-space: nowrap;
+	}
+
+	&__btnAdd {
+		@mixin btnMainAdd;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	&--transparent {
+		background: none;
+		padding: 0;
+	}
+}
+
+.Panel--absences {
+	padding: 0;
+
+	.Panel__area--aux .Panel__item + .Panel__item {
+		margin-left: 10px;
+	}
+
+	@media screen and (max-width: 1225px) {
+		.btn--download {
+			width: 40px;
+			padding: 0;
+			font-size: 0;
+			text-align: center;
+
+			&:before {
+				margin-right: 0;
+			}
+		}
+	}
+}
+
+.Panel--developmentReport {
+	.Panel {
+		&__area {
+			vertical-align: top;
+		}
+
+		&__item {
+			vertical-align: top;
+
+			&--button {
+				padding-top: 35px;
+			}
+		}
+	}
+}

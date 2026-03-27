@@ -28,3 +28,6 @@ Thumbs.db
 .env.local
 .npm-cache/
 .tmp-smoke/
+
+# Plugin usage audit — generated reports (md/json/html for local use)
+test/style_pipeline/usage-audit/report/

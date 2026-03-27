@@ -1,0 +1,142 @@
+/*TROUBLE REPORT
+----------------------------------------------------------------------------------------------*/
+
+.troubleLink {
+	border-right: 1px solid #aaa;
+	cursor: pointer;
+	display: inline-block;
+	margin: 0 5px 0 0;
+	padding: 0 10px 0 19px;
+	position: relative;
+	text-decoration: none;
+	
+	& span{
+		color: #e49101;
+		border-bottom: 1px dotted #e49101;
+	}
+	
+	&:before{
+		background: #efa21c;
+		border-radius: 8px;
+		color: #fff;
+		content: "!";
+		font-weight: bold;
+		height: 16px;
+		left: 0;
+		position: absolute;
+		text-align: center;
+		top: 0;
+		width: 16px;
+	}
+}
+
+.PopupWindow {
+	font-family: $F_OPENSANS_REGULAR;
+	font-size: 12px;
+	line-height: 1.5em;
+	padding: 30px;
+	width: 540px;
+	color: #535C69;
+	
+	&--status {
+		width: 580px;
+		text-align: center;
+		padding: 70px 0;
+
+		.PopupWindow__header{
+			font-size: 20px;
+			font-weight: normal;
+			margin: 0;
+			
+			&:before {
+				background-repeat: no-repeat;
+				content: '';
+				display: inline-block;
+				width: 33px;
+				height: 33px;
+				vertical-align: middle;
+				margin-right: 10px;
+			}
+		}
+	}
+
+	&--statusSuccess .PopupWindow__header:before {
+		background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAhCAMAAABgOjJdAAAAjVBMVEVMaXFZtE9ZtE9ZtE9ZtE9ZtE9ZtE9ZtE9ZtE9ZtE9ZtE9ZtE9ZtE9ZtE9ZtE9ZtE9ZtE9ZtE9ZtE////+QzYnE5cFmul31+/Xe8Ny03a/4/Pix3KxhuFeX0JCOzIe94bmt26ir2abz+vPk8+Lb79jA4ryAxneTzozr9urv+O76/fp0wGttvWS74LfG5cPrR1TSAAAAEnRSTlMAGWujKwIUP7KpcOR1frwix9GcCcNCAAABNklEQVR4Xo2U1W7EMBAAHbzmuOMwHGPp/z+vcu9qUip1nqxolAXvWlgkcRitWUdhnIgxggxDFgifNMMlS11hAtBvivomb3Wx6QEmtjAF+qaVv7SNcuaukB+kTZUDUzvEXvrsTKBUCy574JHuC2zkGDm8KCGA8jBqHEpQfYmgk+N0EAmRQN9Kj4FH0T0kIoarL3zCh1RcIRYhFJ6wBbioUwGhquToC7r8o6pmBtUzdc5PQedewUwA8ocTcJLyrAUFYP5xAWhrR2hhZuVxBdCCzsOuZXAEXYvdj8ESdD/cng6wex5NT0UGjf727txyA9m/7lZVk/89H4oUE90fw9TMaSd9Onsh5kBeSZs2d9dhAZRbM0hv2xJYjO7cXd7rL71zNukSl2UgfFbO7q+Exns/XnmNps778Q2NGUFLnOYr6gAAAABJRU5ErkJggg==");
+	}
+
+	&--helpDesk {
+		font-size: 15px;
+		line-height: normal;
+
+		& .Form__input {
+			font-size: 15px;
+			line-height: 1.15em;
+			padding: 4px 9px;
+		}
+	}
+	
+	&__content {
+		margin-top: 12px;
+	}
+	
+	& h1{
+		font-size: 18px;
+		font-weight: normal;
+		margin: 0 0 25px;
+	}
+	
+	& h3 {
+		font-size: 12px;
+		font-weight: bold;
+		line-height: 1em;
+		margin: 0 0 7px;
+	}
+	
+	& h3 + textarea {
+		margin: 10px 0 0;
+	}
+	
+	& textarea{
+		display: block;
+		font-size: 12px;
+		height: 130px;
+		line-height: 1.5em;
+		margin: 0;
+		padding: 10px;
+		width: 518px;
+	}
+	
+	& button {
+		margin-top: 20px;
+	}
+
+	&__Part {
+		margin: 18px 0 0;
+		
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+}
+
+.TroubleWindow {
+	width: 560px;
+
+	& textarea {
+		width: 100%;
+		box-sizing: border-box;
+	}
+	
+	&__FragmentText {
+		margin: 0;
+		max-height: 110px;
+		overflow: hidden;
+		position: relative;
+	}
+	
+	&__Success{
+		text-align: center;
+		margin: 0;
+	}
+}
+

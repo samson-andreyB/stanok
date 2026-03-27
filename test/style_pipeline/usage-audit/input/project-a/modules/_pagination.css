@@ -1,0 +1,77 @@
+.Pagination {
+	color: #5c6470;
+	font-size: 11px;
+	font-family: $F_OPENSANS_SEMIBOLD;
+	font-weight: normal;
+	display: table;
+	border-top: 3px solid #eef2f4;
+	width: 100%;
+	text-transform: uppercase;
+
+	&__total,
+	&__links,
+	&__itemsPerPage {
+		display: table-cell;
+		vertical-align: middle;
+		padding: 6px 0;
+	}
+
+	&__total,
+	&__itemsPerPage {
+		width: 1px;
+		min-width: 170px;
+		text-align: right;
+	}
+
+	&__total {
+		text-align: left;
+		padding-left: 15px;
+	}
+
+	&__links {
+		text-align: center;
+		cursor: default;
+	}
+
+	&__itemsPerPage {
+		padding-right: 15px;
+		
+		.main-dropdown-inner {
+			height: 25px;
+		}
+	}
+
+	&__linkArea {
+		padding: 1px 5px;
+	}
+
+	&__linkArea + &__linkArea {
+		border-left: 1px solid #cdcdcd;
+	}
+
+	&__totalCount {
+		font-weight: bold;	
+	}
+
+	&__showTotal,
+	&__link,
+	a&__link {
+		color: #0b66c3;
+		cursor: pointer;
+
+		&:hover {
+			color: #e00000;
+		}
+	}
+
+	&__link--current,
+	a&__link--current {
+		color: #5c6470;
+		font-weight: bold;
+		pointer-events: none;
+	}
+
+	.Form__input {
+		padding: 4px 6px;
+	}
+}

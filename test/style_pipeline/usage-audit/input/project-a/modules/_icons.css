@@ -1,0 +1,348 @@
+/* Календарь */
+.AbsencesDiagram__calendarIcon, /* deprecated */
+.Icon--calendar {
+	display: inline-block;
+	background-image: resolve('calendar.png');
+	width: width('calendar.png');
+	height: height('calendar.png');
+	cursor: pointer;
+}
+
+
+/* Печать */
+.Icon--print {
+	display: inline-block;
+	background-image: resolve('print.png');
+	width: width('print.png');
+	height: height('print.png');
+}
+.Icon--printWarning {
+	display: inline-block;
+	background-image: resolve('print_warning.png');
+	width: width('print_warning.png');
+	height: height('print_warning.png');
+	margin-bottom: -2px;
+}
+
+
+/* Печать */
+.Icon--copy {
+	display: inline-block;
+	background-image: resolve('copy_dark.png');
+	width: width('copy_dark.png');
+	height: height('copy_dark.png');
+	margin-bottom: -1px;
+}
+
+
+/* Сложность заказа */
+.Icon--difficulty-a {
+	display: inline-block;
+	background-image: resolve('difficulty_a.png');
+	width: width('difficulty_a.png');
+	height: height('difficulty_a.png');
+
+}
+
+.Icon--difficulty-a-plus {
+	display: inline-block;
+	background-image: resolve('difficulty_a_plus.png');
+	width: width('difficulty_a.png');
+	height: height('difficulty_a.png');
+
+}
+
+.Icon--difficulty-b {
+	display: inline-block;
+	background-image: resolve('difficulty_b.png');
+	width: width('difficulty_b.png');
+	height: height('difficulty_b.png');
+}
+.Icon--difficulty-c {
+	display: inline-block;
+	background-image: resolve('difficulty_c.png');
+	width: width('difficulty_c.png');
+	height: height('difficulty_c.png');
+}
+.Icon--difficulty-d {
+	display: inline-block;
+	background-image: resolve('difficulty_d.png');
+	width: width('difficulty_d.png');
+	height: height('difficulty_d.png');
+}
+
+.Icon--difficulty-a-s {
+	display: inline-block;
+	background-image: resolve('difficulty_a_s.png');
+	width: width('difficulty_a_s.png');
+	height: height('difficulty_a_s.png');
+}
+
+.Icon--difficulty-a-plus-s {
+	display: inline-block;
+	background-image: resolve('difficulty_a_plus_s.png');
+	width: width('difficulty_a_s.png');
+	height: height('difficulty_a_s.png');
+}
+
+.Icon--difficulty-b-s {
+	display: inline-block;
+	background-image: resolve('difficulty_b_s.png');
+	width: width('difficulty_b_s.png');
+	height: height('difficulty_b_s.png');
+}
+.Icon--difficulty-c-s {
+	display: inline-block;
+	background-image: resolve('difficulty_c_s.png');
+	width: width('difficulty_c_s.png');
+	height: height('difficulty_c_s.png');
+}
+.Icon--difficulty-d-s {
+	display: inline-block;
+	background-image: resolve('difficulty_d_s.png');
+	width: width('difficulty_d_s.png');
+	height: height('difficulty_d_s.png');
+}
+
+
+/* Статус ТЗ */
+.Icon--prd-00 {
+	display: inline-block;
+	background-image: resolve('prd_00.png');
+	width: width('prd_00.png');
+	height: height('prd_00.png');
+}
+.Icon--prd-33 {
+	display: inline-block;
+	background-image: resolve('prd_33.png');
+	width: width('prd_33.png');
+	height: height('prd_33.png');
+}
+.Icon--prd-66 {
+	display: inline-block;
+	background-image: resolve('prd_66.png');
+	width: width('prd_66.png');
+	height: height('prd_66.png');
+}
+.Icon--prd-100 {
+	display: inline-block;
+	background-image: resolve('prd_100.png');
+	width: width('prd_100.png');
+	height: height('prd_100.png');
+}
+
+.Icon--jira {
+	background-image: resolve('jira.png');
+	width: width('jira.png');
+	height: height('jira.png');
+}
+
+.Icon--prd-00-s {
+	display: inline-block;
+	background-image: resolve('prd_00_s.png');
+	width: width('prd_00_s.png');
+	height: height('prd_00_s.png');
+}
+.Icon--prd-33-s {
+	display: inline-block;
+	background-image: resolve('prd_33_s.png');
+	width: width('prd_33_s.png');
+	height: height('prd_33_s.png');
+}
+.Icon--prd-66-s {
+	display: inline-block;
+	background-image: resolve('prd_66_s.png');
+	width: width('prd_66_s.png');
+	height: height('prd_66_s.png');
+}
+.Icon--prd-100-s {
+	display: inline-block;
+	background-image: resolve('prd_100_s.png');
+	width: width('prd_100_s.png');
+	height: height('prd_100_s.png');
+}
+
+
+/* Разное */
+.Icon {
+	display: inline-block;
+}
+.Icon--exclamation {
+	display: inline-block;
+	width: width('attention_small.png');
+	height: height('attention_small.png');
+	background-image: resolve('attention_small.png');
+}
+.Icon--exchange {
+	display: inline-block;
+	width: width('exchange_small.png');
+	height: height('exchange_small.png');
+	background-image: resolve('exchange_small.png');
+}
+.Icon--add {
+	display: inline-block;
+	width: width('plus_round_green.png');
+	height: height('plus_round_green.png');
+	background-image: resolve('plus_round_green.png');
+	cursor: pointer;
+}
+.Icon--faceHappy {
+	width: width('face_happy.png');
+	height: height('face_happy.png');
+	background-image: resolve('face_happy.png');
+}
+.Icon--face {
+	width: width('face.png');
+	height: height('face.png');
+	background-image: resolve('face.png');
+}
+.Icon--faceSad {
+	width: width('face_sad.png');
+	height: height('face_sad.png');
+	background-image: resolve('face_sad.png');
+}
+.Icon--faceHappyS {
+	width: width('face_happy_s.png');
+	height: height('face_happy_s.png');
+	background-image: resolve('face_happy_s.png');
+}
+.Icon--faceS {
+	width: width('face_s.png');
+	height: height('face_s.png');
+	background-image: resolve('face_s.png');
+}
+.Icon--faceSadS {
+	width: width('face_sad_s.png');
+	height: height('face_sad_s.png');
+	background-image: resolve('face_sad_s.png');
+}
+.Icon--document {
+	width: width('document_medium.png');
+	height: height('document_medium.png');
+	background-image: resolve('document_medium.png');
+}
+.Icon--checkGreen {
+	background-image: resolve('check_green.png');
+	width: width('check_green.png');
+	height: height('check_green.png');
+}
+.Icon--letterS {
+	width: width('letter.png');
+	height: height('letter.png');
+	background-image: resolve('letter.png');
+}
+.Icon--phoneS {
+	width: width('phone.png');
+	height: height('phone.png');
+	background-image: resolve('phone.png');
+}
+.Icon--documentS {
+	width: width('document_s.png');
+	height: height('document_s.png');
+	background-image: resolve('document_s.png');
+}
+.Icon--documentExclamationS {
+	width: width('document_exclamation_s.png');
+	height: height('document_exclamation_s.png');
+	background-image: resolve('document_exclamation_s.png');
+}
+.Icon--personsS {
+	width: width('persons_s.png');
+	height: height('persons_s.png');
+	background-image: resolve('persons_s.png');
+}
+
+.Icon--youtrack {
+	width: width('youtrack.png');
+	height: height('youtrack.png');
+	background-image: resolve('youtrack.png');
+}
+
+@define-mixin copyLink {
+	display: inline-block;
+	cursor: pointer;
+	opacity: .5;
+	transition: 250ms opacity linear;
+	vertical-align: middle;
+	background-repeat: no-repeat;
+	background-position: center;
+
+	&:hover {
+		opacity: 1;
+	}
+}
+
+.Icon--pageLinkCopy {
+	@mixin copyLink;
+
+	background-image: svg('page_link_14x13', '[color]: #80868e');
+	width: width('page_link_14x13.svg');
+	height: height('page_link_14x13.svg');
+}
+
+.Icon--attentionLight {
+	background-image: resolve('lamp_light.png');
+	width: width('lamp_light.png');
+	height: height('lamp_light.png');
+}
+
+.Icon--attentionGray {
+	background-image: resolve('lamp.png');
+	width: width('lamp.png');
+	height: height('lamp.png');
+}
+
+.Icon--workHome {
+	background-image: resolve('workHome.svg');
+	width: width('workHome.svg');
+	height: height('workHome.svg');
+
+	.bx-messenger-panel-title & {
+		vertical-align: top;
+		margin-left: 5px;
+	}
+
+	.WorkStatus & {
+		position: absolute;
+		left: 0;
+		top: -1px;
+	}
+}
+
+.Icon--textCopy {
+	@mixin copyLink;
+
+	background-image: svg('copy_text_17x18', '[color]: #80868e');
+	width: width('copy_text_17x18.svg');
+	height: height('copy_text_17x18.svg');
+}
+
+.Icon--stage {
+	width: 8px;
+	height: 12px;
+	border-radius: 2px;
+	background-color: #d3d7dc;
+
+	&.Icon--stageGreen {
+		background-color: #b2e233;
+	}
+
+	&.Icon--stageRed {
+		background-color: #ff835a;
+	}
+
+	&.Icon--stageYellow {
+		background-color: #ffdd39;
+	}
+}
+
+.Icon--success {
+	background-image: resolve('success_18x18.png');
+	width: width('success_18x18.png');
+	height: height('success_18x18.png');
+
+	&:hover {
+		opacity: .7;
+		cursor: help;
+	}
+}

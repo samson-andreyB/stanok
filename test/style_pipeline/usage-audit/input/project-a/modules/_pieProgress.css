@@ -1,0 +1,39 @@
+/* Круговая диаграмма с прогрессом
+***********************************************************/
+
+.PieProgress {
+	display: inline-block;
+	position: relative;
+	width: 12px;
+	height: 12px;
+	border: 1px solid #c3c7cb;
+	border-radius: 50%;
+	overflow: hidden;
+	background: white;
+	color: #6db92f;
+	box-sizing: border-box;
+	
+	&__left,
+	&__right {
+		position: absolute;
+		top: 0;
+		width: 50%;
+		height: 100%;
+	}
+
+	&__left {
+		left: 0;
+		background: inherit;
+		transform-origin: 100% 50%;
+	}
+
+	&__right {
+		left: 50%;
+		background: currentColor;
+		transform-origin: 0 50%;
+	}
+
+	&--hign .PieProgress__left {
+		background: currentColor;
+	}
+}

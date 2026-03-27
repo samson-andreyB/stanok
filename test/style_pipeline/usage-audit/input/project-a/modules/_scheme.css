@@ -1,0 +1,285 @@
+/* Scheme
+------------------------------------------------------------------------------*/
+.Scheme {
+	margin-top: 15px;
+	font-size: 12px;
+
+	&--maxLevel-0 {
+		width: 480px;
+	}
+	&--maxLevel-1 {
+		width: 585px;
+	}
+	&--maxLevel-2 {
+		width: 690px;
+	}
+	&--maxLevel-3 {
+		width: 795px;
+	}
+	&--maxLevel-4 {
+		width: 800px;
+	}
+}
+
+.Scheme__legend {
+	margin-bottom: 17px;
+}
+.Scheme__legendList {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.Scheme__legendItem {
+	display: inline-block;
+	vertical-align: middle;
+
+	& + & {
+		margin: 0 0 0 20px;
+	}
+}
+.Scheme__legendClient {
+	&:before {
+		content: '';
+		display: inline-block;
+		width: 10px;
+		height: 10px;
+		vertical-align: middle;
+		margin-right: 4px;
+	}
+
+	&--counterparty:before {
+		background-color: #bbbbbb;
+	}
+	&--partner:before {
+		background-color: #28bd8b;
+	}
+	&--partnerOpt:before {
+		background-color: #bb68de;
+	}
+}
+.Scheme__legendTitle {
+	vertical-align: middle;
+}
+
+.Scheme__row {
+	box-sizing: border-box;
+	display: table;
+	width: 100%;
+}
+
+.Scheme__row--level-1 {
+	padding-left: 105px;
+}
+
+.Scheme__row--level-2 {
+	padding-left: 210px;
+}
+
+.Scheme__row--level-3 {
+	padding-left: 315px;
+}
+
+.Scheme__row--level-4 {
+	padding-left: 420px;
+}
+
+.Scheme__box {
+	display: table-cell;
+	vertical-align: middle;
+	position: relative;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.Scheme__box:last-child {
+	width: 1px;
+}
+
+.Scheme__node {
+	display: inline-block;
+	position: relative;
+	width: 170px;
+	padding: 7px 10px;
+	background-color: #fff;
+	box-sizing: border-box;
+	z-index: 1;
+	border: 1px solid #bbb;
+	color: #777;
+	line-height: 16px;
+
+	&--counterparty {
+		border-color: #bbbbbb;
+	}
+	&--partner {
+		border-color: #28bd8b;
+		color: #000;
+	}
+	&--partnerOpt {
+		border-color: #bb68de;
+		color: #000;
+	}
+}
+
+.Scheme__node--arrowFromBottom:before,
+.Scheme__node--arrowFromRight:after {
+	content: '';
+	position: absolute;
+}
+
+.Scheme__node--arrowFromRight:after {
+	border-color: #ccc;
+}
+
+.Scheme__node--arrowFromBottom:before {
+	top: 100%;
+	left: 50%;
+	background-image: resolve('arrow_top_7x5_777.png');
+	width: width('arrow_top_7x5_777.png');
+	height: height('arrow_top_7x5_777.png');
+	
+	margin-left: -3px;
+}
+
+.Scheme__node--arrowFromRight:after {
+	left: 100%;
+	top: 50%;
+	background-image: resolve('arrow_top_7x5_ccc.png');
+	width: width('arrow_top_7x5_ccc.png');
+	height: height('arrow_top_7x5_ccc.png');
+	margin-top: -2px;
+	transform: rotate(-90deg);
+}
+
+.Scheme__aux {
+	font-size: 11px;
+	margin-top: 5px;
+	color: #aaa;
+	display: block;
+
+	& + & {
+		margin-top: 0;
+	}
+}
+
+/* Палки слева */
+.Scheme__lines--horizontal:before {
+	content: '';
+	display: block;
+	border-top: 1px solid #777;
+	position: absolute;
+	width: 20px;
+	top: 50%;
+	right: 100%;
+}
+
+/* К дочерним справа */
+.Scheme__box--hasChildrenRight .Scheme__lines--horizontal:after {
+	content: '';
+	display: block;
+	border-top: 1px solid #ccc;
+	position: absolute;
+	width: 100%;
+	top: 50%;
+	left: 0;
+}
+
+/* К предыдущему */
+.Scheme__lines--siblings:before {
+	content: '';
+	position: absolute;
+	left: -20px;
+	bottom: 50%;
+	height: 50%;
+	border-left: 1px solid #777;
+}
+
+/* К следующему */
+.Scheme__lines--siblings:after {
+	content: '';
+	position: absolute;
+	left: -20px;
+	top: 50%;
+	height: 50%;
+	border-left: 1px solid #777;
+}
+
+/* К дочерним */
+.Scheme__lines--toChildren:after {
+	content: '';
+	height: 50%;
+	position: absolute;
+	top: 50%;
+	left: 85px;
+	border-left: 1px solid #777;
+}
+
+/* Линии более высоких уровней */
+.Scheme__lines--upperLevels:before {
+	content: '';
+	position: absolute;
+	height: 100%;
+	border-left: 1px solid #777;
+	top: 0;
+	left: -125px;
+}
+
+/* Лишнее не показываем */
+.Scheme__node--root ~ .Scheme__lines--horizontal:before,
+.Scheme__node--first ~ .Scheme__lines--siblings:before,
+.Scheme__node--single ~ .Scheme__lines--siblings:before,
+.Scheme__node--single ~ .Scheme__lines--siblings:after,
+.Scheme__node--last ~ .Scheme__lines--siblings:after {
+	content: none;
+}
+
+.Scheme__node--root ~ .Scheme__lines--siblings,
+.Scheme__node--single ~ .Scheme__lines--siblings {
+	display: none;
+}
+
+.Scheme--relation .Scheme__box--right {
+	padding-right: 20px;
+}
+
+.Scheme .Scheme__box--right :after,
+.Scheme .Scheme__box--right :before {
+	border-color: #ccc;
+}
+
+.Scheme__lines--relation {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 20px;
+	height: 100%;
+}
+
+.Scheme__node--related ~ .Scheme__lines--relation {
+	background-image: linear-gradient(#ccc, #ccc);
+	background-size: 20px 1px;
+	background-repeat: no-repeat;
+	background-position: 0 50%;
+}
+
+.Scheme__lines--relation:before {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 50%;
+	border-left: 1px solid #777;
+}
+
+.Scheme__lines--relation:after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	right: 0;
+	height: 50%;
+	border-left: 1px solid #777;
+}
+
+.Scheme__row--startRelation .Scheme__lines--relation:before,
+.Scheme__row--endRelation .Scheme__lines--relation:after {
+	content: none;
+}

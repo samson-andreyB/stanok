@@ -1,0 +1,48 @@
+.List--dashed {
+	.List__item {
+		position: relative;
+		padding-left: 1.4em;
+	}
+
+	.List__item:before {
+		content: "\2014";
+		position: absolute;
+		left: 0;
+	}
+}
+
+
+.List--insideNumeric {
+	margin-y: 15px;
+	list-style-position: inside;
+	list-style-type: decimal;
+}
+
+.List--services {
+	display: flex;
+	flex-wrap: wrap;
+	background: #fff;
+
+	.List__item {
+		width: 50%;
+		padding: 20px;
+		box-sizing: border-box;
+		border-bottom: 1px solid #edeef0;
+		font-weight: bold;
+		color: #000;
+
+		&:nth-child(2n+1) {
+			border-right: 1px solid #edeef0;
+		}
+
+		&:last-child,
+		&:nth-last-child(2):nth-child(odd) {
+			border-bottom: none;
+		}
+
+		&:hover {
+			background-color: #fcf9e6;
+			color: #000;
+		}
+	}
+}

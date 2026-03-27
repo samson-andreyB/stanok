@@ -1,0 +1,104 @@
+.Plaques {
+	background: #fff;
+	box-sizing: border-box;
+	border: 1px solid #bbb;
+	width: 100%;
+	padding: 7px 0 3px;
+	user-select: none;
+	cursor: default;
+	position: relative;
+
+	&:hover {
+		border-color: #ababab;
+	}
+
+	&--error {
+		border-color: $C_ERROR;
+	}
+}
+
+.Plaque {
+	display: inline-block;
+	position: relative;
+	margin: 0  0 4px 4px;
+	font-size: 13px;
+	font-weight: bold;
+}
+
+.Plaque__label {
+	display: block;
+	padding: 7px 30px 7px 10px;
+	border-radius: 2px;
+}
+
+.Plaque__icon {
+	position: absolute;
+}
+
+.Plaque--item {
+	.Plaque__label {
+		background-color: #bcedfc;
+		color: #1f6ab5;
+		transition: background-color .15s ease;
+	}
+
+	.Plaque__icon {
+		background-image: resolve('cross-small.png');
+		width: 10px;
+		height: 10px;
+		position: absolute;
+		top: 1px;
+		bottom: 0;
+		right: 10px;
+		margin-top: auto;
+		margin-bottom: auto;
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+		cursor: pointer;
+		transition: opacity .15s ease;
+
+		&:hover {
+			background-image: resolve('cross-small-red.png');
+			
+			& + .Plaque__label {
+				background-color: #86e2ff;
+			}
+		}
+	}
+}
+
+.Plaque--add {
+	cursor: pointer;
+	
+	.Plaque__icon {
+		position: absolute;
+		width: width('add.png');
+		height: height('add.png');
+		top: 0;
+		bottom: 0;
+		left: 6px;
+		margin-top: auto;
+		margin-bottom: auto;
+		background-image: resolve('add.png');
+	}
+
+	.Plaque__label {
+		padding-left: 20px;
+		padding-right: 5px;
+		background: none;
+		color: #006cb5;
+	}
+
+	&:hover {
+		.Plaque__label {
+			color: #e00000;
+		}
+		
+		.Plaque__icon {
+			background-image: resolve('add-red.png');
+			width: width('add-red.png');
+			height: height('add-red.png');
+		}
+
+	}
+}

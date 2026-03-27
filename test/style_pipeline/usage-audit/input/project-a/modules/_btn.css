@@ -1,0 +1,1216 @@
+@define-mixin btn {
+	background-color: transparent;
+	border: none;
+	box-sizing: border-box;
+	cursor: pointer;
+	display: inline-block;
+	font: inherit;
+	font-family: $F_OPENSANS_BOLD;
+	font-weight: normal;
+	line-height: 1;
+	outline: none;
+	user-select: none;
+	vertical-align: middle;
+	position: relative;
+	text-decoration: none;
+	transition: background-color .05s linear;
+	white-space: nowrap;
+
+	&[disabled],
+	&.disabled {
+		cursor: default;
+		opacity: .5;
+		pointer-events: none;
+	}
+
+	&::-moz-focus-inner {
+		border: 0;
+	}
+}
+
+@define-mixin btnOutline {
+	&,
+	a& {
+		background-color: transparent;
+	}
+}
+
+@define-mixin btnBadOutline {
+	&,
+	a& {
+		background-color: transparent;
+		color: #f1361b;
+	}
+}
+
+@define-mixin btnDefault {
+	@mixin btn;
+
+	&,
+	a& {
+		border: 1px solid;
+		border-radius: 2px;
+		font-size: 12px;
+		height: 36px;
+		padding: 11px 10px;
+		text-transform: uppercase;
+
+		background-color: #ececee;
+		border-color: #c6cdd3;
+		color: #7a818a;
+
+		&.outline {
+			background-color: transparent;
+		}
+
+		@mixin hocus {
+			background-color: #cfd4d8;
+			border-color: #c6cdd3;
+			color: #535c69;
+		}
+
+		&:active,
+		&.active {
+			background-color: #868d95;
+			border-color: #868d95;
+			color: #fff;
+		}
+	}
+}
+
+@define-mixin btnMain {
+	@mixin btnDefault;
+
+	&,
+	a& {
+		background-color: #bbed21;
+		border-color: #bbed21;
+		color: #535c60;
+
+		@mixin hocus {
+			background-color: #d2f95f;
+			border-color: #d2f95f;
+			color: #535c69;
+		}
+
+		&:active,
+		&.active {
+			background-color: #b2e233;
+			border-color: #b2e233;
+			color: #535c69;
+		}
+	}
+}
+
+@define-mixin btnGlass {
+	@mixin btnDefault;
+
+	.bitrix24-dark-theme &,
+	.bitrix24-default-theme & {
+
+		&,
+		a& {
+			border: 1px solid rgba(0,0,0,.06);
+			color: rgba(51,51,51,.8);
+			background-color: rgba(0,0,0,.07);
+
+			&:hover,
+			&:active,
+			&:focus {
+				border: 1px solid rgba(0,0,0,.06);
+				color: rgba(51,51,51,.8);
+				background-color: rgba(0,0,0,.1);
+			}
+
+			&.btn--wait {
+				color: transparent;
+			}
+		}
+
+		&.btn--edit:before {
+			background-image: resolve('pencil_dark.png');
+		}
+
+		&.btn--course:active:before {
+			background-image: svg('train_25x17', '[color]: #565c68');
+		}
+
+		&.btn--workgroup:active:before {
+			background-image: resolve('group_grey.png');
+		}
+
+		&.btn--copy:active:before {
+			background-image: resolve('copy_dark.png');
+		}
+
+		&.btn--exchange:active:before {
+			background-image: resolve('exchange_dark.png');
+		}
+
+		&.btn--download:before {
+			background-image: resolve('download_dark.png');
+			opacity: 1;
+		}
+
+		&.btn--select:after {
+			border-top-color: #333;
+		}
+
+		&.btn--close:before {
+			background-image: resolve('cross_m_dark.png');
+		}
+	}
+
+	.bitrix24-light-theme & {
+
+		&,
+		a& {
+			border: 1px solid rgba(255,255,255,.4);
+			color: #fff;
+			background: rgba(255,255,255,.15);
+
+			&:hover,
+			&:active,
+			&:focus {
+				border: 1px solid rgba(255,255,255,.4);
+				background: rgba(255,255,255,.3);
+				color: #fff;
+			}
+		}
+
+		&.btn--add:before {
+			background-image: resolve('plus_white.png');
+		}
+
+		&.btn--edit:before {
+			background-image: resolve('pencil_white.png');
+		}
+
+		&.btn--print:before {
+			background-image: resolve('print_white.png');
+		}
+
+		&.btn--course:before {
+			background-image: svg('train_25x17', '[color]: #fff');
+		}
+
+		&.btn--workgroup:before {
+			background-image: resolve('group_white.png');
+		}
+
+		&.btn--copy:before {
+			background-image: resolve('copy_white.png');
+		}
+
+		&.btn--exchange:before {
+			background-image: resolve('exchange_white.png');
+		}
+
+		&.btn--download:before {
+			background-image: resolve('download_white.png');
+			opacity: 1;
+		}
+
+		&.btn--select:after {
+			border-top-color: #fff;
+		}
+
+		&.btn--close:before {
+			background-image: resolve('cross_m_white.png');
+		}
+	}
+}
+
+@define-mixin btnMainAdd {
+	@mixin btnMain;
+
+	&:before {
+		content: '';
+		display: inline-block;
+		background-image: resolve('plus_grey.png');
+		width: width('plus_grey.png');
+		height: height('plus_grey.png');
+		margin-top: -2px;
+		margin-right: .5em;
+		vertical-align: middle;
+	}
+}
+
+@define-mixin btnBad {
+	@mixin btn;
+	@mixin btnDefault;
+
+	&,
+	a& {
+		background-color: #f1361b;
+		border-color: #f1361b;
+		color: #fff;
+
+		@mixin hocus {
+			background-color: #fe644e;
+			border-color: #fe644e;
+			color: #fff;
+		}
+
+		&:active,
+		&.active {
+			background-color: #dc260b;
+			border-color: #dc260b;
+			color: #fff;
+		}
+	}
+}
+
+@define-mixin btnBadDelete {
+	@mixin btnBad;
+
+	&:before {
+		content: '';
+		display: inline-block;
+		background-image: resolve('trash_white.png');
+		width: width('trash_white.png');
+		height: height('trash_white.png');
+		margin-top: -.3em;
+		margin-right: .5em;
+		vertical-align: middle;
+	}
+}
+
+@define-mixin btnInfo {
+	background-image: svg('infoOutline_15x15', '[color]: $C_LABEL');
+	width: width('infoOutline_15x15.svg');
+	height: height('infoOutline_15x15.svg');
+	display: inline-block;
+	vertical-align: middle;
+	cursor: help;
+	padding: 0; /* откуда паддинги по 8 пикселей в FF? Оо */
+
+	&:hover {
+		opacity: .75;
+	}
+}
+
+@define-mixin disabled {
+	opacity: .5;
+	pointer-events: none;
+}
+
+@define-mixin btnAccent {
+	@mixin btn;
+	@mixin btnDefault;
+
+	&,
+	a& {
+		background-color: #2fc7f7;
+		border-color: #2fc7f7;
+		color: #fff;
+		min-width: 95px;
+		text-align: center;
+
+		@mixin hocus {
+			background-color: #3fddff;
+			border-color: #3fddff;
+			color: #fff;
+		}
+
+		&:active,
+		&.active {
+			background-color: #13b1e3;
+			border-color: #13b1e3;
+			color: #fff;
+		}
+	}
+}
+
+@define-mixin btnAux {
+	display: inline-block;
+	padding: 0;
+	margin-bottom: -1px;
+	vertical-align: middle;
+	border: none;
+	font-size: 14px;
+	border-bottom: 1px solid transparent;
+	background: none;
+	cursor: pointer;
+	transition: all .05s linear;
+
+	&:hover {
+		color: #e00000;
+		border-color: #e00000;
+	}
+
+	&::-moz-focus-inner {
+		border: 0;
+	}
+
+	.btnAccent + & {
+		margin-left: 15px;
+	}
+}
+
+@define-mixin btn--edit {
+	&:before {
+		content: '';
+		display: inline-block;
+		background-image: resolve('pencil.png');
+		width: width('pencil.png');
+		height: height('pencil.png');
+		margin-top: -.3em;
+		margin-right: .5em;
+		vertical-align: middle;
+	}
+
+	&:active:before {
+		background-image: resolve('pencil_white.png');
+	}
+}
+
+@define-mixin btnDefaultEdit {
+	@mixin btnDefault;
+	@mixin btn--edit;
+}
+
+@define-mixin btn--add {
+
+	&:before {
+		content: '';
+		display: inline-block;
+		background-image: resolve('plus_grey.png');
+		width: width('plus_grey.png');
+		height: height('plus_grey.png');
+		margin-top: -2px;
+		margin-right: .5em;
+		vertical-align: middle;
+	}
+}
+
+@define-mixin btn--copy {
+
+	&:before {
+		content: '';
+		display: inline-block;
+		background-image: resolve('copy_dark.png');
+		width: width('copy_dark.png');
+		height: height('copy_dark.png');
+		margin-top: -.3em;
+		margin-right: .5em;
+		vertical-align: middle;
+
+		.btnDefault& {
+			opacity: .65;
+		}
+	}
+
+	&:active:before {
+		background-image: resolve('copy_white.png');
+		opacity: 1;
+	}
+
+	&.btnGlass.btn--icon {
+		background-image: resolve('copy_white.png');
+		background-repeat: no-repeat;
+		background-position: 55% 55%;
+		width: 40px;
+		box-sizing: border-box;
+
+		&.btn--loading {
+			background-image: none;
+
+			&:before {
+				content: '_';
+				top: 10px;
+			}
+		}
+
+		&:before {
+			content: none;
+		}
+	}
+
+	.bitrix24-dark-theme &,
+	.bitrix24-default-theme & {
+
+		&.btnGlass.btn--icon {
+			background-image: resolve('copy_dark.png');
+
+			&.btn--loading {
+				background-image: none;
+			}
+		}
+	}
+}
+
+@define-mixin btn--back {
+
+	&:before {
+		content: '';
+		display: inline-block;
+		background-image: resolve('back_dark.png');
+		width: width('back_dark.png');
+		height: height('back_dark.png');
+		margin-top: -.3em;
+		margin-right: .5em;
+		vertical-align: middle;
+
+		.bitrix24-light-theme & {
+			background-image: resolve('back_white.png');
+		}
+	}
+}
+
+@define-mixin btn--upload {
+
+	&:before {
+		content: '';
+		display: inline-block;
+		background-image: resolve('upload_dark.png');
+		width: width('upload_dark.png');
+		height: height('upload_dark.png');
+		margin-top: -.3em;
+		margin-right: .5em;
+		vertical-align: middle;
+
+		.bitrix24-light-theme & {
+			background-image: resolve('upload_white.png');
+		}
+	}
+}
+
+@define-mixin btn--youtrack {
+
+	&:before {
+		content: '';
+		display: inline-block;
+		vertical-align: middle;
+		background-image: resolve('youtrack.png');
+		width: width('youtrack.png');
+		height: height('youtrack.png');
+		margin-top: -.2em;
+		margin-right: .5em;
+
+		.bitrix24-light-theme & {
+			background-image: resolve('youtrack_white.png');
+		}
+	}
+}
+
+@define-mixin btn--up {
+	&:before {
+		content: '';
+		display: inline-block;
+		background-image: resolve('up_20x20_aaa.png');
+		width: width('up_20x20_aaa.png');
+		height: height('up_20x20_aaa.png');
+		margin-top: -.2em;
+		vertical-align: middle;
+	}
+
+	&:hover:before {
+		background-image: resolve('up_20x20_f53.png');
+	}
+}
+
+@define-mixin btnDefaultCopy {
+	@mixin btnDefault;
+	@mixin btn--copy;
+}
+
+@define-mixin btnDefaultExchange {
+	@mixin btnDefault;
+	@mixin btn--exchange;
+}
+
+
+@define-mixin btnDefaultDelete {
+	@mixin btnDefault;
+
+	&:before {
+		content: '';
+		display: inline-block;
+		background-image: resolve('trash.png');
+		width: width('trash.png');
+		height: height('trash.png');
+		margin-top: -.3em;
+		margin-right: .5em;
+		vertical-align: middle;
+	}
+
+	&:active:before {
+		background-image: resolve('trash_white.png');
+	}
+}
+
+@define-mixin btnDefaultClose {
+	@mixin btnDefault;
+	@mixin btn--close;
+}
+
+@define-mixin btn--close {
+	&:before {
+		content: '';
+		display: inline-block;
+		background-image: resolve('cross_m_grey.png');
+		width: width('cross_m_grey.png');
+		height: height('cross_m_grey.png');
+		margin-top: -.3em;
+		margin-right: .5em;
+		vertical-align: middle;
+	}
+
+	&:active:before {
+		background-image: resolve('cross_m_white.png');
+	}
+}
+
+@define-mixin btn--print {
+	&:before {
+		content: '';
+		display: inline-block;
+		background-image: resolve('print.png');
+		width: width('print.png');
+		height: height('print.png');
+		opacity: .9;
+		margin-top: -.3em;
+		margin-right: .5em;
+		vertical-align: middle;
+	}
+}
+
+@define-mixin btn--course {
+	&:before {
+		content: '';
+		display: inline-block;
+		background-image: svg('train_25x17', '[color]: #565c68');
+		background-repeat: no-repeat;
+		background-position: center;
+		width: 28px;
+		height: height('train_25x17.svg');
+		margin-top: -.3em;
+		margin-right: .5em;
+		vertical-align: middle;
+
+		.btnDefault& {
+			opacity: .65;
+		}
+	}
+
+	&:active:before {
+		background-image: svg('train_25x17', '[color]: #fff');
+		opacity: 1;
+	}
+}
+
+@define-mixin btn--workgroup {
+	&:before {
+		content: '';
+		display: inline-block;
+		background-image: resolve('group_grey.png');
+		width: width('group_grey.png');
+		height: height('group_grey.png');
+		margin-top: -.3em;
+		margin-right: .5em;
+		vertical-align: middle;
+
+		.btnDefault& {
+			opacity: .65;
+		}
+	}
+
+	&:active:before {
+		background-image: resolve('group_white.png');
+		opacity: 1;
+	}
+}
+
+@define-mixin btn--exchange {
+	&:before {
+		content: '';
+		display: inline-block;
+		background-image: resolve('exchange_dark.png');
+		width: width('exchange_dark.png');
+		height: height('exchange_dark.png');
+		margin-top: -.3em;
+		margin-right: .5em;
+		vertical-align: middle;
+
+		.btnDefault& {
+			opacity: .65;
+		}
+	}
+
+	&:active:before {
+		background-image: resolve('exchange_white.png');
+		opacity: 1;
+	}
+
+	&.btnGlass.btn--icon {
+		background-image: resolve('exchange_white.png');
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+		width: 40px;
+		box-sizing: border-box;
+
+		&.btn--loading {
+			background-image: none;
+
+			&:before {
+				content: '_';
+				top: 10px;
+			}
+		}
+
+		&:before {
+			content: none;
+		}
+	}
+
+	.bitrix24-dark-theme &,
+	.bitrix24-default-theme & {
+		&.btnGlass.btn--icon {
+			background-image: resolve('exchange_dark.png');
+
+			&.btn--loading {
+				background-image: none;
+			}
+		}
+	}
+}
+
+/* Часики
+**************************************************/
+@define-mixin Watch {
+	position: relative;
+	color: #fff;
+	border: 1px solid currentColor;
+	border-radius: 50%;
+	width: 19px;
+	height: 19px;
+
+	&:before {
+		content: '';
+		position: absolute;
+		top: 9px;
+		left: 9px;
+		width: 5px;
+		border-top: 1px solid currentColor;
+		transform-origin: 5% 50%;
+		animation: Spinner 12s infinite linear;
+	}
+
+	&:after {
+		position: absolute;
+		top: 3px;
+		left: 9px;
+		content: '';
+		height: 7px;
+		border-left: 1px solid currentColor;
+		transform-origin: 50% 95%;
+		animation: Spinner 1s infinite linear;
+	}
+}
+
+.Watch {
+	@mixin Watch;
+}
+
+.btn .Watch {
+	display: none;
+}
+
+
+
+@define-mixin btn--loading {
+	color: #fff;
+	pointer-events: none;
+
+	&:before {
+		position: absolute;
+		top: 8px;
+		left: 50%;
+		content: '_';
+		width: 14px;
+		height: 19px;
+		margin-left: -10px;
+		padding-right: 5px;
+		border: 1px solid currentColor;
+		border-radius: 50%;
+		text-align: right;
+		line-height: 9px;
+		font-size: 10px;
+		font-family: $F_OPENSANS_REGULAR;
+	}
+
+	&:after {
+		position: absolute;
+		top: 12px;
+		left: 50%;
+		content: '';
+		width: 1px;
+		height: 7px;
+		background-color: currentColor;
+		-webkit-transform-origin: 0 100%;
+		transform-origin: 0 100%;
+		animation: Spinner 1s infinite linear;
+	}
+
+	.btnBad&,
+	.btn&,
+	.btnMain&,
+	.btnDefault& {
+
+		&,
+		&:active,
+		&:focus,
+		&:hover {
+			color: transparent;
+		}
+	}
+
+
+	.bitrix24-light-theme &,
+	.bitrix24-dark-theme &,
+	.bitrix24-default-theme & {
+
+		&.btnGlass.btn--icon:before {
+			background-image: none;
+		}
+	}
+
+	/* Цвет часов */
+	&:before,
+	&:after {
+
+		.btnBad&,
+		.bitrix24-light-theme &,
+		.btnDefault&,
+		.btnAccent& {
+			color: #fff;
+		}
+
+		.bitrix24-dark-theme &,
+		.bitrix24-default-theme & {
+			color: rgba(51,51,51,.8);
+		}
+	}
+}
+
+
+@define-mixin btn--shrink {
+	@media screen and (max-width: 1225px) {
+		&,
+		a& {
+			min-width: 40px;
+			width: 40px;
+			text-align: center;
+			padding: 0;
+			font-size: 0;
+		}
+
+		&:before {
+			display: inline-block;
+		}
+	}
+}
+
+@define-mixin btnAddShrink {
+	@mixin btnMain;
+	@mixin btnAccent;
+	@mixin btn--shrink;
+
+	&,
+	a& {
+		font-family: $F_OPENSANS_BOLD;
+		font-weight: normal;
+	}
+
+	@media screen and (max-width: 1225px) {
+		&:before {
+			content: '+';
+			color: #fff;
+			font-size: 24px;
+		}
+	}
+}
+
+.btn {
+	@mixin btn;
+}
+.btn--disabled {
+	@mixin disabled;
+}
+
+.btnDefault {
+	@mixin btnDefault;
+}
+
+.btnMain {
+	@mixin btnMain;
+}
+
+.btnGlass {
+	@mixin btnGlass;
+}
+
+.btnMainAdd,
+.btnMain.btn--add {
+	@mixin btnMainAdd;
+}
+
+.btnAddShrink,
+.btnMain.btn--addShrink {
+	@mixin btnAddShrink;
+}
+
+.btnBad {
+	@mixin btnBad;
+
+	&.btn--loading {
+		&,
+		&:hover,
+		&:focus,
+		&:active {
+			background-color: #f1361b;
+			border-color: #f1361b;
+		}
+	}
+}
+
+.btnBadDelete,
+.btnBad.btn--delete {
+	@mixin btnBadDelete;
+}
+
+.btnInfo {
+	@mixin btn;
+	@mixin btnInfo;
+}
+
+.btnAccent {
+	@mixin btnAccent;
+
+	&.btn--add:before {
+		background-image: resolve('plus_white.png');
+	}
+}
+
+.btnAux {
+	@mixin btnAux;
+}
+
+.btnDefaultEdit,
+.btnDefault.btn--edit {
+	@mixin btnDefaultEdit;
+}
+
+.btnDefaultCopy,
+.btnDefault.btn--copy {
+	@mixin btnDefaultCopy;
+}
+
+.btnDefault.btn--exchange {
+	@mixin btnDefaultExchange;
+}
+
+.btnDefaultDelete,
+.btnDefault.btn--delete {
+	@mixin btnDefaultDelete;
+}
+
+.btn--close {
+	@mixin btn--close;
+}
+
+.btnDefaultClose {
+	@mixin btnDefaultClose;
+}
+
+.btn--print {
+	@mixin btn--print;
+}
+.btnDefault.btn--print {
+
+	&:before {
+		opacity: .6;
+	}
+
+	&:active:before {
+		background-image: resolve('print_white.png');
+		opacity: 1;
+	}
+}
+
+.btn--add {
+	@mixin btn--add;
+}
+
+.btn--edit {
+	@mixin btn--edit;
+}
+.btnMain.btn--edit {
+
+	&:before,
+	&:active:before {
+		background-image: resolve('pencil_dark.png');
+		opacity: .9;
+	}
+}
+
+.btn--copy {
+	@mixin btn--copy;
+}
+
+.btn--back {
+	@mixin btn--back;
+}
+
+.btnDefault.btn--back {
+	&:before {
+		opacity: .65;
+	}
+	.bitrix24-light-theme &:before {
+		background-image: resolve('back_dark.png');
+	}
+
+	&:active:before {
+		background-image: resolve('back_white.png');
+		opacity: 1;
+	}
+}
+
+.btn--upload {
+	@mixin btn--upload;
+}
+
+.btn--youtrack {
+	@mixin btn--youtrack;
+}
+
+.btn--download {
+	@mixin btn--copy;
+
+	&:before {
+		background-image: resolve('download_dark.png');
+		width: width('download_dark.png');
+		height: height('download_dark.png');
+		margin-top: -.3em;
+	}
+
+	&:active:before {
+		background-image: resolve('download_white.png');
+	}
+
+	&.btnGlass.btn--icon {
+		background-image: resolve('download_white.png');
+		background-position: 50% 50%;
+	}
+
+	.bitrix24-dark-theme &,
+	.bitrix24-default-theme & {
+
+		&.btnGlass.btn--icon {
+			background-image: resolve('download_dark.png');
+		}
+	}
+
+	&.btnAccent {
+		&:before {
+			background-image: resolve('download_white.png');
+		}
+	}
+}
+
+.btn--course {
+	@mixin btn--course;
+}
+
+.btn--icon.btn--icon.btn--icon {
+	color: transparent;
+
+	&:before {
+		margin-right: 0;
+	}
+
+	&.btn--wait.btn--wait {
+		background-image: none;
+	}
+
+	&.btn--download {
+		width: 40px;
+		min-width: auto;
+		box-sizing: border-box;
+	}
+
+	.BtnText {
+		display: none;
+	}
+}
+
+.btn--workgroup {
+	@mixin btn--workgroup;
+}
+
+.btn--exchange {
+	@mixin btn--exchange;
+}
+
+.btn--up {
+	@mixin btn--up;
+}
+
+.btnMainOutline,
+.btnMain.btn--outline {
+	@mixin btnMain;
+	@mixin btnOutline;
+}
+
+.btnDefaultOutline,
+.btnDefault.btn--outline {
+	@mixin btnDefault;
+	@mixin btnOutline;
+}
+
+.btnBadOutline,
+.btnBad.btn--outline {
+	@mixin btnBad;
+	@mixin btnBadOutline;
+}
+
+.btn--loading {
+	@mixin btn--loading;
+}
+
+.btnMain.btn--loading {
+
+	&:before {
+		color: #535c60;
+	}
+
+	&:after {
+		background-color: #535c60;
+	}
+}
+
+.btnDefault.btn--loading {
+
+	&,
+	&:hover,
+	&:focus,
+	&:active {
+		background-color: #868d95;
+		border-color: #868d95;
+	}
+}
+
+.btnAccent.btn--loading,
+.btnAccent.btn--wait {
+
+	&,
+	&:hover,
+	&:focus,
+	&:active {
+		background-color: #13b1e3;
+		border-color: #13b1e3;
+	}
+}
+
+.btn--wait {
+	pointer-events: none;
+
+	&,
+	.bitrix24-default-theme &,
+	.bitrix24-dark-theme &,
+	.bitrix24-light-theme & {
+
+		&,
+		&:hover,
+		&:focus,
+		&:active {
+			color: transparent;
+
+			&:before {
+				opacity: 0;
+			}
+		}
+	}
+
+	.Watch {
+		display: block;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+
+		margin-top: -10px;
+		margin-left: -10px;
+
+		.bitrix24-light-theme & {
+			color: #fff;
+		}
+
+		.bitrix24-default-theme &,
+		.bitrix24-dark-theme & {
+			color: rgba(51,51,51,.8);
+		}
+	}
+
+	&.btn--icon {
+		box-sizing: content-box;
+		width: 19px;
+		background-image: none;
+
+		&:before {
+			opacity: 0;
+		}
+	}
+}
+
+.BtnWrapper {
+	display: inline-block;
+	vertical-align: middle;
+
+	&--help {
+		cursor: help;
+	}
+}
+
+.btn--select {
+	font-family: Arial;
+	font-size: 13px;
+	line-height: 1.2;
+	text-transform: none;
+	border-radius: 2em;
+	border: none;
+	height: auto;
+	min-width: 92px;
+	padding: 3px 8px;
+
+	&:hover,
+	&:active,
+	&:focus {
+		border: none;
+	}
+
+	&:after {
+		content: '';
+		display: inline-block;
+		vertical-align: middle;
+		box-sizing: border-box;
+		border: 4px solid transparent;
+		border-top-color: #333;
+		width: 8px;
+		height: 8px;
+		margin-left: 4px;
+		margin-top: .2em;
+		opacity: .7
+	}
+
+	&.btnAccent:after {
+		border-top-color: #fff;
+	}
+}
+
+.btn--svgIcon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding-y: 0;
+}

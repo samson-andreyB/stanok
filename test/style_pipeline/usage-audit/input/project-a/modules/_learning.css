@@ -1,0 +1,52 @@
+.LearningInformer {
+	text-align: center;
+	margin-bottom: 2em;
+	
+	&__box {
+		& + & {
+			margin-top: 1em;
+		}
+		
+		&--info {
+			font-size: 14px;
+			font-weight: bold;
+		}
+	}
+	
+	&__btn {
+		@mixin btnDefault;
+		margin-right: 1em;
+		
+		&:before {
+			content: "";
+			display: inline-block;
+			margin-top: -.4em;
+			margin-right: .4em;
+			vertical-align: middle;
+		}
+		
+		&--university {
+			&:before {
+				background-image: resolve('university.png');
+				width: width('university.png');
+				height: height('university.png');
+			}
+				
+			&:active:before {
+				background-image: resolve('university_white.png');
+			}
+		}
+
+		&--instruction {
+			&:before {
+				background-image: resolve('instruction.png');
+				width: width('instruction.png');
+				height: height('instruction.png');
+			}
+				
+			&:active:before {
+				background-image: resolve('instruction_white.png');
+			}
+		}
+	}
+}

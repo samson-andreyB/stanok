@@ -1,0 +1,279 @@
+.Calendar {
+	&__wrapper {
+		display: flex;
+	}
+
+	&__periodSelector {
+		width: 100%;
+		height: 48px;
+		line-height: 48px;
+		text-align: center;
+		margin-bottom: 15px;
+		background-color: #ecf2f3;
+	}
+
+	&__periodCurrent {
+		display: inline-block;
+		margin-x: 20px;
+		font-size: 18px;
+		color: #565e6a;
+		cursor: default;
+	}
+
+	&__periodPrevious,
+	&__periodNext {
+		display: inline-block;
+		vertical-align: middle;
+		margin-top: -5px;
+		width: 30px;
+		height: 30px;
+		cursor: pointer;
+	}
+
+	&__periodPrevious {
+		background: svg('arrowLeft_6x10.svg', '[color]: #565e6a') no-repeat center;
+	}
+
+	&__periodNext {
+		background: svg('arrowRight_6x10.svg', '[color]: #565e6a') no-repeat center;
+	}
+
+	&__table {
+		table-layout: fixed;
+		border-collapse: collapse;
+		font-size: 11px;
+		user-select: none;
+		cursor: default;
+		color: #acacac;
+
+		td {
+			padding: 4px 0;
+		}
+
+		tbody {
+			td {
+				height: 20px;
+				background-clip:
+					content-box,
+					border-box;
+			}
+
+			tr:first-child td {
+				padding-top: 8px;
+			}
+
+			tr:last-child td {
+				padding-bottom: 8px;
+			}
+		}
+	}
+
+	&__employees {
+		.Calendar__table {
+			margin-left: 10px;
+		}
+	}
+
+	&__events {
+		position: relative;
+
+		.Calendar__table {
+			width: 100%;
+
+			tbody {
+				line-height: 20px;
+			}
+		}
+	}
+
+	&__header {
+		text-align: center;
+		background-color: #fff;
+
+		td {
+			box-sizing: border-box;
+			height: 23px;
+			padding-bottom: 4px;
+			border-x: none;
+		}
+
+		&--daysOfWeek {
+			td {
+				height: 40px;
+			}
+		}
+
+		&--months {
+			td {
+				padding-left: 9px;
+				text-align: left;
+			}
+
+			td + td {
+				position: relative;
+
+				&:before {
+					content: '';
+					width: 1px;
+					height: 200%;
+					position: absolute;
+					top: 0;
+					left: 0;
+					background-color: #ddd;
+				}
+			}
+		}
+
+		.Calendar__jump {
+			color: #acacac;
+			text-decoration: none;
+		}
+	}
+
+	&__workDay {
+		background-color: #f2f2f2;
+	}
+
+	&__today {
+		background-color: #fffbe0;
+	}
+
+	&__workDay&__today {
+		background-color: #f9f5da;
+	}
+
+	&__row {
+		td {
+			.Calendar__events & {
+				border-right: .4px solid #d7d7d7; /* .4px — защита от хромобага с заливкой content-box */
+				background-image:
+					linear-gradient(to top, rgba(189, 189, 189, .2), rgba(189, 189, 189, .2)),
+					none;
+
+				&:last-child {
+					border-right: none;
+				}
+			}
+		}
+
+		&:hover,
+		&.hover {
+			td {
+				background-image:
+					linear-gradient(to top, rgba(0, 0, 0, .1), rgba(0, 0, 0, .1)),
+					none;
+			}
+		}
+	}
+
+	&__employee {
+		white-space: nowrap;
+	}
+
+	&__employeeLink {
+		color: #2067b0;
+		font-weight: bold;
+		text-decoration: none;
+		margin-right: 7px;
+	}
+
+	&__avatar {
+		display: inline-block;
+		vertical-align: middle;
+		box-sizing: border-box;
+		width: 20px;
+		height: 20px;
+		margin-left: -10px;
+		margin-right: 5px;
+		border-radius: 50%;
+		overflow: hidden;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	&__event {
+		box-sizing: border-box;
+		padding: 0 5px;
+		line-height: 20px;
+		font-size: 11px;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		background-image: none;
+		cursor: pointer;
+
+		&--vacation        { background-color: $absenceVacation; }
+		&--leaveunpayed    { background-color: $absenceBS; }
+		&--leavesick       { background-color: $absenceSick; }
+		&--unknown         { background-color: $absenceAbsenteeism; }
+		&--assignment      { background-color: $absenceBusinessTrip; }
+		&--personal        { background-color: $absencePersonalCalendar; }
+		&--leavematerinity { background-color: $absenceMaternityLeave; }
+		&--pregnancy       { background-color: $absencePregnancy; }
+		&--other           { background-color: $absenceOther; }
+		&--lunch           { background-color: $absenceLunch; }
+	}
+
+	&--month {
+		.Calendar__periodCurrent {
+			width: 155px;
+		}
+	}
+
+	&--year {
+		.Calendar__events {
+			overflow-x: scroll;
+			padding-bottom: 7px;
+
+			.Calendar__table {
+				width: 10950px;
+				margin-left: -1px;
+				background-image: resolve('calendar_bg.png');
+			}
+
+			tbody {
+				background-size: 29px 120%;
+				background-repeat: no-repeat;
+			}
+		}
+	}
+
+	&--leapYear {
+		.Calendar__events .Calendar__table {
+			width: 10980px;
+		}
+	}
+
+	&--startFromMonday .Calendar__table {
+		background-position: 0 0;
+	}
+
+	&--startFromTuesday .Calendar__table {
+		background-position: -30px 0;
+	}
+
+	&--startFromWednesday .Calendar__table {
+		background-position: -60px 0;
+	}
+
+	&--startFromThursday .Calendar__table {
+		background-position: -90px 0;
+	}
+
+	&--startFromFriday .Calendar__table {
+		background-position: -120px 0;
+	}
+
+	&--startFromSaturday .Calendar__table {
+		background-position: -150px 0;
+	}
+
+	&--startFromSunday .Calendar__table {
+		background-position: -180px 0;
+	}
+}
+

@@ -1,0 +1,148 @@
+.SalesChannels {
+	width: 979px;
+	font-size: 12px;
+	line-height: 14px;
+	background-color: #fff;
+	margin-x: auto;
+	padding: 25px 20px 80px 30px;
+
+	&__legend {
+		list-style: none;
+		margin: 0 14px 38px;
+		padding: 0;
+		text-align: right;
+	}
+
+	&__legendItem {
+		display: inline-block;
+		vertical-align: middle;
+
+		& + & {
+			margin-left: 5px;
+		}
+
+		&:before {
+			content: '';
+			display: inline-block;
+			width: 14px;
+			height: 14px;
+			vertical-align: middle;
+			border: 1px solid #CADCC4;
+			margin-right: 3px;
+			border-radius: 2px;
+		}
+
+		&--salesChannel:before {
+			background-color: #EDF7D1;
+		}
+
+		&--salesSubchannel:before {
+			background-color: #E9F7FC;
+		}
+
+		&--clientType:before {
+			background-color: #F4F1DF;
+		}
+	}
+
+	&__scheme {
+		background-image: url('/assets/img/misc/saleschannels.png');
+		width: 979px;
+		height: 998px;
+		position: relative;
+	}
+
+	&__schemeItem {
+		position: absolute;
+		width: 174px;
+		text-align: center;
+
+		&--gkSamson {
+			top: 0;
+			left: 396px;
+		}
+
+		&--opt {
+			top: 58px;
+			left: 0;
+		}
+
+		&--kor {
+			top: 58px;
+			left: 298px;
+		}
+
+		&--korTrade {
+			top: 58px;
+			left: -100px;
+		}
+
+		&--korTradeMoscow {
+			top: 58px;
+			left: 98px;
+		}
+
+		&--omr {
+			top: 58px;
+			left: 594px;
+		}
+
+		&--eCommerce {
+			top: 58px;
+			left: 792px;
+		}
+
+		&--trading {
+			top: 116px;
+			left: 792px;
+		}
+
+		.pseudolink {
+			color: $C_TEXT;
+			border-bottom-color: $C_TEXT;
+
+			&:hover {
+				color: $C_LABEL;
+				border-bottom-color: $C_LABEL;
+			}
+		}
+	}
+
+	&__itemName {
+		padding-y: 10px;
+		height: 14px;
+	}
+
+	&__schemeSubItem {
+		margin-top: 16px;
+		margin-left: 23px;
+
+		&--level2 {
+			margin-top: 10px;
+		}
+
+		&--level3 {
+			margin-top: 6px;
+		}
+	}
+
+	.TipTip__content {
+		line-height: 14px;
+
+		ul {
+			margin: 0;
+			padding: 0 0 0 20px;
+		}
+
+		p {
+			margin: 0;
+		}
+
+		li + li,
+		ul + p,
+		p + ul,
+		p + p {
+			margin-top: 2px;
+		}
+	}
+}

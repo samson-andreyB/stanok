@@ -1,0 +1,169 @@
+/* Spoiler
+------------------------------------------------------------------------------*/
+
+.Spoiler {
+	background-repeat: no-repeat;
+	padding: 10px;
+	
+	&__trigger,
+	a&__trigger {
+		border-bottom: 1px dotted;
+		display: inline-block;
+		
+		cursor: pointer;
+		user-select: none;
+		
+		.bitrix24-light-theme & {
+			color: rgba(255, 255, 255, .9);
+
+			&:hover {
+				color: rgba(255, 255, 255, 1);
+			}
+		}
+
+		.bitrix24-default-theme &,
+		.bitrix24-dark-theme & {
+			color: #7a818a;
+
+			&:hover {
+				color: #535c69;
+			}
+		}
+
+		a& {
+			border-bottom-width: 0;
+		}
+	}
+
+	&__content {
+		display: none;
+		margin-top: 1em;
+	}
+
+	&__triggerText {
+		&--show {
+			display: inline;
+		}
+
+		&--hide {
+			display: none;
+		}
+	}
+
+	&--default {
+		padding: 0;
+
+		.Spoiler__trigger {
+			color: $C_LINK;
+
+			&:hover {
+				color: $C_LINK_HOVER;
+			}
+		}
+	}
+
+	&--default&--active {
+		background-color: transparent;
+	}
+
+	&--info {
+		.bitrix24-light-theme & {
+			background-image: resolve('lamp_light.png');
+		}
+
+		.bitrix24-default-theme &,
+		.bitrix24-dark-theme & {
+			background-image: resolve('lamp.png');
+		}
+
+		background-position: 10px 9px;
+		padding-left: calc(width('lamp.png') + 20px);
+	}
+
+	&--history {
+		.bitrix24-light-theme & {
+			background-image: resolve('clock_light.png');
+		}
+
+		.bitrix24-default-theme &,
+		.bitrix24-dark-theme & {
+			background-image: resolve('clock_grey.png');
+		}
+
+		background-position: 10px 11px;
+		padding-left: calc(width('clock_grey.png') + 20px);
+	}
+
+	&--active {
+		background-color: #f0f4f5;
+
+		.Spoiler__trigger,
+		a.Spoiler__trigger {
+			.bitrix24-light-theme & {
+				color: #7a818a;
+
+				&:hover {
+					color: #535c69;
+				}
+			}
+		}
+
+		.Spoiler__triggerText {
+			&--show {
+				display: none;
+			}
+
+			&--hide {
+				display: inline;
+			}
+		}
+
+		&.Spoiler--info {
+			.bitrix24-light-theme & {
+				background-image: resolve('lamp.png');
+			}
+		}
+
+		&.Spoiler--history {
+			.bitrix24-light-theme & {
+				background-image: resolve('clock_grey.png');
+			}
+		}
+	}
+
+	&--triggerBottom {
+		display: flex;
+		flex-direction: column-reverse;
+
+		.Spoiler__trigger {
+			align-self: flex-start;
+		}
+
+		.Spoiler__content {
+			margin-top: 0;
+			margin-bottom: 1em;
+		}
+	}
+
+	&--withPreview {
+		.Spoiler__content {
+			display: block;
+		}
+
+		.Spoiler__contentText {
+			&--hidden {
+				display: none;
+			}
+		}
+	}
+
+	&--listSubordinates {
+		.Spoiler__content {
+			margin-bottom: 3px;
+		}
+	}
+
+	.Items__header .Item {
+		background-color: transparent;
+	}
+}

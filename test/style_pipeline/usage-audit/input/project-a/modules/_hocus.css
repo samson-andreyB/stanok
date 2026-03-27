@@ -1,0 +1,31 @@
+@define-mixin hocus {
+	&:hover,
+	&.hover,
+	&:focus,
+	&.focus {
+		@mixin-content;
+	}
+}
+
+@define-mixin hocusac {
+	&:hover,
+	&.hover,
+	&:focus,
+	&.focus,
+	&:active,
+	&.active {
+		@mixin-content;
+	}
+}
+
+@define-mixin defhocusac {
+	&,
+	&:hover,
+	&.hover,
+	&:focus,
+	&.focus,
+	&:active,
+	&.active {
+		@mixin-content;
+	}
+}

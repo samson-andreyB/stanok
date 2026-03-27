@@ -1,0 +1,83 @@
+.Box {
+	& + & {
+		margin-top: .5em;
+	}
+
+	&--accent {
+		background-color: #f0f4f5;
+		padding: 15px;
+	}
+
+	&--hintWarning {
+		background-color: #f8f3da;
+		margin-top: 20px; /* ^ deprecated */
+		padding: 10px;
+		padding-left: 30px; 
+		background-image: resolve('warning.png');
+		background-repeat: no-repeat;
+		background-position: 10px 13px;
+	}
+
+	&--time {
+		background-color: #f6ffda;
+		color: #535c69;
+		padding: 12px 18px;
+		
+		&:before {
+			content: "";
+			display: inline-block;
+			background-image: resolve('clock_grey_b.png');
+			vertical-align: middle;
+			width: width('clock_grey_b.png');
+			height: height('clock_grey_b.png');
+			margin: -.15em 10px 0 0;
+		}
+	}
+
+	&--showMore {
+		padding: 12px;
+		text-align: center;
+	}
+
+	&--task {
+		background-color: #f8f3da;
+		color: #e00000;
+		display: inline-block;
+		padding: .5em 1em;
+		text-decoration: none;
+
+		a:link,
+		a:visited,
+		a:hover {
+			color: #e00000;
+		}
+	}
+
+	&--info {
+
+		p {
+			margin: 0;
+		}
+
+		p + p {
+			margin-top: 5px;
+		}
+	}
+}
+
+.Group {
+	&--accent {
+		background-color: #f0f4f5;
+		padding: 15px;
+	}
+
+	.Box {
+		display: table-cell;
+		padding-right: 20px;
+		vertical-align: middle;
+		
+		&:last-child {
+			padding-right: 0;
+		}
+	}
+}

@@ -1,0 +1,7 @@
+.Link--accent {
+	color: #fd5d39;
+
+	&:hover {
+		color: #f05633;
+	}
+}

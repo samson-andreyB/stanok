@@ -1,0 +1,118 @@
+/* Выпадалка (работает на ТипТипе)
+***********************************************************/
+
+.Dropdown {
+	display: inline-block;
+
+	&__trigger {
+		cursor: pointer;
+	}
+
+	&__list {
+		list-style: none;
+		padding: 0;
+		margin-y: 4px;
+		color: #3b434f;
+		font-size: 12px;
+	}
+
+	&__item {
+		display: block;
+		padding: 9px 18px;
+		cursor: pointer;
+
+		&:hover {
+			background-color: #eee;
+		}
+
+		&--disabled {
+			opacity: .5;
+			pointer-events: none;
+		}
+	}
+
+	&__link {
+		display: block;
+		margin: -9px -18px;
+		padding: 9px 18px;
+		text-decoration: none;
+
+		&,
+		&:link,
+		&:hover,
+		&:visited {
+			color: #3b434f;
+		}
+	}
+
+	&__clientName {
+		margin: 0;
+		padding-bottom: 2px;
+	}
+
+	&__data {
+		margin: 0;
+		color: #afafaf;
+	}
+
+	&__title {
+		padding-left: 15px;
+		margin-bottom: 2px;
+		margin-top: 5px;
+	}
+}
+
+.Dropdown--buttonSelect {
+	#header-inner & {
+		float: right;
+		position: relative;
+		top: 17px;
+
+		.Dropdown__trigger {
+			margin-right: 15px;
+		}
+	}
+}
+
+.Dropdown__list--responsible {
+	max-height: 210px;
+	min-width: 250px;
+	overflow-y: auto;
+	white-space: nowrap;
+}
+
+.Dropdown__list--scroll {
+	max-height: 205px;
+	width: 260px;
+	overflow-y: auto;
+
+	.Dropdown__item {
+		padding: 7px 8px 0px 15px;
+		cursor: auto;
+		background-color: transparent;
+	}
+}
+
+
+/* Выпадалка на ТипТипе с поиском --> */
+.Dropdown__list--withSearch {
+	font-size: 13px;
+
+	.Dropdown__item {
+		padding-y: 8px;
+	}
+}
+
+.Form--dropdownSearch {
+	padding: 9px 18px 5px;
+
+	.Form__input {
+		font-size: 13px;
+		width: 100% ;
+	}
+
+	& + .Dropdown__list--withSearch {
+		margin-top: 5px;
+	}
+}
+/* <-- Выпадалка на ТипТипе с поиском */

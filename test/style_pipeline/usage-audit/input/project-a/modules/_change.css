@@ -1,0 +1,152 @@
+.Change {
+	display: inline-block;
+	height: 1.35em;
+	cursor: default;
+	
+	&__box {
+		display: inline-block;
+		vertical-align: middle;
+		height: 100%;
+
+		&--user {
+			margin-right: -2px;
+			position: relative;
+		}
+		&--info {
+			max-width: 104px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			margin-left: -8px;
+			padding-left: 15px;
+			padding-right: 5px;
+		}
+	}
+	
+	&__photo {
+		border-radius: 50%;
+		box-shadow: 0 0 0 2px rgba(255,255,255,1);
+		width: 1.35em;
+		height: 1.35em;
+		object-fill: contain;
+	}
+	
+	&--add {
+		.Change__box--info {
+			background-color: #2067b0;
+			color: #fff;
+		}
+	}
+	&--del {
+		.Change__box--info {
+			background-color: $error;
+			color: #fff;
+		}
+	}
+	&--repeat  {
+		.Change__box--info {
+			background-color: #9220af;
+			color: #fff;
+		}
+	}
+}
+
+.ChangeHistory {
+	max-width: 1000px;
+	overflow-x: auto;
+
+	&__group {
+		display: table;
+		width: 100%;
+	}
+	&__box {
+		display: table-cell;
+		vertical-align: middle;
+	}
+
+	&--form {
+		padding: 10px 15px;
+		max-width: 300px;
+	}
+
+	&__header {
+		font-size: 12px;
+		font-weight: bold;
+		margin: 0;
+		padding-top: .4em;
+	}
+	&__content {
+		margin-top: .5em;
+	}
+	&__controls {
+		margin-top: 1em;
+	}
+	&__content + &__header {
+		margin-top: .5em;
+	}
+	&__field {
+		border: 1px solid #b9bcbe;
+		box-sizing: border-box;
+		font: inherit;
+		padding: .5em;
+		width: 100%;
+	}
+	textarea&__field {
+		height: 5em;
+		resize: none;
+	}
+}
+.Items--changeHistory {
+	table-layout: fixed;
+	border-collapse: collapse;
+	margin: .6em 0 1em 0;
+
+	table.Items& {
+		width: auto;
+	}
+	
+	.Item__box {
+		vertical-align: top;
+		border-right: 1px solid #dddddd;
+		padding: 0 .6em;
+	}
+	.Item__box:last-child {
+		border-right: none;
+		padding-right: 0;
+	}
+	.Item--content .Item__box {
+		line-height: 1.2;
+		padding-top: .5em;
+	}
+
+	.Item__box--withPhoto {
+		padding-left: 30px;
+	}
+	.Item__box--remove {
+		color: $error;
+	}
+	.Item__content {
+		max-width: 250px;
+	}
+	.ChangeHistory__date {
+		display: block;
+		font-size: 9px;
+	}
+	.ChangeHistory__date,
+	.ChangeHistory__user {
+		white-space: nowrap;
+	}
+	.ChangeHistory__status {
+		color: #9220af;
+		display: block;
+		font-size: 10px;
+	}
+	.Change__photo {
+		float: left;
+		margin-left: -25px;
+		margin-top: .4em;
+		vertical-align: middle;
+		width: 20px;
+		height: 20px;
+	}
+}

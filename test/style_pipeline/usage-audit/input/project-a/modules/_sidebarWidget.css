@@ -1,0 +1,78 @@
+.SidebarWidget {
+	position: relative;
+	overflow: hidden;
+	border-radius: 12px;
+	background-color: #fff;
+	cursor: default;
+	font: inherit;
+
+	&__header {
+		border-top-left-radius: 12px;
+		border-top-right-radius: 12px;
+		color: #fff;
+		font-family: $F_OPENSANS_BOLD;
+		font-weight: normal;
+		font-size: 15px;
+		height: 40px;
+		line-height: 40px;
+		padding-left: 20px;
+	}
+}
+
+.SidebarWidget--usefulLinks {
+	.SidebarWidget__header {
+		background-color: #f25321;
+	}
+
+	.SidebarWidgetItem {
+		background-repeat: no-repeat;
+		color: #80868e;
+		cursor: pointer;
+		display: block;
+		font-size: 14px;
+		padding: 15px 20px 15px 55px;
+		text-decoration: none;
+		
+		&:hover {
+			background-color: #f8fafb;
+			border-bottom: none;
+			text-decoration: none;
+		}
+
+		&--hotline {
+			background-image: svg('mic_15x21', '[color]: #80868e');
+			background-position: calc(32px - width('mic_15x21.svg')/2) 50%;
+		}
+		&--train {
+			background-image: svg('train_25x17', '[color]: #80868e');
+			background-position: calc(32px - width('train_25x17.svg')/2) 50%;
+		}
+		&--siteMonitor {
+			background-image: svg('monitorPulse_22x19', '[color]: #80868e');
+			background-position: calc(32px - width('monitorPulse_22x19.svg')/2) 50%;
+		}
+	}
+
+	.SidebarWidgetItem + .SidebarWidgetItem {
+		border-top: 1px solid #eff1f3;
+	}
+}
+
+.SidebarWidget--tagCloud {
+	.SidebarWidget__header {
+		background-color: #7f55af;
+	}
+
+	.SidebarWidget__content {
+		padding: 16px 18px;
+		overflow-wrap: break-word;
+
+		a:after {
+			content: '';
+			display: inline-block;
+			vertical-align: middle;
+			height: 1em;
+			padding-bottom: 8px;
+		}
+	}
+}

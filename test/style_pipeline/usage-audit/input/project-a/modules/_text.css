@@ -1,0 +1,21 @@
+.Text {
+	&--red {
+		color: $C_ERROR;
+	}
+
+	&--silver {
+		color: #7f7f7f;
+	}
+
+	&--orange {
+		color: #fd5d39;
+	}
+
+	&--help {
+		cursor: help;
+	}
+
+	.Badge + & {
+		margin-left: 8px;
+	}
+}

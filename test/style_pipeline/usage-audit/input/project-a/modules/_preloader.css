@@ -1,0 +1,76 @@
+/* PRELOADER
+------------------------------------------------------------------*/
+
+.LoadingContent {
+	position: relative;
+}
+
+.Preloader {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	cursor: default;
+	z-index: 5;
+
+	&__overlay {
+		width: 100%;
+		height: 100%;
+		background-color: #fff;
+		opacity: .8;
+	}
+
+	&__spinnerContainer {
+
+		/* По умолчанию отцентрирован относительно
+		   всего блока (для блоков с маленькой высотой) */
+		position: absolute;
+		width: 100%;
+		height: 60px;
+		top: 0;
+		bottom: 0;
+		margin: auto;
+
+		.Preloader--floating & { /* по центру страницы (для длинного блока с прокруткой) */
+			position: fixed;
+			margin-top: -30px;
+			top: 50%;
+			width: 100%; /* установить... */
+			left: 0; /* ...с помощью JS */
+		}
+
+		.Preloader--top &,
+		.Preloader--bottom & {
+			position: absolute;
+		}
+
+		.Preloader--top & {
+			left: 0 !important;
+			top: 100px;
+			bottom: auto;
+		}
+
+		.Preloader--bottom & {
+			left: 0 !important;
+			top: auto;
+			bottom: 70px;
+		}
+	}
+
+	&__spinner {
+		width: 60px;
+		height: 60px;
+		margin: 0 auto;
+		border-radius: 50%;
+		animation: Spinner linear 1.5s infinite;
+	}
+
+	&__spinnerWorm {
+		height: 100%;
+		width: 100%;
+		color: #7a818a;
+		animation: Worm cubic-bezier(0.42, 0, 0.08, 1) 6s infinite;
+	}
+}

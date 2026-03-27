@@ -1,0 +1,6 @@
+.SidePanelWrapper {
+	box-sizing: border-box;
+	min-height: 100vh;
+	padding: 0 15px 21px 21px;
+	background: #eef2f4;
+}

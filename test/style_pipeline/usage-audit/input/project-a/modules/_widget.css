@@ -1,0 +1,205 @@
+
+
+@define-mixin Widget--flag { /* Уровень абстракции: бог */
+	display: table;
+
+	.Widget__picContainer,
+	.Widget__info {
+		display: table-cell;
+		vertical-align: middle;
+	}
+
+	.Widget__picContainer {
+		height: 38px;
+		width: 38px;
+		min-width: 38px;
+	}
+
+	.Widget__label {
+		margin-top: -2px;
+		white-space: nowrap;
+		cursor: default;
+	}
+
+	.Widget__value {
+		margin-top: 1px;
+		white-space: nowrap;
+	}
+
+	.Widget__task {
+		white-space: nowrap;
+		cursor: default;
+
+		& + .Widget__label {
+			vertical-align: top;
+			margin-top: 1px;
+		}
+	}
+
+	.Widget__pic {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		vertical-align: middle;
+	}
+
+	.Widget__info {
+		padding-left: 10px;
+	}
+
+	a {
+		text-decoration: none;
+	}
+}
+
+.Widget {
+	&--person {
+		@mixin Widget--flag;
+
+		.Widget__pic {
+			border: 2px solid transparent;
+			border-radius: 50%;
+
+			&--placeholder {
+				display: inline-block;
+				width: 38px;
+				height: 38px;
+				background-image: resolve('avatar-placeholder.png');
+				background-repeat: no-repeat;
+				background-size: contain;
+			}
+		}
+
+		.Widget__label {
+			display: inline-block;
+			color: #7f7f7f;
+		}
+
+		&.Widget--personOnline,
+		&.Widget--personAbsent,
+		&.Widget--personAccept,
+		&.Widget--personWait,
+		&.Widget--personDecline {
+			.Widget__picContainer {
+				position: relative;
+				
+				&:after {
+					content: "";
+					position: absolute;
+					right: -4px;
+					top: 50%;
+					margin-top: 7px;
+					width: 10px;
+					height: 10px;
+					border: 2px solid #fff;
+					border-radius: 10px;
+				}
+			}
+		}
+
+		&.Widget--personAccept {
+			.Widget__picContainer {
+
+				&:after {
+					background-image: resolve('status-ok.png');
+				}
+			}
+
+			.Widget__pic {
+				border-color: #86b700;
+			}
+		}
+
+		&.Widget--personWait {
+			.Widget__picContainer {
+
+				&:after {
+					background-image: resolve('status-wait.png');
+				}
+			}
+
+			.Widget__pic {
+				border-color: #969ea8;
+			}
+		}
+
+		&.Widget--personDecline {
+			.Widget__picContainer {
+
+				&:after {
+					background-image: resolve('status-wrong.png');
+				}
+			}
+
+			.Widget__pic {
+				border-color: #ce0000;
+			}
+		}
+
+		&.Widget--personOnline {
+			.Widget__picContainer {
+
+				&:after {
+					background-color: #a7c131;
+					margin-top: 5px;
+				}
+			}
+
+			.Widget__pic {
+				border: none;
+			}
+		}
+
+		&.Widget--personAbsent {
+			.Widget__picContainer {
+
+				&:after {
+					background-color: #969ea8;
+					margin-top: 5px;
+				}
+			}
+
+			.Widget__pic {
+				border: none;
+			}
+		}
+	}
+
+	&--project {
+		@mixin Widget--flag;
+
+		.Widget__label {
+			color: $C_TEXT;
+		}
+
+		.Widget__pic {
+			border-radius: 5px;
+		}
+	}
+
+	&--link {
+		@mixin Widget--flag;
+
+		.Widget__picContainer {
+			width: auto;
+			min-width: auto;
+		}
+
+		.Widget__value {
+			margin-top: 0;
+		}
+
+		&:hover {
+			.Widget__picContainer {
+				opacity: .85;
+			}
+		}
+	}
+}
+
+.Widget--processMatching {
+	.Widget__label {
+		color: $C_TEXT;
+		font-size: 14px;
+	}
+}

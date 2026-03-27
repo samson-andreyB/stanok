@@ -18,7 +18,9 @@
     "test:smoke": "node --test test/smoke/*.test.mjs",
     "test:e2e": "node --test test/e2e/*.test.mjs",
     "test": "npm run test:unit && npm run test:smoke",
-    "test:style-pipeline": "node --test test/style_pipeline/*.test.mjs"
+    "test:style-pipeline": "node --test test/style_pipeline/*.test.mjs",
+    "audit:plugins": "node scripts/audit-plugin-usage.mjs",
+    "audit:plugins:pages": "node scripts/audit-plugin-usage.mjs --format html --output docs/plugin-audit/index.html"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.0.0"

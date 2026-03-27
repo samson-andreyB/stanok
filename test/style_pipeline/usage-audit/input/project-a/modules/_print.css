@@ -1,0 +1,42 @@
+@media print {
+	.Page--print-content-only {
+		#panel,
+		#header,
+		#bx-im-bar,
+		#footer,
+		#layout-left-column,
+		#layout-left-column-bottom,
+		#content-table .bx-layout-inner-inner-top-row .main-buttons,
+		#pagetitle-star,
+		.bx24-connection-status,
+		.btn,
+		.pseudolink,
+		.Form .Favorite,
+		.Form__set.submit {
+			display: none !important;
+		}
+
+		* {
+			color: #000 !important;
+		}
+
+		.OrdersForSpecialTerms {
+			.Spoiler {
+				display: none !important;
+			}
+			.Panel {
+				padding: 0 !important;
+			}
+		}
+
+		.bx-layout-table,
+		.bx-layout-inner-table,
+		.bx-layout-inner-inner-table,
+		#workarea,
+		#workarea-content,
+		.workarea-content-paddings {
+			overflow: visible;
+			height: auto;
+		}
+	}
+}

@@ -1,0 +1,277 @@
+.Timeline--default {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: nowrap;
+	padding-x: 8px;
+	max-height: 24px;
+
+	& + .Form .Form__set {
+		margin-top: 10px;
+	}
+
+	& + & {
+		margin-y: 10px;
+	}
+
+	.Timeline__accessory {
+		position: absolute;
+		top: 0;
+		z-index: 1;
+		display: none;
+		box-sizing: border-box;
+		width: 15px;
+		height: 100%;
+		background-color: #d3d7dc;
+	}
+
+	.Timeline__item {
+		position: relative;
+		z-index: 0;
+		box-sizing: border-box;
+		width: 8.3%;
+		padding-x: 10px;
+		color: #2d2d2d;
+		font-size: 11px;
+		line-height: 2.1;
+		font-family: $F_OPENSANS_BOLD;
+		text-transform: uppercase;
+		text-align: center;
+		cursor: pointer;
+		user-select: none;
+		white-space: nowrap;
+
+		&:before,
+		&:after {
+			content: '';
+			position: absolute;
+			left: 0;
+			z-index: -1;
+			box-sizing: border-box;
+			width: 100%;
+			height: 12px;
+			border: solid #d3d7dc;
+			border-width: 2px 3px;
+			background-color: #d3d7dc;
+		}
+
+		&:before {
+			top: 0;
+			border-bottom-width: 0;
+			transform: skewX(40deg);
+		}
+
+		&:after {
+			bottom: 0;
+			border-top-width: 0;
+			transform: skewX(-40deg);
+		}
+
+		&:first-child,
+		&:last-child {
+			.Timeline__accessory {
+				display: block;
+			}
+		}
+
+		&:first-child {
+			.Timeline__accessory {
+				left: -8px;
+				border-radius: 3px 0 0 3px;
+			}
+		}
+
+		&:last-child {
+			.Timeline__accessory {
+				right: -8px;
+				border-radius: 0 3px 3px 0;
+			}
+		}
+
+		&--active {
+			cursor: default;
+		}
+
+		&:hover,
+		&--active {
+			&:before,
+			&:after {
+				border-color: #abafb5;
+			}
+
+			&:first-child {
+				.Timeline__accessory {
+					border: 2px solid #abafb5;
+					border-right: none;
+				}
+			}
+
+			&:last-child {
+				.Timeline__accessory {
+					border: 2px solid #abafb5;
+					border-left: none;
+				}
+			}
+		}
+
+		&--green {
+			&:before,
+			&:after {
+				border-color: #b2e233;
+				background-color: #b2e233;
+			}
+
+			&:first-child,
+			&:last-child {
+				.Timeline__accessory {
+					background-color: #b2e233;
+				}
+			}
+
+			&:hover,
+			&.Timeline__item--active {
+				&:before,
+				&:after {
+					border-color: #7cc80a;
+				}
+
+				&:first-child,
+				&:last-child {
+					.Timeline__accessory {
+						border-color: #7cc80a;
+					}
+				}
+			}
+		}
+
+		&--red {
+			&:before,
+			&:after {
+				border-color: #ff835a;
+				background-color: #ff835a;
+			}
+
+			&:first-child,
+			&:last-child {
+				.Timeline__accessory {
+					background-color: #ff835a;
+				}
+			}
+
+			&:hover,
+			&.Timeline__item--active {
+				&:before,
+				&:after {
+					border-color: #e63900;
+				}
+
+				&:first-child,
+				&:last-child {
+					.Timeline__accessory {
+						border-color: #e63900;
+					}
+				}
+			}
+		}
+
+		&--yellow {
+			&:before,
+			&:after {
+				border-color: #ffdd39;
+				background-color: #ffdd39;
+			}
+
+			&:first-child,
+			&:last-child {
+				.Timeline__accessory {
+					background-color: #ffdd39;
+				}
+			}
+
+			&:hover,
+			&.Timeline__item--active {
+				&:before,
+				&:after {
+					border-color: #ffc10d;
+				}
+
+				&:first-child,
+				&:last-child {
+					.Timeline__accessory {
+						border-color: #ffc10d;
+					}
+				}
+			}
+		}
+
+		&--lightGray {
+			opacity: .5;
+		}
+	}
+
+	.Timeline__item + .Timeline__item {
+		margin-left: 4px;
+	}
+
+	.Timeline__aux {
+		margin-left: 2px;
+		color: #2d2d2d;
+		font-size: 9px;
+		line-height: 1;
+		text-transform: none;
+		opacity: .6;
+
+		&--expired {
+			color: $error;
+		}
+	}
+}
+
+.Timeline--adaptation{
+	.Timeline__item {
+		flex-grow: 1;
+		width: auto;
+		text-transform: none;
+		font-weight: 700;
+
+		&:first-child {
+			flex-grow: 0;
+			font-weight: 600;
+			text-transform: uppercase;
+			pointer-events: none;
+
+			&:before,
+			&:after {
+				border-color: #fff;
+				background-color: #fff;
+			}
+
+			&:first-child,
+			&:last-child {
+				.Timeline__accessory {
+					background-color: #fff;
+				}
+			}
+
+			&:hover,
+			&.Timeline__item--active {
+				&:before,
+				&:after {
+					border-color: #fff;
+				}
+
+				&:first-child,
+				&:last-child {
+					.Timeline__accessory {
+						border-color: #fff;
+					}
+				}
+			}
+
+			.Icon {
+				margin-left: 5px;
+				position: relative;
+				top: 2px;
+			}
+		}
+	}
+}

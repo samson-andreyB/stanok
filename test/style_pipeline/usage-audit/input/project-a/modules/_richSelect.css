@@ -1,0 +1,297 @@
+/* RichSelect (Забрал с Офисмага 13 января 2017 года и внёс правки)
+------------------------------------------------------------------------------*/
+
+/*
+<div class="RichSelect">
+	<span class="RichSelect__field RichSelect__trigger">Выбрано 3 группы</span>
+	<ul class="RichSelect__options">
+		<li class="RichSelect__option"><label><input class="RichSelect__input" type="checkbox">Выбрать все</label></li>
+		<li class="RichSelect__option"><label><input type="checkbox" class="RichSelect__input">Товары для офиса, канцтовары<span class="RichSelect__info">(251)</span></label></li>
+		<li class="RichSelect__option level2"><label><input type="checkbox" class="RichSelect__input">Демонстрационное оборудование&nbsp;<span class="RichSelect__info">(30)</span></label></li>
+	</ul>
+</div>
+*/
+
+.RichSelect {	
+	&:focus,
+	&.focus {
+		/*border-color: $main;*/
+	}
+
+	border-color: #b9bcbe;
+	width: auto;
+}
+
+$RichSelectPaddingLeft: 25px;
+
+.RichSelect {
+	display: inline-block;
+	line-height: 0;
+	position: relative;
+	user-select: none;
+	vertical-align: middle;
+	
+	.RichSelect--active&:after {
+		content: "";
+		position: absolute;
+		height: 1px;
+		width: 100%;
+		bottom: 0;
+		left: 0;
+		box-sizing: border-box;
+		background-color: #fff;
+		border-x: 1px solid #bbb;
+		z-index: 100;
+	}
+
+	.RichSelect__input {
+		margin-top: -1px;
+		margin-right: .4em;
+		margin-left: -19px;
+		vertical-align: middle;
+	}
+}
+
+.RichSelect__field {
+	background: #fff;
+	box-sizing: border-box;
+	color: #222;
+	cursor: pointer;
+	display: inline-block;
+	line-height: 1.3 !important;
+	margin-right: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding-right: 1.8em !important;
+	position: relative;
+	white-space: nowrap;
+	width: 100% !important;
+
+	border: 1px solid #d9d9d9;
+	font: inherit;
+	margin: 0;
+	padding: 5px;
+	
+	&:hover,
+	&.hover,
+	&:focus {
+		border-color: #ababab;
+	}
+	
+	&:after {
+		content: "";
+		border-style: solid;
+		border-width: 4px;
+		border-x-color: transparent;
+		border-bottom-width: 0;
+		position: absolute;
+		top: .95em;
+		right: .5em;
+	}
+
+	&:hover {
+		border-color: #ababab;
+	}
+
+	&:focus {
+		box-shadow: none;
+	}
+
+	.RichSelect--active & {
+		border-color: #bbb;
+		border-bottom-color: #fff;
+		z-index: 100;
+	}
+
+	.RichSelect--error & {
+		border-color: $C_ERROR;
+	}
+}
+
+.RichSelect__options {
+	background: #fff;
+	border: 1px solid #bbb;
+	box-shadow: 0 9px 12px rgba(0,0,0,.25);	   
+	box-sizing: border-box;
+	display: none;
+	line-height: 1.3;
+	margin-top: -1px;
+	max-height: 300px;
+	overflow: auto;
+	padding: 3px; /* 0 */
+	position: absolute;
+	left: 0;
+	top: 100%;
+	min-width: 100%;
+	max-width: 600px;
+	z-index: 99;
+
+	input[type="checkbox"] + span {
+		vertical-align: middle;
+	}
+}
+
+.RichSelect__option {
+	display: block;
+	font-weight: bold;
+	
+	/* место под возможную полосу прокрутки */
+	padding-right: 20px;
+	padding-left: $RichSelectPaddingLeft;
+	white-space: nowrap;
+	
+	& + & {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+
+	&--active {
+		background-color: #e9f8f3;
+	}
+
+	label {
+		display: block;
+		padding-y: 3px;
+	}
+}
+.RichSelect--oneLevel .RichSelect__option {
+	font-weight: normal;
+}
+
+.RichSelect__info {
+	color: #888;
+	display: inline-block;
+	font-weight: normal;
+	margin-left: 3px;
+}
+
+.RichSelect .level2 {
+	font-weight: normal;
+	padding-left: calc(20px + $RichSelectPaddingLeft);
+}
+
+.RichSelect--liveSearch {
+	max-width: 340px;
+
+	.RichSelect__filter {
+		margin: 9px;
+	}
+
+	.RichSelect__filterInput {
+		width: 100%;
+		padding: 10px;
+	}
+
+	.RichSelect__options {
+		min-width: 340px;
+		padding: 0;
+		overflow: visible;
+	}
+
+	.RichSelect__list {
+		list-style-type: none;
+		padding: 0;
+		margin: 0;
+		max-height: 180px;
+		overflow: auto;
+	}
+
+	.RichSelect__item {
+		padding: 3px 9px;
+
+		&:hover {
+			background-color: #eee;
+			cursor: pointer;
+		}
+	}
+
+	.RichSelect__noResults {
+		display: none;
+		padding-left: 15px;
+		padding-bottom: 20px;
+		color: #999;
+
+		&--active {
+			display: block;
+		}
+	}
+}
+
+.RichSelect--plaques {
+	display: block;
+	line-height: 1.2;
+
+	.Plaques {
+		&:hover {
+			border-color: #64a6f3;
+
+			.Plaque--add:after {
+				opacity: 1;
+			}
+		}
+	}
+
+	.RichSelect__options {
+		margin-top: 0px;
+		padding: 10px 8px;
+		border: none;
+
+		label {
+			padding-top: 6px;
+			padding-bottom: 7px;
+		}
+	}
+
+	&.RichSelect--active {
+		&.RichSelect:after {
+			display: none;
+		}
+
+		.Plaques {
+			border-color: #64a6f3;
+		}
+	}
+
+	.RichSelect__option {
+		color: #80868e;
+
+		&:hover {
+			background-color: #f3f6f8;
+		}
+	}
+
+	& + .pseudolink {
+		display: inline-block;
+		margin-top: 8px;
+	}
+
+	& + .Form__error {
+		margin-bottom: 5px;
+	}
+
+	.RichSelect__filter {
+		margin: 10px 5px 5px;
+	}
+
+	.RichSelect__filterInput {
+		width: 100%;
+		padding: 10px;
+	}
+
+	.RichSelect__noResults {
+		display: none;
+		padding-top: 10px;
+		padding-left: 5px;
+		color: #999;
+
+		&--active {
+			display: block;
+		}
+	}
+}
+
+.RichSelect--error {
+	.RichSelect__field {
+		border-color: $error;
+	}
+}

@@ -1,0 +1,20 @@
+@font-face {
+	font-family: 'Russo One';
+	src: url('/assets/fonts/RussoOne-Regular.ttf');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Gabriela';
+	src: url('/assets/fonts/Gabriela-Regular.ttf');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Lobster';
+	src: url('/assets/fonts/Lobster-Regular.ttf');
+	font-weight: normal;
+	font-style: normal;
+}

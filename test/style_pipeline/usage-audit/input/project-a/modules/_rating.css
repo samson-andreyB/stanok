@@ -1,0 +1,45 @@
+.Rating--sticks {
+	.Rating__grades {
+		vertical-align: middle;
+		cursor: pointer;
+		user-select: none;
+	}
+
+	.Rating__value {
+		vertical-align: middle;
+	}
+
+	.Rating__grades + .Rating__value {
+		margin-left: 3px;
+	}
+
+	.Rating__item {
+		display: inline-block;
+		width: 8px;
+		height: 12px;
+		cursor: pointer;
+
+		&:before {
+			content: '';
+			display: block;
+			border-radius: 2px;
+			height: 100%;
+			background-color: #d4d4d4;
+			transition: background-color .1s;
+		}
+
+		&--active {
+			&:before {
+				background-color: #fd5e3a;
+			}
+		}
+	}
+
+	.Rating__item + .Rating__item {
+		padding-left: 3px;
+	}
+
+	&.Rating--disabled {
+		pointer-events: none;
+	}
+}

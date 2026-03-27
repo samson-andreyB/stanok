@@ -1,0 +1,421 @@
+/* Структура компании
+***********************************************************/
+
+.CompanyStructure {
+	display: flex;
+	box-sizing: border-box;
+	background-color: #fff;
+	font-size: 13px;
+	color: $C_LABEL;
+	cursor: default;
+
+	&__main {
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+		width: 70%;
+		padding: 20px;
+		padding-bottom: 0;
+		box-sizing: border-box;
+	}
+
+	&__sidebar {
+		display: flex;
+		flex-direction: column;
+		width: 30%;
+		max-width: 450px;
+	}
+
+	&__departments {
+		flex-grow: 1;
+		padding: 20px;
+		border-left: 1px solid #e8eff3;
+	}
+
+	&__departmentsHeader {
+		border-bottom: 1px solid #e8eff3;
+		height: 74px;
+		line-height: 74px;
+		box-sizing: border-box;
+		font-family: $F_OPENSANS_REGULAR;
+		font-size: 22px;
+		font-weight: normal;
+		margin: 0;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+}
+
+
+
+/* Нет панели, табов, сайдбара — только таблица
+***********************************************************/
+.CompanyStructure--table {
+
+	.CompanyStructure__main {
+		padding: 0;
+	}
+
+	.Item__box {
+
+		&:first-child {
+			padding-left: 25px;
+		}
+
+		&:last-child {
+			padding-right: 25px;
+		}
+	}
+
+	.Pagination__total {
+		padding-left: 25px;
+	}
+
+	.Pagination__itemsPerPage {
+		padding-right: 25px;
+	}
+}
+
+
+
+/* Внутренности: модификация от контекста
+***********************************************************/
+
+.CompanyStructure {
+
+	.Tabs {
+
+		&__containers {
+			padding-top: 0;
+		}
+
+		&__labels {
+			padding-bottom: 27px;
+			border-bottom: 1px solid #e8eff3;
+
+			&:after {
+				content: '';
+				display: block;
+				clear: both;
+			}
+		}
+	}
+
+	.DepartmentStatus {
+		margin-bottom: 25px;
+	}
+
+	.Items {
+		border-spacing: 0;
+	}
+
+	.Item__balancer {
+		height: 70px;
+	}
+
+	.TextBadges {
+		margin-top: 3px;
+	}
+
+	.Pagination {
+		margin-top: -1px;
+		border-color: #e8eff3;
+	}
+
+	a {
+		@mixin link;
+	}
+}
+
+
+
+/* На узких экранах
+***********************************************************/
+@media (max-width: 1360px) {
+
+	.CompanyStructure {
+
+		&__departmentsHeader {
+			font-size: 17px;
+		}
+
+		&:not(.CompanyStructure--table) {
+
+			.Pagination {
+
+				&__total,
+				&__itemsPerPage {
+					min-width: auto;
+					width: 1px;
+					white-space: nowrap;
+				}
+			}
+		}
+	}
+}
+
+
+
+/* Сотрудник (микс с .Item)
+***********************************************************/
+
+.Employee {
+
+	.Item__box {
+		padding-y: 13px;
+		border-bottom: 1px solid #e8eff3;
+		vertical-align: top;
+	}
+
+	.Item__box--info {
+		width: 280px;
+	}
+
+	&__photoContainer {
+		width: 70px;
+		height: 70px;
+		position: relative;
+	}
+
+	&__photo {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		border-radius: 50%;
+		box-sizing: border-box;
+		border: 1px solid #f1f1f1;
+		image-rendering: -webkit-optimize-contrast; /* делаем уменьшенные фото чётче в хроме */
+	}
+
+	&__status {
+		position: absolute;
+		display: block;
+		bottom: 2px;
+		right: 2px;
+		width: 15px;
+		height: 15px;
+		box-sizing: border-box;
+		border: 2px solid #fff;
+		border-radius: 50%;
+
+		&--online {
+			background-color: $C_ONLINE;
+		}
+
+		&--outsideOffice {
+			background-color: $C_OUTSIDE_OFFICE;
+		}
+	}
+
+	&__nameContainer {
+		white-space: nowrap;
+	}
+
+	&__name {
+		font-size: 15px;
+		font-weight: bold;
+	}
+
+	&__post {
+		margin-top: 4px;
+	}
+
+	&__department {
+		margin-top: 5px;
+	}
+
+	&__badges {
+		display: inline-block;
+		margin: -3px 0;
+	}
+
+	&__badge {
+		display: inline-block;
+		vertical-align: middle;
+		margin-left: 6px;
+
+		.ui-side-panel-wrap-title-item & {
+			margin-left: 0;
+			margin-right: 10px;
+		}
+
+		&--bestInProfession {
+			background-image: resolve('medal.png');
+			width: width('medal.png');
+			height: height('medal.png');
+		}
+
+		&--birthday {
+			background-image: resolve('cake.svg');
+			width: width('cake.svg');
+			height: height('cake.svg');
+			margin-top: -4px;
+		}
+
+		&--newEmployee {
+			background-image: resolve('academicCapBlue.svg');
+			width: width('academicCapBlue.svg');
+			height: height('academicCapBlue.svg');
+			margin-top: -4px;
+		}
+
+		&--attendant {
+			background: resolve('attendant.svg');
+			width: width('attendant.svg');
+			height: height('attendant.svg');
+			margin-top: -2px;
+		}
+
+		&--maternityLeave {
+			background-image: resolve('pregnantWoman_10x24_e8a.svg');
+			width: width('pregnantWoman_10x24_e8a.svg');
+			height: height('pregnantWoman_10x24_e8a.svg');
+			margin-top: -3px;
+		}
+
+		&--workHome {
+			background-image: resolve('workHome.svg');
+			width: width('workHome.svg');
+			height: height('workHome.svg');
+			margin-top: -4px;
+		}
+
+		&--vacation {
+			background-image: resolve('vacation.svg');
+			width: width('vacation.svg');
+			height: height('vacation.svg');
+			margin-top: -4px;
+		}
+	}
+
+	&__moreContacts {
+		margin-left: 2px;
+	}
+
+	&__change {
+		min-width: 200px;
+		max-width: 270px;
+	}
+}
+
+
+
+/* Список контактных данных
+***********************************************************/
+
+.ContactsList {
+
+	&__item {
+		padding-left: 20px;
+
+		&:before {
+			content: '';
+			display: inline-block;
+			width: 15px;
+			height: 15px;
+			vertical-align: middle;
+			margin-left: -20px;
+			margin-top: -3px;
+			margin-right: 5px;
+			background-repeat: no-repeat;
+			background-position: 50% 50%;
+		}
+
+		& + & {
+			margin-top: 3px;
+		}
+
+		&--phone {
+			&:before {
+				background-image: resolve('phone.png');
+			}
+		}
+
+		&--mobilePhone {
+			&:before {
+				background-image: resolve('mobile_phone.png');
+			}
+		}
+
+		&--email {
+			&:before {
+				background-image: resolve('letter.png');
+			}
+		}
+
+		&--quittingQuestionnaire {
+
+			&:before {
+				background-image: resolve('download_thicker.png');
+				width: width('download_thicker.png');
+				height: height('download_thicker.png');
+				margin-right: 8px;
+			}
+		}
+	}
+
+	a&__link {
+		@mixin linkMasked;
+	}
+
+	.pseudolink {
+		@mixin link;
+	}
+}
+
+
+
+/* Список телефонов (контент для ТипТипа)
+***********************************************************/
+
+.PhonesList {
+	margin: 0;
+	padding: 7px;
+	list-style: none;
+	color: #3b434f;
+	display: table;
+
+	&__item {
+		display: table-row;
+	}
+
+	&__itemValue {
+		display: table-cell;
+		font-weight: bold;
+		text-align: right;
+	}
+
+	&__itemLabel {
+		padding-left: 5px;
+		display: table-cell;
+		font-size: 11px;
+	}
+
+	a&__link {
+		@mixin linkMasked;
+	}
+}
+
+
+
+/* Модификация раскладки
+***********************************************************/
+
+.Page--companyStructure {
+	.pagetitle-below {
+		display: none;
+	}
+}
+
+
+
+/* Профиль пользователя
+***********************************************************/
+
+.WorkStatus {
+	margin-top: 6px;
+	margin-bottom: 5px;
+	position: relative;
+	padding-left: 25px;
+}

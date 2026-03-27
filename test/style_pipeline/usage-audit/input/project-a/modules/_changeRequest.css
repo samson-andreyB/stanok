@@ -1,0 +1,313 @@
+/*********************
+* Items modification *
+*********************/
+.Items--changeRequest {
+	color: #535c69;
+
+	.Item__box {
+		border-top: none;
+		vertical-align: top;
+		padding: 20px 10px;
+
+		&--siteIcon,
+		&--itemNumber,
+		&--requestClass,
+		&--requestStatusIcon,
+		&--printIcon {
+			width: 1px;
+		}
+
+		&--implementationReason,
+		&--initiator {
+			width: 100%;
+		}
+
+		&--requestStatus {
+			min-width: 150px;
+		}
+
+		&--siteIcon,
+		&--itemNumber {
+			padding-right: 3px;
+		} 
+	}
+
+	.Items__list .Item:hover .Item__box {
+		background-color: #fcf9e6;
+		cursor: default;
+	}
+
+	.Icon--print,
+	.Icon--printWarning {
+		visibility: hidden;
+	}
+	.Item:hover {
+		.Icon--print,
+		.Icon--printWarning {
+			visibility: visible;
+			opacity: .7;
+		}
+		.Icon--print:hover {
+			opacity: 1;
+			cursor: pointer;
+		}
+	}
+
+	.Item--released {
+		opacity: .6;
+	}
+
+	.version {
+		display: block;
+		font-size: .7em;
+		margin-top: 2px;
+	}
+
+	.takeForConsideration {
+		background-color: #f8f3da;
+		color: #e00000;
+		display: inline-block;
+		margin-top: 1em;
+		padding: .5em 1em;
+		text-decoration: none;
+	}
+	.takeForConsideration:hover {
+		text-decoration: underline;
+	}
+
+	.requestLink,
+	.initiatorLink {
+		color: #535c69;
+		text-decoration: none;
+
+		&:hover {
+			color: #0069c4;
+			text-decoration: underline;
+		}
+	}
+}
+
+
+
+/****************
+* ChangeRequest *
+****************/
+.ChangeRequest__panelTop {
+	.DocumentInformation__blockHeader {
+		color: #7f7f7f;
+	}
+	.DocumentInformation__blockContent {
+		color: #000;
+	}
+	.DocumentInformation__box {
+		vertical-align: middle;
+	}
+	.DocumentInformation__block:first-child .DocumentInformation__blockHeader {
+		color: #000;
+	}
+}
+
+.ChangeRequest__favicon {
+	border-radius: 2px;
+}
+
+.ChangeRequest__information {
+	display: none;
+	margin-top: 1em;
+	margin-left: 230px;
+
+	.DocumentInformation__blockHeader,
+	.DocumentInformation__blockContent {
+		font-style: normal;
+		font-size: 90%;
+	}
+	.DocumentInformation__blockHeader {
+		color: #7f7f7f;
+	}
+	.DocumentInformation__block,
+	.DocumentInformation__box {
+		padding-bottom: 0;
+		vertical-align: middle;
+	}
+	.DocumentInformation__block:first-child {
+		padding-right: 35px;
+	}
+	.DocumentInformation__block + .DocumentInformation__block {
+		padding: 8px 12px;
+		background-color: #f8f3da;
+	}
+}
+
+.ChangeRequest__matching {
+	cursor: default;
+
+	.DocumentInformation__block {
+		display: block;
+		padding-left: 0;
+		margin-top: 15px;
+	}
+	.DocumentInformation__block:first-child {
+		margin-top: 0;
+	}
+	.DocumentInformation__box + .DocumentInformation__box {
+		padding-top: 3px;
+	}
+	.AvatarWrapper--status:after {
+		bottom: -4px;
+		right: -4px;
+	}
+	.AvatarImage {
+		border: 2px solid transparent;
+	}
+	.matchingApprove .AvatarImage {
+		border: 2px solid #86b700;
+	}
+	.matchingApprove.AvatarWrapper--status:after {
+		background-image: resolve('status-ok.png');
+	}
+	.matchingCancel .AvatarImage {
+		border: 2px solid #ce0000;
+	}
+	.matchingCancel.AvatarWrapper--status:after {
+		background-image: resolve('status-wrong.png');
+	}
+	.matchingInProgress .AvatarImage {
+		border: 2px solid #969ea8;
+	}
+	.matchingInProgress.AvatarWrapper--status:after {
+		background-image: resolve('status-wait.png');
+	}
+}
+
+.ChangeRequest__delegate {
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: 6px;
+	margin-top: -2px;
+	width: width('pencil.png');
+	height: height('pencil.png');
+	background-image: resolve('pencil.png');
+	cursor: pointer;
+}
+
+.ChangeRequest__panelBottom {
+	margin-top: 20px;
+	padding: 17px;
+	background-color: #f0f4f5;
+	color: #7f7f7f;
+
+	.ChangeRequest__basic {
+		display: table-cell;
+		.ChangeRequest__btn {
+			margin-right: 1em;
+		}
+	}
+	.ChangeRequest__additional {
+		display: table-cell;
+		text-align: right;
+		.ChangeRequest__btn {
+			margin-left: 1em;
+		}
+	}
+	.ChangeRequest__hint {
+		margin-top: 10px;
+		font-size: 12px;
+	}
+	.btnDefault {
+		height: auto;
+	}
+	.Form__btn {
+		height: auto;
+	}
+}
+
+.ChangeRequest__btn {
+	&--sendForMatching,
+	&--edit,
+	&--print {
+		background-repeat: no-repeat;
+		background-position: left 13px center;
+	}
+
+	&--sendForMatching {
+		padding-left: 40px;
+		background-image: resolve('person.png');
+	}
+	&--sendForMatching:active {
+		background-image: resolve('person_white.png');
+	}
+
+	&--edit {
+		padding-left: 36px;
+		background-image: resolve('pencil.png');
+	}
+	&--edit:active {
+		background-image: resolve('pencil_white.png');
+	}
+
+	&--print {
+		padding-left: 40px;
+		background-image: resolve('print.png');
+	}
+	&--print:active {
+		background-image: resolve('print_white.png');
+	}
+}
+
+.ChangeRequest__difficulty {
+	border-bottom: 1px dotted currentColor;
+}
+
+.ChangeRequest__header {
+	font-size: 18px;
+	font-weight: normal;
+	font-family: verdana;
+	margin: 25px 0;
+	vertical-align: middle;
+
+	.releaseVersion {
+		font-size: 14px;
+		a {
+			text-decoration: none;
+		}
+	}
+}
+
+.rscCard {
+	.Icon--difficulty-a,
+	.Icon--difficulty-b,
+	.Icon--difficulty-c,
+	.Icon--difficulty-d {
+		margin-left: 5px;
+		margin-bottom: -3px;
+	}
+}
+
+
+
+/**********
+* Spoiler *
+**********/
+.Form .Form__set.Spoiler {
+	padding: 0;
+
+	.Form__header {
+		margin: 0;
+		background-repeat: no-repeat;
+		background-position: right 15px center;
+		cursor: pointer;
+	}
+
+	.Col__wrapper {
+		padding: 0 20px 20px 20px;
+	}
+}
+.Spoiler--shown .Form__header {
+	background-image: resolve('arrow_up.png');
+}
+.Spoiler--hidden .Form__header {
+	background-image: resolve('arrow_down.png');
+}
+.Spoiler--hidden .Col__wrapper {
+	display: none;
+}

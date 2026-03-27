@@ -1,0 +1,11 @@
+body {
+	color: $C_TEXT;
+	font-family: $F_ARIAL;
+}
+a {
+	color: $C_LINK;
+	
+	&:hover {
+		color: $C_LINK_HOVER;
+	}
+}

@@ -1,0 +1,30 @@
+.ContextList {
+	&--absolute {
+		position: absolute;
+		top: 100%;
+		left: -1px;
+		z-index: 10;
+		display: none;
+	}
+
+	&__item {
+		display: block;
+
+		& + & {
+			margin-top: 5px;
+		}
+	}
+	
+	&--vacancy {
+		background-color: #fff;
+		border: 1px solid #bbb;
+		padding: 10px;
+		height: 140px;
+		width: 350px;
+		overflow-y: auto;
+	}
+
+	&--report {
+		padding: 7px;
+	}
+}

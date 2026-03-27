@@ -1,0 +1,99 @@
+.FancyDialog {
+	box-sizing: border-box;
+	padding: 25px;
+
+	&__controls {
+		margin: 0 -25px -25px -25px;
+		padding: 15px 25px;
+		font-size: 0;
+		text-align: center;
+		white-space: nowrap;
+		background-color: #f0f4f5;
+
+		&--left {
+			text-align: left;
+		}
+
+		&--transparent {
+			background: transparent;
+		}
+	}
+
+	&__title {
+		font-size: 22px;
+		font-weight: 400;
+	}
+
+	&__btn {
+		margin-right: 15px;
+	}
+
+	&__btn:last-child {
+		margin-right: 0;
+	}
+
+	&--narrow {
+		width: 410px;
+	}
+
+	&--medium {
+		width: 600px;
+	}
+
+	&--wide {
+		width: 880px;
+	}
+
+	&--prolongAdaptation {
+		width: 285px;
+	}
+}
+
+.FancyDialog--default {
+	padding: 30px;
+	color: #535b69;
+	cursor: default;
+
+	.FancyDialog__header {
+		margin: 0;
+		font-family: $F_OPENSANS_LIGHT;
+		font-size: 22px;
+		font-weight: normal;
+	}
+
+	.FancyDialog__content {
+		margin-top: 20px;
+		line-height: 1.4;
+
+		&:first-child {
+			margin-top: 0;
+		}
+
+		p {
+			margin: 0;
+		}
+
+		p + p {
+			margin-top: 12px;
+		}
+	}
+
+		&.Form {
+			.FancyDialog__content {
+				line-height: inherit;
+			}
+		}
+
+	.FancyDialog__controls {
+		padding: 0;
+		margin: 0;
+		margin-top: 25px;
+		font-size: inherit;
+		text-align: left;
+		background: none;
+
+		.btn + .btn {
+			margin-left: .6em;
+		}
+	}
+}

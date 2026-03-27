@@ -1,0 +1,8 @@
+.UrgentOrder {
+	margin-top: -15px;
+	padding-bottom: 20px;
+
+	& > * {
+		margin-right: 12px;
+	}
+}
