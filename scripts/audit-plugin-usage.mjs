@@ -7,6 +7,7 @@
  * Usage:
  *   node scripts/audit-plugin-usage.mjs                         # MD + JSON + HTML → report/
  *   node scripts/audit-plugin-usage.mjs --input ./my/css/dir
+ *   node scripts/audit-plugin-usage.mjs --plugins-meta-url https://example.com/plugins-meta.json
  *   node scripts/audit-plugin-usage.mjs --format html --output docs/plugin-audit/index.html
  *   node scripts/audit-plugin-usage.mjs --format json
  *   node scripts/audit-plugin-usage.mjs --format markdown
@@ -16,11 +17,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 // ---------------------------------------------------------------------------
-// Plugin metadata (priority + complexity) — sourced from plugins-meta.json
+// Plugin metadata (priority + complexity) — optionally loaded from URL
 // ---------------------------------------------------------------------------
-
-const META_PATH = new URL('./plugins-meta.json', import.meta.url).pathname.replace(/^\/([A-Z]:)/, '$1');
-const PLUGINS_META = JSON.parse(fs.readFileSync(META_PATH, 'utf8'));
 
 // ---------------------------------------------------------------------------
 // CLI args
@@ -38,6 +36,7 @@ const OUTPUT_PATH = getArg('--output') ?? null;
 const FORMAT = getArg('--format') ?? 'all'; // 'all' | 'markdown' | 'json' | 'html'
 const LOCKFILE_PATH = path.join(ROOT, 'package-lock.json');
 const PROJECT_MAP_PATH = getArg('--project-map') ?? null;
+const PLUGINS_META_URL = getArg('--plugins-meta-url') ?? null;
 
 function loadProjectAliasMap(filePath) {
   if (!filePath || !fs.existsSync(filePath)) return {};
@@ -144,6 +143,21 @@ function loadIntcssDependencySpecs(lockfilePath) {
 
 const INTCSS_DEP_SPECS = loadIntcssDependencySpecs(LOCKFILE_PATH);
 
+async function loadPluginsMeta(url) {
+  if (!url) return {};
+  try {
+    const response = await fetch(url, { cache: 'no-store' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const raw = await response.json();
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
+    return raw;
+  } catch (error) {
+    console.warn(`Не удалось загрузить plugins meta по URL: ${url}`);
+    console.warn(error instanceof Error ? error.message : String(error));
+    return {};
+  }
+}
+
 const PLUGIN_NPM_PACKAGE = {
   'postcss-nested (BEM)': 'postcss-nested',
   'postcss-nested (standard)': 'postcss-nested',
@@ -201,13 +215,12 @@ function resolvePluginPackageMeta(pluginId, meta) {
 // Plugin definitions
 // ---------------------------------------------------------------------------
 
-const PLUGINS = [
+function buildPlugins(pluginsMeta = {}) {
+  return [
   {
     id: 'postcss-import',
     order: 1,
     lightning: 'none',
-    priority: 'critical',
-    complexity: 'medium',
     recommendation: 'Rust Pre-stage (обязательный)',
     patterns: [
       { label: '@import string',   re: /@import\s+["']/gm },
@@ -238,8 +251,6 @@ $color-primary: #3b82f6;
     id: 'postcss-mixins',
     order: 2,
     lightning: 'none',
-    priority: 'critical',
-    complexity: 'high',
     recommendation: 'Rust Pre-stage (обязательный)',
     patterns: [
       { label: '@define-mixin',             re: /@define-mixin\s+\w+/gm },
@@ -286,8 +297,6 @@ $color-primary: #3b82f6;
     id: 'postcss-axis',
     order: 3,
     lightning: 'none',
-    priority: 'high',
-    complexity: 'low',
     recommendation: 'Rust Pre-stage (обязательный — 32 matches подтверждены)',
     patterns: [
       { label: 'margin-x/y',   re: /\bmargin-[xy]\s*:/gm },
@@ -320,8 +329,6 @@ $color-primary: #3b82f6;
     id: 'postcss-property-lookup',
     order: 4,
     lightning: 'none',
-    priority: 'out-of-scope',
-    complexity: 'n/a',
     recommendation: 'Out of scope — нет usage в реальных проектах',
     patterns: [
       { label: ': @property-name', re: /:\s*@[a-z][a-z-]+(?!\s*[\w(])/gm },
@@ -331,8 +338,6 @@ $color-primary: #3b82f6;
     id: 'postcss-assets',
     order: 5,
     lightning: 'none',
-    priority: 'critical',
-    complexity: 'high',
     recommendation: 'Rust Pre-stage (обязательный)',
     patterns: [
       { label: 'width()',   re: /\bwidth\(['"]/gm },
@@ -372,8 +377,6 @@ $color-primary: #3b82f6;
     id: 'postcss-advanced-variables',
     order: 6,
     lightning: 'none',
-    priority: 'critical',
-    complexity: 'high',
     recommendation: 'Rust Pre-stage для $var; @for/@if — проверить usage',
     patterns: [
       { label: '$var declaration', re: /\$[a-zA-Z][\w-]*\s*:/gm },
@@ -418,8 +421,6 @@ $radius: 6px;
     id: 'postcss-color-function',
     order: 7,
     lightning: 'partial',
-    priority: 'out-of-scope',
-    complexity: 'n/a',
     recommendation: 'Out of scope — нет usage в реальных проектах',
     patterns: [
       { label: 'color(shade)',   re: /\bcolor\([^)]*shade\(/gm },
@@ -433,8 +434,6 @@ $radius: 6px;
     id: 'postcss-strip-units',
     order: 8,
     lightning: 'none',
-    priority: 'out-of-scope',
-    complexity: 'n/a',
     recommendation: 'Out of scope — нет usage в реальных проектах',
     patterns: [
       { label: 'strip()', re: /\bstrip\([^)]+\)/gm },
@@ -444,8 +443,6 @@ $radius: 6px;
     id: 'postcss-conditionals',
     order: 9,
     lightning: 'none',
-    priority: 'out-of-scope',
-    complexity: 'n/a',
     recommendation: 'Out of scope — нет usage в реальных проектах',
     patterns: [
       { label: '@if',      re: /@if\s+/gm },
@@ -457,8 +454,6 @@ $radius: 6px;
     id: 'postcss-nested (BEM)',
     order: 10,
     lightning: 'none',
-    priority: 'critical',
-    complexity: 'medium',
     recommendation: '⚠️ Rust Pre-stage обязателен — Lightning CSS не поддерживает BEM-конкатенацию',
     patterns: [
       { label: '&__element',      re: /&__[\w-]+/gm },
@@ -497,8 +492,6 @@ $radius: 6px;
     id: 'postcss-nested (standard)',
     order: 10,
     lightning: 'yes',
-    priority: 'native',
-    complexity: 'trivial',
     recommendation: 'Lightning CSS покрывает стандартные комбинаторы нативно',
     patterns: [
       { label: '&:pseudo',        re: /&:/gm },
@@ -533,8 +526,6 @@ $radius: 6px;
     id: 'postcss-extend',
     order: 11,
     lightning: 'none',
-    priority: 'out-of-scope',
-    complexity: 'n/a',
     recommendation: 'Out of scope — нет usage в реальных проектах (0 matches)',
     patterns: [
       { label: '@extend .class',       re: /@extend\s+\./gm },
@@ -546,8 +537,6 @@ $radius: 6px;
     id: 'postcss-calc',
     order: 12,
     lightning: 'yes',
-    priority: 'native',
-    complexity: 'trivial',
     recommendation: 'Lightning CSS native — встроенная оптимизация calc()',
     patterns: [
       { label: 'calc() usage', re: /\bcalc\([^)]+\)/gm },
@@ -574,8 +563,6 @@ $radius: 6px;
     id: 'postcss-svg',
     order: 13,
     lightning: 'none',
-    priority: 'high',
-    complexity: 'high',
     recommendation: 'Rust Pre-stage (обязательный) — проверить $var в параметрах',
     patterns: [
       { label: 'svg() no params',       re: /(?<![a-z-])svg\(['"]/gm },
@@ -608,8 +595,6 @@ $radius: 6px;
     id: 'postcss-url',
     order: 14,
     lightning: 'none',
-    priority: 'out-of-scope',
-    complexity: 'n/a',
     recommendation: 'Out of scope — rewrite-only, 12 matches, не критично',
     patterns: [
       { label: 'url() relative',   re: /url\(['"](?!data:|https?:\/\/|\/\/)[^/'"#][^'"]*['"]\)/gm },
@@ -622,8 +607,6 @@ $radius: 6px;
     id: 'postcss-svg-fallback',
     order: 15,
     lightning: 'none',
-    priority: 'out-of-scope',
-    complexity: 'n/a',
     recommendation: 'Rust Post-stage (опциональный) — нет usage в реальных проектах',
     patterns: [
       { label: 'SVG in url() (non-data)', re: /url\(['"](?!data:)[^'"]*\.svg['"]\)/gm },
@@ -633,8 +616,6 @@ $radius: 6px;
     id: 'postcss-color-rgba-fallback',
     order: 16,
     lightning: 'none',
-    priority: 'out-of-scope',
-    complexity: 'n/a',
     recommendation: 'Out of scope — IE8 мёртв, hex fallback не нужен',
     patterns: [
       { label: 'rgba() with numbers', re: /\brgba\(\s*\d+\s*,/gm },
@@ -645,8 +626,6 @@ $radius: 6px;
     id: 'autoprefixer',
     order: 17,
     lightning: 'yes',
-    priority: 'native',
-    complexity: 'trivial',
     recommendation: 'Lightning CSS native — проверить browserslist targets mapping',
     patterns: [
       { label: 'browserslist comment', re: /browsers(?:list)?:\s*['"]/gim },
@@ -676,8 +655,6 @@ $radius: 6px;
     id: 'postcss-data-packer',
     order: 18,
     lightning: 'none',
-    priority: 'removed',
-    complexity: 'n/a',
     recommendation: 'Намеренно удалён — данные inline в mainX.css, _data.css больше не генерируется',
     patterns: [
       { label: 'data: image inline',    re: /url\(['"]data:image\/[^'"]+['"]\)/gm },
@@ -686,10 +663,27 @@ $radius: 6px;
     ],
   },
 ].map(p => {
-  const meta = PLUGINS_META[p.id] ?? {};
-  const description = meta.description ?? p.description ?? PLUGIN_DESCRIPTIONS_RU[p.id] ?? '';
-  return { ...p, ...meta, description, ...resolvePluginPackageMeta(p.id, meta) };
+  const meta = pluginsMeta[p.id] ?? {};
+  const description =
+    (typeof meta.description === 'string' && meta.description.trim())
+      ? meta.description.trim()
+      : (PLUGIN_DESCRIPTIONS_RU[p.id] ?? '—');
+  const recommendation = meta.recommendation ?? '—';
+  const priority = meta.priority ?? '—';
+  const complexity = meta.complexity ?? '—';
+  return {
+    ...p,
+    ...meta,
+    description,
+    recommendation,
+    priority,
+    complexity,
+    ...resolvePluginPackageMeta(p.id, meta),
+  };
 });
+}
+
+let PLUGINS = buildPlugins();
 
 // ---------------------------------------------------------------------------
 // File discovery
@@ -721,10 +715,10 @@ function scanFiles(files) {
       id: plugin.id,
       order: plugin.order,
       lightning: plugin.lightning,
-      priority: plugin.priority,
-      complexity: plugin.complexity ?? 'n/a',
-      recommendation: plugin.recommendation,
-      description: plugin.description ?? '',
+      priority: plugin.priority ?? '—',
+      complexity: plugin.complexity ?? '—',
+      recommendation: plugin.recommendation ?? '—',
+      description: plugin.description ?? '—',
       npm: plugin.npm ?? null,
       npmPackage: plugin.npmPackage ?? null,
       version: plugin.version ?? '—',
@@ -811,8 +805,7 @@ function aggregatePlugins(projects) {
           lightning: p.lightning,
           priority: p.priority,
           complexity: p.complexity,
-          recommendation: p.recommendation,
-          description: p.description ?? '',
+          description: (typeof p.description === 'string' && p.description.trim()) ? p.description.trim() : '—',
           npm: p.npm ?? null,
           npmPackage: p.npmPackage ?? null,
           version: p.version ?? '—',
@@ -865,6 +858,13 @@ function renderHtml(projects, sources, generatedDate) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>intcss Аудит плагинов</title>
+<script>
+try {
+  if (localStorage.getItem('plugin-audit-theme') === 'dark') {
+    document.documentElement.classList.add('dark');
+  }
+} catch {}
+</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23488BFF'/%3E%3Cstop offset='100%25' stop-color='%2379B4FF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='4' y='4' width='56' height='56' rx='14' fill='url(%23g)'/%3E%3Ctext x='32' y='39' text-anchor='middle' font-family='Arial,sans-serif' font-size='22' font-weight='700' fill='white'%3EPA%3C/text%3E%3C/svg%3E">
 <link rel="shortcut icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23488BFF'/%3E%3Cstop offset='100%25' stop-color='%2379B4FF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='4' y='4' width='56' height='56' rx='14' fill='url(%23g)'/%3E%3Ctext x='32' y='39' text-anchor='middle' font-family='Arial,sans-serif' font-size='22' font-weight='700' fill='white'%3EPA%3C/text%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23488BFF'/%3E%3Cstop offset='100%25' stop-color='%2379B4FF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='4' y='4' width='56' height='56' rx='14' fill='url(%23g)'/%3E%3Ctext x='32' y='39' text-anchor='middle' font-family='Arial,sans-serif' font-size='22' font-weight='700' fill='white'%3EPA%3C/text%3E%3C/svg%3E">
@@ -1177,7 +1177,7 @@ html.dark .settings-dialog{box-shadow:0 24px 80px rgba(0,0,0,.45)}
 .settings-btn:focus-visible{outline:none;box-shadow:0 0 0 3px var(--focus-ring)}
 .settings-btn--primary{background:var(--accent);border-color:var(--accent);color:#fff}
 .settings-btn--primary:hover{filter:brightness(1.03)}
-.settings-note{padding:10px 12px;border-radius:12px;background:var(--bg);border:1px solid var(--border);font-size:12px;line-height:1.5;color:var(--muted)}
+.settings-note{padding-top:14px;border-top:1px solid var(--border);font-size:12px;line-height:1.5;color:var(--muted)}
 
 .empty-state{padding:32px;text-align:center;color:var(--muted)}
 </style>
@@ -1275,7 +1275,7 @@ html.dark .settings-dialog{box-shadow:0 24px 80px rgba(0,0,0,.45)}
       <div class="settings-head">
         <div>
           <div class="settings-title" id="settings-title">Настройки отчёта</div>
-          <div class="settings-subtitle">Подключите внешний JSON, чтобы подставлять реальные названия проектов поверх алиасов.</div>
+          <div class="settings-subtitle">Подключите внешние JSON, чтобы подгружать реальные названия проектов и данные по плагинам.</div>
         </div>
         <button class="icon-btn settings-close" id="settings-close-btn" type="button" title="Закрыть окно" aria-label="Закрыть окно">✕</button>
       </div>
@@ -1284,7 +1284,10 @@ html.dark .settings-dialog{box-shadow:0 24px 80px rgba(0,0,0,.45)}
           URL JSON с названиями проектов
           <input class="settings-input" id="project-map-url-input" type="url" inputmode="url" placeholder="https://example.com/project-names.json" />
         </label>
-        <div class="settings-hint">Поддерживаются оба варианта: <code>project-001 → Реальное имя</code> и <code>Реальное имя → project-001</code>. Можно использовать объект целиком или поле <code>projects</code>.</div>
+        <label class="settings-label" for="plugins-meta-url-input">
+          URL JSON с данными по плагинам
+          <input class="settings-input" id="plugins-meta-url-input" type="url" inputmode="url" placeholder="https://example.com/plugins-meta.json" />
+        </label>
         <div class="settings-note">URL сохраняется только локально в браузере через <code>localStorage</code> для этого отчёта.</div>
         <div class="settings-status" id="settings-status"></div>
         <div class="settings-actions">
@@ -1320,22 +1323,23 @@ html.dark .settings-dialog{box-shadow:0 24px 80px rgba(0,0,0,.45)}
 <script>
 const DATA = ${safeData};
 
-const PRIORITY_CYCLE = ['critical','high','native','out-of-scope','removed'];
+const PRIORITY_CYCLE = ['critical','high','native','out-of-scope','removed','—'];
 const PRIORITY_LABEL = {
   critical: 'Критический', high: 'Высокий',
-  native: 'Нативный', 'out-of-scope': 'Не рассматривается', removed: 'Удален'
+  native: 'Нативный', 'out-of-scope': 'Не рассматривается', removed: 'Удален', '—': '—'
 };
-const PRIORITY_WEIGHT = {critical:0,high:1,native:2,'out-of-scope':3,removed:4};
+const PRIORITY_WEIGHT = {critical:0,high:1,native:2,'out-of-scope':3,removed:4,'—':5};
 const LIGHTNING_LABEL = {yes:'Нативно', none:'Нет', partial:'Частично'};
-const COMPLEXITY_LABEL = {trivial:'Минимальная', low:'Низкая', medium:'Средняя', high:'Высокая', 'n/a':'Без оценки'};
-const COMPLEXITY_WEIGHT = {trivial:0,low:1,medium:2,high:3,'n/a':4};
+const COMPLEXITY_LABEL = {trivial:'Минимальная', low:'Низкая', medium:'Средняя', high:'Высокая', 'n/a':'Без оценки', '—':'—'};
+const COMPLEXITY_WEIGHT = {trivial:0,low:1,medium:2,high:3,'n/a':4,'—':5};
 
-const COMPLEXITY_CYCLE = ['trivial','low','medium','high','n/a'];
+const COMPLEXITY_CYCLE = ['trivial','low','medium','high','n/a','—'];
 
 const LS_KEY = 'plugin-audit-priorities';
 const LS_COMPLEXITY_KEY = 'plugin-audit-complexities';
 const LS_THEME_KEY = 'plugin-audit-theme';
 const LS_PROJECT_LABELS_URL_KEY = 'plugin-audit-project-labels-url';
+const LS_PLUGINS_META_URL_KEY = 'plugin-audit-plugins-meta-url';
 
 let projSel = new Set();
 let filters = new Set();
@@ -1357,6 +1361,8 @@ let popover = { id: null, el: null };
 let settingsState = { open: false };
 let projectLabelsUrl = '';
 let projectLabels = {};
+let pluginsMetaUrl = '';
+let pluginsMetaOverrides = {};
 let expandAll = false;
 let projNone = false;
 let filtersNone = false;
@@ -1416,12 +1422,49 @@ function getProjectDisplayLabel(projectKey) {
   return name === projectKey ? projectKey : name;
 }
 
+function priorityBadgeClass(value) {
+  const key = String(value ?? '—');
+  return key === '—' ? 'unknown' : key;
+}
+
+function complexityBadgeClass(value) {
+  const key = String(value ?? '—');
+  if (key === 'n/a') return 'na';
+  return key === '—' ? 'unknown' : key;
+}
+
+function normalizePluginsMeta(raw) {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
+  const source = raw.plugins && typeof raw.plugins === 'object' && !Array.isArray(raw.plugins) ? raw.plugins : raw;
+  const normalized = {};
+  for (const [pluginId, meta] of Object.entries(source)) {
+    if (!meta || typeof meta !== 'object' || Array.isArray(meta)) continue;
+    normalized[String(pluginId)] = { ...meta };
+  }
+  return normalized;
+}
+
+function getPluginMeta(pluginId) {
+  return pluginsMetaOverrides[String(pluginId)] ?? null;
+}
+
+function getPluginField(plugin, key, fallback = '—') {
+  const meta = getPluginMeta(plugin?.id);
+  const fromMeta = meta?.[key];
+  if (typeof fromMeta === 'string' && fromMeta.trim()) return fromMeta.trim();
+  const fromPlugin = plugin?.[key];
+  if (typeof fromPlugin === 'string' && fromPlugin.trim()) return fromPlugin.trim();
+  return fallback;
+}
+
 function refreshProjectNameViews() {
   renderProjSel();
   renderFilesProjTabs();
   renderSourcesProjTabs();
   renderSourcesList();
   renderSourcesContent();
+  renderFtabs();
+  renderCxtabs();
   renderBody();
 }
 
@@ -1439,8 +1482,13 @@ function openSettingsModal() {
   modal.classList.add('open');
   modal.setAttribute('aria-hidden', 'false');
   const input = document.getElementById('project-map-url-input');
+  const metaInput = document.getElementById('plugins-meta-url-input');
   input.value = projectLabelsUrl;
-  setSettingsStatus(projectLabelsUrl ? 'Текущий URL сохранён локально. Можно заменить его и перезагрузить названия.' : '', projectLabelsUrl ? 'success' : '');
+  metaInput.value = pluginsMetaUrl;
+  setSettingsStatus(
+    projectLabelsUrl || pluginsMetaUrl ? 'Текущие URL сохранены локально. Можно заменить их и перезагрузить данные.' : '',
+    projectLabelsUrl || pluginsMetaUrl ? 'success' : ''
+  );
   setTimeout(() => input.focus(), 0);
 }
 
@@ -1481,9 +1529,39 @@ async function loadProjectLabelsFromUrl(url, { silent = false } = {}) {
   }
 }
 
+async function loadPluginsMetaFromUrl(url, { silent = false } = {}) {
+  const normalizedUrl = String(url ?? '').trim();
+  if (!normalizedUrl) {
+    pluginsMetaOverrides = {};
+    if (!silent) setSettingsStatus('Внешняя meta плагинов отключена.', '');
+    refreshProjectNameViews();
+    return true;
+  }
+
+  try {
+    if (!silent) setSettingsStatus('Загружаю meta плагинов...', '');
+    const response = await fetch(normalizedUrl, { cache: 'no-store' });
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    const raw = await response.json();
+    pluginsMetaOverrides = normalizePluginsMeta(raw);
+    if (!silent) {
+      const count = Object.keys(pluginsMetaOverrides).length;
+      setSettingsStatus(count > 0 ? 'Meta плагинов обновлена: ' + count + ' записей.' : 'JSON загружен, но записей meta не найдено.', count > 0 ? 'success' : '');
+    }
+    refreshProjectNameViews();
+    return true;
+  } catch (error) {
+    pluginsMetaOverrides = {};
+    refreshProjectNameViews();
+    if (!silent) setSettingsStatus('Не удалось загрузить meta плагинов: ' + (error instanceof Error ? error.message : String(error)), 'error');
+    return false;
+  }
+}
+
 function initSettingsModal() {
   const modal = document.getElementById('settings-modal');
   const input = document.getElementById('project-map-url-input');
+  const metaInput = document.getElementById('plugins-meta-url-input');
   const openBtn = document.getElementById('settings-btn');
   const closeBtn = document.getElementById('settings-close-btn');
   const saveBtn = document.getElementById('settings-save-btn');
@@ -1501,20 +1579,43 @@ function initSettingsModal() {
 
   saveBtn.onclick = async () => {
     const nextUrl = String(input.value || '').trim();
-    const ok = await loadProjectLabelsFromUrl(nextUrl);
-    if (!ok) return;
+    const nextMetaUrl = String(metaInput.value || '').trim();
+    setSettingsStatus('Принудительно обновляю внешние данные...', '');
     projectLabelsUrl = nextUrl;
+    pluginsMetaUrl = nextMetaUrl;
+    overrides = {};
+    complexityOverrides = {};
+    saveOverrides();
+    saveComplexityOverrides();
     try {
       if (projectLabelsUrl) localStorage.setItem(LS_PROJECT_LABELS_URL_KEY, projectLabelsUrl);
       else localStorage.removeItem(LS_PROJECT_LABELS_URL_KEY);
+      if (pluginsMetaUrl) localStorage.setItem(LS_PLUGINS_META_URL_KEY, pluginsMetaUrl);
+      else localStorage.removeItem(LS_PLUGINS_META_URL_KEY);
     } catch {}
+    const okProjectLabels = await loadProjectLabelsFromUrl(projectLabelsUrl, { silent: true });
+    const okPluginsMeta = await loadPluginsMetaFromUrl(pluginsMetaUrl, { silent: true });
+    if (okProjectLabels && okPluginsMeta) {
+      setSettingsStatus('Настройки сохранены. Данные обновлены.', 'success');
+    } else if (!okProjectLabels && !okPluginsMeta) {
+      setSettingsStatus('Настройки сохранены, но оба внешних источника не загрузились.', 'error');
+    } else if (!okProjectLabels) {
+      setSettingsStatus('Настройки сохранены, но названия проектов не загрузились.', 'error');
+    } else {
+      setSettingsStatus('Настройки сохранены, но meta плагинов не загрузилась.', 'error');
+    }
   };
 
   clearBtn.onclick = async () => {
     input.value = '';
+    metaInput.value = '';
     projectLabelsUrl = '';
+    pluginsMetaUrl = '';
     try { localStorage.removeItem(LS_PROJECT_LABELS_URL_KEY); } catch {}
+    try { localStorage.removeItem(LS_PLUGINS_META_URL_KEY); } catch {}
     await loadProjectLabelsFromUrl('');
+    await loadPluginsMetaFromUrl('', { silent: true });
+    setSettingsStatus('Внешние источники отключены.', '');
   };
 }
 
@@ -1578,16 +1679,18 @@ function getPlugins(keys) {
 
 
 function effectivePriority(plugin) {
-  return overrides[plugin.id] ?? plugin.priority;
+  const base = getPluginField(plugin, 'priority', '—');
+  return overrides[plugin.id] ?? base;
 }
 
 function effectiveComplexity(plugin) {
-  return complexityOverrides[plugin.id] ?? plugin.complexity;
+  const base = getPluginField(plugin, 'complexity', '—');
+  return complexityOverrides[plugin.id] ?? base;
 }
 
 function effectivePriorityById(id, plugins) {
   const p = plugins.find(x => x.id === id);
-  return p ? effectivePriority(p) : 'out-of-scope';
+  return p ? effectivePriority(p) : '—';
 }
 
 function getFilesPlugins() {
@@ -1757,7 +1860,7 @@ function renderFilesTable() {
         <td><span class="file-path">\${escHtml(r.file)}</span></td>
         <td><span class="matches">\${r.total}</span></td>
         <td><div class="plugin-chips">\${
-          sortedPlugins.map(p => \`<span class="badge p-\${escAttr(effectivePriorityById(p.id, plugins))}">\${escHtml(p.id)} <span class="count-muted">\${p.count}</span></span>\`).join('')
+          sortedPlugins.map(p => \`<span class="badge p-\${escAttr(priorityBadgeClass(effectivePriorityById(p.id, plugins)))}">\${escHtml(p.id)} <span class="count-muted">\${p.count}</span></span>\`).join('')
         }</div></td>
       </tr>\`;
     if (!isOpen) return mainRow;
@@ -1769,7 +1872,7 @@ function renderFilesTable() {
             \${detailPlugins.map(p => \`
               <div class="fd-plugin">
                 <div class="fd-plugin-label">
-                  <span class="badge p-\${escAttr(effectivePriorityById(p.id, plugins))}">\${escHtml(p.id)}</span>
+                  <span class="badge p-\${escAttr(priorityBadgeClass(effectivePriorityById(p.id, plugins)))}">\${escHtml(p.id)}</span>
                   <span class="fd-plugin-count">\${p.count} совпадений</span>
                 </div>
                 \${p.patterns.map(pat => \`
@@ -1940,6 +2043,9 @@ function init() {
   projectLabelsUrl = (() => {
     try { return localStorage.getItem(LS_PROJECT_LABELS_URL_KEY) || ''; } catch { return ''; }
   })();
+  pluginsMetaUrl = (() => {
+    try { return localStorage.getItem(LS_PLUGINS_META_URL_KEY) || ''; } catch { return ''; }
+  })();
   const isDark = document.documentElement.classList.contains('dark');
   document.getElementById('theme-btn').textContent = isDark ? '☀️' : '🌙';
   document.getElementById('theme-btn').onclick = toggleTheme;
@@ -1953,6 +2059,7 @@ function init() {
   initPopover();
   initCxPopover();
   if (projectLabelsUrl) loadProjectLabelsFromUrl(projectLabelsUrl, { silent: true });
+  if (pluginsMetaUrl) loadPluginsMetaFromUrl(pluginsMetaUrl, { silent: true });
   document.querySelectorAll('.vbtn').forEach(b => {
     b.onclick = () => switchView(b.dataset.view);
   });
@@ -2064,10 +2171,10 @@ function renderFtabs() {
     const pr = effectivePriority(p);
     counts[pr] = (counts[pr] || 0) + 1;
   }
-  const options = ['all','critical','high','native','out-of-scope','removed'];
+  const options = ['all', ...PRIORITY_CYCLE];
   const labels = {
     all: 'Все', critical: 'Критический', high: 'Высокий',
-    native: 'Нативный', 'out-of-scope': 'Не рассматривается', removed: 'Удален'
+    native: 'Нативный', 'out-of-scope': 'Не рассматривается', removed: 'Удален', '—': '—'
   };
   const panel = document.getElementById('priority-panel');
   const triggerLabel = document.getElementById('priority-trigger-label');
@@ -2082,7 +2189,7 @@ function renderFtabs() {
       triggerLabel.textContent = \`Все (\${counts.all ?? 0})\`;
     } else if (filters.size === 1) {
       const key = [...filters][0];
-      triggerLabel.textContent = \`\${labels[key]} (\${counts[key] ?? 0})\`;
+      triggerLabel.textContent = \`\${labels[key] ?? key} (\${counts[key] ?? 0})\`;
     } else {
       triggerLabel.textContent = \`Выбрано: \${filters.size}\`;
     }
@@ -2091,7 +2198,7 @@ function renderFtabs() {
   panel.innerHTML = [
     \`<label class="proj-option all-option"><input type="checkbox" id="pr-all" \${(filters.size === 0 && !filtersNone) ? 'checked' : ''}> Все (\${counts.all ?? 0})</label>\`,
     ...available.map(key =>
-      \`<label class="proj-option"><input type="checkbox" data-priority="\${key}" \${((filters.size === 0 && !filtersNone) || filters.has(key)) ? 'checked' : ''}> \${labels[key]} (\${counts[key] ?? 0})</label>\`
+      \`<label class="proj-option"><input type="checkbox" data-priority="\${key}" \${((filters.size === 0 && !filtersNone) || filters.has(key)) ? 'checked' : ''}> \${labels[key] ?? key} (\${counts[key] ?? 0})</label>\`
     )
   ].join('');
   updateLabel();
@@ -2157,7 +2264,7 @@ function renderCxtabs() {
     counts[cx] = (counts[cx] || 0) + 1;
   }
   const options = ['all', ...COMPLEXITY_CYCLE];
-  const labels = { all: 'Все', trivial: 'Минимальная', low: 'Низкая', medium: 'Средняя', high: 'Высокая', 'n/a': 'Без оценки' };
+  const labels = { all: 'Все', trivial: 'Минимальная', low: 'Низкая', medium: 'Средняя', high: 'Высокая', 'n/a': 'Без оценки', '—': '—' };
   const panel = document.getElementById('complexity-panel');
   const triggerLabel = document.getElementById('complexity-trigger-label');
   const available = options.filter(t => t !== 'all' && counts[t]);
@@ -2171,7 +2278,7 @@ function renderCxtabs() {
       triggerLabel.textContent = \`Все (\${counts.all ?? 0})\`;
     } else if (complexityFilters.size === 1) {
       const key = [...complexityFilters][0];
-      triggerLabel.textContent = \`\${labels[key]} (\${counts[key] ?? 0})\`;
+      triggerLabel.textContent = \`\${labels[key] ?? key} (\${counts[key] ?? 0})\`;
     } else {
       triggerLabel.textContent = \`Выбрано: \${complexityFilters.size}\`;
     }
@@ -2180,7 +2287,7 @@ function renderCxtabs() {
   panel.innerHTML = [
     \`<label class="proj-option all-option"><input type="checkbox" id="cx-all" \${(complexityFilters.size === 0 && !complexityFiltersNone) ? 'checked' : ''}> Все (\${counts.all ?? 0})</label>\`,
     ...available.map(key =>
-      \`<label class="proj-option"><input type="checkbox" data-complexity="\${key}" \${((complexityFilters.size === 0 && !complexityFiltersNone) || complexityFilters.has(key)) ? 'checked' : ''}> \${labels[key]} (\${counts[key] ?? 0})</label>\`
+      \`<label class="proj-option"><input type="checkbox" data-complexity="\${key}" \${((complexityFilters.size === 0 && !complexityFiltersNone) || complexityFilters.has(key)) ? 'checked' : ''}> \${labels[key] ?? key} (\${counts[key] ?? 0})</label>\`
     )
   ].join('');
   updateLabel();
@@ -2278,8 +2385,8 @@ function renderBody() {
     else if (sortCol === 'id') { av = a.id; bv = b.id; }
     else if (sortCol === 'lightning') { av = a.lightning; bv = b.lightning; }
     else if (sortCol === 'complexity') {
-      av = COMPLEXITY_WEIGHT[a.complexity] ?? 99;
-      bv = COMPLEXITY_WEIGHT[b.complexity] ?? 99;
+      av = COMPLEXITY_WEIGHT[effectiveComplexity(a)] ?? 99;
+      bv = COMPLEXITY_WEIGHT[effectiveComplexity(b)] ?? 99;
     }
     else if (sortCol === 'priority') {
       av = PRIORITY_WEIGHT[effectivePriority(a)] ?? 99;
@@ -2338,7 +2445,7 @@ function renderBody() {
           </div>
           <div class="d-section">
             <div class="d-label">Описание</div>
-            <div class="desc-txt">\${escHtml(p.description || 'Описание не задано')}</div>
+            <div class="desc-txt">\${escHtml(getPluginField(p, 'description', 'Описание не задано'))}</div>
           </div>
           \${matchHits.length ? \`
           <div class="d-section">
@@ -2391,8 +2498,8 @@ function renderBody() {
       <td><span class="exp-icon">▶</span> <span class="plugin-order">\${p.order}</span></td>
       <td><span class="plugin-name">\${highlightMatch(p.id, searchQuery)}</span></td>
       <td><span class="badge l-\${lightKey}">\${LIGHTNING_LABEL[lightKey]}</span></td>
-      <td><span class="badge cx-\${ec === 'n/a' ? 'na' : ec} cxbadge" data-id="\${escAttr(p.id)}" title="Изменить сложность">\${COMPLEXITY_LABEL[ec] ?? ec}\${cxDotHtml}</span></td>
-      <td><span class="badge p-\${ep} pbadge" data-id="\${escAttr(p.id)}" title="Изменить приоритет">\${PRIORITY_LABEL[ep]}\${dotHtml}</span></td>
+      <td><span class="badge cx-\${complexityBadgeClass(ec)} cxbadge" data-id="\${escAttr(p.id)}" title="Изменить сложность">\${COMPLEXITY_LABEL[ec] ?? ec}\${cxDotHtml}</span></td>
+      <td><span class="badge p-\${priorityBadgeClass(ep)} pbadge" data-id="\${escAttr(p.id)}" title="Изменить приоритет">\${PRIORITY_LABEL[ep] ?? ep}\${dotHtml}</span></td>
       <td><span class="\${p.totalMatches === 0 ? 'matches-zero' : 'matches'}">\${p.totalMatches}</span></td>
     </tr>\${detailHtml}\`;
   });
@@ -2454,6 +2561,7 @@ function openPopover(badge, pluginId) {
   const plugin = getPlugins().find(p => p.id === pluginId);
   if (!plugin) return;
   const cur = effectivePriority(plugin);
+  const base = getPluginField(plugin, 'priority', '—');
   popover.el.innerHTML = PRIORITY_CYCLE.map(val =>
     \`<div class="popover-row\${cur === val ? ' current' : ''}" data-val="\${val}">\${PRIORITY_LABEL[val]}</div>\`
   ).join('');
@@ -2461,7 +2569,7 @@ function openPopover(badge, pluginId) {
     row.onclick = e => {
       e.stopPropagation();
       const next = row.dataset.val;
-      if (next === plugin.priority) delete overrides[pluginId];
+      if (next === base) delete overrides[pluginId];
       else overrides[pluginId] = next;
       saveOverrides();
       closePopover();
@@ -2503,6 +2611,7 @@ function openCxPopover(badge, pluginId) {
   const plugin = getPlugins().find(p => p.id === pluginId);
   if (!plugin) return;
   const cur = effectiveComplexity(plugin);
+  const base = getPluginField(plugin, 'complexity', '—');
   cxPopover.el.innerHTML = COMPLEXITY_CYCLE.map(val =>
     \`<div class="popover-row\${cur === val ? ' current' : ''}" data-val="\${val}">\${COMPLEXITY_LABEL[val]}</div>\`
   ).join('');
@@ -2510,7 +2619,7 @@ function openCxPopover(badge, pluginId) {
     row.onclick = e => {
       e.stopPropagation();
       const next = row.dataset.val;
-      if (next === plugin.complexity) delete complexityOverrides[pluginId];
+      if (next === base) delete complexityOverrides[pluginId];
       else complexityOverrides[pluginId] = next;
       saveComplexityOverrides();
       closeCxPopover();
@@ -2623,8 +2732,12 @@ function buildUnifiedPluginsForExport() {
           id: p.id,
           order: p.order,
           lightning: p.lightning,
-          priority: p.priority,
-          complexity: p.complexity,
+          priority: effectivePriority(p),
+          complexity: effectiveComplexity(p),
+          description: getPluginField(p, 'description', '—'),
+          npm: p.npm ?? null,
+          npmPackage: p.npmPackage ?? null,
+          version: p.version ?? '—',
           totalMatches: 0,
         });
       }
@@ -2654,6 +2767,21 @@ function buildMarkdownReport() {
   return md;
 }
 
+function buildPluginsMetaExport() {
+  const plugins = getPlugins()
+    .slice()
+    .sort((a, b) => (a.order ?? 999) - (b.order ?? 999) || String(a.id).localeCompare(String(b.id)));
+
+  const meta = {};
+  plugins.forEach(plugin => {
+    meta[plugin.id] = {
+      priority: effectivePriority(plugin),
+      complexity: effectiveComplexity(plugin),
+    };
+  });
+  return meta;
+}
+
 function initExportButtons() {
   const day = (DATA.generated ? String(DATA.generated) : new Date().toISOString()).slice(0, 10);
   const panel = document.getElementById('export-panel');
@@ -2663,6 +2791,7 @@ function initExportButtons() {
   panel.innerHTML = [
     '<button type="button" class="proj-option export-option" data-format="md">Скачать Markdown (.md)</button>',
     '<button type="button" class="proj-option export-option" data-format="json">Скачать JSON (.json)</button>',
+    '<button type="button" class="proj-option export-option" data-format="meta-json">Скачать Meta JSON (.json)</button>',
   ].join('');
 
   panel.querySelectorAll('[data-format]').forEach(btn => {
@@ -2673,6 +2802,9 @@ function initExportButtons() {
       } else if (format === 'json') {
         const json = JSON.stringify({ generated: DATA.generated, plugins: buildUnifiedPluginsForExport() }, null, 2);
         downloadTextFile('plugin-audit-' + day + '.json', json, 'application/json');
+      } else if (format === 'meta-json') {
+        const json = JSON.stringify(buildPluginsMetaExport(), null, 2);
+        downloadTextFile('plugin-meta-' + day + '.json', json, 'application/json');
       }
       panel.classList.remove('open');
     };
@@ -2701,54 +2833,64 @@ init();
 // Main
 // ---------------------------------------------------------------------------
 
-const { allFiles, projects, sources } = scanByProject(INPUT_DIR);
+async function main() {
+  if (!PLUGINS_META_URL) {
+    console.log('—');
+  }
 
-if (allFiles.length === 0) {
-  console.log(`В каталоге не найдено CSS-файлов: ${INPUT_DIR}`);
-  console.log(`Добавьте анонимизированные CSS-файлы проекта в: ${INPUT_DIR}/project-a/`);
-  process.exit(0);
-}
+  PLUGINS = buildPlugins(await loadPluginsMeta(PLUGINS_META_URL));
 
-console.log(`Сканирование: ${allFiles.length} CSS-файлов в ${Object.keys(projects).length} проект(ах)...`);
+  const { allFiles, projects, sources } = scanByProject(INPUT_DIR);
 
-const generatedDate = new Date().toISOString();
+  if (allFiles.length === 0) {
+    console.log(`В каталоге не найдено CSS-файлов: ${INPUT_DIR}`);
+    console.log(`Добавьте анонимизированные CSS-файлы проекта в: ${INPUT_DIR}/project-a/`);
+    process.exit(0);
+  }
 
-const DEFAULT_REPORT_DIR = path.join(ROOT, 'test/style_pipeline/usage-audit/report');
+  console.log(`Сканирование: ${allFiles.length} CSS-файлов в ${Object.keys(projects).length} проект(ах)...`);
 
-if (FORMAT === 'html') {
-  const html = renderHtml(projects, sources, generatedDate);
-  const out = OUTPUT_PATH ?? path.join(DEFAULT_REPORT_DIR, 'plugin-usage.html');
-  fs.mkdirSync(path.dirname(out), { recursive: true });
-  fs.writeFileSync(out, html, 'utf8');
-  console.log(`HTML-отчет сохранен: ${out}`);
+  const generatedDate = new Date().toISOString();
 
-} else if (FORMAT === 'json') {
-  const json = JSON.stringify({ generated: generatedDate, plugins: aggregatePlugins(projects) }, null, 2);
-  const out = OUTPUT_PATH ?? path.join(DEFAULT_REPORT_DIR, 'plugin-usage.json');
-  fs.mkdirSync(path.dirname(out), { recursive: true });
-  fs.writeFileSync(out, json, 'utf8');
-  console.log(`JSON-отчет сохранен: ${out}`);
+  if (FORMAT === 'html') {
+    if (!OUTPUT_PATH) {
+      console.log('Для HTML-отчета укажите --output.');
+      return;
+    }
+    const html = renderHtml(projects, sources, generatedDate);
+    const out = OUTPUT_PATH;
+    fs.mkdirSync(path.dirname(out), { recursive: true });
+    fs.writeFileSync(out, html, 'utf8');
+    console.log(`HTML-отчет сохранен: ${out}`);
+    return;
+  }
 
-} else if (FORMAT === 'markdown') {
-  const md = renderMarkdown(projects, generatedDate);
-  const out = OUTPUT_PATH ?? path.join(DEFAULT_REPORT_DIR, 'plugin-usage.md');
-  fs.mkdirSync(path.dirname(out), { recursive: true });
-  fs.writeFileSync(out, md, 'utf8');
-  console.log(`Markdown-отчет сохранен: ${out}`);
+  if (FORMAT === 'json') {
+    if (!OUTPUT_PATH) {
+      console.log('Для JSON-отчета укажите --output.');
+      return;
+    }
+    const json = JSON.stringify({ generated: generatedDate, plugins: aggregatePlugins(projects) }, null, 2);
+    const out = OUTPUT_PATH;
+    fs.mkdirSync(path.dirname(out), { recursive: true });
+    fs.writeFileSync(out, json, 'utf8');
+    console.log(`JSON-отчет сохранен: ${out}`);
+    return;
+  }
 
-} else {
-  // FORMAT === 'all' (default): write all three formats
-  fs.mkdirSync(DEFAULT_REPORT_DIR, { recursive: true });
+  if (FORMAT === 'markdown') {
+    if (!OUTPUT_PATH) {
+      console.log('Для Markdown-отчета укажите --output.');
+      return;
+    }
+    const md = renderMarkdown(projects, generatedDate);
+    const out = OUTPUT_PATH;
+    fs.mkdirSync(path.dirname(out), { recursive: true });
+    fs.writeFileSync(out, md, 'utf8');
+    console.log(`Markdown-отчет сохранен: ${out}`);
+    return;
+  }
 
-  const mdPath   = path.join(DEFAULT_REPORT_DIR, 'plugin-usage.md');
-  const jsonPath = path.join(DEFAULT_REPORT_DIR, 'plugin-usage.json');
-  const htmlPath = path.join(DEFAULT_REPORT_DIR, 'plugin-usage.html');
-
-  fs.writeFileSync(mdPath,   renderMarkdown(projects, generatedDate), 'utf8');
-  fs.writeFileSync(jsonPath, JSON.stringify({ generated: generatedDate, plugins: aggregatePlugins(projects) }, null, 2), 'utf8');
-  fs.writeFileSync(htmlPath, renderHtml(projects, sources, generatedDate), 'utf8');
-
-  // Console summary
   console.log('\n=== Сводка по плагинам ===\n');
   const firstPlugins = Object.values(projects)[0]?.plugins ?? [];
   const maxId = Math.max(...firstPlugins.map(r => r.id.length));
@@ -2759,7 +2901,9 @@ if (FORMAT === 'html') {
       : `${String(r.totalMatches).padStart(4)}  ${icon}`;
     console.log(`  ${r.id.padEnd(maxId)}  ${status}  [${r.priority}]`);
   }
-  console.log(`\nMarkdown: ${mdPath}`);
-  console.log(`JSON:     ${jsonPath}`);
-  console.log(`HTML:     ${htmlPath}`);
 }
+
+main().catch(error => {
+  console.error(error instanceof Error ? error.stack || error.message : String(error));
+  process.exit(1);
+});
