@@ -839,7 +839,7 @@ h1{font-size:22px;font-weight:800;letter-spacing:-.3px;line-height:1.2}
 .hdr-sub{font-size:12px;color:var(--muted)}
 .hdr-meta{font-size:11px;color:var(--muted);white-space:nowrap}
 .hdr-right{display:flex;align-items:center;gap:10px}
-.export-option{width:100%;border:0;background:transparent;text-align:left}
+.export-option{width:100%;border:0;background:transparent;text-align:right;justify-content:flex-end}
 .theme-btn{width:32px;height:32px;border:1px solid var(--border);border-radius:6px;background:var(--surface);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color .15s;line-height:1}
 .theme-btn:hover{border-color:var(--accent)}
 .theme-btn:focus-visible,.proj-trigger:focus-visible,.vbtn:focus-visible,.fptab:focus-visible,.toggle-zero input:focus-visible{outline:none;box-shadow:0 0 0 3px var(--focus-ring)}
@@ -869,7 +869,7 @@ html.dark .proj-panel{box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .proj-panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px;border:2px solid transparent;background-clip:padding-box}
 .proj-panel::-webkit-scrollbar-thumb:hover{background:var(--muted);background-clip:padding-box}
 .proj-panel.open{display:block}
-#export-panel{left:auto;right:0;min-width:170px;max-width:220px}
+#export-panel{left:auto;right:0;min-width:220px;max-width:260px}
 .proj-option{display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;font-size:13px;transition:background .1s;color:var(--text)}
 .proj-option:hover{background:var(--hover)}
 .proj-option input[type="checkbox"]{cursor:pointer;accent-color:var(--accent)}
@@ -881,7 +881,9 @@ html.dark .proj-panel{box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .select-field .proj-dropdown{width:100%}
 .select-field .proj-trigger{width:100%;max-width:none}
 .select-meta{font-size:11px;color:var(--muted);line-height:1.25}
-.plugins-export-wrap{justify-self:end;align-self:end}
+.plugins-export-wrap{justify-self:end;align-self:end;margin-left:auto}
+#plugins-export-dropdown .proj-panel{right:0;left:auto}
+.export-option{white-space:nowrap}
 #plugins-export-dropdown .proj-trigger{max-width:none;min-width:112px;background:var(--accent);border-color:var(--accent);color:#fff}
 #plugins-export-dropdown .proj-trigger .trigger-arrow{color:rgba(255,255,255,.9)}
 #plugins-export-dropdown .proj-trigger:hover{filter:brightness(1.06)}
