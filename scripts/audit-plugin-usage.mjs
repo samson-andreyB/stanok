@@ -609,9 +609,11 @@ function scanFiles(files, inputDir) {
 function scanByProject(inputDir) {
   const allFiles = findCssFiles(inputDir);
   const groups = {};
+  const sources = {};
 
   for (const file of allFiles) {
     const rel = path.relative(inputDir, file).replace(/\\/g, '/');
+    sources[rel] = fs.readFileSync(file, 'utf8');
     const parts = rel.split('/');
     const projectName = parts.length > 1 ? parts[0] : '(root)';
     if (!groups[projectName]) groups[projectName] = [];
@@ -625,7 +627,7 @@ function scanByProject(inputDir) {
       plugins: scanFiles(files, inputDir),
     };
   }
-  return { allFiles, projects };
+  return { allFiles, projects, sources };
 }
 
 // ---------------------------------------------------------------------------
@@ -696,8 +698,8 @@ function renderMarkdown(projects, generatedDate) {
 // Render: HTML
 // ---------------------------------------------------------------------------
 
-function renderHtml(projects, generatedDate) {
-  const safeData = JSON.stringify({ generated: generatedDate, projects })
+function renderHtml(projects, sources, generatedDate) {
+  const safeData = JSON.stringify({ generated: generatedDate, projects, sources })
     .replace(/<\/script>/gi, '<\\/script>');
 
   return `<!DOCTYPE html>
@@ -837,7 +839,42 @@ tr.fdr>td{padding:0}
 .fd-plugin-count{font-size:12px;color:var(--muted)}
 .fd-pat{margin-left:8px;margin-bottom:8px}
 .fd-code{display:block;font-family:'SFMono-Regular',Consolas,monospace;font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:4px 8px;margin-bottom:4px;white-space:pre-wrap;word-break:break-all;color:var(--text)}
+.fd-code.src-jump{width:100%;text-align:left;cursor:pointer}
+.fd-code.src-jump:hover{border-color:var(--accent);color:var(--accent)}
 .fd-no-ex{font-size:12px;color:var(--muted);margin-left:8px}
+.sources-section{display:none;flex:1 1 0;min-height:0;flex-direction:column;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.sources-proj-tabs{display:flex;gap:4px;padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap}
+.sources-body{display:grid;grid-template-columns:320px 1fr;min-height:0;flex:1 1 0}
+.sources-list{border-right:1px solid var(--border);overflow:auto;padding:8px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.sources-list::-webkit-scrollbar{width:8px;height:8px}
+.sources-list::-webkit-scrollbar-track{background:transparent}
+.sources-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:6px}
+.sources-list::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+.src-file-btn{display:block;width:100%;text-align:left;padding:6px 8px;border:1px solid transparent;border-radius:6px;background:transparent;color:var(--text);cursor:pointer;font:12px/1.4 'SFMono-Regular',Consolas,monospace}
+.src-file-btn:hover{border-color:var(--accent);background:var(--hover)}
+.src-file-btn.active{border-color:var(--accent);background:var(--hover)}
+.source-view{min-height:0;overflow:auto;background:var(--bg);scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.source-view::-webkit-scrollbar{width:10px;height:10px}
+.source-view::-webkit-scrollbar-track{background:transparent}
+.source-view::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px}
+.source-view::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+.source-head{position:sticky;top:0;z-index:2;padding:8px 10px;border-bottom:1px solid var(--border);background:var(--surface);font:12px/1.4 'SFMono-Regular',Consolas,monospace;color:var(--muted)}
+.source-code{padding:8px 0 14px}
+.src-line{display:grid;grid-template-columns:56px 1fr;align-items:start}
+.src-ln{padding:0 10px;text-align:right;color:var(--muted);user-select:none;font:12px/1.5 'SFMono-Regular',Consolas,monospace}
+.src-txt{padding-right:12px;white-space:pre-wrap;word-break:break-word;font:12px/1.5 'SFMono-Regular',Consolas,monospace;color:var(--text)}
+.src-line.hit .src-ln,.src-line.hit .src-txt{background:rgba(0,106,220,.14)}
+.src-txt .tok-comment{color:#6b87a5}
+.src-txt .tok-string{color:#95d79a}
+.src-txt .tok-atrule{color:#7ec2ff}
+.src-txt .tok-var{color:#f4b56e}
+.src-txt .tok-num{color:#eed18a}
+.src-txt .tok-prop{color:#a9c9ff}
+.src-txt .tok-punc{color:#8fa4c3}
+@media (max-width: 980px){
+  .sources-body{grid-template-columns:1fr}
+  .sources-list{max-height:180px;border-right:none;border-bottom:1px solid var(--border)}
+}
 .tbl-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:auto;flex:1 1 0;min-height:0;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
 .tbl-wrap::-webkit-scrollbar{width:6px;height:6px}
 .tbl-wrap::-webkit-scrollbar-track{background:transparent}
@@ -953,6 +990,7 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
     <div class="view-toggle">
       <button class="vbtn active" data-view="plugins">Плагины</button>
       <button class="vbtn" data-view="files">Файлы</button>
+      <button class="vbtn" data-view="sources">Исходники</button>
     </div>
     <div class="controls">
     <div class="select-field" id="files-plugin-ctrl" style="display:none">
@@ -1026,6 +1064,16 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
       </table>
     </div>
   </div>
+  <div id="sources-section" class="sources-section">
+    <div class="sources-proj-tabs" id="sources-proj-tabs"></div>
+    <div class="sources-body">
+      <div class="sources-list" id="sources-list"></div>
+      <div class="source-view" id="source-view">
+        <div class="source-head" id="source-head">Файл не выбран</div>
+        <div class="source-code" id="source-code"></div>
+      </div>
+    </div>
+  </div>
 </div>
 <script>
 const DATA = ${safeData};
@@ -1056,6 +1104,9 @@ let expanded = new Set();
 let fileExpanded = new Set();
 let filesProjKey = Object.keys(DATA.projects)[0] || '';
 let filePluginFilters = new Set();
+let sourceProjKey = Object.keys(DATA.projects)[0] || '';
+let sourceSelectedFile = '';
+let sourceHighlightLine = null;
 let overrides = {};
 let complexityOverrides = {};
 let searchQuery = '';
@@ -1305,7 +1356,11 @@ function renderFilesTable() {
                   <div class="fd-pat">
                     <div class="d-label">\${escHtml(pat.label)} <span class="muted-count">(\${pat.count})</span></div>
                     \${pat.examples.length > 0
-                      ? pat.examples.map(ex => \`<code class="fd-code">\${escHtml(ex)}</code>\`).join('')
+                      ? pat.examples.map(ex => {
+                        const m = /^L(\\d+):/.exec(ex);
+                        const line = m ? Number(m[1]) : 0;
+                        return \`<button type="button" class="fd-code src-jump" data-file="\${escAttr(r.file)}" data-line="\${line}">\${escHtml(ex)}</button>\`;
+                      }).join('')
                       : '<span class="fd-no-ex">—</span>'}
                   </div>
                 \`).join('')}
@@ -1317,11 +1372,20 @@ function renderFilesTable() {
     return mainRow + detailRow;
   }).join('');
   document.querySelectorAll('#files-tbody tr.fr').forEach(tr => {
-    tr.onclick = () => {
+    tr.onclick = e => {
+      if (e.target.closest('.src-jump')) return;
       const file = tr.dataset.file;
       if (fileExpanded.has(file)) fileExpanded.delete(file);
       else fileExpanded.add(file);
       renderFilesTable();
+    };
+  });
+  document.querySelectorAll('.src-jump').forEach(btn => {
+    btn.onclick = e => {
+      e.stopPropagation();
+      const file = btn.dataset.file || '';
+      const line = Number(btn.dataset.line || '0');
+      openSourceLine(file, line > 0 ? line : null);
     };
   });
 }
@@ -1332,19 +1396,92 @@ function renderFilesView() {
   renderFilesTable();
 }
 
+function getSourceFilesForProject(projectKey) {
+  const prefix = projectKey + '/';
+  return Object.keys(DATA.sources || {})
+    .filter(p => p.startsWith(prefix))
+    .sort((a, b) => a.localeCompare(b));
+}
+
+function renderSourcesProjTabs() {
+  const projects = Object.keys(DATA.projects);
+  const container = document.getElementById('sources-proj-tabs');
+  container.innerHTML = projects.map(key =>
+    '<button class="fptab' + (sourceProjKey === key ? ' active' : '') + '" data-proj="' + escAttr(key) + '">' + escHtml(key) + '</button>'
+  ).join('');
+  container.querySelectorAll('.fptab').forEach(btn => {
+    btn.onclick = () => {
+      sourceProjKey = btn.dataset.proj;
+      sourceSelectedFile = '';
+      sourceHighlightLine = null;
+      renderSourcesView();
+    };
+  });
+}
+
+function renderSourcesList() {
+  const files = getSourceFilesForProject(sourceProjKey);
+  if (!sourceSelectedFile || !files.includes(sourceSelectedFile)) {
+    sourceSelectedFile = files[0] || '';
+  }
+  const list = document.getElementById('sources-list');
+  list.innerHTML = files.map(file => {
+    const short = file.slice(sourceProjKey.length + 1);
+    return '<button type="button" class="src-file-btn' + (file === sourceSelectedFile ? ' active' : '') + '" data-file="' + escAttr(file) + '">' + escHtml(short) + '</button>';
+  }).join('');
+  list.querySelectorAll('.src-file-btn').forEach(btn => {
+    btn.onclick = () => {
+      sourceSelectedFile = btn.dataset.file || '';
+      sourceHighlightLine = null;
+      renderSourcesContent();
+      renderSourcesList();
+    };
+  });
+}
+
+function renderSourcesContent() {
+  const head = document.getElementById('source-head');
+  const code = document.getElementById('source-code');
+  if (!sourceSelectedFile) {
+    head.textContent = 'Файл не выбран';
+    code.innerHTML = '';
+    return;
+  }
+  const content = DATA.sources?.[sourceSelectedFile] ?? '';
+  head.textContent = sourceSelectedFile;
+  const lines = content.split('\\n');
+  code.innerHTML = lines.map((line, i) => {
+    const lineNo = i + 1;
+    const hitCls = sourceHighlightLine === lineNo ? ' hit' : '';
+    return '<div class="src-line' + hitCls + '" data-line="' + lineNo + '"><span class="src-ln">' + lineNo + '</span><code class="src-txt">' + highlightCssLine(line) + '</code></div>';
+  }).join('');
+  if (sourceHighlightLine) {
+    const lineEl = code.querySelector('.src-line[data-line="' + sourceHighlightLine + '"]');
+    if (lineEl) lineEl.scrollIntoView({ block: 'center' });
+  }
+}
+
+function renderSourcesView() {
+  renderSourcesProjTabs();
+  renderSourcesList();
+  renderSourcesContent();
+}
+
 let currentView = 'plugins';
 
-function switchView(view, opts = {}) {
-  const preserveFileExpanded = Boolean(opts.preserveFileExpanded);
+function switchView(view) {
   currentView = view;
   document.querySelectorAll('.vbtn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
   const isPlugins = view === 'plugins';
+  const isFiles = view === 'files';
+  const isSources = view === 'sources';
   document.getElementById('plugins-section').style.display = isPlugins ? 'flex' : 'none';
-  document.getElementById('files-section').style.display = isPlugins ? 'none' : 'flex';
+  document.getElementById('files-section').style.display = isFiles ? 'flex' : 'none';
+  document.getElementById('sources-section').style.display = isSources ? 'flex' : 'none';
   document.getElementById('plugins-filters-ctrl').style.display = isPlugins ? '' : 'none';
-  document.getElementById('files-plugin-ctrl').style.display = isPlugins ? 'none' : '';
-  if (!preserveFileExpanded) fileExpanded.clear();
-  if (!isPlugins) renderFilesView();
+  document.getElementById('files-plugin-ctrl').style.display = isFiles ? '' : 'none';
+  if (isFiles) renderFilesView();
+  if (isSources) renderSourcesView();
 }
 
 function openFileInFilesView(filePath) {
@@ -1353,11 +1490,19 @@ function openFileInFilesView(filePath) {
   filePluginFilters.clear();
   fileExpanded.clear();
   fileExpanded.add(filePath);
-  switchView('files', { preserveFileExpanded: true });
+  switchView('files');
   requestAnimationFrame(() => {
     const row = document.querySelector(\`#files-tbody tr.fr[data-file="\${CSS.escape(filePath)}"]\`);
     if (row) row.scrollIntoView({ block: 'center' });
   });
+}
+
+function openSourceLine(filePath, lineNo) {
+  const projectKey = String(filePath).split('/')[0] || '';
+  if (projectKey && DATA.projects[projectKey]) sourceProjKey = projectKey;
+  sourceSelectedFile = filePath;
+  sourceHighlightLine = Number.isFinite(lineNo) ? lineNo : null;
+  switchView('sources');
 }
 
 function init() {
@@ -1903,6 +2048,27 @@ function highlightMatch(text, query) {
   return escHtml(text.slice(0, idx)) + '<mark>' + escHtml(text.slice(idx, idx + query.length)) + '</mark>' + escHtml(text.slice(idx + query.length));
 }
 
+function highlightCssLine(line) {
+  const raw = String(line ?? '');
+  if (!raw) return '';
+  const tokens = [];
+  const put = (txt, cls) => {
+    const token = '%%TOK' + tokens.length + '%%';
+    tokens.push('<span class="' + cls + '">' + escHtml(txt) + '</span>');
+    return token;
+  };
+  let out = raw;
+  out = out.replace(/\\/\\*.*?\\*\\//g, m => put(m, 'tok-comment'));
+  out = out.replace(/"(?:\\\\.|[^"\\\\])*"|'(?:\\\\.|[^'\\\\])*'/g, m => put(m, 'tok-string'));
+  out = out.replace(/@[a-zA-Z_-][\\w-]*/g, m => put(m, 'tok-atrule'));
+  out = out.replace(/\\$[a-zA-Z_][\\w-]*|--[a-zA-Z_][\\w-]*/g, m => put(m, 'tok-var'));
+  out = out.replace(/\\b\\d+(?:\\.\\d+)?(?:%|px|rem|em|vh|vw|ms|s|deg)?\\b/g, m => put(m, 'tok-num'));
+  out = out.replace(/(^|[\\s{;])([a-z-]+)(\\s*:)/g, (m, p1, p2, p3) => p1 + put(p2, 'tok-prop') + p3);
+  out = out.replace(/[{}():;,]/g, m => put(m, 'tok-punc'));
+  out = escHtml(out);
+  return out.replace(/%%TOK(\\d+)%%/g, (m, idx) => tokens[Number(idx)] ?? m);
+}
+
 function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
@@ -1923,7 +2089,7 @@ init();
 // Main
 // ---------------------------------------------------------------------------
 
-const { allFiles, projects } = scanByProject(INPUT_DIR);
+const { allFiles, projects, sources } = scanByProject(INPUT_DIR);
 
 if (allFiles.length === 0) {
   console.log(`No CSS files found in: ${INPUT_DIR}`);
@@ -1938,7 +2104,7 @@ const generatedDate = new Date().toISOString();
 const DEFAULT_REPORT_DIR = path.join(ROOT, 'test/style_pipeline/usage-audit/report');
 
 if (FORMAT === 'html') {
-  const html = renderHtml(projects, generatedDate);
+  const html = renderHtml(projects, sources, generatedDate);
   const out = OUTPUT_PATH ?? path.join(DEFAULT_REPORT_DIR, 'plugin-usage.html');
   fs.mkdirSync(path.dirname(out), { recursive: true });
   fs.writeFileSync(out, html, 'utf8');
@@ -1968,7 +2134,7 @@ if (FORMAT === 'html') {
 
   fs.writeFileSync(mdPath,   renderMarkdown(projects, generatedDate), 'utf8');
   fs.writeFileSync(jsonPath, JSON.stringify({ generated: generatedDate, projects }, null, 2), 'utf8');
-  fs.writeFileSync(htmlPath, renderHtml(projects, generatedDate), 'utf8');
+  fs.writeFileSync(htmlPath, renderHtml(projects, sources, generatedDate), 'utf8');
 
   // Console summary
   console.log('\n=== Plugin Usage Summary ===\n');
