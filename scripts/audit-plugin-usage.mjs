@@ -16,6 +16,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 // ---------------------------------------------------------------------------
+// Plugin metadata (priority + complexity) — sourced from plugins-meta.json
+// ---------------------------------------------------------------------------
+
+const META_PATH = new URL('./plugins-meta.json', import.meta.url).pathname.replace(/^\/([A-Z]:)/, '$1');
+const PLUGINS_META = JSON.parse(fs.readFileSync(META_PATH, 'utf8'));
+
+// ---------------------------------------------------------------------------
 // CLI args
 // ---------------------------------------------------------------------------
 
@@ -518,7 +525,7 @@ $radius: 6px;
       { label: '_data.css ref (built)', re: /url\(['"][^'"]*_data\.css#/gm },
     ],
   },
-];
+].map(p => ({ ...p, ...(PLUGINS_META[p.id] ?? {}) }));
 
 // ---------------------------------------------------------------------------
 // File discovery
@@ -932,6 +939,10 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
         <input type="checkbox" id="hide-zero"> Скрыть нулевые
       </label>
     </div>
+    <div class="ctrl-group" id="complexity-ctrl">
+      <span class="ctrl-label">Сложность</span>
+      <div class="filter-tabs" id="cxtabs"></div>
+    </div>
     </div>
   </div>
   <div id="plugins-section" style="display:flex;flex-direction:column;flex:1 1 0;min-height:0">
@@ -972,11 +983,15 @@ const LIGHTNING_LABEL = {yes:'Native', none:'None', partial:'Partial'};
 const COMPLEXITY_LABEL = {trivial:'Trivial', low:'Low', medium:'Medium', high:'High', 'n/a':'N/A'};
 const COMPLEXITY_WEIGHT = {trivial:0,low:1,medium:2,high:3,'n/a':4};
 
+const COMPLEXITY_CYCLE = ['trivial','low','medium','high','n/a'];
+
 const LS_KEY = 'plugin-audit-priorities';
+const LS_COMPLEXITY_KEY = 'plugin-audit-complexities';
 const LS_THEME_KEY = 'plugin-audit-theme';
 
 let projSel = [Object.keys(DATA.projects)[0] || ''];
 let filters = new Set();
+let complexityFilters = new Set();
 let sortCol = 'order';
 let sortDir = 1;
 let hideZero = false;
@@ -985,6 +1000,7 @@ let fileExpanded = new Set();
 let filesProjKey = Object.keys(DATA.projects)[0] || '';
 let filePluginFilters = new Set();
 let overrides = {};
+let complexityOverrides = {};
 let searchQuery = '';
 let popover = { id: null, el: null };
 let expandAll = false;
@@ -994,6 +1010,13 @@ function loadOverrides() {
 }
 function saveOverrides() {
   try { localStorage.setItem(LS_KEY, JSON.stringify(overrides)); } catch {}
+}
+
+function loadComplexityOverrides() {
+  try { complexityOverrides = JSON.parse(localStorage.getItem(LS_COMPLEXITY_KEY) || '{}'); } catch { complexityOverrides = {}; }
+}
+function saveComplexityOverrides() {
+  try { localStorage.setItem(LS_COMPLEXITY_KEY, JSON.stringify(complexityOverrides)); } catch {}
 }
 
 function loadTheme() {
@@ -1044,6 +1067,10 @@ function getPlugins(keys) {
 
 function effectivePriority(plugin) {
   return overrides[plugin.id] ?? plugin.priority;
+}
+
+function effectiveComplexity(plugin) {
+  return complexityOverrides[plugin.id] ?? plugin.complexity;
 }
 
 function effectivePriorityById(id, plugins) {
@@ -1230,6 +1257,7 @@ function switchView(view) {
   document.getElementById('files-section').style.display = isPlugins ? 'none' : 'flex';
   document.getElementById('proj-ctrl').style.display = isPlugins ? '' : 'none';
   document.getElementById('priority-ctrl').style.display = isPlugins ? '' : 'none';
+  document.getElementById('complexity-ctrl').style.display = isPlugins ? '' : 'none';
   document.getElementById('files-plugin-ctrl').style.display = isPlugins ? 'none' : '';
   fileExpanded.clear();
   if (!isPlugins) renderFilesView();
@@ -1238,12 +1266,14 @@ function switchView(view) {
 function init() {
   loadTheme();
   loadOverrides();
+  loadComplexityOverrides();
   const isDark = document.documentElement.classList.contains('dark');
   document.getElementById('theme-btn').textContent = isDark ? '☀️' : '🌙';
   document.getElementById('theme-btn').onclick = toggleTheme;
   renderProjSel();
   renderAll();
   initPopover();
+  initCxPopover();
   document.querySelectorAll('.vbtn').forEach(b => {
     b.onclick = () => switchView(b.dataset.view);
   });
@@ -1252,6 +1282,7 @@ function init() {
 function renderAll() {
   renderMeta();
   renderFtabs();
+  renderCxtabs();
   renderHead();
   renderBody();
 }
@@ -1348,6 +1379,39 @@ function renderFtabs() {
   });
 }
 
+function renderCxtabs() {
+  const allPlugins = getPlugins();
+  const plugins = allPlugins.filter(p => {
+    if (hideZero && p.totalMatches === 0) return false;
+    if (searchQuery && !p.id.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    return true;
+  });
+  const counts = { all: plugins.length };
+  for (const p of plugins) {
+    const cx = effectiveComplexity(p);
+    counts[cx] = (counts[cx] || 0) + 1;
+  }
+  const tabs = ['all', ...COMPLEXITY_CYCLE];
+  const labels = { all: 'Все', trivial: 'Trivial', low: 'Low', medium: 'Medium', high: 'High', 'n/a': 'N/A' };
+  const cxtabs = document.getElementById('cxtabs');
+  cxtabs.innerHTML = tabs.filter(t => t === 'all' || counts[t]).map(t => {
+    const isAll = t === 'all';
+    const active = isAll ? complexityFilters.size === 0 : complexityFilters.has(t);
+    return \`<button class="fbtn\${active ? ' active' : ''}" data-cxfilter="\${t}">\${labels[t]}\${counts[t] ? \` (\${counts[t]})\` : ''}</button>\`;
+  }).join('');
+  cxtabs.querySelectorAll('.fbtn').forEach(btn => {
+    btn.onclick = () => {
+      if (btn.dataset.cxfilter === 'all') {
+        complexityFilters.clear();
+      } else {
+        const t = btn.dataset.cxfilter;
+        if (complexityFilters.has(t)) complexityFilters.delete(t); else complexityFilters.add(t);
+      }
+      renderCxtabs(); renderBody();
+    };
+  });
+}
+
 function renderHead() {
   const cols = [
     {key:'order', label:'#', title:'Порядок в списке'},
@@ -1374,10 +1438,12 @@ function renderHead() {
 
 function renderBody() {
   closePopover();
+  closeCxPopover();
   const allPlugins = getPlugins();
   const plugins = allPlugins.filter(p => {
     if (hideZero && p.totalMatches === 0) return false;
     if (filters.size > 0 && !filters.has(effectivePriority(p))) return false;
+    if (complexityFilters.size > 0 && !complexityFilters.has(effectiveComplexity(p))) return false;
     if (searchQuery && !p.id.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     return true;
   });
@@ -1462,11 +1528,13 @@ function renderBody() {
     </tr>\` : '';
 
     const dotHtml = overrides[p.id] !== undefined ? '<span class="override-dot" title="Переопределено вручную"></span>' : '';
+    const ec = effectiveComplexity(p);
+    const cxDotHtml = complexityOverrides[p.id] !== undefined ? '<span class="override-dot" title="Переопределено вручную"></span>' : '';
     return \`<tr class="pr\${isOpen ? ' open' : ''}" data-id="\${escAttr(p.id)}">
       <td><span class="exp-icon">▶</span> <span class="plugin-order">\${p.order}</span></td>
       <td><span class="plugin-name">\${highlightMatch(p.id, searchQuery)}</span></td>
       <td><span class="badge l-\${lightKey}">\${LIGHTNING_LABEL[lightKey]}</span></td>
-      <td><span class="badge cx-\${p.complexity === 'n/a' ? 'na' : p.complexity}">\${COMPLEXITY_LABEL[p.complexity] ?? p.complexity}</span></td>
+      <td><span class="badge cx-\${ec === 'n/a' ? 'na' : ec} cxbadge" data-id="\${escAttr(p.id)}" title="Изменить сложность">\${COMPLEXITY_LABEL[ec] ?? ec}\${cxDotHtml}</span></td>
       <td><span class="badge p-\${ep} pbadge" data-id="\${escAttr(p.id)}" title="Изменить приоритет">\${PRIORITY_LABEL[ep]}\${dotHtml}</span></td>
       <td><span class="\${p.totalMatches === 0 ? 'matches-zero' : 'matches'}">\${p.totalMatches}</span></td>
     </tr>\${detailHtml}\`;
@@ -1478,7 +1546,7 @@ function renderBody() {
   // Row click to expand
   tbody.querySelectorAll('tr.pr').forEach(tr => {
     tr.onclick = e => {
-      if (e.target.closest('.pbadge')) return;
+      if (e.target.closest('.pbadge') || e.target.closest('.cxbadge')) return;
       const id = tr.dataset.id;
       if (expanded.has(id)) expanded.delete(id); else expanded.add(id);
       renderBody();
@@ -1489,8 +1557,19 @@ function renderBody() {
   tbody.querySelectorAll('.pbadge').forEach(badge => {
     badge.onclick = e => {
       e.stopPropagation();
+      closeCxPopover();
       if (popover.id === badge.dataset.id) { closePopover(); return; }
       openPopover(badge, badge.dataset.id);
+    };
+  });
+
+  // Complexity badge click → popover
+  tbody.querySelectorAll('.cxbadge').forEach(badge => {
+    badge.onclick = e => {
+      e.stopPropagation();
+      closePopover();
+      if (cxPopover.id === badge.dataset.id) { closeCxPopover(); return; }
+      openCxPopover(badge, badge.dataset.id);
     };
   });
 }
@@ -1501,7 +1580,7 @@ function initPopover() {
   el.id = 'priority-popover';
   document.body.appendChild(el);
   popover.el = el;
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopover(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closePopover(); closeCxPopover(); } });
   document.addEventListener('click', e => {
     if (popover.id && !e.target.closest('#priority-popover') && !e.target.closest('.pbadge')) closePopover();
   });
@@ -1543,6 +1622,55 @@ function closePopover() {
   popover.id = null;
 }
 
+let cxPopover = { id: null, el: null };
+
+function initCxPopover() {
+  const el = document.createElement('div');
+  el.className = 'popover';
+  el.id = 'complexity-popover';
+  document.body.appendChild(el);
+  cxPopover.el = el;
+  document.addEventListener('click', e => {
+    if (cxPopover.id && !e.target.closest('#complexity-popover') && !e.target.closest('.cxbadge')) closeCxPopover();
+  });
+}
+
+function openCxPopover(badge, pluginId) {
+  const plugin = getPlugins().find(p => p.id === pluginId);
+  if (!plugin) return;
+  const cur = effectiveComplexity(plugin);
+  cxPopover.el.innerHTML = COMPLEXITY_CYCLE.map(val =>
+    \`<div class="popover-row\${cur === val ? ' current' : ''}" data-val="\${val}">\${COMPLEXITY_LABEL[val]}</div>\`
+  ).join('');
+  cxPopover.el.querySelectorAll('.popover-row').forEach(row => {
+    row.onclick = e => {
+      e.stopPropagation();
+      const next = row.dataset.val;
+      if (next === plugin.complexity) delete complexityOverrides[pluginId];
+      else complexityOverrides[pluginId] = next;
+      saveComplexityOverrides();
+      closeCxPopover();
+      renderCxtabs(); renderBody();
+    };
+  });
+  cxPopover.el.style.visibility = 'hidden';
+  cxPopover.el.style.display = 'block';
+  const rect = badge.getBoundingClientRect();
+  const pw = cxPopover.el.offsetWidth, ph = cxPopover.el.offsetHeight;
+  let top = rect.bottom + 4, left = rect.left;
+  if (left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
+  if (top + ph > window.innerHeight - 8) top = rect.top - ph - 4;
+  cxPopover.el.style.top = top + 'px';
+  cxPopover.el.style.left = left + 'px';
+  cxPopover.el.style.visibility = 'visible';
+  cxPopover.id = pluginId;
+}
+
+function closeCxPopover() {
+  if (cxPopover.el) { cxPopover.el.style.display = 'none'; cxPopover.el.style.visibility = 'hidden'; }
+  cxPopover.id = null;
+}
+
 function initExpandAll() {
   const btn = document.getElementById('expand-all-btn');
   btn.onclick = () => {
@@ -1563,17 +1691,18 @@ function initSearch() {
 
 function renderFilterSummary(total, shown) {
   const parts = [];
-  if (filters.size > 0) parts.push(\`фильтр: <b>\${[...filters].join(', ')}</b>\`);
+  if (filters.size > 0) parts.push(\`приоритет: <b>\${[...filters].join(', ')}</b>\`);
+  if (complexityFilters.size > 0) parts.push(\`сложность: <b>\${[...complexityFilters].join(', ')}</b>\`);
   if (searchQuery) parts.push(\`поиск: <b>\${escHtml(searchQuery)}</b>\`);
   if (hideZero) parts.push('скрыты нулевые');
   const el = document.getElementById('filter-summary');
   if (parts.length === 0) { el.textContent = ''; return; }
   el.innerHTML = \`Показано \${shown} из \${total} · \${parts.join(' · ')} · <a id="reset-filters">Сбросить</a>\`;
   document.getElementById('reset-filters').onclick = () => {
-    filters.clear(); searchQuery = ''; hideZero = false;
+    filters.clear(); complexityFilters.clear(); searchQuery = ''; hideZero = false;
     document.getElementById('search-input').value = '';
     document.getElementById('hide-zero').checked = false;
-    renderFtabs(); renderBody();
+    renderFtabs(); renderCxtabs(); renderBody();
   };
 }
 

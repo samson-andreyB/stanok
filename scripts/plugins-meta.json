@@ -1,0 +1,21 @@
+{
+  "postcss-import":               { "priority": "critical",    "complexity": "medium"  },
+  "postcss-mixins":               { "priority": "critical",    "complexity": "high"    },
+  "postcss-axis":                 { "priority": "high",        "complexity": "low"     },
+  "postcss-property-lookup":      { "priority": "out-of-scope","complexity": "n/a"     },
+  "postcss-assets":               { "priority": "critical",    "complexity": "high"    },
+  "postcss-advanced-variables":   { "priority": "critical",    "complexity": "high"    },
+  "postcss-color-function":       { "priority": "out-of-scope","complexity": "n/a"     },
+  "postcss-strip-units":          { "priority": "out-of-scope","complexity": "n/a"     },
+  "postcss-conditionals":         { "priority": "out-of-scope","complexity": "n/a"     },
+  "postcss-nested (BEM)":         { "priority": "critical",    "complexity": "medium"  },
+  "postcss-nested (standard)":    { "priority": "native",      "complexity": "trivial" },
+  "postcss-extend":               { "priority": "out-of-scope","complexity": "n/a"     },
+  "postcss-calc":                 { "priority": "native",      "complexity": "trivial" },
+  "postcss-svg":                  { "priority": "high",        "complexity": "high"    },
+  "postcss-url":                  { "priority": "out-of-scope","complexity": "n/a"     },
+  "postcss-svg-fallback":         { "priority": "out-of-scope","complexity": "n/a"     },
+  "postcss-color-rgba-fallback":  { "priority": "out-of-scope","complexity": "n/a"     },
+  "autoprefixer":                 { "priority": "native",      "complexity": "trivial" },
+  "postcss-data-packer":          { "priority": "removed",     "complexity": "n/a"     }
+}
