@@ -1,0 +1,40 @@
+.Page--searchResults {
+
+	/* Фильтры */
+	.Filter2 {
+		&--code {
+			width: 50px;
+		}
+
+		&--name {
+			width: 250px;
+		}
+
+		&--productGroup {
+			min-width: 200px;
+		}
+
+		&--productStatus {
+			min-width: 145px;
+		}
+	}
+
+
+	.ControlPanel {
+		.Bubble {
+			margin-left: 16px;
+			vertical-align: middle;
+		}
+
+		.btnMain {
+			margin-left: 10px;
+			vertical-align: middle;
+		}
+	}
+
+
+	/* Отбивка от pageControl */
+	.Scrollbox {
+		margin-bottom: 1px;
+	}
+}

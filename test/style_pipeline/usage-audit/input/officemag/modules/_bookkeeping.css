@@ -1,0 +1,173 @@
+.tabsList--bookkeeping {
+	margin-bottom: 20px;
+}
+
+.Filters--BookkeepingDelay {
+	.Filter {
+		margin-right: 0;
+
+		& + .Filter {
+			margin-left: 100px;
+		}
+
+		&__field {
+			font-size: 22px;
+		}
+
+		&--error {
+			& + .Filter {
+				margin-left: 80px;
+			}
+
+			.Filter__field {
+				font-size: 14px;
+			}
+		}
+	}
+}
+
+.Items--bookkeeping {
+	.Item__box {
+		white-space: nowrap;
+
+		&--document {
+			width: 21%;
+
+			.pseudoLink {
+				cursor: help;
+			}
+		}
+
+		&--client {
+			width: 30%;
+		}
+
+		&--sum,
+		&--paid,
+		&--dept,
+		&--delay {
+			width: 10%;
+		}
+
+		&--payUp {
+			width: 9%;
+		}
+
+		.pseudoLink {
+			color: $C_INFO;
+			
+			&:hover {
+				color: $BRAND__A;
+			}
+		}
+	}
+
+	.Items--bookkeepingUpd {
+		.Item__box--document,
+		.Item__box--date,
+		.Item__box--client {
+			width: auto;
+			white-space: normal;
+		}
+	}
+
+	.Item .Item__box--dept {
+		font-weight: bold;
+	}
+
+	.Item--total {
+		font-weight: bold;
+
+		.Item__box {
+			border-bottom: none;
+		}
+	}
+}
+
+.FancyModal--bookkeepingDelay {
+	width: 410px;
+
+	.BookkeepingDebtRelevance {
+		font-size: 12px;
+
+		&__date {
+			margin-right: 3px;
+		}
+	}
+
+	.FancyModal__header + .BookkeepingDebtRelevance {
+		margin-top: -10px;
+		margin-bottom: 15px;
+	}
+}
+
+.BookkeepingDelaySum {
+	font-weight: bold;
+}
+
+
+.BookkeepingDebtRelevance--default {
+	margin-bottom: 20px;
+	color: #777;
+
+	.BookkeepingDebtRelevance__date {
+		&--error {
+			color: $ERROR;
+		}
+	}
+}
+
+.BookkeepingReconciliation {
+	.instructionLink {
+		margin-bottom: 10px;
+	}
+
+	&__description {
+		margin-bottom: 20px;
+		line-height: 1.5;
+	}
+
+	&__btn {
+		& + .BookkeepingReconciliation__content {
+			margin-top: 25px;
+		}
+	}
+
+	&__content {
+		width: 80%;
+	}
+}
+
+.Items--bookkeepingReconciliation {
+	.Item__box {
+		&--date {
+			width: 19%;
+		}
+
+		&--period {
+			width: 26%;
+		}
+
+		&--status {
+			width: 18%;
+
+			.btnInfo {
+				margin-left: 2px;
+			}
+		}
+	}
+}
+
+.FancyModal--bookkeepingReconciliation {
+	width: 500px;
+
+	.Items--formFieldsList {
+		margin-top: 0;
+	}
+
+	.Form {
+		&__value {
+			font-weight: bold;
+		}
+	}
+}

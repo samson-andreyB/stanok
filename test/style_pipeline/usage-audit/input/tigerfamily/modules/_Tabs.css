@@ -1,0 +1,68 @@
+/* Tabs
+---------------------------------------------------------------------- */
+
+/*doc
+
+### Вкладки
+
+Контейнеры для содержимого должны быть блочными, так как всегда отображается первый контейнер до первого действия пользователя с помощью `display: block`.
+
+Изначально должны быть проставлены `Tab--active` и `TabContent--active`.
+
+```html
+<div class="Tabs">
+	<div class="Tab__wrapper main fill">
+		<ul class="Tab__list main" data-tabs-id="example">
+			<li class="Tab Tab--active" data-tab-id="main">
+				<span class="Tab__text">Основное</span>
+			</li><li class="Tab" data-tab-id="products">
+				<span class="Tab__text">Товары-участники</span>
+				<span class="Tab__info">(4&nbsp;532)</span>
+			</li>
+		</ul>
+	</div>
+
+	<div class="TabContent__wrapper" data-tabs-id="example" data-tab-animate="true">
+		<div class="TabContent TabContent--active" data-tab-id="main">
+			a
+		</div>
+		<div class="TabContent" data-tab-id="products">
+			b
+		</div>
+	</div>
+</div>
+```
+ */
+
+.Tab__wrapper {
+	width: 100%;
+}
+
+.Tab__list,
+.Tab {
+	margin: 0;
+	padding: 0;
+}
+
+.Tab {
+	cursor: pointer;
+	display: inline-block;
+	margin-top: 0;
+	vertical-align: top;
+	user-select: none;
+}
+.Tab--active {
+	cursor: default;
+}
+
+.Tab--active .Tab__text {
+	cursor: default;
+}
+
+.TabContent {
+	display: block;
+
+	& + & {
+		display: none;
+	}
+}

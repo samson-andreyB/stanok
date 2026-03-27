@@ -1,0 +1,60 @@
+.TabsContentSpoiler--default {
+	transition: padding-bottom .3s;
+
+	.TabsContentSpoiler__header {
+		position: relative;
+		display: inline-block;
+		cursor: pointer;
+		padding-right: 24px;
+		margin-bottom: 0;
+
+		&:after {
+			content: '';
+			position: absolute;
+			top: 50%;
+			right: 0;
+			transform: translateY(-50%);
+			background-image: svg('arrow_down_12x7', '[color]: $BRAND_BLACK');
+			width: width('arrow_down_12x7.svg');
+			height: height('arrow_down_12x7.svg');
+			background-repeat: no-repeat;
+			background-position: center;
+			transition: transform .3s;
+		}
+	}
+
+	.TabsContentSpoiler__info {
+		color: $BRAND;
+	}
+
+	.TabsContentSpoiler__content {
+		margin-top: 10px;
+		display: none;
+
+	}
+}
+
+.TabsContentSpoiler--active {
+	padding-bottom: 10px;
+
+	.TabsContentSpoiler__header {
+		&:after {
+			transform: translateY(-50%) rotateZ(-180deg);
+		}
+	}
+
+	.TabsContentSpoiler__content {
+		display: block;
+		animation: sweep .5s ease-in-out;
+	}
+}
+
+@keyframes sweep {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}

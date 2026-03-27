@@ -1,0 +1,15 @@
+.Brand {
+	margin-bottom: 20px;
+	position: relative;
+	border: 1px solid #d6d6d6;
+}
+.Brand__imageWrapper {
+	margin-bottom: 10px;
+}
+.Brand__image {
+	width: 100%;
+	height: auto;
+}
+.Brand__text {
+	padding: 5px 15px;
+}

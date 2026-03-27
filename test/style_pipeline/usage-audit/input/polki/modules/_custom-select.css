@@ -1,0 +1,65 @@
+/* BLOCKS - CUSTOM RADIO CHECKBOX
+---------------------------------------------------------------------*/
+
+/*doc
+
+### Custom Select
+
+```html
+<div class="Select">
+	<label class="Select__label">
+		<select class="Select__select" data-placeholder="Выберите нужное">
+			<option>Вариант первый</option>
+			<option>Вторая возможность</option>
+			<option>Третья опция</option>
+			<option>Кейс четвёртый</option>
+		</select>
+		<span class="Select__text">Пожалуйста, выберите</span>
+	</label>
+</div>
+```
+*/
+
+@define-mixin CustomSelectCommon {
+	& {
+		display: inline-block;
+		max-width: 100%;
+		vertical-align: bottom;
+		
+		&__label {
+			display: block;
+			position: relative;
+		}
+
+		&__select {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+
+			box-sizing: border-box;
+			right: 0;
+			height: 100%;
+			opacity: 0;
+			width: 100%;
+			z-index: 2;
+		}
+		&__select[disabled] {
+			cursor: default;
+		}
+		.ielte8 &__select {
+			-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+		}
+
+		&__text {
+			display: block;
+			min-height: 1.75em;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			padding-right: 10px;
+		}
+		&__text.placeholder {
+			color: #aaa;
+		}
+	}
+}

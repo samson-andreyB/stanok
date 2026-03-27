@@ -1,0 +1,108 @@
+.Footer {
+	&__group {
+		@mixin PseudoTable;
+		padding-y: 30px;
+		border-top: 1px solid $dividerColor;
+		table-layout: fixed;
+		width: 100%;
+
+		&:first-child {
+			border-top: 0;
+			padding-top: 0;
+		}
+	}
+
+	&__logo {
+		display: inline-block;
+		text-align: center;
+		vertical-align: bottom;
+		width: 20%;
+	}
+
+	&__info,
+	&__copy {
+		color: $infoColor;
+		font-size: 11px;
+	}
+
+	&__info {
+		& + .Footer__info,
+		& + .Footer__copy {
+			margin-top: 12px;
+		}
+	}
+}
+
+.FooterBox {
+	@mixin PseudoTable__cell;
+	padding-left: 2%;
+	vertical-align: top;
+
+	&:first-child {
+		padding-left: 0;
+	}
+
+	&.logo {
+		width: 180px;
+	}
+
+	&__header {
+		margin: 0 0 15px;
+	}
+
+	&__list {
+		@mixin List--basic;
+	}
+
+	&__item {
+		@mixin List__item--basic;
+
+		& + & {
+			margin-top: calc($lineHeight / 4);
+		}
+	}
+
+	&__link {
+		color: #000;
+		padding: .5em 0;
+	}
+}
+
+/* Одно и то же */
+.Footer__header,
+.FooterBox__header {
+	color: $infoColor;
+	cursor: default;
+	font-style: italic;
+	font-weight: normal;
+}
+
+.FooterBox--phone {
+	.Phone {
+		font-size: 14px;
+	}
+
+	.Phone__number {
+		display: inline-block;
+		font-size: 18px;
+		color: #000;
+
+		&:hover {
+			@mixin a--hover;
+		}
+	}
+}
+
+.FooterBox--errorLink {
+	text-align: right;
+}
+
+.FooterError {
+	font-size: 14px;
+	margin-top: .3em;
+
+	&__shortcut {
+		font-family: inherit;
+		font-weight: bold;
+	}
+}

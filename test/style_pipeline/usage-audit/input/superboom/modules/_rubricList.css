@@ -1,0 +1,27 @@
+.RubricList--popular {
+	@mixin bannerHover;
+
+	position: relative;
+	display: inline-block;
+	border-radius: $BD_RAD_BANNER;
+	color: $BRAND_BLACK;
+	overflow: hidden;
+
+	.RubricList__image {
+		vertical-align: top;
+		max-width: 100%;
+	}
+
+	.RubricList__name {
+		position: absolute;
+		top: 50%;
+		left: 9.2%;
+		width: 40%;
+		transform: translateY(-50%);
+		font-size: 18px;
+	}
+
+	&:hover {
+		color: inherit;
+	}
+}

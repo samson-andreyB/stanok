@@ -1,0 +1,22 @@
+.Price {
+	display: inline-block;
+	color: #555;
+	line-height: 18px;
+
+	& + & {
+		margin-left: 50px;
+	}
+
+	&__amount {
+		color: #000;
+		font-weight: bold;
+	}
+
+	&--red .Price__amount {
+		color: #e45959;
+	}
+
+	&--green .Price__amount {
+		color: #28bd8b;
+	}
+}

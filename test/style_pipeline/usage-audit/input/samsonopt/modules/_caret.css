@@ -1,0 +1,19 @@
+@define-mixin caretXY $sizeX: .72em, $sizeY: .36em {
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: 1px;
+	border: solid transparent;
+	border-width: $sizeY calc($sizeX / 2) 0 calc($sizeX / 2);
+	border-top-color: currentColor;
+}
+
+@define-mixin caret $size: 4px {
+	@mixin caretXY calc($size * 2), $size;
+}
+
+@define-mixin caretTop {
+	border-top-color: transparent;
+	border-top-width: 0;
+	border-bottom-color: currentColor;
+	border-bottom-width: .36em;
+}

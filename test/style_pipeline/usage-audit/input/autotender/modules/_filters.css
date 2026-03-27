@@ -1,0 +1,29 @@
+/* FILTERS
+------------------------------------------------------------------------------*/
+.filters {
+	&--completedBidList {
+		.filter--status,
+		.filter--type,
+		.filter--winner {
+			min-width: 135px;
+		}
+
+		.filter--winner {
+			.RichSelect {
+				&__options {
+					min-width: 220px;
+				}
+			}
+		}
+
+		.filter--manager {
+			width: 170px;
+		}
+	}
+
+	&--usersList {
+		.filter--search {
+			width: 260px;
+		}
+	}
+}

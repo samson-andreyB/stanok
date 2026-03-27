@@ -1,0 +1,53 @@
+/* Actions list
+---------------------------------------------------------------------------------------------------*/
+
+.btnAdd--action {
+	margin-right: .75em;
+}
+
+.Items--actions {
+	.Item__box--status,
+	.Item__box--number,
+	.Item__box--site,
+	.Item__box--duration,
+	.Item__box--statusName {
+		white-space: nowrap;
+		width: 1px;
+	}
+	.Item__box--number {
+		color: $info;
+		font-size: 11px;
+	}
+
+	.Item__box--status {
+		padding-y: 0;
+		line-height: 1;
+	}
+	.ActionStatus {
+		cursor: help;
+		display: inline-block;
+		padding: .5em .3em;
+	}
+
+	.Item--active {
+		.ActionStatus__icon {
+			@mixin BadgeIndicator $main;
+		}
+	}
+
+	.Item--wait {
+		.ActionStatus__icon {
+			@mixin BadgeIndicator $attention;
+		}
+	}
+
+	.Item--disabled {
+		.ActionStatus__icon {
+			@mixin BadgeIndicator $disable;
+		}
+	}
+}
+
+.Action__filterName {
+	width: 300px;
+}

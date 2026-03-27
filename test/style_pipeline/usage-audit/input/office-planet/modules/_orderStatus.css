@@ -1,0 +1,71 @@
+.OrderStatus {
+	white-space: nowrap;
+
+	.pseudoLink {
+		color: inherit;
+		cursor: help;
+
+		&:hover {
+			color: $linkHoverColor;
+		}
+	}
+
+	.Icon {
+		width: 1em;
+		height: 1em;
+		background-color: #acacac;
+		border-radius: 50%;
+		margin-right: .3em;
+	}
+
+	&--ready .Icon {
+		background-color: #e0b727;
+	}
+
+	&--received .Icon {
+		background-color: #62a73c;
+	}
+
+	&--cancelled .Icon {
+		background-color: #ce1728;
+	}
+
+	&--postponed .Icon {
+		background-color: #904cb0;
+	}
+
+	&--archive .Icon {
+		opacity: .5;
+	}
+
+	&--bonuses {
+		font-size: 13px;
+		color: $actionColor;
+
+		&:before {
+			content: '';
+			display: inline-block;
+			margin-right: 5px;
+			@mixin v-a-m-true;
+			@mixin OtherIcon bonuses_15x14, $actionColor;
+		}
+
+		.OrderList__item--archive & {
+			color: #939393;
+
+			&:before {
+				background-image: svg('bonuses_15x14', '[color]: #939393');
+			}
+		}
+	}
+}
+
+.OrderStatusTip {
+	box-sizing: border-box;
+	max-height: 270px;
+	padding: 8px 10px;
+	line-height: 16px;
+	font-size: 12px;
+	color: #6b6b6b;
+	overflow-y: auto;
+}

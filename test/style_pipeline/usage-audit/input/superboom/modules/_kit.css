@@ -1,0 +1,41 @@
+.Kit--cart {
+	margin-top: 15px;
+	font-size: 12px;
+
+	.Kit__header {
+		font-weight: bold;
+	}
+
+	.Kit__item {
+		display: table;
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	.Kit__item + .Kit__item {
+		margin-top: 7px;
+		border-top: 1px solid #eeebe8;
+	}
+
+	.Kit__box {
+		display: table-cell;
+		padding-top: 7px;
+		vertical-align: top;
+
+		&--amount {
+			width: 40px;
+			text-align: right;
+			white-space: nowrap;
+		}
+	}
+
+	.Kit__box + .Kit__box {
+		padding-left: 15px;
+	}
+
+	.Kit__aux {
+		display: block;
+		margin-top: 2px;
+		color: #777;
+	}
+}

@@ -1,0 +1,22 @@
+.Logo {
+	display: inline-block;
+	vertical-align: middle;
+	width: width('logo_200x49.png');
+	height: height('logo_200x49.png');
+	background-image: resolve('logo_200x49.png');
+	background-repeat: no-repeat;
+	background-size: contain;
+	transition: width $headerTransitionDuration, height $headerTransitionDuration;
+	margin-bottom: -13px;
+
+	@mixin hocus {
+		opacity: .85;
+	}
+
+	.Header__row--fixed & {
+		width: width('logo_184x45.png');
+		height: height('logo_184x45.png');
+		background-image: resolve('logo_184x45.png');
+		margin-bottom: -3px;
+	}
+}

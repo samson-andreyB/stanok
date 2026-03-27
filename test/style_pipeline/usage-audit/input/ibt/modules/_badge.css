@@ -1,0 +1,26 @@
+.Badge--cluster {
+	color: #309ac7;
+}
+
+.Badge--clone {
+	color: #fa8565
+}
+
+.Badge2 {
+	&--mp {
+		background-color: #309ac7;
+		border-color: #309ac7;
+		color: #fff;
+	}
+
+	&--wb {
+		background-color: #b75dde;
+		border-color: #b75dde;
+		color: #fff;
+	}
+
+	&--aux {
+		border-color: #666;
+		color: #666;
+	}
+}

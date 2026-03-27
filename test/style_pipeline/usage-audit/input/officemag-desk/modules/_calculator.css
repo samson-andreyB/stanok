@@ -1,0 +1,63 @@
+.Calculator {
+	&.FancyModal {
+		width: 760px;
+	}
+
+	.Box--potential {
+		padding-right: 20px;
+		color: $info;
+		text-align: right;
+	}
+
+	.Form__set {
+		width: 100%;
+	}
+	.Form__field {
+		margin-left: 130px;
+	}
+	.Form__title {
+		margin-left: -130px;
+		text-align: left;
+		width: 120px;
+		height: auto;
+	}
+
+	.Specs {
+		padding-top: 1.5em;
+		padding-bottom: 0;
+	}
+	.Specs__item {
+		width: 50%;
+		
+		&--calculatorData {
+			padding-bottom: 0;
+			width: 100%;
+		}
+
+		&--keyValue {
+			.Group {
+				width: 70%;
+			}
+			.Box--value {
+				white-space: nowrap;
+				width: 1px;
+			}
+		}
+	}
+}
+
+.Items--calculatorData {
+	margin: -1em -$indentX 0;
+
+	.Item__box--calculated,
+	.Item__box--client,
+	.Item__box--agree {
+		text-align: right;
+		width: 1px;
+		white-space: nowrap;
+	}
+
+	.Item__box--category {
+		width: 30%;
+	}
+}

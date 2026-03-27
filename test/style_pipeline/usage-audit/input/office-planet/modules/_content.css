@@ -1,0 +1,71 @@
+.Content {
+	display: inline-block;
+	width: 100%;
+}
+
+
+
+/*doc
+
+<h1 class="Content__header">
+	<img class="Content__headerImage Content__headerImage--brand" src="/assets/img/misc/brand_logo.jpg">
+	Забыли пароль?
+</h1>
+<p class="Content__description">Введите адрес электронной почты, указанный при регистрации, на который мы вышлем ссылку для восстановления пароля.</p>
+
+*/
+
+.Content__header {
+	margin-y: 35px 25px;
+	cursor: default;
+	font-size: 27px;
+	font-weight: normal;
+
+	& + .Content__description {
+		margin-top: calc(-$lineHeight/2);
+	}
+
+	&--brand {
+		display: table;
+		width: 100%;
+
+		.Content__headerName {
+			width: 100%;
+		}
+
+		.Content__headerName,
+		.Content__headerImage {
+			display: table-cell;
+			vertical-align: middle;
+		}
+	}
+}
+
+.Content__headerImage {
+	vertical-align: middle;
+	margin-top: -.18em;
+
+	&--brand {
+		max-height: 60px;
+		width: auto;
+	}
+}
+
+
+
+.Content--profile .Tabs2--default {
+	margin-bottom: 10px;
+}
+.Content--profile .Content__description {
+	margin-top: 35px;
+}
+.Content--profile .OrderConfirmation__group {
+	padding-right: 300px;
+}
+
+
+.Content--cartEmpty {
+	.Price__penny {
+		font-size: 9px;
+	}
+}

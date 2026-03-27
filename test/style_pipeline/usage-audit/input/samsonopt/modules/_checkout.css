@@ -1,0 +1,323 @@
+.Checkout {
+	&--success {
+		.Checkout__description {
+			font-size: 14px;
+			padding-top: 7px;
+		}
+	}
+}
+
+.Checkout--default {
+	width: 60%;
+
+	.Checkout__description {
+		line-height: 1.357em;
+	}
+
+	.Checkout__paragraph + .Checkout__paragraph {
+		margin-top: .8em;
+	}
+
+	.Checkout__description + .Checkout__order {
+		margin-top: 2.5em;
+	}
+
+	.Checkout__orderTitle {
+		padding: .714em 1.071em;
+		color: #fff;
+		font-size: 115%;
+		background-color: $C_BRAND;
+	}
+
+	.Checkout__orderTitle + .CheckoutSummary {
+		margin-top: 1.1em;
+	}
+
+	.CheckoutSummary + .Checkout__comment {
+		margin-top: 1.571em;
+	}
+
+	.Checkout__comment {
+		.Form__title {
+			font-weight: bold;
+		}
+
+		& + .Checkout__options--call {
+			margin-top: 30px;
+		}
+	}
+
+	.Checkout__options,
+	.OrderControls {
+		margin-top: 2.143em;
+	}
+
+	.Checkout__options--call {
+		margin-top: 15px;
+
+		.Blocked {
+			pointer-events: auto;
+			cursor: help;
+		}
+	}
+
+	.Checkout__optionsItem + .Checkout__optionsItem {
+		margin-top: 1.3em;
+	}
+
+	.Checkout__option {
+		font-weight: bold;
+		cursor: pointer;
+		user-select: none;
+
+		&--disabled {
+			opacity: .5;
+			cursor: default;
+		}
+
+		.icon.tender-big {
+			margin-left: .25em;
+		}
+	}
+
+	.Tender {
+		margin-top: 1em;
+		margin-bottom: 30px;
+	}
+
+	.Checkout__preparedOrder {
+		margin-bottom: 30px;
+
+		.Form__field {
+			.Form__input {
+				width: 525px;
+			}
+
+			&--orderId {
+				.Form__input {
+					width: 165px;
+				}
+			}
+		}
+	}
+
+	.Checkout__preparedOrderInfo {
+		line-height: 1.36em;
+	}
+
+	.Checkout__preparedOrderInfo + .Form__field {
+		margin-top: 1.5em;
+	}
+
+	.Checkout__preparedOrderParagraph + .Checkout__preparedOrderParagraph {
+		margin-top: .8em;
+	}
+
+	.Checkout__call {
+		margin-top: 15px;
+		display: none;
+	}
+}
+
+
+.CheckoutParameters--default {
+	width: 60%;
+
+	.Form__field.inputFull {
+		margin-top: 0;
+		padding: 15px 0;
+		width: 460px;
+
+		.Form__title {
+			margin-bottom: 15px;
+			padding-bottom: 0;
+			color: #111;
+			font-weight: bold;
+			font-size: 14px;
+			line-height: 1;
+		}
+
+		&:first-child {
+			padding-top: 7px;
+		}
+
+		&:last-child {
+			padding-bottom: 0;
+		}
+	}
+
+	.DeliveryMethods {
+		margin-top: 25px;
+	}
+}
+
+.CheckoutParameters--modal {
+	.Form__title {
+		color: #111;
+		font-weight: bold;
+		font-size: 14px;
+	}
+
+	.Form__value {
+		margin-top: -4px;
+		display: block;
+	}
+}
+
+
+.CheckoutStepsFields {
+	&--edit {
+		.CheckoutStepsField--primary {
+			display: none;
+		}
+
+		.CheckoutStepsField--secondary {
+			display: block;
+		}
+	}
+}
+
+.CheckoutStepsField {
+	&--secondary {
+		display: none;
+	}
+
+	&__name {
+		color: $C_GRAY;
+		margin-bottom: 5px;
+
+		&--required:after {
+			color: #c7130d;
+			content: '*';
+			margin-left: 4px;
+		}
+	}
+
+	&__note {
+		margin: 10px 0 7px;
+	}
+
+	&__fieldText {
+		width: 100%;
+	}
+
+	&__fieldSelect {
+		width: 100%;
+	}
+
+	&__fieldValue {
+		line-height: 1.5;
+	}
+
+	&__pseudoLink {
+		margin: 15px 0 10px;
+
+		.pseudoLink {
+			cursor: pointer;
+		}
+	}
+
+	&__errorNotify {
+		@mixin ErrorNotify;
+
+		display: none;
+	}
+
+	&--error {
+		.CheckoutStepsField__fieldText {
+			border-color: $C_ERROR;
+			box-shadow: none;
+		}
+		.CheckoutStepsField__errorNotify {
+			display: block;
+		}
+	}
+}
+
+.DeliveryMethods--default {
+	.DeliveryMethods__item {
+		width: 460px;
+
+		&--active {
+
+			.DeliveryMethods__triggerLabel {
+				cursor: default;
+				font-weight: bold;
+			}
+
+			.DeliveryMethods__trigger ~ .DeliveryMethods__content {
+				margin-top: 13px;
+			}
+
+			.DeliveryMethods__content {
+				display: block;
+			}
+		}
+	}
+
+	.DeliveryMethods__triggerLabel {
+		cursor: pointer;
+	}
+
+	.DeliveryMethods__item + .DeliveryMethods__item {
+		margin-top: 15px;
+	}
+
+	.DeliveryMethods__item--active + .DeliveryMethods__item {
+		margin-top: 25px;
+	}
+
+	.DeliveryMethods__content {
+		display: none;
+	}
+
+	.CheckoutStepsField__pseudoLink {
+		margin-bottom: 30px;
+	}
+}
+
+.DeliveryMethods--modal {
+	.DeliveryMethods__item {
+		width: 100%;
+
+		&--active {
+			.DeliveryMethods__triggerLabel {
+				font-weight: normal;
+			}
+
+			.DeliveryMethods__trigger ~ .DeliveryMethods__content {
+				margin-top: 5px;
+			}
+		}
+	}
+
+	.DeliveryMethods__item + .DeliveryMethods__item {
+		margin-top: 5px;
+	}
+
+	.DeliveryMethods__item--active + .DeliveryMethods__item {
+		margin-top: 10px;
+	}
+
+	.CheckoutStepsField__name {
+		margin-bottom: 5px;
+	}
+
+	.CheckoutStepsField__pseudoLink {
+		margin: 4px 0 16px;
+	}
+}
+
+.DeliveryMethodsTip {
+	box-sizing: border-box;
+	padding: 5px 6px;
+	line-height: 19px;
+
+	p {
+		margin: 0;
+	}
+
+	p + p {
+		margin-top: 1em;
+	}
+}

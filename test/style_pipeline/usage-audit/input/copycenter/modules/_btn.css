@@ -1,0 +1,41 @@
+/* BLOCKS - BUTTONS
+---------------------------------------------------------------------*/
+
+/*
+<a class="Btn" href="#">Напомнить</a>
+<button class="Btn">Купить</button>
+<input class="Btn" type="submit" value="Применить">
+*/
+
+.Btn {
+	border: 0;
+	box-sizing: border-box;
+	cursor: pointer;
+	display: inline-block;
+	font: inherit;
+	overflow: visible;
+	user-select: none;
+}
+.Btn:hover {
+	text-decoration: none;
+}
+.ielte7 .Btn {
+	display: inline;
+	zoom: 1;
+}
+
+.Btn.big {
+	font-size: 1.25em;
+}
+.Btn.small {
+	font-size: .75em;
+}
+
+
+.BtnDefault {
+	line-height: 1;
+	position: relative;
+	text-align: center;
+	text-decoration: none;
+	white-space: nowrap;
+}

@@ -1,0 +1,45 @@
+.StatusHistory {
+
+	&__title {
+		margin: 3px 0;
+		font-weight: bold;
+	}
+
+	.Items--statusChangesHistory {
+		max-width: 400px;
+
+		.Item {
+
+			.Item__box {
+				padding: 4px 0 3px;
+				vertical-align: top;
+
+				&--date,
+				&--colleague {
+					padding-left: 10px;
+				}
+
+				&--date {
+					white-space: nowrap;
+					text-align: right;
+					color: #656565;
+				}
+			}
+		}
+
+		.Item:first-child {
+
+			.Item__box {
+				border-top: none;
+			}
+		}
+	}
+
+	.Items--customerVisitRequest {
+		max-width: 450px;
+	}
+
+	&__expired {
+		color: #e35959;
+	}
+}

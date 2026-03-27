@@ -1,0 +1,36 @@
+/* VACANCIES
+------------------------------------------------------------------------------*/
+
+.Items--vacancies {
+
+	.Item__box--status {
+		width: 1px;
+	}
+
+	.Item__box--name {
+		width: 60%;
+	}
+
+	&.Items--sortable {
+		.Item__box--status {
+			width: initial;
+		}
+
+		.Item__box--number {
+			color: #666;
+		}
+
+		.Item__box--name {
+			width: 64%;
+		}		
+	}
+}
+
+.Vacancy__filterName {
+	width: 380px;
+}
+
+.VacancyCard.contentWrapper {
+	padding: 0 20px 20px;
+}
+

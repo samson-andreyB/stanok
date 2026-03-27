@@ -1,0 +1,79 @@
+.TopMessages {
+	font-size: 14px;
+	text-align: center;
+	position: relative;
+	z-index: 10;
+	
+	&__content {
+		position: absolute;
+		top: 0;
+		width: 100%;
+	}
+
+	&.isFlowing {
+		.TopMessages__content {
+			position: fixed;
+		}
+	}
+}
+
+.TopMessage {
+	box-sizing: border-box;
+	display: none;
+	padding: 15px 20px;
+	
+	&--active {
+		display: block;
+	}
+
+	&:before {
+		content: "";
+		display: inline-block;
+		margin: -.15em .5em 0 0;
+		vertical-align: middle;
+	}
+
+	&--timing {
+		background-color: #ffe6ae;
+		
+		&:before {
+			background-image: resolve('icons/ibt_warn.png');
+			width: width('icons/ibt_warn.png');
+			height: height('icons/ibt_warn.png');
+		}
+	}
+
+	&--tech {
+		background-color: #000;
+		border-top: 4px solid #fbae00;
+		color: #c5c5c5;
+
+		&:before {
+			background-image: resolve('icons/ibt_close.png');
+			width: width('icons/ibt_close.png');
+			height: height('icons/ibt_close.png');
+		}
+	}
+
+	&--success {
+		background-color: #3b8700;
+		color: #fff;
+
+		&:before {
+			background-image: resolve('icons/ibt_success.png');
+			width: width('icons/ibt_success.png');
+			height: height('icons/ibt_success.png');
+		}
+	}
+
+	&--error {
+		background-color: #b91414;
+		color: #fff;
+
+		&:before {
+			background-image: resolve('icons/ibt_error.png');
+			width: width('icons/ibt_error.png');
+			height: height('icons/ibt_error.png');
+		}
+	}
+}

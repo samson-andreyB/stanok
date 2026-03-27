@@ -1,0 +1,48 @@
+.Filters2--returnQualityGoods {
+	.Filter2 {
+		&--code {
+			width: 70px;
+			min-width: 70px;
+		}
+
+		&--counterparty {
+			width: 195px;
+		}
+
+		&--search {
+			width: 200px;
+		}
+
+		&--status2 {
+			width: 120px;
+		}
+
+		&--subdivision {
+			width: 160px;
+		}
+
+		&--reason,
+		&--status {
+			width: 150px;
+		}
+
+		&--sign {
+			width: 100px;
+		}
+
+		&--returnDate {
+			width: 175px;
+		}
+
+		&--salesRepresentative,
+		&--responsible {
+			width: 180px;
+		}
+	}
+}
+
+.Filters2 {
+	& + .controlPanel {
+		margin-top: 3px;
+	}
+}

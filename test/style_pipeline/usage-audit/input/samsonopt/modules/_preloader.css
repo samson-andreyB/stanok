@@ -1,0 +1,97 @@
+/* PRELOADER
+------------------------------------------------------------------*/
+
+.Preloader {
+	position: relative;
+	min-height: 180px;
+
+	&__overlay,
+	&__spinnerContainer,
+	&__spinner {
+		z-index: 100;
+	}
+
+	&__overlay {
+		display: none;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: #fff;
+		opacity: .8;
+		cursor: default;
+	}
+
+	&__spinnerContainer {
+		display: none;
+		position: absolute;
+		width: 100%;
+		height: 120px;
+		top: 0;
+		bottom: 0;
+		margin: auto;
+	}
+
+	&__spinner {
+		width: 120px;
+		height: 120px;
+		margin: 0 auto;
+		border: 5px solid #dc241f;
+		border-left-color: transparent;
+		border-top-color: transparent;
+		border-radius: 50%;
+		box-sizing: border-box;
+		animation: Spinner linear 1.5s infinite;
+	}
+
+	/* В скриптах определено такое поведение: если высота блока больше 200,
+	 * спиннер старается расположиться по центру экрана (по вертикали) */
+	&--floating {
+
+		.Preloader__spinnerContainer {
+			position: fixed;
+			margin-top: -60px;
+			top: 50%;
+			width: 100%;
+			left: 0;
+		}
+	}
+
+	/* Если нельзя выводить по центру, то закрепляемся сверху... */
+	&--top {
+
+		.Preloader__spinnerContainer {
+			position: absolute;
+			left: 0 !important;
+			top: 40px;
+			margin-top: 0;
+			bottom: auto;
+		}
+	}
+
+	/* ...или снизу, в зависимости от положения */
+	&--bottom {
+
+		.Preloader__spinnerContainer {
+			position: absolute;
+			left: 0 !important;
+			top: auto;
+			margin-top: 0;
+			bottom: 40px;
+		}
+	}
+
+	&--bordered {
+		border: 1px solid #e7e7e7;
+
+		.Items {
+			border: none;
+		}
+		
+		& + .ListControl,
+		.ListControl + & {
+			margin-top: -1px;
+		}
+	}
+}

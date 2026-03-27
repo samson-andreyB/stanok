@@ -1,0 +1,44 @@
+/* Сообщение пользователю
+**********************************************************/
+
+.Message {
+	display: flex;
+	max-width: 850px;
+	padding: 35px 25px;
+	background-color: #f9f9f9;
+	box-sizing: border-box;
+
+	&__icon {
+		background-repeat: no-repeat;
+		margin-top: 2px;
+	}
+
+	&__icon + &__body {
+		margin-left: 15px;
+	}
+
+	&__header {
+		line-height: 1;
+		margin: 0;
+		margin-bottom: .3em;
+		font-size: 16px;
+	}
+
+	&--success {
+
+		.Message__icon {
+			width: width('success.png');
+			height: height('success.png');
+			background-image: resolve('success.png');
+		}
+	}
+
+	&--fail {
+
+		.Message__icon {
+			width: width('fail.png');
+			height: height('fail.png');
+			background-image: resolve('fail.png');
+		}
+	}
+}

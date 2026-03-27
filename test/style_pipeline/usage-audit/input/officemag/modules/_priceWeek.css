@@ -1,0 +1,41 @@
+.Page--priceWeekCustom {
+	.ActionsTypes__item.priceWeek .ActionsTypes__link {
+		background-position: right -21px bottom -1px;
+
+		&:hover,
+		&.hover {
+			background-position: right -1px bottom -1px;
+		}
+	}
+
+	.actionsListType__item.priceWeek:hover .icon,
+	.actionsListType__item.priceWeek.hover .icon,
+	.orderByCodeList .actionsBadgePic.priceWeek:hover,
+	.orderByCodeList .actionsBadgePic.priceWeek.hover,
+	.Items--cart .actionsBadgePic.priceWeek:hover,
+	.FancyItem .actionsBadgePic.priceWeek:hover {
+		@mixin brightness 0.2;
+	}
+
+	.listItems .actionsBadgePic.priceWeek:hover,
+	.compareItems .actionsBadgePic.priceWeek:hover {
+		@mixin brightness 0.1;
+	}
+
+	.actionsBadgePic.priceWeek {
+		.actionsBadgeText {
+			position: absolute;
+			padding-top: 0;
+			text-align: center;
+			font-weight: normal;
+		}
+
+		.actionsBadgeText__number {
+			font-weight: bold;
+		}
+	}
+
+	.actionsListType__item.priceWeek .icon {
+		margin-top: 0;
+	}
+}

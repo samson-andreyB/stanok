@@ -1,0 +1,59 @@
+#fancybox-close {
+	margin: 0 0 -30px;
+	background-color: #fff;
+
+	&:before {
+		content: none;
+	}
+}
+
+.FancyModal--createDemoAccess {
+	width: 345px;
+}
+
+.FancyModal--shutdounJackpot {
+	width: 345px;
+
+	.Item__box--login {
+		padding-left: 0;
+		width: 30%;
+		word-break: break-all;
+	}
+}
+
+.FancyModal__paragraph {
+	line-height: 1.5;
+
+	& + & {
+		margin-top: 6px;
+	}
+}
+
+.FancyModal--removeInfoExchange {
+	width: 345px;
+}
+
+.FancyModal--uploadFileResult {
+	width: 410px;
+
+	.FancyModal__content {
+		max-height: 390px;
+		overflow-y: auto;
+	}
+}
+
+.FancyModal--requestSaveError {
+	width: 500px;
+}
+
+.FancyModal--reportSettings {
+	width: 350px;
+
+	.Form__input--branch {
+		max-width: 200px;
+	}
+}
+
+.FancyModal--commentHistory {
+	width: 600px;
+}

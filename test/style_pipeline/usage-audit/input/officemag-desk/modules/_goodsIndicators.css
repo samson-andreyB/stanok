@@ -1,0 +1,122 @@
+.GoodsIndicators {
+	.LastUpdate {
+		margin-x: 10px;
+		vertical-align: middle;
+	}
+
+	button + button {
+		margin-left: 10px;
+	}
+
+	.filter {
+		min-height: 1.725em;
+
+		&--code {
+			width: 280px;
+			line-height: 17px;
+		}
+
+		&--category,
+		&--sign,
+		&--department,
+		&--industry {
+			width: 180px;
+		}
+
+		&--category {
+			.RichSelect {
+				width: 100%;
+			}
+
+			.RichSelect__options {
+				width: 450px;
+			}
+
+			.RichSelect__option {
+				white-space: normal;
+			}
+		}
+	}
+
+	.Items__list {
+		.Item--selected {
+			background-color: #fff2d9;
+		}
+
+		.Item__box {
+			vertical-align: top;
+			padding-x: 5px;
+
+			&--checkbox {
+				width: 13px;
+				padding-left: 20px;
+			}
+
+			&--industry {
+				font-size: 0;
+				white-space: nowrap;
+			}
+
+			&--price {
+				width: 55px;
+				text-align: right;
+				padding-right: 20px;
+			}
+
+			&--minPrice {
+				text-align: right;
+				width: 75px;
+			}
+
+			&--presence {
+				width: 110px;
+				text-align: right;
+				padding-right: 20px;
+				padding-left: 10px;
+
+				.AvailabilityList--default {
+					color: #a7126a;
+				}
+			}
+		}
+
+		.Items__header .Item__box {
+			font-size: 11px;
+			vertical-align: bottom;
+		}
+	}
+
+	.FancyModal--sendLeaflet {
+		width: 520px;
+
+		.FancyModal__header {
+			margin-bottom: 1em;
+		}
+
+		.Form__set {
+			width: auto;
+
+			&--hidden {
+				display: none;
+			}
+
+			& > .Form__field {
+				margin-top: 20px;
+			}
+		}
+
+		.Form__set + .Form__set {
+			margin-top: 20px;
+		}
+
+		.Form__title {
+			margin-bottom: .6em;
+			font-weight: bold;
+			color: #000;
+		}
+
+		textarea {
+			min-height: 85px;
+		}
+	}
+}

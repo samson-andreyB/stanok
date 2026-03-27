@@ -1,0 +1,10 @@
+.Form--linkingStores {
+	.Autocomplete,
+	.Form__field--website .Form__input{
+		width: 150px;
+	}
+
+	.Autocomplete__list {
+		width: 300px;
+	}
+}

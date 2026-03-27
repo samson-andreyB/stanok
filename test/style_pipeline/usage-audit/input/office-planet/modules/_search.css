@@ -1,0 +1,15 @@
+.Search {
+
+	&__result {
+		@mixin Search__result;
+	}
+
+	&__query {
+		font-weight: bold;
+	}
+
+	&__info {
+		color: $infoColor;
+		font-size: 13px;
+	}
+}

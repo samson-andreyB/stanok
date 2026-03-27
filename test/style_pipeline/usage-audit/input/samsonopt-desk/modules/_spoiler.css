@@ -1,0 +1,7 @@
+.Spoiler--ordersCompleted {
+	width: 700px;
+
+	.Box {
+		vertical-align: top;
+	}
+}

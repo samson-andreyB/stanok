@@ -1,0 +1,30 @@
+.Footer {
+	font-size: 13px;
+	color: $colorFooterText;
+	background-color: $colorFooter;
+
+	&__box {
+		&:not(:first-child) {
+			margin-left: 50px;
+		}
+	}
+
+	.Page__wrapper {
+		position: relative;
+		display: flex;
+		align-items: flex-end;
+		padding-y: 45px;
+	}
+
+	&__credits {
+		margin-top: .8em;
+	}
+
+	.Logo {
+		height: height('logo.svg');
+	}
+
+	a {
+		color: inherit;
+	}
+}

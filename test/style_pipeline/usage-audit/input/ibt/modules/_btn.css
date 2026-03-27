@@ -1,0 +1,3 @@
+.btn--columns {
+	@mixin setButtonIcons 'icons/columns_s.png', 'icons/columns_s_white.png';
+}

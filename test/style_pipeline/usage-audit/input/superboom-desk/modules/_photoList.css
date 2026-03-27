@@ -1,0 +1,69 @@
+.PhotosList {
+	&__item {
+		display: inline-block;
+		position: relative;
+		margin-top: 5px;
+
+		&:before {
+			content: '';
+			display: block;
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			transition: background-color .2s;
+		}
+
+		&:hover {
+			&:before {
+				background-color: rgba(109, 109, 109, .75);
+			}
+
+			.PhotosList__control {
+				display: inline-block;
+			}
+		}
+
+		& + .PhotosList__item {
+			margin-left: 8px;
+		}
+	}
+
+	&__preview {
+		width: 80px;
+		height: 80px;
+		object-fit: cover;
+		border: 1px solid #ddd;
+	}
+
+	&__control {
+		position: absolute;
+		background-repeat: no-repeat;
+		background-position: center;
+		opacity: .5;
+		transition: opacity .2s;
+		display: none;
+
+		&:hover {
+			opacity: 1;
+		}
+
+		&--zoom {
+			background-image: resolve('icons/zoom_16x16_fff.png');
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			margin: auto;
+			z-index: 2;
+		}
+
+		&--download {
+			width: 26px;
+			height: 26px;
+			background-image: resolve('icons/download_10x11_fff.png');
+			right: 0;
+			bottom: 0;
+			z-index: 3;
+		}
+	}
+}

@@ -1,0 +1,51 @@
+.AttractionChannels {
+	margin-bottom: 30px;
+
+	.contentWrapper {
+		padding-y: 20px;
+	}
+
+	.contentWrapper + .contentWrapper {
+		margin-top: 20px;
+	}
+
+	h3 {
+		margin: 0 0 10px;
+	}
+
+	.Upload {
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	.File {
+		margin: 0;
+		margin-left: 25px;
+		vertical-align: middle;
+	}
+
+	.filters {
+		padding: 0;
+	}
+
+	.filter {
+		margin-top: 0;
+	}
+
+	select.Field {
+		min-width: 100%;
+	}
+
+	.Box + .Box {
+		padding-left: 20px;
+	}
+
+	.Box--upload,
+	.Box--download {
+		width: 1px;
+		white-space: nowrap;
+	}
+	.Box--updated {
+		color: #666;
+	}
+}

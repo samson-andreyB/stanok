@@ -1,0 +1,53 @@
+/* BLOCKS - CUSTOM RADIO CHECKBOX
+---------------------------------------------------------------------*/
+
+/*doc
+
+### Custom Radio Checkbox
+
+```html
+<div class="Checkbox">
+	<input type="checkbox" checked="" value="yes" name="check" id="check1" class="Checkbox__input">
+	<label for="check1" class="Checkbox__label">
+		<span class="Checkbox__button"></span><span class="Checkbox__text">Чекбокс</span>
+	</label>
+</div>
+
+<div class="Radio">
+	<input type="radio" id="radio1" class="Radio__input">
+	<label for="radio1" class="Radio__label">
+		<span class="Radio__button"></span><span class="Radio__text">Радиобатон</span>
+	</label>
+</div>
+```
+*/
+
+@define-mixin CheckboxRadioCommon {
+	& {
+		display: inline-block;
+		margin-right: 1.5em;
+	}
+
+	&__label {
+		display: inline-block;
+	}
+
+	&__input {
+		border: 0;
+		clip: rect(0,0,0,0);
+		height: 1px;
+		margin: -1px;
+		overflow: hidden;
+		padding: 0;
+		position: absolute;
+		width: 1px;
+	}
+
+	&__button {
+		size: 13px;
+		cursor: pointer;
+		display: inline-block;
+		margin-top: -.17em;
+		vertical-align: middle;
+	}
+}

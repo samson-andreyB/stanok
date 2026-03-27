@@ -1,0 +1,28 @@
+.Items--changeRequests {
+	.Item__box {
+		vertical-align: top;
+
+		&--date {
+			width: 1px;
+		}
+
+		&--status {
+			white-space: nowrap;
+		}
+	}
+}
+
+.Specs__item--changeRequestCard {
+	margin-y: -11px 9px;
+
+	.pseudoLink {
+		font-size: 11px;
+		color: #999;
+		cursor: help;
+		font-weight: bold;
+
+		&:hover {
+			color: $linkHover;
+		}
+	}
+}

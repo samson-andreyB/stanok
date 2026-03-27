@@ -1,0 +1,595 @@
+.HeaderPanel {
+	position: relative;
+	z-index: 100;
+
+	&__wrapper {
+		padding-top: 18px;
+	}
+
+	&--main {
+		z-index: 101;
+	}
+
+	&--catalog {
+		background-color: #fff;
+	}
+
+	&--fly {
+		 z-index: 10000;
+
+		.HeaderPanel__wrapper {
+			background-color: #fff;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, .13);
+			width: 100%;
+			position: fixed;
+			top: 0;
+			padding: 18px 0 15px;
+
+			@supports (width: var(--fancybox-scrollbar-width)) {
+				width: calc(100% - var(--fancybox-scrollbar-width, 0px));
+			}
+		}
+	}
+}
+
+.Header {
+	&__group {
+		box-sizing: border-box;
+		display: table;
+		width: 100%;
+	}
+
+	&__row {
+		display: table-row;
+	}
+
+	&__box {
+		box-sizing: border-box;
+		display: table-cell;
+		vertical-align: middle;
+		white-space: nowrap;
+
+		&--logo {
+			white-space: nowrap;
+			width: $SIDE_WIDTH;
+			padding-right: 30px;
+
+			.Logo {
+				display: inline-block;
+				vertical-align: middle;
+
+				&--work {
+					background-image: svg('logo_main', '[color]: $BRAND_BLACK');
+					height: height('logo_main.svg');
+					width: width('logo_main.svg');
+				}
+
+				&--home {
+					background-image: svg('logo_channelOet', '[color]: $BRAND_BLACK');
+					width: width('logo_channelOet.svg');
+					height: height('logo_channelOet.svg');
+				}
+			}
+		}
+
+		&--rubricatorButton {
+			width: 1%;
+			padding-right: 20px;
+		}
+
+		&--search {
+			width: 100%;
+			padding-right: 20px;
+		}
+
+		&--user,
+		&--loyaltyWidget {
+			padding-x: 10px;
+		}
+
+		&--cart {
+			padding-left: 10px;
+
+			.CartWidget {
+				display: inline-block;
+				vertical-align: bottom;
+				position: relative;
+				color: $BRAND_BLACK;
+				margin-bottom: -4px;
+				line-height: 16px;
+
+				@media screen and (max-width: 1170px) {
+					margin-bottom: 0;
+				}
+
+				&:before {
+					content: "";
+					display: block;
+					background-image: svg('basket_icon_12x17', '[color]: $GREY_2');
+					background-position-y: 50%;
+					background-repeat: no-repeat;
+					width: width('basket_icon_12x17.svg');
+					height: 20px;
+					margin: 0 auto 5px;
+
+					@media screen and (max-width: 1170px) {
+						display: inline-block;
+						vertical-align: middle;
+						margin-bottom: 0;
+					}
+				}
+
+				&--hasGoods {
+					&:before {
+						background-image: svg('basket_icon_12x17', '[color]: $GREY_1');
+					}
+
+					&:hover {
+						color: $RED_LIGHT;
+
+						&:before {
+							background-image: svg('basket_icon_12x17', '[color]: $RED_LIGHT');
+						}
+					}
+				}
+
+				&__title {
+					user-select: none;
+					color: $GREY_2;
+
+					@media screen and (max-width: 1170px) {
+						display: inline-block;
+						vertical-align: middle;
+					}
+				}
+
+				.Badge--counter {
+					position: absolute;
+					left: 50%;
+					top: -2px;
+					margin-left: 6px;
+					background-color: $RED;
+
+					@media screen and (max-width: 1170px) {
+						position: static;
+						margin-left: -2px;
+					}
+				}
+			}
+
+			.Price {
+				font-weight: bold;
+				height: 16px;
+				vertical-align: top;
+
+				@media screen and (max-width: 1170px) {
+					vertical-align: middle;
+				}
+			}
+		}
+	}
+}
+
+.HeaderMenu {
+	position: relative;
+
+	& + & {
+		border-top: 1px solid $GREY_3;
+	}
+
+	&__list {
+		text-align: left;
+		display: inline-block;
+		overflow: hidden;
+		vertical-align: top;
+
+		&--sites {
+			white-space: nowrap;
+			visibility: hidden;
+		}
+
+		&--info {
+			position: relative;
+			white-space: nowrap;
+			visibility: hidden;
+		}
+
+		&--active {
+			overflow: visible;
+
+			.HeaderMenu__dropdownMenu {
+				visibility: visible;
+				opacity: 1;
+			}
+
+			.HeaderMenu__item--more {
+				& > .HeaderMenu__link,
+				& > .HeaderMenu__link:hover {
+					background-color: #fff;
+				}
+			}
+		}
+	}
+
+	&__item {
+		display: inline-block;
+		vertical-align: top;
+		position: relative;
+		line-height: 1;
+
+		&--dropdownToggle {
+			> .HeaderMenu__link {
+				&:after {
+					@mixin arrowDown;
+				}
+
+				&.TipTip__active {
+					background-color: #fff;
+				}
+			}
+		}
+
+		&--more {
+			display: none;
+		}
+	}
+
+	&__dropdownMenu {
+		position: absolute;
+		z-index: -1;
+		top: 100%;
+		left: 0;
+		min-width: 105px;
+		overflow: hidden;
+		background: #f2eeea;
+		-webkit-box-shadow: 0 0 20px rgba(0, 0, 0, .2);
+		box-shadow: 0 0 20px rgba(0, 0, 0, .2);
+		border-radius: 0 0 8px 8px;
+		visibility: hidden;
+		opacity: 0;
+		transition: .2s;
+		white-space: nowrap;
+
+		.HeaderMenu {
+			&__item {
+				display: block;
+
+				&--information {
+					white-space: nowrap;
+				}
+			}
+
+			&__link {
+				display: block;
+				padding: 12px 15px;
+				background-color: $GREY_5;
+				color: $BRAND_BLACK;
+				height: auto;
+
+				&:hover {
+					background-color: #fff;
+				}
+			}
+		}
+	}
+
+	&__itemBox,
+	&__link {
+		color: $BRAND_BLACK;
+		display: inline-block;
+		padding: 15px 10px;
+		vertical-align: top;
+
+		&:before {
+			display: inline-block;
+			vertical-align: middle;
+			margin-top: -3px;
+			margin-right: 2px;
+		}
+
+		strong {
+			font-weight: bold;
+		}
+	}
+
+	&__link {
+		cursor: pointer;
+
+		&:hover {
+			background-color: $GREY_3;
+			color: $BRAND_BLACK;
+		}
+
+		&--individualCatalog {
+			&:before {
+				content: '';
+				background-image: svg('catalog_15x18', '[color]: $BRAND_BLACK');
+				width: width('catalog_15x18.svg');
+				height: height('catalog_15x18.svg');
+			}
+		}
+
+		&--overdueDebt {
+			&:before {
+				content: '';
+				background-image: svg('warning_18x17', '[color]: $RED');
+				width: width('warning_18x17.svg');
+				height: height('warning_18x17.svg');
+			}
+		}
+
+		&--feedback {
+			&:before {
+				content: '';
+				background-image: svg('feedback_16x15', '[color]: $BRAND_BLACK');
+				width: width('feedback_16x15.svg');
+				height: height('feedback_16x15.svg');
+			}
+		}
+
+		&.CityDetector {
+			&:before {
+				content: '';
+				background-image: svg('placemark_11x16', '[color]: $BRAND_BLACK');
+				width: width('placemark_11x16.svg');
+				height: height('placemark_11x16.svg');
+			}
+
+			&--blocked {
+				color: $GREY_1;
+				cursor: help;
+
+				&:before {
+					background-image: svg('placemark_11x16', '[color]: $GREY_1');
+				}
+			}
+		}
+	}
+
+	&__itemBox {
+		&--limit {
+			padding-right: 5px;
+
+			&:before {
+				content: '';
+				background-image: svg('purse_18x15', '[color]: $BRAND_BLACK');
+				width: width('purse_18x15.svg');
+				height: height('purse_18x15.svg');
+			}
+		}
+
+		&--balance {
+			padding-left: 0;
+		}
+
+		.HeaderMenu__list--sites & {
+			background-color: #fff;
+			user-select: none;
+		}
+	}
+
+	&--financialData,
+	&--main {
+		z-index: 102;
+		background-color: #f2eeea;
+		text-align: right;
+	}
+
+	&--financialData {
+		.Price--incorrect {
+			color: $RED;
+		}
+	}
+
+	&--ready {
+		.HeaderMenu__list {
+			visibility: visible;
+		}
+	}
+
+	&--main {
+		.Page__wrapper {
+			display: flex;
+			justify-content: space-between;
+		}
+	}
+
+	&--offer {
+		@mixin overlay;
+
+		position: relative;
+	}
+
+	&__offerLinks {
+		border-collapse: collapse;
+		position: relative;
+		width: 100%;
+	}
+
+	.OfferLinks--header {
+		padding-y: 7px 20px;
+	}
+
+	.Price {
+		font-weight: bold;
+	}
+}
+
+
+/* Баннер в шапке сайта
+------------------------------------------------------------------------------*/
+
+.HeaderBanner {
+	overflow: hidden;
+	border-bottom: 1px solid $GREY_3;
+
+	&__wrapper {
+		max-width: $maxContentWidth;
+		position: relative;
+		margin-x: auto;
+		padding: 0 $PAGE_WRAPPER_PADDING;
+	}
+
+	&__remove {
+		@mixin BtnRemove;
+
+		position: absolute;
+		right: $PAGE_WRAPPER_PADDING;
+		top: 23px;
+		z-index: 1;
+	}
+
+	&__link {
+		@mixin bannerHover;
+
+		display: block;
+		height: 70px;
+		background-position: center;
+		background-repeat: repeat-x;
+		min-width: 1920px;
+		position: relative;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+}
+
+
+
+/* Кнопка рубрикатора
+------------------------------------------------------------------------------*/
+
+.RubricatorButton {
+	&.btnDefault.big {
+		font-weight: bold;
+		font-size: 14px;
+		height: 40px;
+		border-radius: 4px;
+		background: $RED;
+		padding-x: 20px;
+
+		&:hover {
+			background: $RED_LIGHT;
+		}
+
+		&:active {
+			background: $RED_DARK;
+			box-shadow: none;
+		}
+	}
+
+	&__icon {
+		position: relative;
+		display: inline-block;
+		vertical-align: middle;
+		margin-top: -2px;
+		margin-right: 7px;
+
+		&,
+		&:before,
+		&:after {
+			width: 16px;
+			height: 2px;
+			border-radius: 2px;
+			background-color: #fff;
+			transition: .2s;
+		}
+
+		&:before,
+		&:after {
+			content: '';
+			position: absolute;
+			left: 0;
+		}
+
+		&:before {
+			bottom: 5px;
+		}
+
+		&:after {
+			top: 5px;
+		}
+	}
+
+	&--active {
+		.RubricatorButton__icon {
+			background-color: transparent;
+
+			&:before {
+				width: 22px;
+				bottom: 1px;
+				left: -3px;
+				transform: rotate(45deg);
+			}
+
+			&:after {
+				width: 22px;
+				top: -1px;
+				left: -3px;
+				transform: rotate(-45deg);
+			}
+		}
+	}
+}
+
+
+
+/* Виджет рубликов в шапке
+------------------------------------------------------------------------------*/
+
+.LoyaltyWidget {
+	margin-bottom: -4px;
+	line-height: 16px;
+
+	@media screen and (max-width: 1170px) {
+		margin-bottom: 0;
+	}
+
+	&__trigger {
+		display: block;
+		color: $BRAND_BLACK;
+
+		&:hover {
+			color: $VIOLET_LIGHT;
+
+			.LoyaltyWidget__count {
+				color: $VIOLET_LIGHT;
+
+				&:before {
+					background-image: svg('loyaltyProgram_20x20', '[color]: $VIOLET_LIGHT');
+				}
+			}
+		}
+	}
+
+	&__count {
+		display: block;
+		text-align: center;
+		color: $GREY_1;
+		font-weight: bold;
+
+		&:before {
+			content: "";
+			display: inline-block;
+			vertical-align: middle;
+			background-image: svg('loyaltyProgram_20x20', '[color]: $GREY_1');
+			background-position-y: 50%;
+			background-repeat: no-repeat;
+			width: width('loyaltyProgram_20x20.svg');
+			height: 20px;
+			margin-right: 4px;
+		}
+
+		.Price {
+			vertical-align: middle;
+		}
+	}
+
+	&__title {
+		display: block;
+		margin-top: 5px;
+
+		@media screen and (max-width: 1170px) {
+			display: none;
+		}
+	}
+}

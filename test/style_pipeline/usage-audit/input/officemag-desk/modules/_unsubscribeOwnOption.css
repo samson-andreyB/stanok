@@ -1,0 +1,9 @@
+.Items__list--unsubscribeOwnOption {
+	.Item__box {
+		vertical-align: top;
+
+		&--phone {
+			min-width: 100px;
+		}
+	}
+}

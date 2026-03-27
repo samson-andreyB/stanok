@@ -1,0 +1,18 @@
+/* Логотип
+**********************************************************/
+
+.Logo {
+	display: block;
+	width: width('logo.png');
+	height: 65px;
+	background-image: resolve('logo.png');
+	background-repeat: no-repeat;
+	background-position: 0 6px;
+	text-indent: 120%;
+	white-space: nowrap;
+	overflow: hidden;
+
+	.Page--main & {
+		@mixin Disabled;
+	}
+}

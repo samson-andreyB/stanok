@@ -1,0 +1,23 @@
+.Tender {
+	display: none;
+	
+	&__info {
+		margin-bottom: 17px;
+
+		.Message--warning + & {
+			margin-top: 25px;
+		}
+	}
+	
+	.Form__title {
+		font-weight: bold;
+	}
+
+	.Form__field--num {
+		width: 170px;
+	}
+
+	.Upload--attachments {
+		margin-top: -10px;
+	}
+}

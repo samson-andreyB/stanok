@@ -1,0 +1,12 @@
+/* jQuery UI */
+.ui-datepicker-first-available {
+	.ui-state-default {
+		border-color: currentColor;
+		color: #003eff;
+
+		&.ui-state-active {
+			border-color: #003eff;
+			color: #fff;
+		}
+	}
+}

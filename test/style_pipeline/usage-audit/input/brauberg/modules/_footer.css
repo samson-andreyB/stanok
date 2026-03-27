@@ -1,0 +1,30 @@
+.Page__footer {
+	margin-top: 70px;
+	font-size: 14px;
+	line-height: 1.5em;
+	background-color: #e6e6e6;
+
+	.Box {
+		display: inline-block;
+		vertical-align: middle;
+
+		&__content {
+			display: inline-block;
+			vertical-align: middle;
+		}
+	}
+
+	.Page__wrapper {
+		position: relative;
+		padding-y: 45px;
+	}
+
+	.FooterItems {
+		display: table;
+		width: 100%;
+
+		.Box {
+			display: table-cell;
+		}
+	}
+}

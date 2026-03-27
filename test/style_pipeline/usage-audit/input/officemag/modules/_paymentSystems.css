@@ -1,0 +1,20 @@
+.PaymentSystems--default {
+
+	.PaymentSystems__item {
+		display: inline-block;
+		vertical-align: middle;
+		margin-right: 20px;
+	}
+
+	.PaymentSystems__logo {
+		margin-bottom: -11px;
+	}
+
+	.PaymentSystems__img {
+		margin: 0;
+	}
+
+	.PaymentSystems__list {
+		margin-top: -10px;
+	}
+}

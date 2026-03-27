@@ -1,0 +1,48 @@
+.Sidebar {
+	float: left;
+	width: 200px;
+
+	.Menu {
+		&__item {
+			background-color: #e7e7e7;
+			position: relative;
+
+			.CounterBadge {
+				position: absolute;
+				top: 50%;
+				right: 11px;
+				margin-top: -10px;
+				min-width: 18px;
+				height: 18px;
+				box-sizing: border-box;
+			}
+
+			&:hover {
+				background-color: #d5d5d5;
+			}
+
+			&--active {
+				background-color: #dc241f;
+				box-shadow: inset -4px 0 0 rgba(0,0,0,.2);
+				pointer-events: none;
+
+				.CounterBadge {
+					background-color: #fff;
+					color: #dc241f;
+				}
+
+				.Menu__text {
+					color: #fff;
+					font-weight: bold;
+					padding: 13px 11px;
+				}
+			}
+		}
+
+		&__text {
+			color: #444;
+			padding: 11px;
+			line-height: 17px;
+		}
+	}
+}

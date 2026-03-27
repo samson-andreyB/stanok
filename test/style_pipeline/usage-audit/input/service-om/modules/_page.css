@@ -1,0 +1,40 @@
+.Page {
+	display: flex;
+	flex-direction: column;
+	font-family: $font;
+	font-size: 15px;
+	line-height: 1.3;
+	color: $colorText;
+	background-color: $colorBackground;
+
+	&__wrapper {
+		@mixin Limiter;
+
+		&--grow {
+			display: flex;
+			flex-direction: column;
+			flex-grow: 1;
+		}
+	}
+
+	&__main {
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+		flex-shrink: 0;
+		padding-bottom: 80px;
+		background-color: $colorBackground;
+	}
+}
+
+.Page--main {
+	.Page__main {
+		padding-top: 40px;
+	}
+}
+
+.Page--error {
+	.Page__main {
+		padding-bottom: 0;
+	}
+}

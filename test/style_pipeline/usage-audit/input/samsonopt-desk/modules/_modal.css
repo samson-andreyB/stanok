@@ -1,0 +1,13 @@
+$modalVerticalIndent: 20px;
+
+.Modal--bookmarkNew {
+	width: 345px;
+	padding-top: $modalVerticalIndent;
+	padding-bottom: $modalVerticalIndent;
+
+	.Modal__footer {
+		.ControlPanel--accent {
+			margin-bottom: -$modalVerticalIndent;
+		}
+	}
+}

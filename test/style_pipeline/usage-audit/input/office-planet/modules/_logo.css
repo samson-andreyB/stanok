@@ -1,0 +1,53 @@
+/* LOGO
+---------------------------------------------------------------------*/
+
+@media print {
+	.Logo {
+		overflow: hidden;
+		position: relative;
+	}
+
+	.Logo--l .Logo__main {
+		background: none;
+		
+		&:before {
+			content: url($theme_logo_path);
+		}
+	}
+
+	.Logo--s {
+		&:before {
+			content: url($theme_logo_path);
+			position: absolute;
+			bottom: -5px;
+			left: 0;
+		}
+	}
+
+	.Logo--custom .Logo__main {
+		&:before {
+			display: none;
+		}
+	}
+}
+
+.Logo--l {
+	.Logo__main {
+		display: inline-block;
+		vertical-align: middle;
+		width: $theme_logo_width;
+		height: $theme_logo_height;
+		background-image: url($theme_logo_path);
+		background-repeat: no-repeat; /* ^ мб не надо? */
+	}
+}
+
+.Logo--s {
+	display: inline-block;
+	vertical-align: middle;
+	width: $theme_logo_s_width;
+	height: $theme_logo_s_height;
+	background-image: url($theme_logo_path);
+	background-position: $theme_logo_s_position;
+	background-repeat: no-repeat; /* ^ мб не надо? */
+}

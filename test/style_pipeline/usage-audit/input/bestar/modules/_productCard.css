@@ -1,0 +1,66 @@
+/* Карточка товара
+**********************************************************/
+
+.ProductCard {
+	background-color: $colorFill;
+
+	&--new &__title:after{
+		@mixin badge_new;
+		position: relative;
+		vertical-align: middle;
+		margin-left: 10px;
+	}
+	
+	&__title {
+		margin-bottom: 30px;
+		line-height: 1.4;
+	}
+
+	&__container {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	&__box {
+		width: 48%;
+	}
+
+	&__code {
+		margin: .5em 0 1.5em;
+	}
+	
+	&__info{
+	    position: relative;
+	}
+
+	.List {
+		margin-bottom: 2.5em;
+	}
+
+	&__description {
+		margin-top: 40px;
+
+		h4 {
+			margin-bottom: 10px;
+			font-weight: bold;
+		}
+	}
+}
+
+.Files {
+	margin-bottom: 25px;
+}
+
+.File__nameWrapper {
+	&:hover {
+		text-decoration: none;
+	}
+
+	&:hover .File__name {
+		@mixin textUnderline $colorLink;
+	}
+}
+
+.File__size {
+	margin-top: 2px;
+}

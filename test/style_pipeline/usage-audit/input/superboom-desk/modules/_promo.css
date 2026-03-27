@@ -1,0 +1,128 @@
+/* PROMO
+------------------------------------------------------------------------------*/
+.Promo {
+	&__box {
+		box-sizing: border-box;
+		width: 700px;
+	}
+
+	&__subject {
+		width: 100%;
+	}
+
+	&__active {
+		margin-right: 7px;
+	}
+
+	.Tabs2,
+	.Tabs2 .Specs,
+	.Hint,
+	.Form__set,
+	.Form__set:first-child,
+	.Specs__divider {
+		margin-top: 1.5em;
+	}
+
+	.bx-editor-iframe {
+		vertical-align: middle !important;
+	}
+}
+
+.Form--promo {
+	.contentWrapper {
+		padding-y: 0;
+	}
+
+	.Form__title {
+		color: #000;
+		font-size: 14px;
+		font-weight: bold;
+		text-align: left;
+	}
+
+	.Items--action {
+		.Items__list {
+			border: 0;
+			table-layout: fixed;
+			margin-top: 0;
+		}
+
+		.Item__box {
+			border: 0;
+			padding-top: 0;
+			
+			&--info {
+				color: #666;
+				font-size: 13px;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+
+			&--drag {
+				padding-left: 0;
+			}
+		}
+	}
+}
+
+.filter--promoTitle {
+	width: 330px;
+}
+
+.Items--promo {
+	.Item__box--indicator {
+		width: 1%;
+		padding-right: 0;
+	}
+
+	.Item__box--link {
+		text-align: center;
+	}
+}
+
+/* Ссылка на промо-страницу */
+.FancyModal--getPromoLink {
+	width: 555px;
+	
+	.FancyModal__content {
+		margin: 20px 0;
+	}
+
+	.Specs {
+		&__header {
+			font-size: 12px;
+			font-weight: normal;
+		}
+
+		&__content {
+			display: table;
+		}
+
+		&__box{
+			vertical-align: middle;
+			
+			& + .Specs__box {
+				padding-left: 0;	
+			}
+
+			&--promoLink {
+				width: 100%;
+			}
+
+			&--promoBtn {
+				width: 1px;
+			}
+		}
+	}
+
+	.Field {
+		border-radius: 2px;
+		padding: 6px;
+	}
+
+	.btnGetLink {
+		margin-left: 10px;
+	}
+}
+

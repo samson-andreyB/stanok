@@ -1,0 +1,91 @@
+.Rubrics--main {
+	&.Rubrics--demo {
+		width: 270px;
+		background-color: rgba(242, 238, 234, .5);
+	}
+
+	.Rubrics__icon {
+		position: absolute;
+		top: 9px;
+		left: 10px;
+		width: 18px;
+		height: 18px;
+		background-repeat: no-repeat;
+	}
+
+	.Rubrics__link {
+		position: relative;
+		display: block;
+		padding: 10px 5px 10px 34px;
+		color: $BRAND_BLACK;
+		transition: color .2s;
+	}
+
+	.Rubrics__item {
+		&--active {
+			background-color: #fff;
+		}
+
+		&:not(.Rubrics__item--active):hover,
+		&:not(.Rubrics__item--active):active {
+			background-color: $GREY_5;
+		}
+	}
+}
+
+.Rubrics--sub {
+	.Rubrics__item {
+		&--hide {
+			display: none;
+		}
+	}
+
+	.Rubrics__item + .Rubrics__item {
+		margin-top: 13px;
+	}
+
+	.Rubrics__link {
+		@mixin blackLink;
+
+		padding-y: .7em;
+		transition: color .2s;
+
+		&--more {
+			position: relative;
+			padding-right: 13px;
+
+			&:after {
+				content: '';
+				position: absolute;
+				top: 50%;
+				right: 0;
+				border: 4px solid transparent;
+				border-top-color: currentColor;
+				margin-top: -2px;
+			}
+
+			.Rubrics__link--opened:after {
+				top: 50%;
+				border-color: transparent transparent currentColor transparent;
+				margin-top: -6px;
+			}
+		}
+	}
+}
+
+.Rubrics--popular {
+	$popularRubricGap: 1.5%;
+	$popularRubricGapTop: calc($popularRubricGap + 0.5%);
+	$popularRubricWidth: calc(100% / 4 - $popularRubricGap);
+
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	margin-top: -$popularRubricGapTop;
+
+	.RubricList {
+		width: $popularRubricWidth;
+		max-width: 326px;
+		margin-top: $popularRubricGapTop;
+	}
+}

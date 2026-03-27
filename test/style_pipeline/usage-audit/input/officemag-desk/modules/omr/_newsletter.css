@@ -1,0 +1,113 @@
+.Page--omr {
+
+	.filter--mailSubject {
+		width: 180px;
+	}
+	.filter--mailDivision {
+		width: 150px;
+	}
+	.filter--mailDivision .RichSelect {
+		width: 100%;
+	}
+
+	/* отступ из-за блоков добавления строк */
+	.contentWrapper.MailDevWrapper,
+	.MailDev {
+		padding-top: 0;
+		padding-bottom: 0;
+	}
+
+	/* добавление строки в произвольном месте */
+	.MailRowAdd,
+	.MailRowAdd__content {
+		transition: .2s;
+	}
+	.MailRowAdd {
+		text-align: center;
+		min-height: 20px;
+
+		/* использование переменной? */
+		width: 760px;
+	}
+	.MailRowAdd__content {
+		font-family: Arial;
+		font-size: 18px;
+		height: 0;
+		opacity: 0;
+		visibility: hidden;
+		display: block;
+	}
+	.MailRowAdd__content:before {
+		display: inline-block;
+		width: 0;
+		height: 100%;
+		vertical-align: middle;
+		margin: 0;
+		background-image: none;
+		position: static;
+		border: 0;
+	}
+	.MailRowAdd:not(.MailRowAdd--disabled):hover {
+		padding-top: 20px;
+		padding-bottom: 20px;
+	}
+	.MailRowAdd:not(.MailRowAdd--disabled):hover .MailRowAdd__content {
+		height: 50px;
+		opacity: 1;
+		visibility: visible;
+		line-height: 45px;
+	}
+
+	.MailRow + .MailRow {
+		margin-top: 0;
+	}
+
+
+	/* настройка редактора */
+	.MailRowEditor {
+		.MailRowEditor__form--product .Specs--mail,
+		.MailRowEditor__form--action .Specs--mail {
+			display: table;
+			width: 100%;
+			margin-top: 20px;
+		}
+		.MailRowEditor__form--product .Specs__item,
+		.MailRowEditor__form--action .Specs__item {
+			display: table-row;
+			padding-top: 20px;
+			width: 100%;
+		}
+		.MailRowEditor__form--product .Specs__item + .Specs__item .Specs__header,
+		.MailRowEditor__form--product .Specs__item + .Specs__item .Specs__content,
+		.MailRowEditor__form--action .Specs__item + .Specs__item .Specs__header,
+		.MailRowEditor__form--action .Specs__item + .Specs__item .Specs__content {
+			padding-top: 15px;
+		}
+		.MailRowEditor__form--product .Specs__header,
+		.MailRowEditor__form--action .Specs__header {
+			display: table-cell;
+			width: 120px;
+		}
+		.MailRowEditor__form--product .Specs__content,
+		.MailRowEditor__form--action .Specs__content {
+			display: table-cell;
+		}
+		.MailForm__auxText {
+			width: 100%;
+		}
+	}
+
+	.Specs__item--mailSendTime {
+		display: inline-block;
+		vertical-align: top;
+	}
+	.Specs__item--mailSendTime + .Specs__item--mailSendTime {
+		margin-left: 25px;
+	}
+	.Specs__item--mailSendTime + .Specs__item--mailSendTime .Specs__content {
+		margin-top: 15px;
+	}
+	.Specs__item--mailSendTime .chooseDateRange {
+		margin-right: 0;
+	}
+}

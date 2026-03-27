@@ -1,0 +1,44 @@
+.ProductReplacementSpecs--default {
+	list-style-type: none;
+	margin-bottom: 0;
+
+	.ProductReplacementSpecs__item {
+		&:before {
+			content: '';
+			position: absolute;
+			margin-top: 3px;
+			margin-left: -18px;
+			width: width('icons/check_10x8_2b8.png');
+			height: height('icons/check_10x8_2b8.png');
+			background-image: resolve('icons/check_10x8_2b8.png');
+		}
+
+		&--disable {
+			color: $C_GRAY_DARK;
+
+			&:before {
+				margin-top: 5px;
+				width: 10px;
+				height: 2px;
+				background-image: resolve('icons/hyphen_10x2_e55.png');
+			}
+		}
+
+		&--disableOther {
+			display: none;
+		}
+	}
+
+	.ProductReplacementSpecs__value {
+		font-weight: bold;
+	}
+
+	.ProductReplacementSpecs__count {
+		color: $C_GRAY_DARK;
+
+		&:before {
+			content: '\2014';
+			margin-right: .3em;
+		}
+	}
+}

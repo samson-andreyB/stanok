@@ -1,0 +1,61 @@
+.DescriptionBlock {
+	max-width: 600px;
+	margin-top: 25px;
+	color: #3a3a3a;
+
+	.contentDescription + & {
+		margin-top: 0;
+	}
+
+	&__box {
+		background-color: $BG;
+		padding: 25px 20px;
+
+		& + .DescriptionBlock__box {
+			margin-top: 10px;
+		}
+	}
+
+	&__item {
+		& + .DescriptionBlock__item {
+			margin-top: 10px;
+		}
+
+		& + .btn {
+			margin-top: 15px;
+		}
+	}
+
+	&__title {
+		font-weight: bold;
+		margin-bottom: 10px;
+	}
+
+	&__code {
+		color: #3e791e;
+		font-size: 16px;
+		font-weight: bold;
+	}
+
+	&__field {
+		&.Form__input {
+			height: 67px;
+		}
+	}
+
+	&--orderItem {
+		.contractDescription {
+			margin-bottom: 10px;
+		}
+
+		@media (min-width: 640px) {
+			.DescriptionBlock__box {
+				border-radius: $BD_RAD;
+			}
+		}
+	}
+
+	& + .Actions {
+		margin-top: 30px;
+	}
+}

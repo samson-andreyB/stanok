@@ -1,0 +1,66 @@
+.RichSelect--selectResponsible {
+	.filter & {
+		min-width: 100%;
+		max-width: 100%;
+	}
+
+	.RichSelect__field {
+		min-width: 130px;
+		max-width: 300px;
+	}
+
+	.RichSelect__options {
+		min-width: 265px;
+		max-height: none;
+	}
+
+	.RichSelect__showInactive {
+		padding: 10px;
+		padding-bottom: 0;
+		font-size: 11px;
+
+		input {
+			margin-top: -3px;
+			margin-right: 5px;
+		}
+	}
+
+	.RichSelect__list {
+		max-height: 230px;
+		overflow-y: auto;
+	}
+
+	.RichSelect__option {
+		white-space: nowrap;
+	}
+}
+
+
+.RichSelect--territoryErp {
+	min-width: 100%;
+	max-width: 100%;
+
+	.RichSelect__field {
+		min-width: 130px;
+		max-width: 290px;
+	}
+
+	.RichSelect__options {
+		min-width: 290px;
+	}
+}
+
+
+.RichSelect--receiptMethod {
+	min-width: 100%;
+	max-width: 100%;
+
+	.RichSelect__field {
+		min-width: 130px;
+		max-width: 230px;
+	}
+
+	.RichSelect__options {
+		min-width: 230px;
+	}
+}

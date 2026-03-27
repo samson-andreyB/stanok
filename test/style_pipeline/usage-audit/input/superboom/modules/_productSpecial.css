@@ -1,0 +1,151 @@
+$product-special-border-radius: var(--border-radius, 0px);
+
+.ProductSpecial {
+	font-size: 12px;
+	line-height: 14px;
+
+	&__table {
+		width: 100%;
+	}
+
+	&__item {
+		&--spacer {
+			height: 6px;
+		}
+
+		&--active {
+			.ProductSpecial__box {
+				color: #fff;
+				background-color: $BRAND;
+			}
+		}
+	}
+
+	&__box {
+		padding: 3px 2px;
+		text-align: left;
+		white-space: nowrap;
+		transition: background-color 0.2s, color 0.2s;
+
+		&--profit {
+			width: 30%;
+		}
+
+		&--price {
+			width: 1px;
+		}
+	}
+
+	&__header,
+	&__footer {
+		font-weight: bold;
+
+		.ProductSpecial {
+			&__box {
+				padding-y: 5px;
+			}
+		}
+	}
+
+	&__mobileHide {
+		@media (max-width: 979px) {
+			display: none;
+		}
+	}
+
+	&--default {
+		max-width: 280px;
+
+		.ProductSpecial {
+			&__box {
+				&:not(.ProductSpecial__box--link) {
+					background-color: $BG;
+				}
+
+				&--link {
+					padding-top: 10px;
+					padding-bottom: 0;
+					font-size: 14px;
+				}
+			}
+
+			&__item {
+				&--active {
+					.ProductSpecial__box {
+						background-color: $BRAND;
+					}
+				}
+			}
+
+			&__header {
+				.ProductSpecial__box {
+					&:first-child {
+						border-top-left-radius: $product-special-border-radius;
+					}
+
+					&:last-child {
+						border-top-right-radius: $product-special-border-radius;
+					}
+				}
+			}
+
+			&__content {
+				.ProductSpecial__item {
+					&:last-child {
+						.ProductSpecial__box {
+							&:first-child {
+								border-bottom-left-radius: $product-special-border-radius;
+							}
+
+							&:last-child {
+								border-bottom-right-radius: $product-special-border-radius;
+							}
+						}
+					}
+				}
+			}
+
+			&__footer {
+				.ProductSpecial__box {
+					&:first-child {
+						border-top-left-radius: $product-special-border-radius;
+						border-bottom-left-radius: $product-special-border-radius;
+					}
+
+					&:last-child {
+						border-top-right-radius: $product-special-border-radius;
+						border-bottom-right-radius: $product-special-border-radius;
+					}
+				}
+			}
+
+			&__extra {
+				margin-top: 6px;
+			}
+		}
+
+		.listItem .listItem__features & {
+			.ProductSpecial {
+				&__box {
+					&--link.ProductSpecial__box {
+						padding-x: 0;
+					}
+				}
+			}
+		}
+	}
+
+	&--tip {
+		.ProductSpecial {
+			&__wrapper {
+				min-width: 240px;
+			}
+
+			&__extra {
+				margin-top: 6px;
+			}
+		}
+	}
+}
+
+@mixin ProductSpecialBoxPadding 10px;

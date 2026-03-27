@@ -1,0 +1,47 @@
+/*
+ * Заявки на тендер
+ */
+.Items__list--tender .Item__box {
+	padding-left: 0;
+	vertical-align: top;
+
+	&:first-child {
+		padding-left: 15px;
+	}
+
+	&--message {
+		width: 1px;
+		white-space: nowrap;
+		padding-right: 0;
+	}
+
+	&--subdivision {
+		width: 90px;
+		padding-left: 3px;
+		padding-right: 0;
+	}
+
+	&--organization {
+		width: 155px;
+	}
+
+	&--contactPerson {
+		width: 170px;
+	}
+
+	&--phone {
+		width: 110px;
+	}
+
+	&--received {
+		width: 85px;
+	}
+
+	&--status {
+		width: 90px;
+	}
+}
+
+.Items__list--tender .Item--accepted {
+	font-weight: bold;
+}

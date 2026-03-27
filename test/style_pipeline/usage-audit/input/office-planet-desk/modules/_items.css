@@ -1,0 +1,132 @@
+.Items {
+	&--orders {
+		.Item__box {
+			display: table-cell;
+			vertical-align: top;
+			padding: 10px 7px;
+
+			&:first-child {
+				padding-left: 20px;
+			}
+
+			&:last-child {
+				padding-right: 20px;
+			}
+
+			&--call,
+			&--comment,
+			&--gift,
+			&--site {
+				width: 16px;
+				text-align: center;
+			}
+
+			&--comment {
+				.Icon--bubble {
+					margin-top: 1px;
+				}
+			}
+
+			&--gift {
+				.Icon--gift {
+					cursor: help;
+				}
+			}
+
+			&--number {
+				width: 65px;
+
+				.bonus {
+					white-space: nowrap;
+				}
+			}
+			&--dateStatus {
+				width: 125px;
+			}
+			&--sumCount {
+				text-align: right;
+				width: 90px;
+				padding-right: 25px;
+			}
+			&--idp {
+				width: 120px;
+			}
+			&--dealerDomen {
+				width: 135px;
+			}
+
+			&--count {
+				min-width: 16px;
+				padding-left: 20px;
+			}
+
+			&--product {
+				width: 38%;
+			}
+
+			&--pack,
+			&--stock {
+				text-align: center;
+			}
+
+			&--cost,
+			&--quantity,
+			&--sum {
+				text-align: right;
+			}
+
+			&--clientAdressMail {
+				word-break: break-all;
+				word-break: break-word;
+			}
+
+			.OrderInfo {
+				cursor: help;
+				position: relative;
+				top: 1px;
+			}
+
+			.OrderInfo:hover {
+				opacity: .75;
+			}
+		}
+
+		.Items__title {
+			margin-bottom: 0;
+		}
+
+		.Items__header .Item__box {
+			vertical-align: bottom;
+		}
+	}
+
+	&--mailingList {
+		.Item__box {
+			&--indicator {
+				width: 1px;
+
+				.BadgeStatus {
+					margin-top: 0;
+					padding: 0;
+				}
+			}
+
+			&--status {
+				width: 22%;
+			}
+		}
+
+		.Item__aux--view {
+			&:before {
+				content: '';
+				width: 14px;
+				height: 8px;
+				display: inline-block;
+				vertical-align: middle;
+				margin-right: 5px;
+				margin-top: -2px;
+				background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAICAMAAAD+zz7+AAAANlBMVEVHcEyZmZmZmZmbm5uZmZmZmZmZmZmbm5ubm5uZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmcnJx6CVsbAAAAEHRSTlMAMoNDGgGc0s8+7lFGNDPiFg94lgAAAEtJREFUeF41zVkOwDAIQ0FnA7LWuf9lW5A6f0+yAJ+WZAw5DaEag1WvTuaiWjLZgUUe2L2GRC5MMnmq5/zHFuM4pQxaEdqW8cj2Ry/KDANof7Bc0AAAAABJRU5ErkJggg==');
+			}
+		}
+	}
+}

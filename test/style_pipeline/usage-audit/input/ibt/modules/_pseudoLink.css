@@ -1,0 +1,254 @@
+@define-mixin PseudoLinkIcon $iconPos: 'first' {
+	display: inline-flex;
+	align-items: center;
+	border: none;
+
+	@if $iconPos == 'first' {
+		&:before {
+			content: '';
+			margin-right: 5px;
+		}
+	}
+
+	@if $iconPos == 'last' {
+		&:after {
+			content: '';
+			margin-left: 5px;
+		}
+	}
+
+	.pseudoLink__text {
+		padding-x: 0;
+		margin-x: 0;
+		line-height: 1;
+		border-bottom: 1px dotted;
+	}
+}
+
+.pseudoLink--gray {
+	color: $C_GRAY_DARK;
+}
+
+.pseudoLink--addGray {
+	@mixin PseudoLinkIcon;
+
+	color: $C_GRAY_DARK;
+
+	&:before {
+		width: width('icons/plus_8x8_999.png');
+		height: height('icons/plus_8x8_999.png');
+		margin-top: -1px;
+		background-image: resolve('icons/plus_8x8_999.png');
+	}
+
+	&:hover:before {
+		background-image: resolve('icons/plus_8x8_2b8.png');
+	}
+}
+
+.pseudoLink--download {
+	@mixin PseudoLinkIcon;
+
+	&:before {
+		width: width('icons/download_10x11_18a.png');
+		height: height('icons/download_10x11_18a.png');
+		background-image: resolve('icons/download_10x11_18a.png');
+	}
+
+	&:hover:before {
+		background-image: resolve('icons/download_10x11_2b8.png');
+	}
+}
+
+.pseudoLink--history {
+	@mixin PseudoLinkIcon;
+
+	&:before {
+		width: width('icons/history.png');
+		height: height('icons/history.png');
+		background-image: resolve('icons/history.png');
+	}
+
+	&:hover {
+		&:before {
+			opacity: .75;
+		}
+	}
+}
+
+.pseudoLink--accept {
+	@mixin PseudoLinkIcon;
+
+	color: $success;
+
+	&:before {
+		width: width('icons/check_12x12_2b8.png');
+		height: height('icons/check_12x12_2b8.png');
+		background-image: resolve('icons/check_12x12_2b8.png');
+	}
+
+	&:hover {
+		color: $successHover;
+	}
+
+	.Spinner {
+		@mixin SpinnerButton $main;
+	}
+
+	&.Spinner--active {
+		pointer-events: none;
+
+		&:before,
+		.pseudoLink__text {
+			opacity: 0;
+		}
+	}
+}
+
+.pseudoLink--snabAccept {
+	@mixin PseudoLinkIcon;
+
+	color: #000;
+
+	&:before {
+		width: width('icons/check_12x12_29e.png');
+		height: height('icons/check_12x12_29e.png');
+		background-image: resolve('icons/check_12x12_29e.png');
+	}
+
+	&:hover {
+		color: #444;
+	}
+}
+
+.pseudoLink--deferred {
+	@mixin PseudoLinkIcon;
+
+	color: $error;
+
+	&:before {
+		width: width('icons/clock_12x12_e55.png');
+		height: height('icons/clock_12x12_e55.png');
+		background-image: resolve('icons/clock_12x12_e55.png');
+	}
+
+	&:hover {
+		color: $errorHover;
+	}
+}
+
+.pseudoLink--decline {
+	@mixin PseudoLinkIcon;
+
+	color: $error;
+
+	&:before {
+		width: width('icons/stop_12x12_e55.png');
+		height: height('icons/stop_12x12_e55.png');
+		background-image: resolve('icons/stop_12x12_e55.png');
+	}
+
+	&:hover {
+		color: $errorHover;
+	}
+}
+
+.pseudoLink--save {
+	@mixin PseudoLinkIcon;
+
+	align-items: baseline;
+
+	&:before {
+		width: width('icons/check_10x8_2b8.png');
+		height: height('icons/check_10x8_2b8.png');
+		background-image: resolve('icons/check_10x8_2b8.png');
+	}
+
+	&:hover {
+		color: $linkHover;
+	}
+}
+
+.pseudoLink--cancel {
+	@mixin PseudoLinkIcon;
+
+	align-items: baseline;
+
+	&:before {
+		width: width('icons/cross_8x8_e55.png');
+		height: height('icons/cross_8x8_e55.png');
+		background-image: resolve('icons/cross_8x8_e55.png');
+	}
+
+	&:hover {
+		color: $error;
+	}
+}
+
+.pseudoLink--remove {
+	@mixin hocus {
+		color: $error;
+	}
+
+	&.pseudoLink--icon {
+		@mixin PseudoLinkIcon;
+
+		align-items: baseline;
+
+		&:before {
+			width: width('icons/cross_9x9_18a.png');
+			height: height('icons/cross_9x9_18a.png');
+			background-image: resolve('icons/cross_9x9_18a.png');
+		}
+
+		&:hover:before {
+			background-image: resolve('icons/cross_9x9_e55.png');
+		}
+	}
+
+	&.pseudoLink--gray.pseudoLink--icon {
+		&:before {
+			background-image: resolve('icons/cross_9x9_999.png');
+		}
+
+		&:hover:before {
+			background-image: resolve('icons/cross_9x9_e55.png');
+		}
+	}
+}
+
+.pseudoLink--help {
+	cursor: help;
+}
+
+.pseudoLink--attention {
+	@mixin PseudoLinkIcon;
+
+	color: $error;
+
+	&:before {
+		width: width('attention_outline_13x13.svg');
+		height: height('attention_outline_13x13.svg');
+		background-image: svg('attention_outline_13x13', '[color]: $error');
+	}
+
+	&:hover {
+		color: $errorHover;
+	}
+}
+
+.pseudoLink--photoUploaded {
+	@mixin PseudoLinkIcon;
+
+	color: #000;
+
+	&:before {
+		width: width('icons/plus_circle_12x12_aaa.png');
+		height: height('icons/plus_circle_12x12_aaa.png');
+		background-image: resolve('icons/plus_circle_12x12_aaa.png');
+	}
+
+	&:hover {
+		color: #444;
+	}
+}

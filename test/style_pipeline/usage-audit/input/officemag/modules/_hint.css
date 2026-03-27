@@ -1,0 +1,7 @@
+.Hint {
+	color: $C_INFO;
+
+	&--error {
+		color: $BRAND;
+	}
+}

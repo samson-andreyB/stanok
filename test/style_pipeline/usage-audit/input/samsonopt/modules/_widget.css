@@ -1,0 +1,72 @@
+.Widget--account {
+	position: relative;
+	color: #333;
+	cursor: pointer;
+	border: none;
+	padding: 0;
+	background: none;
+	outline: none;
+	overflow: visible;
+	@mixin noOutline;
+
+	@mixin tiphocus {
+		color: $C_BRAND;
+	}
+
+	.Widget__icon {
+		height: 24px;
+		background-position: 50% 50%;
+		background-size: auto 100%;
+		background-repeat: no-repeat;
+		transition: height $headerTransitionDuration;
+	}
+
+	.Widget__label {
+		margin-top: 6px;
+	}
+
+	&:before {
+		content: '';
+	}
+
+	.CounterBadge {
+		position: absolute;
+		top: -8px;
+		right: 7px;
+		height: 0;
+	}
+}
+
+
+.Widget--store {
+	.Widget__icon {
+		background-image: svg('store_24x24.svg', '[color]: #666');
+	}
+
+	&:before {
+		background-image: svg('store_24x24.svg', '[color]: $C_BRAND');
+	}
+
+	@mixin tiphocus {
+		.Widget__icon {
+			background-image: svg('store_24x24.svg', '[color]: $C_BRAND');
+		}
+	}
+}
+
+
+.Widget--cabinet {
+	.Widget__icon {
+		background-image: svg('man_21x25.svg', '[color]: #666');
+	}
+
+	&:before {
+		background-image: svg('man_21x25.svg', '[color]: $C_BRAND');
+	}
+
+	@mixin tiphocus {
+		.Widget__icon {
+			background-image: svg('man_21x25.svg', '[color]: $C_BRAND');
+		}
+	}
+}

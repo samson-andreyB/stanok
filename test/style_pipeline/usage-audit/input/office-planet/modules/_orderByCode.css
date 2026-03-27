@@ -1,0 +1,21 @@
+.OrderByCode {
+	&__title {
+		color: $infoColor;
+		cursor: default;
+		display: inline-block;
+		font-size: 13px;
+	}
+
+	&__add {
+		.Icon {
+			@mixin OtherIcon add, $linkColor;
+			margin-right: 0.2em;
+		}
+
+		&:hover {
+			.Icon {
+				background-image: svg('add', '[color]: $linkHoverColor');
+			}
+		}
+	}
+}

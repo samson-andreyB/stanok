@@ -1,0 +1,25 @@
+.PriceWrapper {
+	$indent: 4px;
+
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	margin-right: -$indent;
+
+	&--list {
+		flex-direction: column;
+		margin-right: 0;
+
+		.PriceWrapper__item {
+			margin-right: 0;
+		}
+	}
+
+	&__item {
+		margin-right: $indent;
+
+		.Favorite{
+			margin-left: $indent;
+		}
+	}
+}

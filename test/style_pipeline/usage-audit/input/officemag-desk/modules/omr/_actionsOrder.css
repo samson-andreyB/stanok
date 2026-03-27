@@ -1,0 +1,50 @@
+/* Actions order
+---------------------------------------------------------------------------------------------------*/
+
+.FancyModal--organizeAction {
+	width: calc($pageMainWidth - 1px);
+
+	.Tabs2__nav {
+		margin-x: -$indentX;
+	}
+
+	.FancyModal__description {
+		margin-top: 1.5em;
+		margin-bottom: 1.5em;
+	}
+
+	.Items {
+		max-height: 400px;
+
+		&__group {
+			display: block;
+		}
+	}
+
+	.Item {
+		transition: background-color .3s;
+
+		&:hover {
+			background-color: $mainLight;
+		}
+	}
+
+	.Item__box {
+
+		&--drag {
+			width: 1.5%;
+		}
+		&--status {
+			width: 1.4%;
+		}
+		&--number {
+			width: 4%;
+		}
+		&--name {
+			width: 64%;
+		}
+		&--duration {
+			width: 17%;
+		}
+	}
+}

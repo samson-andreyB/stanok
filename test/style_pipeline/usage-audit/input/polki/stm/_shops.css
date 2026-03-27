@@ -1,0 +1,1054 @@
+@define-mixin ShopAddressesBtn {
+
+	color: $SHOP_BOX_BTN_COLOR;
+	background-color: $SHOP_BOX_BTN_BG;
+	font-size: 14px;
+	line-height: 14px;
+	border-bottom: 0;
+	padding: 16px;
+	text-align: center;
+	border-radius: $SHOP_RADIUS_BTN;
+	user-select: none;
+	text-decoration: none;
+
+	&:hover {
+		background-color: $SHOP_BOX_BTN_BG_HOVER;
+		border-color: $SHOP_BOX_BTN_BG_HOVER;
+		color: $SHOP_BOX_BTN_COLOR_HOVER;
+		text-decoration: none;
+	}
+}
+
+.ShopAddresses {
+	a {
+		color: $SHOP_LINK_COLOR;
+
+		&:hover {
+			color: $SHOP_LINK_COLOR_HOVER;
+		}
+	}
+
+	&__title {
+		font-size: 20px;
+		line-height: 24px;
+		font-weight: normal;
+		margin: 24px 0 20px;
+	}
+
+	.ShopAddresses__represent {
+		position: relative;
+		box-sizing: border-box;
+		font-size: 14px;
+		line-height: 21px;
+		padding-left: 20px;
+		display: inline-block;
+		border-bottom: 0;
+		margin-right: 10px;
+		border-radius: $SHOP_RADIUS_TAB_SUB $SHOP_RADIUS_TAB_SUB 0 0;
+		color: #858585;
+		padding: 5px 14px;
+		border: 1px solid #dcdcdc;
+		border-bottom-width: 0;
+		text-decoration: none;
+
+		&:before {
+			content: '';
+			margin-right: 6px;
+			display: inline-block;
+			background-repeat: no-repeat;
+			background-position: 50% 50%;
+			vertical-align: middle;
+		}
+
+		&:hover {
+			border-color: $SHOP_TAB_ACTIVE_COLOR;
+			color: $SHOP_TAB_ACTIVE_COLOR;
+		}
+
+		&.active {
+			pointer-events: none;
+			border-color: $SHOP_TAB_ACTIVE_COLOR;
+			color: $SHOP_TAB_ACTIVE_COLOR;
+		}
+
+		&.active:after {
+			content: '';
+			position: absolute;
+			top: 100%;
+			left: 0;
+			width: 100%;
+			border-top: 1px solid #fff;
+		}
+
+		&:focus {
+			outline: none;
+		}
+
+		&--map {
+			&:before {
+				background-image: svg('pin_11x15.svg', '[color]: #858585');
+				width: width('pin_11x15.svg');
+				height: height('pin_11x15.svg');
+			}
+
+			&:hover:before,
+			&.active:before {
+				background-image: svg('pin_11x15.svg', '[color]: $SHOP_TAB_ACTIVE_COLOR');
+			}
+		}
+
+		&--list {
+			margin-right: 15px;
+
+			&:before {
+				background-image: svg('list_15x12.svg', '[color]: #858585');
+				width: width('list_15x12.svg');
+				height: height('list_15x12.svg');
+			}
+
+			&:hover:before,
+			&.active:before {
+				background-image: svg('list_15x12.svg', '[color]: $SHOP_TAB_ACTIVE_COLOR');
+			}
+		}
+	}
+
+	&__representMapContent {
+		position: relative;
+		display: none;
+		margin-top: 12px;
+		width: 100%;
+		height: 890px;
+	}
+
+	&__logoSamson {
+		margin: 17px 0 19px;
+	}
+}
+
+
+
+/* Tabs
+---------------------------------------------------------------------- */
+
+.Tabs--shopAddresses {
+	margin: 0;
+
+	.Tabs__list {
+		margin: 0;
+		padding: 0;
+		border-bottom: 1px solid $SHOP_TAB_ACTIVE_COLOR;
+		padding-right: 10px;
+		padding-left: 10px;
+		white-space: nowrap;
+		user-select: none;
+	}
+
+	.Tabs__content {
+		display: block;
+		padding: 0;
+
+		.TabContent {
+			margin-top: 1.43em;
+		}
+	}
+
+	.Tab {
+		margin: 0;
+		padding: 14px 28px;
+		vertical-align: top;
+		display: inline-block;
+		margin-right: 14px;
+		border: 1px solid #dcdcdc;
+		border-bottom-width: 1px;
+		border-bottom-width: 0;
+		border-radius: $SHOP_RADIUS_MAIN $SHOP_RADIUS_MAIN 0 0;
+		background: none;
+		cursor: pointer;
+		box-shadow: none;
+		font-weight: normal;
+		color: #858585;
+
+		@media (max-width:1030px){
+			padding: .93em 1.05em .65em 1em;
+		}
+
+		&:before {
+			display: none;
+		}
+
+		&--active {
+			cursor: default;
+			border-color: $SHOP_TAB_ACTIVE_COLOR;
+			position: relative;
+
+			&:after {
+				content: '';
+				position: absolute;
+				top: 100%;
+				left: 0;
+				width: 100%;
+				height: 0;
+				border-bottom: 1px solid #fff;
+			}
+		}
+
+		&:hover,
+		&--active,
+		&--active:hover {
+			color: $SHOP_TAB_ACTIVE_COLOR;
+			border-color: $SHOP_TAB_ACTIVE_COLOR;
+		}
+
+		&__title {
+			font-size: 15px;
+			line-height: 17px;
+			text-align: center;
+			font-weight: bold;
+		}
+
+		&__desc {
+			font-size: 12px;
+			line-height: 18px;
+			text-align: center;
+			margin-top: 1px;
+		}
+	}
+}
+
+
+
+/* ShopAddressesView
+---------------------------------------------------------------------- */
+
+.ShopAddressesView--default {
+	.ShopAddressesView__control {
+		display: table;
+		width: 100%;
+		border-bottom: 1px solid $SHOP_TAB_ACTIVE_COLOR;
+		margin-bottom: 15px;
+	}
+
+	.ShopAddressesView__controlBox {
+		display: table-cell;
+
+		&--type {
+			text-align: right;
+		}
+	}
+
+	a.ShopAddressesView__address {
+		color: $SHOP_LINK_COLOR;
+		border-bottom: 1px dashed;
+		text-decoration: none;
+		display: inline;
+	}
+
+	a.ShopAddressesView__address:hover {
+		color: $SHOP_LINK_COLOR_HOVER;
+	}
+
+	.ShopAddressesView__site {
+		font-weight: normal;
+	}
+
+	.ShopAddressesView__sheduleLine {
+		white-space: nowrap;
+	}
+
+	.ShopAddressesView__empty {
+		color: #858585;
+		font-size: 20px;
+		margin: 1.4em auto 0 auto;
+		text-align: center;
+	}
+
+	.ShopAddressesView__content {
+		margin-top: 1.43em;
+	}
+}
+
+
+
+/* Items
+---------------------------------------------------------------------- */
+
+.Items--shopAddressesList {
+	display: table;
+	box-sizing: border-box;
+	border-collapse: collapse;
+	width: 100%;
+	max-width: none;
+	line-height: 1.5;
+	font-size: inherit;
+	border-spacing: 0;
+	margin-top: 0;
+	margin-bottom: -.75em;
+
+	.Item {
+		display: table-row;
+
+		& + .Item .Item__box {
+			border-top: 1px solid #dcdcdc;
+		}
+	}
+
+	.Item__box {
+		display: table-cell;
+		vertical-align: top;
+		padding: .75em;
+
+		&:first-child {
+			padding-left: 0;
+		}
+
+		&:last-child {
+			padding-right: 0;
+		}
+
+		&--city {
+			width: 14.29em; /* 200px */
+		}
+
+		&--name {
+			font-weight: bold;
+			width: 14.29em; /* 200px */
+		}
+
+		&--phone {
+			text-align: right;
+			width: 10em; /* 140px */
+		}
+
+		&--site {
+			white-space: nowrap;
+		}
+	}
+}
+
+
+
+/* CitySelector
+---------------------------------------------------------------------- */
+
+.CitySelector {
+	&__link {
+		position: relative;
+		border: 0;
+		font-size: 18px;
+		line-height: 23px;
+		display: inline-block;
+		padding-right: 15px;
+		color: $SHOP_LINK_COLOR;
+		cursor: pointer;
+
+		&:hover {
+			color: $SHOP_LINK_COLOR_HOVER;
+		}
+
+		&:after {
+			content: "";
+			background-image: svg('arrow_10x5.svg', '[color]: $SHOP_CITYSELECTOR__LINK_COLOR');
+			width: width('arrow_10x5.svg');
+			height: height('arrow_10x5.svg');
+			top: 50%;
+			right: 0;
+			margin-left: 5px;
+			margin-top: -3px;
+			position: absolute;
+		}
+
+		&:hover:after {
+			background-image: svg('arrow_10x5.svg', '[color]: $SHOP_CITYSELECTOR__LINK_COLOR_HOVER');
+		}
+	}
+
+	&__current {
+		font-size: 14px;
+		line-height: 18px;
+
+		&--link {
+			border-bottom: 1px dashed;
+		}
+	}
+}
+
+
+
+/* CitySelectorTipTip
+-----------------------------------------------------------------*/
+
+.CitySelectorTipTip {
+	&.TipTip--theme-white .TipTip__content {
+		-webkit-box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+		box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+		border-width: 0;
+		background: #fff;
+	}
+
+	&.TipTip--theme-white .TipTip__pointer {
+		background-position: 0 0;
+		background-repeat: no-repeat;
+		margin: 0 0 0 -6px;
+	}
+
+	&.TipTip--top.TipTip--theme-white .TipTip__pointer,
+	&.TipTip--bottom.TipTip--theme-white .TipTip__pointer {
+		width: 24px;
+		height: 13px;
+	}
+
+	&.TipTip--top.TipTip--theme-white .TipTip__pointer {
+		background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAANBAMAAABBQrPjAAAAIVBMVEUAAAAAAABMaXEAAAAAAAAAAAAAAAAAAAAAAAAAAAD///9jq0b1AAAACnRSTlMBBAAGDwkWCx0RsuNsiAAAAHVJREFUeF4tikEKQEAYRn9OQLKXG0wlJ6DYCbmAClupXEBlLS4gaU7pTeOrad7r/eIk+l/tIaXlG5Ewt9JXIhKsk+HnUkaawciWIZGTnrvW7zh7rsTckbZLgTGpmJ6DgJC64lgICCloW0VAeD4DEJIw1woT+33hDyyyYixypgAAAABJRU5ErkJggg==');
+		margin-top: -1px;
+	}
+
+	&.TipTip--bottom.TipTip--theme-white .TipTip__pointer {
+		background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAANBAMAAABBQrPjAAAAIVBMVEUAAAAAAABMaXEAAAAAAAAAAAAAAAAAAAAAAAAAAAD///9jq0b1AAAACnRSTlMBBAAPBgkLEx0XWVGgLAAAAHtJREFUeF5jUAIBBigFxAoMQMAE5TAIAgGYAZRgFAkNdRRgAnMYRMLMi1MdQSyghJv5rJXFKUApBqBE8oxVqzrNgFIMQInKrlWrVkwHSjEwiARXrAKCdlNHBiAnfRaIs7IMxBE1XwUGxYEMDIyuVhDO4hABIGcVFIQIAACAGyyhS5imNQAAAABJRU5ErkJggg==');
+		margin: 0 0 -1px -6px;
+	}
+
+	&.TipTip--right.TipTip--theme-white .TipTip__pointer,
+	&.TipTip--left.TipTip--theme-white .TipTip__pointer {
+		width: 13px;
+		height: 24px;
+	}
+
+	&.TipTip--right.TipTip--theme-white .TipTip__pointer {
+		background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAYBAMAAADT3mpnAAAAIVBMVEUAAAAAAABMaXEAAAAAAAAAAAAAAAAAAAAAAAAAAAD///9jq0b1AAAACnRSTlMBBAAGDwkWCx0RsuNsiAAAAGdJREFUeF5jUAICBgYGEK3AwCgAohkEhQ2AtAKjcWgAkGYQDndZwADkmntmAWkG4cq0VQsYgNxpXSBaMCRjFYgWruwC0Qyibqsg9CwQDaNh4jB1MH0wc2DmwuyB2QtzB8xdMHfC3A0AwM8vzaJij00AAAAASUVORK5CYII=');
+		margin: -6px 0 0 4px;
+	}
+
+	&.TipTip--left.TipTip--theme-white .TipTip__pointer {
+		background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAYBAMAAADT3mpnAAAAIVBMVEUAAAAAAABMaXEAAAAAAAAAAAAAAAAAAAAAAAAAAAD///9jq0b1AAAACnRSTlMBBAAGDwkWCx0RsuNsiAAAAGdJREFUeF5jYGBgUlJSUmAQZGAA08aCAkwgOjTYkAFEL3EPFmAC0qsy3Q0ZQPSyzGIBJiC9qm26IQOIXpESKACiV3UWQ+hlrgIMIHrVVAQNE4epg+mDmQMzF2YPzF6YO2DugrkT5m4AHiovzUtqXGkAAAAASUVORK5CYII=');
+		margin: -6px 0 0 0;
+	}
+}
+
+
+
+/* CitySelectorTip
+-----------------------------------------------------------------*/
+
+.CitySelectorTip {
+	font-size: 12px;
+	line-height: 18px;
+	padding: 10px 12px;
+	white-space: nowrap;
+	cursor: default;
+
+	&__title,
+	&__city {
+		display: inline-block;
+	}
+
+	&__btn {
+		@mixin ShopAddressesBtn;
+
+		box-sizing: border-box;
+		display: inline-block;
+		border: 1px solid;
+		padding: 5px 11px;
+		font-size: 12px;
+		line-height: 18px;
+
+		&--close {
+			margin-left: 10px;
+			border-color: $SHOP_BOX_BTN_BG;
+		}
+
+		&--link {
+			color: $SHOP_BOX_BTN_BG;
+			margin-left: 7px;
+			background-color: transparent;
+			border-color: $SHOP_BOX_BTN_BG;
+		}
+	}
+}
+
+
+
+/* MapPlacemark
+---------------------------------------------------------------------- */
+
+.MapPlacemark--brand {
+	& {
+		background-image: resolve('pin.png');
+		width: width('pin.png');
+		height: height('pin.png');
+		cursor: pointer;
+	}
+
+	&.MapPlacemark--active,
+	&:hover {
+		background-image: resolve('pin_hover.png');
+	}
+
+	&.MapPlacemark--active {
+		cursor: default;
+	}
+}
+
+.MapPlacemark--cluster {
+	box-sizing: border-box;
+	width: 39px;
+	height: 39px;
+	color: #000;
+	font-size: 14px;
+	line-height: 31px;
+	text-align: center;
+	border: 4px solid $SHOP_BOX_BTN_BG;
+	border-radius: 100%;
+	background-color: #fff;
+	cursor: pointer;
+	user-select: none;
+	transform: translate(-19px, -19px);
+
+	&.MapPlacemark--active {
+		cursor: default;
+	}
+
+	&.MapPlacemark--active,
+	&:hover {
+		border-color: $SHOP_BOX_BTN_BG_HOVER;
+	}
+}
+
+
+
+/* BuyOnline
+---------------------------------------------------------------------- */
+
+.BuyOnline--default {
+	margin: 50px 0 0;
+	padding: 0;
+	list-style: none;
+
+	.BuyOnline__item {
+		display: inline-block;
+		margin: 0 0 20px 2%;
+		padding: 0;
+		vertical-align: top;
+		box-sizing: border-box;
+		width: 32%;
+	}
+
+	.BuyOnline__item:nth-child(3n + 1) {
+		margin-left: 0;
+	}
+
+	.BuyOnline__link {
+		background-color: #fff;
+		border: 1px solid #f2f2f2;
+		text-align: center;
+		display: block;
+		height: 60px;
+		line-height: 60px;
+		padding: 34px 20px 33px;
+		position: relative;
+		border-radius: $SHOP_RADIUS_MAIN;
+		text-decoration: none;
+	}
+
+	.BuyOnline__link:hover {
+		border-color: $SHOP_PILL_ACTIVE_COLOR;
+	}
+
+	.BuyOnline__img {
+		max-width: 100%;
+		max-height: 100%;
+	}
+
+	.BuyOnline__title {
+		color: $SHOP_PILL_COLOR;
+		font-weight: bold;
+		font-size: 14px;
+		line-height: 16px;
+		display: block;
+		margin-top: 12px;
+	}
+
+	.BuyOnline__reference {
+		color: #949494;
+		font-size: 12px;
+		line-height: 14px;
+		display: block;
+		margin-top: 5px;
+	}
+
+	.BuyOnline__link:hover .BuyOnline__title,
+	.BuyOnline__link:hover .BuyOnline__reference {
+		color: $SHOP_PILL_ACTIVE_COLOR;
+	}
+}
+
+
+
+/* Addresses
+---------------------------------------------------------------------- */
+
+.Address--default {
+	.Address__title {
+		font-weight: bold;
+		font-size: 16px;
+		line-height: 24px;
+	}
+
+	.Address__infoItem {
+		font-size: 13px;
+		line-height: 24px;
+	}
+
+	.Address__title + .Address__info,
+	.Address__infoItem + .Address__infoItem {
+		margin-top: 6px;
+	}
+
+	.Address__gallery {
+		display: flex;
+	}
+
+	.Address__photoLink {
+		border-bottom-width: 0;
+		width: 16%;
+		transition: opacity .3s;
+
+		&--loading {
+			position: relative;
+			background-color: rgba(220, 220, 220, .5);
+			user-select: none;
+
+			&:before {
+				@mixin StmSpinner $SPINNER_COLOR;
+				content: '';
+				position: absolute;
+				top: calc(50% - 12px);
+				left: calc(50% - 12px);
+			}
+		}
+
+		&:hover {
+			opacity: .6;
+		}
+	}
+
+	.Address__photoLink + .Address__photoLink {
+		margin-left: 1%;
+	}
+
+	.Address__photo {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+}
+
+.Address--balloonContent {
+	position: absolute;
+	box-sizing: border-box;
+	border-radius: 10px;
+	padding: 18px;
+	background-color: #fff;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, .3);
+	transform: translate(-50%, -100%);
+
+	.Address__btnClose {
+		position: absolute;
+		top: 5px;
+		right: 5px;
+		border: none;
+		width: 19px;
+		height: 19px;
+		padding: 0;
+		background-color: transparent;
+		background-image: svg('cross_11x11.svg', '[color]: #4C4C4C');
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+		cursor: pointer;
+
+		&:hover {
+			opacity: .7;
+		}
+	}
+
+	.Address__title {
+		padding-right: 10px;
+		font-size: 14px;
+		line-height: 1.143;
+	}
+
+	.Address__info {
+		padding-right: 10px;
+	}
+
+	.Address__infoItem {
+		font-size: 12px;
+		line-height: 1.5;
+	}
+
+	.Address__gallery {
+		margin-top: 10px;
+	}
+
+	.Address__photoLink + .Address__photoLink {
+		margin-left: 10px;
+	}
+
+	.Address__photoLink,
+	.Address__photo {
+		width: 84px;
+		height: 56px;
+	}
+
+	&:after {
+		content: '';
+		position: absolute;
+		left: 50%;
+		bottom: 0;
+		width: 12px;
+		height: 12px;
+		margin-left: -6px;
+		margin-bottom: -6px;
+		background-color: #fff;
+		transform: rotate(-45deg);
+	}
+}
+
+
+/* ShopAddressesCards
+---------------------------------------------------------------------- */
+
+.ShopAddressesCards--default {
+	margin-top: 20px;
+}
+
+.ShopAddressesCard--default {
+	display: inline-block;
+	width: 350px;
+	border: 1px solid #dcdcdc;
+	margin: 0 30px 0 0;
+	vertical-align: top;
+	padding: 25px;
+	box-sizing: border-box;
+	border-radius: $SHOP_RADIUS_MAIN;
+
+	.ShopAddressesCard__title {
+		font-size: 20px;
+		line-height: 24px;
+		margin-top: 15px;
+	}
+
+	.ShopAddressesCard__content {
+		font-size: 14px;
+		line-height: 21px;
+		margin-top: 12px;
+		height: 105px;
+	}
+
+	.ShopAddressesCard__link {
+		display: inline-block;
+		margin-top: 5px;
+		border-bottom: 0;
+	}
+
+	.ShopAddressesCard__mail {
+		border-bottom: 0;
+		display: inline;
+	}
+
+	.ShopAddressesCard__mail,
+	.ShopAddressesCard__phone {
+		margin-left: 26px;
+		line-height: 26px;
+		position: relative;
+	}
+
+	.ShopAddressesCard__mail:before,
+	.ShopAddressesCard__phone:before {
+		content: '';
+		display: inline-block;
+		position: absolute;
+		left: -26px;
+		width: 18px;
+		height: 17px;
+	}
+
+	.ShopAddressesCard__mail:before {
+		background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAALBAMAAABrDns0AAAAJ1BMVEXOzs7Dw8POzs7JycnJycnHx8fExMTFxcXGxsbGxsbDw8PExMTExMQIE9dWAAAADHRSTlMfLy9MZH+Pn7fe7+8OWd/oAAAAVklEQVQI12OQOAMGJxQYJuSAWQUTGE6yghhHOQ8wnJkUA2QFrgGyTpucOXPE6wyQdeaA9WmDMyDWaZegSSHWINammONqZ4LmHEDSO6EGbF7CBAYNmB0AhLw+go9gq2MAAAAASUVORK5CYII=');
+		background-position: 0 0;
+		background-repeat: no-repeat;
+		top: 3px;
+		height: 12px;
+	}
+
+	.ShopAddressesCard__phone:before {
+		background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAARCAMAAADjcdz2AAAAS1BMVEUAAAC/v7/Pz8/FxcXW1ta/v7/Hx8fOzs7GxsbIyMjCwsLHx8fJycnIyMjHx8fExMTFxcXGxsbExMTFxcXFxcXGxsbDw8PExMTExMTNG5egAAAAGHRSTlMAEBAfHyAgLz9PUF9fb3+Pn6+/z9/f7+8y9U3VAAAAiUlEQVQY002PWxaDIAxEh1qpCOWRimT/Ky0h1DofMLknmQAwReR/1i9y7pmPYXAZmzn0KzEPkhwQ2wtgUQEKF4PyAZqAKBOVYJoD9TppRtuQCKGDTdflDEdA7aFmgIdy11sy7iozdfXaCFNl8bIeTLPFCuHzNqpE9J7EJK3b80q28kD5yl82RKm/ZN4JzkCnKHEAAAAASUVORK5CYII=');
+		background-position: 0 0;
+		background-repeat: no-repeat;
+		top: 5px;
+	}
+
+	.ShopAddressesCard__btnWrapper {
+		margin-top: 18px;
+	}
+
+	.ShopAddressesCard__btn {
+		@mixin ShopAddressesBtn;
+		display: block;
+	}
+
+	.ShopAddressesCard__explanation {
+		margin-top: 7px;
+		color: #858585;
+		font-size: 12px;
+		text-align: center;
+	}
+}
+
+
+
+/* CitySelectWindow
+---------------------------------------------------------------------- */
+
+.CitySelectWindow {
+	width: 670px;
+	overflow: hidden;
+	padding-bottom: 0;
+
+	&--loading {
+		position: relative;
+		user-select: none;
+
+		&:before {
+			@mixin StmSpinner $SPINNER_COLOR, 100px, 5px;
+			content: '';
+			position: absolute;
+			top: calc(50% - 50px);
+			left: calc(50% - 50px);
+			z-index: 2;
+		}
+
+		&:after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(255, 255, 255, .75);
+			z-index: 1;
+		}
+	}
+
+	& a:hover {
+		color: $SHOP_LINK_COLOR_HOVER;
+	}
+
+	.FancyModal__header {
+		border-bottom: 0;
+		margin-bottom: 0;
+	}
+
+	&__content {
+		border-top: 1px solid #d6d6d6;
+		position: relative;
+	}
+
+	&__box {
+		position: relative;
+		box-sizing: border-box;
+		display: inline-block;
+		vertical-align: top;
+		height: 440px;
+		width: 50%;
+
+		&:after {
+			background: linear-gradient(to bottom, rgba(255,255,255,0) 0, #fff 100%);
+			content: '';
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			z-index: 1;
+			width: 90%;
+			height: 30px;
+			pointer-events: none;
+		}
+
+		&--regions,
+		&--cities {
+			box-shadow: inset -1px 0 0 0 #d6d6d6;
+		}
+
+		&--regions {
+			width: 300px;
+		}
+
+		&--cities {
+			width: 370px;
+		}
+	}
+
+	&__wrapper {
+		box-sizing: border-box;
+		padding: 25px 30px 0;
+		height: 100%;
+		overflow: auto;
+	}
+
+	&__header {
+		color: #b1b5bd;
+		cursor: default;
+		font-size: 18px;
+		line-height: 1em;
+		margin-bottom: 15px;
+	}
+}
+
+.CitySelectList {
+	line-height: 1em;
+	padding: 0;
+	margin: 0;
+	position: relative;
+	overflow: hidden;
+
+	&--main {
+		margin-bottom: 1em;
+	}
+
+	&--main &__box {
+		margin: 0;
+	}
+
+	&:last-child {
+		margin-bottom: 20px;
+	}
+
+	&__box {
+		list-style: none;
+		display: block;
+		vertical-align: top;
+		margin: 0 0 0 25px;
+		padding: 0;
+		max-width: 200px;
+	}
+
+	&__box--alphabet {
+		color: #bbb;
+		text-transform: uppercase;
+		width: 15px;
+		float: left;
+		margin: 0;
+		position: absolute;
+	}
+
+	&__item:before {
+		content: none;
+	}
+
+	&__item {
+		margin: 0 0 14px 0;
+	}
+
+	&__item--search {
+		display: none;
+	}
+
+	&__item--main {
+		font-weight: bold;
+	}
+
+	&__item--active {
+		font-weight: bold;
+	}
+
+	&__item--active &__link {
+		color: $SHOP_LINK_COLOR;
+		pointer-events: none;
+		outline: none;
+	}
+
+	&__link {
+		color: #000;
+		border: 0;
+	}
+
+	&__region {
+		color: #999;
+		display: block;
+		font-size: 16px;
+		font-weight: normal;
+		margin-top: 3px;
+	}
+}
+
+.CitySelectSearch {
+	.Field--search {
+		position: relative;
+		border-width: 0;
+		padding: 0;
+		margin-bottom: 15px;
+		display: block;
+	}
+
+	.Field__input {
+		width: 100%;
+		background-color: #f5f7fa;
+		border: 1px solid #dcdcdc;
+		height: 31px;
+		box-sizing: border-box;
+		border-radius: 4px;
+		padding-left: 45px;
+		background-image: svg('search_14x14.svg', '[color]: #C4C4C4');
+		background-position: 17px 50%;
+		background-repeat: no-repeat;
+
+		&:focus {
+			background-color: #fff;
+			background-image: svg('search_14x14.svg', '[color]: #4C4C4C');
+		}
+	}
+}
+
+.CitySelectSearchResult,
+.CitySelectNotSearch {
+	display: none;
+}
+
+.CitySelectNotSearch {
+	margin-top: 13px;
+
+	&__box {
+		line-height: 20px;
+
+		&--title {
+			font-weight: bold;
+		}
+	}
+
+	&__box + &__box,
+	&__item + &__item {
+		margin-top: 4px;
+	}
+
+	&__list {
+		list-style: none;
+		margin: 0;
+		padding: 0 0 0 30px;
+	}
+
+	&__item:before {
+		content: '';
+		display: inline-block;
+		width: 16px;
+		height: 1px;
+		background-color: #000;
+		position: absolute;
+		top: 10px;
+		left: -21px;
+	}
+}
+
+.HeaderNav__link .LinkWrapper {
+	color: #576372;
+	border: 0;
+}

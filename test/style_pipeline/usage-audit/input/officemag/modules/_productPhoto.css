@@ -1,0 +1,92 @@
+.ProductPhoto {
+	position: relative;
+	display: block;
+
+	&:hover &__indicators {
+		@mixin mouseOnly {
+			display: flex;
+		}
+	}
+
+	.swiper {
+		z-index: 0;
+	}
+
+	.swiper-slide:not(:first-child):not(.swiper-slide-active):not(.swiper-slide-next):not(.swiper-slide-prev) {
+		.ProductPhoto__img {
+			display: none;
+		}
+	}
+
+	&__img {
+		display: block;
+		width: 100%;
+		pointer-events: none;
+	}
+
+	&__slide {
+		position: relative;
+		flex-shrink: 0;
+		display: block;
+		width: 100%;
+		height: auto;
+
+		&--loading {
+			img {
+				height: 0;
+				padding-top: 100%;
+				overflow: hidden;
+				visibility: hidden;
+				opacity: 0;
+			}
+
+			&:after {
+				content: '';
+				position: absolute;
+				inset: 0;
+				z-index: 1;
+				background: #f1eeec resolve('interface/camera.png') no-repeat center;
+				background-size: auto;
+			}
+		}
+	}
+
+	&__indicators.swiper-pagination-bullets {
+		position: absolute;
+		top: -8px;
+		bottom: auto;
+		left: 50%;
+		transform: translateX(-50%);
+		display: flex;
+		width: 60%;
+		height: 2px;
+
+		@mixin mouseOnly {
+			display: none;
+			width: 100%;
+			left: 0;
+			transform: none;
+		}
+
+		&.swiper-pagination-lock {
+			display: none;
+		}
+
+		.swiper-pagination-bullet {
+			flex: 1 1 auto;
+			height: 100%;
+			margin: 0;
+			background: $GREY_2;
+			border-radius: 0;
+			opacity: 1;
+
+			&:not(:last-child) {
+				margin-right: 4px;
+			}
+
+			&-active {
+				background: $RED;
+			}
+		}
+	}
+}

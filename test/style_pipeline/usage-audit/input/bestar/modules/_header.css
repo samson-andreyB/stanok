@@ -1,0 +1,50 @@
+/* Шапка
+**********************************************************/
+
+.Header {
+	background-color: $colorHeader;
+	color: $colorHeaderText;
+
+	&__row--sub {
+		background-color: $colorHeaderDark;
+		padding: 10px 0;
+	}
+
+	.Page__wrapper {
+		display: flex;
+	}
+
+	a {
+		color: $colorHeaderText;
+	}
+
+	&__box {
+
+		&--menu {
+			align-self: stretch;
+			margin-left: 25px;
+		}
+
+		&--search {
+			flex-grow: 1;
+			display: flex;
+			justify-content: flex-end;
+		}
+	}
+}
+
+.Header--search {
+
+	.Header__box--menu {
+		flex-grow: 0;
+	}
+
+	.Header__box--search {
+		flex-grow: 1;
+	}
+
+	.Search {
+		background-color: $colorHeaderDark;
+		flex-grow: 1;
+	}
+}

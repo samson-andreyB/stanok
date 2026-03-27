@@ -1,0 +1,105 @@
+.Notify--attention {
+	&.Notify--accent,
+	&.Notify--default {
+		padding: 1.4em 1.5em;
+	}
+
+	&.Notify--withIcon {
+		.Notify__title {
+			&:before {
+				content: '';
+				display: inline-block;
+				margin-top: -.2em;
+				margin-right: .3em;
+				width: width('attention_13x13.svg');
+				height: height('attention_13x13.svg');
+				vertical-align: middle;
+				background-image: svg('attention_13x13', '[color]: #404040');
+			}
+		}
+
+		&.Notify--textAccent {
+			.Notify__content{
+				&:before {
+					content: '';
+					display: inline-block;
+					background-image: svg('attention_13x13', '[color]: $BRAND');
+					width: width('attention_13x13.svg');
+					height: height('attention_13x13.svg');
+					margin-top: -2px;
+					margin-right: 5px;
+					vertical-align: middle;
+				}
+			}
+		}
+	}
+
+	.Notify__title {
+		font-weight: bold;
+	}
+
+	.Notify__content {
+		margin-top: .2em;
+	}
+
+	.Notify__paragraph + .Notify__paragraph {
+		margin-top: .3em;
+	}
+
+	.textNode & {
+		ul,
+		ol {
+			margin-bottom: 0;
+
+			li:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+}
+
+.Notify--addedToCart {
+	padding: 13px;
+	padding-left: 20px;
+
+	&.Notify--withIcon {
+		background-image: svg('attention_13x13', '[color]: $BRAND');
+		background-repeat: no-repeat;
+		background-position: 20px 15px;
+		padding-right: 25px;
+		padding-left: 40px;
+	}
+}
+
+.Notify--controls {
+	background-color: #f2eeea;
+}
+
+.Notify__content--accent {
+	color: $C_PZK;
+}
+
+.Notify--accent {
+	background-color: $ATTENTION;
+}
+
+.Notify--default {
+	background-color: $BG;
+}
+
+.Notify__contentWrapper {
+	max-width: 500px;
+	display: inline-block;
+}
+
+.Notify--reorganization {
+	margin-bottom: 20px;
+
+	.Notify__content {
+		margin-top: .5em;
+	}
+}
+
+.Notify--textAccent {
+	color: #c22119;
+}

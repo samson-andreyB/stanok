@@ -1,0 +1,162 @@
+/* PAGE
+---------------------------------------------------------------------*/
+
+.Page {
+	font-size: $fontSize;
+	font-family: $fontFamilyL;
+
+	&--overlay {
+		position: relative;
+
+		&:before {
+			@mixin Overlay--before;
+
+			z-index: 100;
+		}
+
+		.HeaderBanner,
+		.ddMainInfoPanel,
+		.Page__header {
+			z-index: 101;
+		}
+
+		.Page__header {
+			position: relative;
+			background-color: #fff;
+		}
+
+		.FeedbackBtn {
+			pointer-events: none;
+
+			&:before {
+				@mixin Overlay--before;
+			}
+		}
+	}
+}
+
+.Page__wrapper {
+	@mixin Page__wrapper;
+}
+
+.Page__nav {
+	float: left;
+	width: $sidebarContentWidth;
+}
+
+.Page__content {
+	padding-y: 15px 55px;
+
+	&--overlay {
+		position: relative;
+
+		&:before {
+			@mixin Overlay--before;
+		}
+	}
+}
+
+.Page__footer {
+	padding-y: 50px 20px;
+	background-color: $theme_layoutAccentColor;
+
+	&--overlay {
+		position: relative;
+
+		&:before {
+			@mixin Overlay--before;
+		}
+	}
+}
+
+
+
+/* PAGE LAYOUTS
+---------------------------------------------------------------------*/
+
+
+/* CONTENT AND SIDEBAR
+---------------------------------------------------------------------*/
+
+.Page--contentAndSidebar {
+	.Sidebar {
+		width: $sidebarContentWidth;
+	}
+
+	.Content__wrapper {
+		margin-left: $sidebarWidth;
+	}
+
+	.Content {
+		float: right;
+		width: 100%;
+	}
+
+	.Page__content {
+		@mixin group;
+	}
+
+	.Page__footer {
+		clear: both;
+	}
+}
+
+
+
+/* ACTIONS
+---------------------------------------------------------------------*/
+
+.Page--actions {
+	.Content__description {
+		font-size: 14px;
+	}
+
+	.Tabs2--default {
+		margin: 30px 0 30px;
+	}
+}
+
+
+
+/* PRINT
+---------------------------------------------------------------------*/
+
+.Page--print {
+	color: #000;
+	font-family: Arial, Verdana;
+	font-size: 12px;
+	margin-right: auto;
+	margin-left: auto;
+	width: 670px;
+
+	table {
+		width: 100%;
+	}
+}
+
+
+
+/* PROMO
+---------------------------------------------------------------------*/
+
+.Page--promo {
+	.Page__content {
+		padding: 0;
+		padding-bottom: 55px;
+	}
+
+	.Page__nav {
+		position: absolute;
+		margin-top: 15px;
+	}
+}
+
+
+
+/* PROFILE
+---------------------------------------------------------------------*/
+.Page--purchasedGoods {
+	.Content__wrapper {
+		margin-top: 20px;
+	}
+}

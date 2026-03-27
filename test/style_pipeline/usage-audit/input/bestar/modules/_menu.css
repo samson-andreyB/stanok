@@ -1,0 +1,133 @@
+/* Меню
+**********************************************************/
+
+.Menu {
+	margin:0;
+	padding: 0;
+	display: flex;
+	height: 100%;
+
+	> li {
+		list-style-type: none;
+		display: block;
+		position: relative;
+
+		&:hover {
+			background-color: $colorHeaderDark;
+
+			.DropdownMenu {
+				display: block;
+			}
+		}
+
+		&.active {
+			background-color: $colorHeaderDark;
+		}
+	}
+
+	a {
+		text-decoration: none;
+		height: 100%;
+		display: inline-block;
+		padding: 2px 20px 0;
+		box-sizing: border-box;
+
+		&:before {
+			content: '';
+			height: 100%;
+			display: inline-block;
+			vertical-align: middle;
+		}
+	}
+
+	.DropdownMenu {
+		display: none;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		margin: 0;
+		padding: 0;
+		background-color: $colorHeaderDark;
+		list-style-type: none;
+		z-index: 10;
+
+		&:hover {
+			display: block;
+		}
+
+		> li {
+			white-space: nowrap;
+		}
+
+		a {
+			display: block;
+			padding: 10px 20px;
+
+			&:hover {
+				background-color: $colorHeader;
+			}
+		}
+	}
+
+	&--footer {
+		height: auto;
+
+		> li {
+
+			&:hover {
+				background: none;
+			}
+
+			a {
+
+				&:hover,
+				&:active,
+				&:focus {
+					text-decoration: underline;
+				}
+			}
+
+			+ li {
+				margin-left: 10px;
+
+				&:before {
+					content: none;
+				}
+			}
+		}
+
+		a {
+			height: auto;
+			padding: 0;
+
+			&:before {
+				content: none;
+			}
+		}
+	}
+}
+
+
+.Submenu {
+	display: flex;
+
+	&__item {
+		padding: 8px 18px;
+
+		& + & {
+			margin-left: 3px;
+		}
+
+		&--active {
+
+			border-radius: 4px;
+			background-color: $colorHeaderText;
+			color: $colorHeaderDark;
+
+			.Submenu__link {
+				color: inherit;
+				pointer-events: none;
+			}
+		}
+	}
+}

@@ -1,0 +1,51 @@
+/* BUBBLESELECT
+------------------------------------------------------------------------------*/
+.BubbleSelect {
+	&--activeBanned,
+	&--bool {
+		.Bubble__trigger {
+			position: relative;
+		}
+
+		.BadgeStatus.Bubble__trigger {
+			position: relative;
+			box-sizing: border-box;
+
+			&:after {
+				position: absolute;
+				left: auto;
+				right: 15px;
+				top: 50%;
+				margin-top: -1px;
+			}
+		}
+
+		.Spinner {
+			display: none;
+			border-left-color: $main;
+			border-top-color: $main;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			margin-top: -.6em;
+			margin-left: -.6em;
+		}
+	}
+
+	&--loading {
+		.BadgeStatus.Bubble__trigger:after {
+			content: none;
+		}
+		.Spinner {
+			display: block;
+		}
+	}
+
+	&--bool .BadgeStatus.Bubble__trigger {
+		min-width: 48px;
+	}
+
+	&--activeBanned .BadgeStatus.Bubble__trigger {
+		min-width: 78px;
+	}
+}

@@ -1,0 +1,132 @@
+/* Общее */
+@import 'modules/_var';
+@import 'modules/_mixins'; /* ^ Все примеси сюда? */
+@import 'modules/_base';
+@import 'modules/_fonts';
+@import 'modules/_useful';
+@import "lib/modules/_loading-spinner";
+
+
+
+/* Блоки */
+@import 'modules/_pseudoTable';
+@import 'modules/_h';
+@import 'modules/_btn';
+@import 'modules/_list';
+@import 'modules/_icon';
+@import 'modules/_mosaic';
+@import 'modules/_spinner';
+@import 'modules/_collections';
+@import 'modules/_cols';
+@import 'modules/_tab';
+@import 'modules/_logo';
+@import 'modules/_overlay';
+@import 'modules/_breadcrumbs';
+@import 'modules/_complectation';
+@import 'modules/_productSetCard';
+@import 'modules/_pageControl';
+@import 'modules/_price';
+@import 'modules/_priceWrapper';
+@import 'modules/_facets';
+@import 'modules/_categories';
+@import 'modules/_viewer';
+@import 'modules/_status';
+@import 'modules/_dealerSelect';
+@import 'modules/_company';
+@import 'modules/_actionsTypes';
+@import 'modules/_info';
+@import 'modules/_industry';
+@import 'modules/_promo';
+@import 'modules/_promoPage';
+@import 'modules/_user';
+@import 'modules/_userMenu';
+@import 'modules/_action';
+@import 'modules/_actionTip';
+@import 'modules/_authorization';
+@import 'modules/_furnitureForm'; /* FurnitureForm, FurnitureFormHeader: нужно объединить в `FurnitureForm` */
+@import 'modules/_catalogSet';
+@import 'modules/_catalogSetNav';
+@import 'modules/_feedbackStatus';
+@import 'modules/_feedbackHistory';
+@import 'modules/_feedbackBtn';
+@import 'modules/_feedbackChat';
+@import 'modules/_orderByCode';
+@import 'modules/_search';
+@import 'modules/_searchTip';
+@import 'modules/_showcase';
+@import 'modules/_items';
+@import 'modules/_formElements'; /* Коллекция: Form FormSearch FieldFile Checkbox Radio Select Range Field Amount Textarea */
+@import 'modules/_social'; /* ^ Удалить немного лишнего после релиза */
+@import 'modules/_paginator'; /* Paginator, OrderSteps: поменять в разметке `OrderSteps` на `Paginator` */
+@import 'modules/_progress'; /* Progress, ActionProgress: поменять в разметке `ActionProgress` на `Progress` */
+@import 'modules/_cartridge';
+@import 'modules/_cartridgeSearch';
+@import 'modules/_brand';
+@import 'modules/_brandRubrics'; /* BrandRubrics, SubBrandRubric: переименовать `SubBrandRubric` */
+@import 'modules/_brandSlider';
+@import 'modules/_contact';
+@import 'modules/_contactFeature';
+@import 'modules/_contactShop';
+@import 'modules/_slides'; /* Slides, SlidesList, Slide, SlideTitle, SlideSplash: объединить в `Slides` */
+@import 'modules/_orderSteps';
+@import 'modules/_orderConfirmation';
+@import 'modules/_collapsible';
+@import 'modules/_placemark';
+@import 'modules/_paletteColor';
+@import 'modules/_modifiers';
+@import 'modules/_loading';
+@import 'modules/_minimumAmount';
+@import 'modules/_kit';
+@import 'modules/_fancyModal';
+@import 'modules/_rubricator';
+@import 'modules/_widget';
+@import 'modules/_favorite';
+@import 'modules/_tipNote';
+@import 'modules/_bonusProgram';
+@import 'modules/_voteForm';
+
+
+/* Раскладка */
+@import 'modules/_page';
+@import 'modules/_content';
+@import 'modules/_contentHeader';
+@import 'modules/_footer'; /* Footer, FooterBox, FooterError: объединить в `Footer` */
+
+
+
+@import 'modules/_header'; /* Коллекция: Header, HeaderInfo, HeaderEllipsis, HeaderSearch, HeaderLinks, OfferLinks, ActionsMenu, ActionsMenuWrapper, Cart, ddMainInfoPanel */
+@import 'modules/_feedbackWindow'; /* Коллекция: FeedbackContainer FeedbackBox FeedbackForm OrderInfo OrderInfoForm */
+@import 'modules/_form_something'; /* ^ WTF! */
+@import 'modules/_citySelect'; /* CitySelect CitySelectWindow CitySelectList CitySelectSearch CitySelectSearchResult CitySelectNotSearch */
+@import 'modules/_selectSupplierWindow';
+@import 'modules/_suggestCity';
+@import 'modules/_products'; /* Products Product ProductTip ProductDetails Promo ProductIsRemoved ProductCard ProductCert ProductDisabled */
+@import 'modules/_activeActions';
+@import 'modules/_addedProducts';
+@import 'modules/_deliveryBonus';
+@import 'modules/_amount';
+@import 'modules/_productRecomendation';
+@import 'modules/_cart'; /* ActiveActions ActionProgress AddedProducts .Product Amount ProductRecomendation Order OrderDetails OrderPrice DeliveryBonus Delivery Addresses Address Defs */
+@import 'modules/_order';
+@import 'modules/_orderHeader';
+@import 'modules/_orderList';
+@import 'modules/_orderStatus';
+@import 'modules/_deliveryRequisites';
+@import 'modules/_forms'; /* Коллекция форм */
+@import 'modules/_links'; /* Коллекция: PrintLink, EditLink, ErrorLink, DownloadLink, ClearCart */
+@import 'modules/_requisites';
+@import 'modules/_print';
+@import 'modules/_message';
+@import 'modules/_scrollToTop';
+@import 'modules/_ui';
+
+
+
+/* Разное (рассортировать) */
+@import 'modules/_misc';
+@import 'modules/_helpers';
+
+
+
+/* Костыли */
+@import 'modules/_pluginsCustomization';

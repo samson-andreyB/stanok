@@ -1,0 +1,47 @@
+$wrapperMinWidth: 920px;
+$wrapperMaxWidth: 1180px;
+
+$sidebarWidth: 250px;
+$sidebarContentWidth: 230px;
+$sidebarGap: 20px;
+
+
+$fontSize: 1.3em;
+$fontFamilyL: 'Trebuchet MS', arial, helvetica, sans-serif;
+$fontFamilyM: Verdana, arial, helvetica, sans-serif;
+
+$lineHeight: 1.5em;
+$lineHeightUnitless: 1.5;
+
+$selectionBG: #b3d3fd;
+$selectionC: #000;
+
+$accentColor: #ea7648;
+$accentColorLighter: #ff8453;
+
+$actionColor: #ce1728;
+$actionColorHover: #e4182b;
+
+$notAccentColor: #afafaf;
+
+$linkColor: $brandColor;
+$linkHoverColor: $brandColorLighter;
+
+$disabledColor: #acacac;
+$infoColor: #6c6c6c;
+$errorColor: #fc0204;
+$successColor: #62a73c;
+$dividerColor: #d6d6d6;
+
+$pzkColor: #a7126a;
+
+$imgPath: /assets/img;
+
+$theme_logo_path: $imgPath/brand/$theme_logo;
+$theme_logo_s_position: 0 calc(-$theme_logo_height - 5px);
+
+$SpinnerBG: transparent;
+$SpinnerColor: $brandColorLighter;
+
+$ProductBoxPadding: 10px;
+$ProductMargin: 10px;

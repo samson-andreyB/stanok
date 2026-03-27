@@ -1,0 +1,28 @@
+.DeliveryBonus--default {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid $dividerColor;
+
+	.DeliveryBonus__text {
+		padding-y: 1em;
+		color: #8F8F8F;
+		font-style: italic;
+		text-align: center;
+
+		&:before {
+			@mixin OtherIcon truck, #929292;
+			content: '';
+			display: inline-block;
+			margin-top: -.17em;
+			margin-right: 1.15em;
+			vertical-align: middle;
+		}
+	}
+
+	.DeliveryBonus__accent {
+		color: $theme_accent;
+		font-weight: bold;
+		font-size: 108%;
+	}
+}

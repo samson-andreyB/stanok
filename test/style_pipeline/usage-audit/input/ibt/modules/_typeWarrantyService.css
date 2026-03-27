@@ -1,0 +1,37 @@
+.TypeWarrantyService--default {
+	display: flex;
+	align-items: baseline;
+
+	.TypeWarrantyService__input {
+		flex-shrink: 0;
+		max-width: 390px;
+	}
+
+	.TypeWarrantyService__value {
+		flex-shrink: 0;
+	}
+
+	.TypeWarrantyService__linkBox {
+		margin-left: 20px;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+
+	.TypeWarrantyService__add {
+		vertical-align: baseline;
+	}
+
+	.TypeWarrantyService__edit {
+		margin-left: 5px;
+
+		&:before {
+			margin-top: -.3em;
+		}
+	}
+}
+
+
+.TypeWarrantyServiceTip {
+	width: 320px;
+}

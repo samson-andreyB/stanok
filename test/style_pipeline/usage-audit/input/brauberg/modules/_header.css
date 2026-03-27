@@ -1,0 +1,95 @@
+.Page__header {
+	.Page__wrapper {
+		display: table;
+		width: 100%;
+		padding-top: 30px;
+		padding-bottom: 40px;
+	}
+
+	.Box {
+		display: table-cell;
+		vertical-align: middle;
+
+		@media (max-width: 1150px) {
+			display: block;
+			margin-bottom: 30px;
+
+			&.Box--list {
+				padding-left: 0;
+			}
+
+			&.Box--search {
+				margin-bottom: 0;
+			}
+		}
+
+		&--logo {
+			width: 230px;
+		}
+
+		&--list {
+			padding-left: 40px;
+		}
+
+		&--search {
+			width: 270px;
+		}
+
+		&__search {
+			box-sizing: border-box;
+			border: 1px solid #f2453f;
+			border-right-width: 0;
+			font-size: 13px;
+			padding: .2em 5px .4em;
+			height: 30px;
+			width: 100%;
+		}
+
+		&__link {
+			color: #999;
+			text-decoration: none;
+
+			&.current {
+				color: #000;
+			}
+
+			&:hover {
+				color: #f2453f;
+				cursor: pointer;
+			}
+
+			&.disabled {
+				cursor: default;
+				pointer-events: none;
+			}
+		}
+
+		&__item {
+			display: inline-block;
+			font-size: 16px;
+			vertical-align: middle;
+
+			& + .Box__item {
+				margin-left: 40px;
+			}
+		}
+	}
+
+	.HeaderItems {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		@media (max-width: 1150px) {
+			justify-content: flex-start;
+
+			.HeaderItem--social {
+				margin-left: 40px;
+			}
+		}
+	}
+
+	.HeaderItem--social {
+		margin-right: 15px;
+	}
+}

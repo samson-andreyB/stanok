@@ -1,0 +1,394 @@
+/* ITEMS
+------------------------------------------------------------------------------*/
+.Items--orders .Item__box {
+	display: table-cell;
+	vertical-align: top;
+	padding: 10px 7px;
+
+	&:first-child {
+		padding-left: 20px;
+	}
+
+	&:last-child {
+		padding-right: 20px;
+	}
+
+	&--count {
+		min-width: 16px;
+		padding-left: 20px;
+	}
+
+	&--product {
+		width: 38%;
+	}
+
+	&--pack,
+	&--stock {
+		text-align: center;
+	}
+
+	&--cost,
+	&--quantity,
+	&--sum {
+		text-align: right;
+	}
+}
+
+.Items--orders {
+	.Items__title {
+		margin-bottom: 0;
+	}
+
+	.Items__header .Item__box {
+		vertical-align: bottom;
+	}
+}
+
+.Items--ordersCompleted {
+	.Item--new,
+	.Item--error {
+		font-weight: bold;
+	}
+
+	.Item__box {
+		vertical-align: top;
+
+		.btnComment {
+			background-image: resolve('icons/bubble_main.png');
+
+			&:hover {
+				opacity: .8;
+			}
+		}
+
+		.btnDownload {
+			@mixin btnMain;
+			@mixin btnDownloadIcon;
+
+			font-weight: normal;
+
+			&:before {
+				background-image: resolve('icons/download_10x11_fff.png');
+			}
+		}
+
+		.Item__aux {
+			color: #666;
+			font-weight: normal;
+		}
+
+		.Bubble {
+			font-weight: normal;
+		}
+
+		.BadgeStatus {
+			background-color: #fff;
+		}
+
+		.BadgeStatus.main,
+		.BadgeStatus.work {
+			color: #16A474;
+		}
+
+		&--comment {
+			padding-left: 0;
+		}
+
+		&--number {
+			width: 60px;
+
+			.Badge {
+				margin-top: 4px;
+
+				&.Badge--violet {
+					@mixin Badge--fill #b75dde;
+				}
+				&.Badge--orange {
+					@mixin Badge--fill #f78040;
+				}
+				&.Badge--olive {
+					@mixin Badge--fill #6c8a42;
+				}
+				&.Badge--red {
+					@mixin Badge--fill #ed3030;
+				}
+				&.Badge--brown {
+					@mixin Badge--fill #c4a360;
+				}
+			}
+		}
+
+		&--delivery {
+			padding-left: 10px;
+			padding-right: 15px;
+
+			.Item__aux {
+				margin-top: 5px;
+			}
+		}
+
+		&--client {
+			padding-left: 25px;
+			position: relative;
+			min-width: 150px;
+			max-width: 190px;
+
+			.Item__agreement {
+				position: absolute;
+				left: 2px;
+				top: 11px;
+				padding: 3px;
+				background-position: 3px 3px;
+				cursor: help;
+
+				&:hover {
+					opacity: .75;
+				}
+			}
+
+			.Item__aux {
+				margin-top: 4px;
+			}
+		}
+
+		&--sum {
+			white-space: nowrap;
+			text-align: right;
+		}
+
+		&--date {
+			width: 65px;
+		}
+
+		&--error {
+			color: $error;
+		}
+
+		&--status {
+			white-space: nowrap;
+			width: 85px;
+
+			.BubbleSelect + .Item__aux {
+				margin-top: 6px;
+			}
+		}
+
+		&--responsible {
+			width: 110px;
+			word-wrap: anywhere;
+
+			.btnDownload {
+				margin-bottom: 5px;
+			}
+		}
+
+		&--call {
+			padding-right: 0;
+			padding-left: 15px;
+
+			.Icon--notCall {
+				padding: 5px;
+				background-position: center;
+			}
+		}
+	}
+
+	.Item__linkContainer {
+		margin-top: 4px;
+	}
+
+	.Item__link {
+		padding: 2px 0;
+	}
+
+	.Items__header .Item__box {
+		vertical-align: bottom;
+	}
+
+	.Items__group {
+		.Item__box--delivery,
+		.Item__box--client {
+			font-size: 14px;
+		}
+	}
+}
+
+.Items--triggeredActions {
+	.contentWrapper & .Items__title {
+		padding-left: 0;
+		margin: 0;
+	}
+
+	.Items__list {
+		table-layout: fixed;
+	}
+
+	.Item__box {
+		vertical-align: top;
+
+		&--name {
+			width: 25%;
+		}
+
+		&--description {
+			width: 40%;
+		}
+
+		&--gift {
+			width: 35%;
+
+			.Box {
+				vertical-align: top;
+
+				& + .Box {
+					padding-left: 12px;
+				}
+			}
+		}
+	}
+}
+
+.Items--orderItems {
+	.Item__box {
+		&--pack,
+		&--stock {
+			text-align: left;
+		}
+
+		&--discount {
+			text-align: right;
+		}
+
+		&--discount,
+		&--sum {
+			.btnInfo {
+				margin-right: -5px;
+			}
+		}
+
+		&--code {
+			.pseudoLink {
+				cursor: help;
+			}
+		}
+
+		&--product {
+			width: 23%;
+
+			.Badge {
+				margin-top: 3px;
+			}
+		}
+	}
+}
+
+.Items--demoAccess {
+	.Item__box {
+		&--role {
+			width: 22%;
+		}
+
+		&--date {
+			white-space: nowrap;
+		}
+
+		&--action {
+			width: 38%;
+		}
+	}
+}
+
+.Items--infoExchange {
+	.Item__box {
+		&--indicator {
+			width: 1%;
+		}
+
+		&--login {
+			word-break: break-all;
+			width: 15%;
+		}
+
+		&--name {
+			width: 29%;
+		}
+
+		&--actions {
+			text-align: right;
+
+			.btn + .btn,
+			.Upload + .btn {
+				margin-left: 7px;
+			}
+
+			.Upload__button {
+				vertical-align: middle;
+			}
+		}
+	}
+
+	.Items__group {
+		.Item__box {
+			vertical-align: baseline;
+		}
+	}
+}
+
+.Items--commentHistory {
+	.Item__box {
+		vertical-align: baseline;
+
+		&:first-child {
+			padding-left: 0;
+		}
+
+		&:last-child {
+			padding-right: 0;
+		}
+
+		&--status {
+			width: 18%;
+		}
+
+		&--fio {
+			width: 30%;
+		}
+
+		&--date {
+			width: 14%;
+		}
+	}
+}
+
+.Items--formFieldsList {
+	.Items__list {
+		width: auto;
+		border: none;
+	}
+
+	.Items__header .Item__box {
+		padding-y: 0;
+	}
+
+	.Item {
+		&__box {
+			border: none;
+			padding: 5px;
+
+			&:first-child {
+				padding-left: 0;
+			}
+
+			&--doc {
+				width: 150px;
+			}
+		}
+	}
+	.Items__control {
+		margin-top: 10px;
+	}
+}
+
+.Item__line {
+	margin-top: 4px;
+}

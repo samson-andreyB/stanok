@@ -1,0 +1,41 @@
+/* PRINT
+---------------------------------------------------------------------------------------------------*/
+
+.Print__boxes {
+	border-bottom: 1px solid #dadada;
+}
+
+.PrintSetStore {
+	&__field {
+		width: 200px;
+	}
+}
+
+.PrintShop {
+	&__field {
+		width: 200px;
+	}
+}
+
+.Print__addProducts {
+	.chooseDateRange {
+		margin-right: 1em;
+	}
+}
+.PrintAddProducts__tip .TipTip__content {
+	width: 250px;
+}
+
+/* PRINT A PRICE TAG
+---------------------------------------------------------------------------------------------------*/
+
+.PrintMessageLastLoad {
+	width: 300px;
+	float: right;
+	padding-top: 7px;
+	text-align: right;
+
+	&__date {
+		font-weight: 700;
+	}
+}

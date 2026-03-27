@@ -1,0 +1,319 @@
+.Scheme__legend {
+	padding-x: 20px;
+}
+
+.Scheme__legendList {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.Scheme__legendItem {
+	display: inline-block;
+	vertical-align: middle;
+	margin-top: 0;
+
+	& + & {
+		margin-left: 20px;
+	}
+}
+
+.Scheme__legendClient {
+	&:before {
+		content: '';
+		display: inline-block;
+		width: 10px;
+		height: 10px;
+		vertical-align: middle;
+		margin-right: 4px;
+	}
+
+	&--counterparty:before {
+		background-color: #bbbbbb;
+	}
+
+	&--partner:before {
+		background-color: #28bd8b;
+	}
+
+	&--partnerOpt:before {
+		background-color: #bb68de;
+	}
+}
+
+.Scheme__legendTitle {
+	vertical-align: middle;
+}
+
+.Scheme__items {
+	display: inline-block;
+	vertical-align: top;
+	margin-top: 10px;
+	padding: 10px 20px;
+}
+
+.Scheme__row {
+	display: table;
+	position: relative;
+	padding-left: calc(105px * var(--scheme-item-level));
+}
+
+.Scheme__box {
+	display: table-cell;
+	vertical-align: middle;
+	position: relative;
+	padding-y: 10px;
+	padding-right: 40px;
+
+	&--empty {
+		width: 65px;
+	}
+
+	&--right {
+		padding-right: calc(105px * var(--scheme-max-remote-level, 0) + 21px);
+	}
+}
+
+.Scheme__node {
+	display: inline-block;
+	position: relative;
+	width: 170px;
+	padding: 7px 10px;
+	background-color: #fff;
+	box-sizing: border-box;
+	z-index: 1;
+	border: 1px solid #bbb;
+	color: #777;
+	line-height: 16px;
+	word-wrap: break-word;
+
+	&--counterparty {
+		border-color: #bbbbbb;
+	}
+
+	&--partner {
+		border-color: #28bd8b;
+		color: #000;
+	}
+
+	&--partnerOpt {
+		border-color: #bb68de;
+		color: #000;
+	}
+
+	&--active {
+		border-width: 2px;
+	}
+}
+
+.Scheme__node--arrowFromBottom:before,
+.Scheme__node--arrowFromRight:after {
+	content: '';
+	position: absolute;
+}
+
+.Scheme__node--arrowFromRight:after {
+	border-color: #ccc;
+}
+
+.Scheme__node--arrowFromBottom:before {
+	top: 100%;
+	left: 50%;
+	background-image: resolve('icons/arrow_top_7x5_777.png');
+	width: width('icons/arrow_top_7x5_777.png');
+	height: height('icons/arrow_top_7x5_777.png');
+	margin-left: -3px;
+}
+
+.Scheme__node--arrowFromRight:after {
+	left: 100%;
+	top: 50%;
+	background-image: resolve('icons/arrow_top_7x5_ccc.png');
+	width: width('icons/arrow_top_7x5_ccc.png');
+	height: height('icons/arrow_top_7x5_ccc.png');
+	margin-top: -2px;
+	transform: rotate(-90deg);
+}
+
+.Scheme__aux {
+	font-size: 11px;
+	margin-top: 5px;
+	color: #aaa;
+	display: block;
+
+	& + & {
+		margin-top: 0;
+	}
+
+	&&--error {
+		color: #e35959;
+		margin-top: 3px;
+	}
+
+	&&--text {
+		margin-top: 3px;
+		color: #777;
+	}
+
+	&--text + .Scheme__aux {
+		margin-top: 3px;
+	}
+}
+
+.Scheme__currentPosition {
+	position: absolute;
+	left: 0;
+	bottom: 100%;
+	font-size: 11px;
+	color: #aaa;
+	line-height: 22px;
+}
+
+/* Палки слева */
+.Scheme__lines--horizontal:before {
+	content: '';
+	display: block;
+	border-top: 1px solid #777;
+	position: absolute;
+	width: 20px;
+	top: 50%;
+	right: 100%;
+}
+
+/* К дочерним справа */
+.Scheme__box--hasChildrenRight .Scheme__lines--horizontal:after {
+	content: '';
+	display: block;
+	border-top: 1px solid #ccc;
+	position: absolute;
+	width: 100%;
+	top: 50%;
+	left: 0;
+}
+
+/* К предыдущему */
+.Scheme__lines--siblings:before {
+	content: '';
+	position: absolute;
+	left: -20px;
+	bottom: 50%;
+	height: 50%;
+	border-left: 1px solid #777;
+}
+
+/* К следующему */
+.Scheme__lines--siblings:after {
+	content: '';
+	position: absolute;
+	left: -20px;
+	top: 50%;
+	height: 50%;
+	border-left: 1px solid #777;
+}
+
+/* К дочерним */
+.Scheme__lines--toChildren:after {
+	content: '';
+	height: 50%;
+	position: absolute;
+	top: 50%;
+	left: 85px;
+	border-left: 1px solid #777;
+}
+
+.Scheme__lines--relation {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.Scheme__node--related ~ .Scheme__lines--relation {
+	background-image: linear-gradient(#ccc, #ccc);
+	background-size: 100% 1px;
+	background-repeat: no-repeat;
+	background-position: 0 calc(50% + .5px);
+}
+
+.Scheme__lines--relation {
+	&:before,
+	&:after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: calc(190px + (105px * var(--scheme-remote-level, 0)));
+		height: 50%;
+		border-left: 1px solid #777;
+	}
+
+	&:after {
+		top: 50%;
+	}
+}
+
+.Scheme__lines--ancestor {
+	&:before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: calc(105px * var(--scheme-ancestor-level) + 85px);
+		height: 100%;
+		border-left: 1px solid #777;
+	}
+}
+
+.Scheme__lines--remoteRelation {
+	&:before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: calc(105px * var(--scheme-remote-level) + 85px);
+		height: 100%;
+		border-left: 1px solid #ccc;
+	}
+}
+
+.Scheme__lines--remoteRelationEnd {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 170px;
+	width: calc((105px * var(--scheme-remote-level) + 85px) - 170px - 104px);
+	height: 50%;
+
+	&:before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 50%;
+		border-top: 1px solid #ccc;
+	}
+
+	&:after {
+		content: '';
+		position: absolute;
+		top: 0;
+		right: 0;
+		height: 100%;
+		border-right: 1px solid #ccc;
+	}
+}
+
+.Scheme__box--right {
+	:after,
+	:before {
+		border-color: #ccc;
+	}
+}
+
+/* Лишнее не показываем */
+.Scheme__node--root ~ .Scheme__lines--horizontal:before,
+.Scheme__node--first ~ .Scheme__lines--siblings:before,
+.Scheme__node--last ~ .Scheme__lines--siblings:after,
+.Scheme__row--startRelation .Scheme__lines--relation:before,
+.Scheme__row--endRelation .Scheme__lines--relation:after {/**/
+	content: none;
+}

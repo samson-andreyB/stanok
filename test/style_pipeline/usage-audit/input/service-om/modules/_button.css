@@ -1,0 +1,28 @@
+.Button {
+	box-sizing: border-box;
+	display: inline-block;
+	vertical-align: middle;
+	padding: 10px 25px 10px;
+	border: 1px solid $colorActive;
+	border-radius: 4px;
+	font: inherit;
+	background-color: $colorActive;
+	color: $colorActiveContrast;
+	cursor: pointer;
+	outline: none;
+
+	&:hover,
+	&:focus {
+		color: $colorActiveContrast;
+		background-color: $colorActiveHover;
+		border-color: $colorActiveHover;
+		text-decoration: none;
+	}
+
+	&:active {
+		color: $colorActiveContrast;
+		background-color: $colorActiveActive;
+		border-color: $colorActiveActive;
+		text-decoration: none;
+	}
+}

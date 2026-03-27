@@ -1,0 +1,53 @@
+.Orders {
+	.filters--ordersCompletedItem .filter--status {
+		.filter__data {
+			overflow: visible;
+		}
+
+		.BubbleSelect {
+			margin-top: 3px;
+			font-weight: normal;
+		}
+	}
+}
+
+.BubbleSelect--ordersCompleted {
+	.Bubble__trigger {
+		position: relative;
+		width: 105px;
+	}
+
+	.BadgeStatus.Bubble__trigger {
+		position: relative;
+		min-width: 52px;
+		box-sizing: border-box;
+
+		&:after {
+			position: absolute;
+			left: auto;
+			right: 15px;
+			top: 50%;
+			margin-top: -1px;
+		}
+	}
+
+	.Spinner {
+		display: none;
+		border-left-color: $main;
+		border-top-color: $main;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		margin-top: -.6em;
+		margin-left: -.6em;
+	}
+
+	&.BubbleSelect--loading {
+		.Bubble__trigger:after {
+			content: none;
+		}
+		.Spinner {
+			display: block;
+		}
+	}
+}

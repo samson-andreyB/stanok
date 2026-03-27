@@ -1,0 +1,117 @@
+/* перенести в файл с подключением плагинов */
+
+#fancybox-close {
+	@mixin OtherIcon cross_12x12, $infoColor;
+	background-color: #fff;
+	background-position: center;
+	background-repeat: no-repeat;
+	border: 7px solid #fff;
+	line-height: 12px;
+	right: 0;
+	top: 0;
+	margin: 0 0 -26px;
+
+	&:before {
+		content: none;
+	}
+
+	.Page--oz & {
+		color: inherit;
+	}
+
+	&.noBG {
+		background-color: transparent;
+		border-color: transparent;
+	}
+
+	&:hover {
+		background-color: $theme_color_6;
+		border-color: $theme_color_6;
+		background-image: svg('cross_12x12', '[color]: #fff');
+	}
+}
+
+#fancybox-overlay {
+	z-index: 10000;
+}
+
+#fancybox-wrap {
+	z-index: 10001;
+}
+
+
+/* настройки джкуери уйя */
+
+.ui-autocomplete {
+	@mixin List--basic;
+
+	position: absolute;
+	z-index: 1111;
+	border-radius: 0;
+	background: #fff;
+}
+.ui-widget {
+	font-family: inherit;
+	font-size: 1.1em;
+}
+.ui-menu {
+	@mixin List--basic;
+	background: #fff;
+	border-radius: 0;
+}
+.ui-widget-content {
+	border-color: $theme_color_6;
+	box-shadow: 0 5px 7px rgba(0,0,0,.15);
+}
+.ui-menu-item {
+	@mixin List__item--basic;
+}
+.ui-menu .ui-menu-item-wrapper {
+	padding: 2px .4em;
+	line-height: 1.5;
+	font-weight: normal;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.ui-widget-content .ui-menu-item {
+	color: #222;
+}
+.ui-menu .ui-state-active,
+.ui-menu .ui-state-hover,
+.ui-menu .ui-state-focus {
+	background: $theme_color_6;
+	border: 0;
+	color: #fff;
+}
+
+
+.Form__field--daData {
+	.suggestions-suggestions {
+		border-color: #ffcc50;
+		border-top-color: #eee;
+		padding: 5px 6px;
+		cursor: pointer;
+		font-size: 14px;
+	}
+
+	.suggestions-suggestions strong {
+		color: #098fd8;
+	}
+
+	.suggestions-constraints li {
+		padding: 0;
+	}
+
+	.suggestions-suggestion:hover {
+		background: #f7f7f7;
+	}
+
+	.suggestions-subtext {
+		color: #878787;
+		font-size: 11px;
+	}
+
+	.suggestions-promo {
+		display: none !important;
+	}
+}

@@ -1,0 +1,80 @@
+@import 'modules/_page';
+@import 'modules/_btn';
+
+.Page__footer {
+	clear: left;
+}
+
+
+.Footer--default {
+	position: relative;
+	padding: 20px 30px;
+	font-size: 14px;
+	line-height: 25px;
+	color: #666;
+	background-color: #eee;
+	text-size-adjust: none;
+
+	&:before { /* Rounded top */
+		content: '';
+		position: absolute;
+		bottom: 100%;
+		left: 0;
+		width: 100%;
+		height: $B_RAD;
+		border-radius: $B_RAD $B_RAD 0 0;
+		background-color: inherit;
+	}
+
+	.Footer__link {
+		color: inherit;
+
+		&:hover {
+			color: #111;
+		}
+	}
+
+	.Footer__links--documents {
+		.Footer__link + .Footer__link {
+			margin-left: 15px;
+		}
+	}
+
+	.Footer__copyright {
+		color: #111;
+	}
+
+	.Footer__row {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.Footer__row + .Footer__row {
+		margin-top: 20px;
+	}
+}
+
+
+.FooterReport--default {
+	.FooterReport__title {
+		color: #111;
+	}
+
+	.FooterReport__message {
+		color: #777;
+	}
+
+	.FooterReport__item + .FooterReport__item {
+		margin-top: 15px;
+	}
+
+	.FooterReport__button {
+		@mixin Btn--gray;
+	}
+}
+
+@media screen and (max-width: 1100px) {
+	.Footer__list + .Footer__list {
+		margin-left: 10px;
+	}
+}

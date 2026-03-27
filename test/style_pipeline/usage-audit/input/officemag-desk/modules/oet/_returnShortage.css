@@ -1,0 +1,67 @@
+.ReturnShortage--default {
+	.filter {
+		.RichSelect {
+			width: 100%;
+		}
+
+		&--shop,
+		&--status {
+			width: 150px;
+		}
+
+		&--search {
+			width: 250px;
+		}
+	}
+
+	.controlPanel {
+		& + .contentWrapper.accent {
+			margin-top: 3px;
+		}
+	}
+
+	.Box--right {
+		.btn + .btn {
+			margin-left: 8px;
+		}
+	}
+
+	.contentWrapper {
+		&.accent {
+			padding-top: 20px;
+			padding-bottom: 15px;
+		}
+
+		&--invoiceScan {
+			padding-top: 25px;
+		}
+
+		&--comment {
+			padding-bottom: 20px;
+		}
+
+		&.contentWrapper--header + .Form {
+			.Items__caption {
+				margin-top: 5px;
+			}
+		}
+	}
+
+	.Form {
+		&__title {
+			font-weight: bold;
+			color: #000;
+		}
+
+		.Form__field--comment {
+			width: 600px;
+		}
+	}
+
+	.Specs {
+		&__content {
+			display: block;
+			margin-top: 6px;
+		}
+	}
+}

@@ -1,0 +1,142 @@
+.Page--changeRequestCard {
+
+	.contentWrapper {
+		&--potentialClients,
+		&--info,
+		&--clientDetails,
+		&--files {
+			padding: 20px;
+		}
+
+		&--clientDetails {
+			.Specs {
+				break-inside: avoid-column;
+			}
+		}
+
+		&__header {
+			margin-top: 0;
+			margin-bottom: 15px;
+			font-size: 15px;
+			font-weight: normal;
+			color: #656565;
+		}
+	}
+
+	.contentWrapper--potentialClients + .Spoiler--changesList {
+		margin-top: -20px;
+	}
+
+	.contentWrapper--info .Specs{
+		display: block;
+	}
+
+	.accent + .accent {
+		margin-top: 3px;
+	}
+
+	.Specs + .Specs {
+		margin-top: 35px;
+	}
+
+	.contentWrapper--clientDetails .Specs + .Specs {
+		margin-top: 0;
+	}
+
+	.Specs__item {
+		break-inside: avoid-column;
+	}
+
+	.Specs--area {
+		.Specs__title {
+			font-size: 15px;
+			font-weight: normal;
+			color: #656565;
+		}
+	}
+}
+
+
+.filters--changeRequests {
+	&.contentWrapper {
+		padding-right: 0;
+	}
+
+	.filter {
+		&--period,
+		&--department {
+			white-space: nowrap;
+		}
+
+		&--search {
+			width: 310px;
+		}
+
+		&--status {
+			width: 145px;
+		}
+
+		&--status,
+		&--search {
+			.filter__field {
+				width: 100%;
+			}
+		}
+
+		&--author {
+			width: 175px;
+
+			.RichSelect {
+				max-width: 175px;
+			}
+		}
+
+		&--usersGroup {
+			.RichSelect {
+				width: 125px;
+			}
+		}
+
+		&--source {
+			.RichSelect {
+				width: 120px;
+			}
+		}
+
+		&--typeRequest {
+			.RichSelect {
+				width: 165px;
+			}
+		}
+	}
+}
+
+
+.Items--changeRequests {
+	.Item__box {
+		vertical-align: top;
+
+		&--date {
+			width: 1px;
+		}
+
+		&--status {
+			white-space: nowrap;
+		}
+	}
+}
+
+.Specs__item--changeRequestCard {
+	margin-y: -11px 9px;
+
+	.pseudoLink {
+		font-size: 11px;
+		color: #999;
+		cursor: help;
+		font-weight: bold;
+
+		&:hover {
+			color: $linkHover;
+		}
+	}
+}

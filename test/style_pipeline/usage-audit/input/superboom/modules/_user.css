@@ -1,0 +1,148 @@
+.User {
+	display: inline-block;
+	position: relative;
+	vertical-align: top;
+
+	&__trigger {
+		@mixin headerWidget logIn_icon_20x20;
+
+		cursor: pointer;
+
+		@media screen and (max-width: 1170px) {
+			font-size: 0;
+		}
+	}
+
+	&__group {
+		display: none;
+		position: absolute;
+		top: 100%;
+		right: 50%;
+		margin-top: 13px;
+		box-sizing: border-box;
+		border-radius: 8px;
+		text-align: left;
+		background-color: #fff;
+		box-shadow: 0 0 20px rgba(0, 0, 0, .2);
+
+		&:before,
+		&:after {
+			content: "";
+			display: block;
+			position: absolute;
+			left: 50%;
+		}
+
+		&:before {
+			top: -20px;
+			margin-left: 77px;
+			border: 10px solid transparent;
+			border-bottom: 10px solid #e5e0dd;
+		}
+
+		&:after {
+			top: -16px;
+			margin-left: 79px;
+			border: 8px solid transparent;
+			border-bottom: 8px solid #fff;
+		}
+
+		&--active {
+			display: flex;
+		}
+	}
+
+	&__box {
+		padding: 20px 19px;
+		box-sizing: border-box;
+		vertical-align: top;
+	}
+
+	&__group--basic {
+		width: 265px;
+		margin-right: -133px;
+
+		&:before {
+			margin-left: -11px;
+		}
+
+		&:after {
+			margin-left: -9px;
+		}
+
+		@media screen and (max-width: 1490px) {
+			margin-right: -123px;
+
+			&:before {
+				margin-left: 0;
+			}
+
+			&:after {
+				margin-left: 2px;
+			}
+		}
+	}
+
+	&__group--basic &__box {
+		display: block;
+		white-space: normal;
+		border-radius: 8px;
+	}
+}
+
+.User__box {
+	&--scroll {
+		@mixin customScrollbar;
+		overflow-y: scroll;
+	}
+}
+
+
+
+.UserInfo {
+	position: relative;
+	background-color: #fff;
+	line-height: 1.4;
+
+	&__list {
+
+		.UserInfo__name + & {
+			padding-top: 12px;
+		}
+
+		& + & {
+			padding-top: 13px;
+			margin-top: 12px;
+			border-top: 1px solid $GREY_3;
+		}
+	}
+
+	&__item {
+		& + & {
+			padding-top: 11px;
+		}
+	}
+
+	&__link {
+		color: $BRAND_BLACK;
+		padding-y: .2em;
+	}
+
+	&__name {
+		display: inline-block;
+		width: 229px;
+		white-space: normal;
+		word-wrap: break-word;
+		font-weight: bold;
+		font-size: 14px;
+		color: $BRAND_BLACK;
+	}
+
+	.Badge--counter {
+		margin-left: 3px;
+	}
+
+	.Icon--feedback {
+		margin-left: 3px;
+	}
+}

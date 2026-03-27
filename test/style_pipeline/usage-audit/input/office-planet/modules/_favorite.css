@@ -1,0 +1,40 @@
+.Favorite--default {
+	@mixin a;
+	@mixin noUserSelect;
+
+	display: inline-flex;
+	align-items: baseline;
+	cursor: pointer;
+
+	&.Favorite--active {
+		.Favorite__icon {
+			background-image: svg('favoriteFill', '[color]: $theme_brand');
+
+			@if $theme_name == 'op' {
+				background-image: svg('favoriteFill', '[color]: $theme_accent');
+			}
+		}
+	}
+
+	&.Favorite--unauth {
+		cursor: help;
+	}
+
+	&:hover {
+		.Favorite__icon {
+			opacity: .75;
+		}
+	}
+
+	.Favorite__icon {
+		@extend .Icon;
+		@mixin OtherIcon favoriteOutline, #6c6c6c;
+
+		margin-top: 0;
+		align-self: center;
+	}
+
+	.Favorite__text {
+		margin-left: 5px;
+	}
+}

@@ -1,0 +1,184 @@
+.HolidayDecorations--list {
+	.filter {
+		&--search {
+			width: 260px;
+		}
+
+		&--status {
+			width: 160px;
+		}
+	}
+}
+
+.HolidayDecorations--completed {
+	.contentWrapper + .controlPanel {
+		margin-top: 3px;
+	}
+}
+
+
+.Form--holidayDecorations {
+	.Form__set {
+		box-sizing: border-box;
+		width: 100%;
+	}
+
+	.Form__set + .Form__set {
+		margin-top: 20px;
+	}
+
+	.Form__set + .Form__error {
+		margin-top: 15px;
+		margin-bottom: 10px;
+	}
+
+	.Form__header {
+		border-bottom-width: 0;
+		margin-bottom: 0;
+		padding-bottom: 0;
+	}
+
+	.Form__title {
+		margin-top: 0;
+		color: #111;
+	}
+
+	.Form__title + .Form__group {
+		margin-top: 5px;
+	}
+
+	.Form__aux,
+	.Form__hint {
+		color: #999;
+	}
+
+	.Form__header + .Form__aux,
+	.Form__aux + .Form__description {
+		margin-top: 5px;
+	}
+
+	.Form__field.inputFull {
+		.Form__input--name {
+			width: 470px;
+		}
+
+		.Form__input--offsetTop {
+			width: 210px;
+		}
+
+		.Form__input--channel {
+			width: 125px;
+		}
+	}
+}
+
+
+.Items--holidayDecorations {
+	.Item {
+		&__box {
+			&--indicator {
+				width: 1%;
+			}
+
+			&--number {
+				width: 75px;
+				padding-left: 0;
+			}
+
+			&--date {
+				width: 125px;
+			}
+
+			&--period {
+				width: 180px;
+			}
+
+			&--status {
+				width: 100px;
+			}
+		}
+
+		.Item__box--name {
+			font-weight: bold;
+		}
+	}
+
+	.BadgeStatus {
+		margin-top: 0;
+		padding: 0;
+
+		&__indicator {
+			margin-top: 0;
+		}
+	}
+}
+
+
+.Items--holidayDecorationsList {
+	.Items__list {
+		margin-top: 0;
+	}
+
+	.Item:first-child {
+		.Item__box {
+			border-top-width: 0;
+		}
+	}
+
+	.Item__box {
+		padding-y: 5px;
+		vertical-align: top;
+
+		&--date {
+			white-space: nowrap;
+		}
+
+		&:first-child {
+			padding-left: 0;
+		}
+
+		&:last-child {
+			padding-right: 0;
+		}
+	}
+}
+
+
+.HolidayDecorationsListTip {
+	max-height: 235px;
+	padding: 0 10px 0;
+	overflow-y: auto;
+}
+
+
+.ImageUploader--holidayDecorations {
+	max-width: 330px;
+	max-height: 80px;
+}
+
+
+.FancyModal--holidayDecorations {
+	.FancyModal__content {
+		line-height: 1.5;
+	}
+}
+
+.FancyModal--holidayDecorationsComplete {
+	width: 540px;
+}
+
+.FancyModal--holidayDecorationsDeactivate {
+	width: 640px;
+}
+
+.FancyModal--holidayDecorationsActivation {
+	width: 620px;
+}
+
+.FancyModal--holidayDecorationsDelete {
+	width: 445px;
+}
+
+.FancyModal--holidayDecorationsSave {
+	width: 450px;
+}

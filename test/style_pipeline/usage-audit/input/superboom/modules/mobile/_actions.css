@@ -1,0 +1,11 @@
+.Actions {
+	&__box {
+		&--filter {
+			width: auto;
+		}
+
+		& + .Actions__box {
+			padding-left: 0;
+		}
+	}
+}

@@ -1,0 +1,25 @@
+$colorBackground: #fff;  /* фон страницы */
+$colorText: #242322;        /* текст */
+
+
+$colorActive: #e82111;      /* активные элементы */
+$colorActiveContrast: #fff; /* контрастирующий с активным */
+$colorActiveHover: #ff2413; /* активный элемент при наведении */
+$colorActiveActive: #bf2d21; /* активный элемент при нажатии */
+$colorLink: #0b86df;        /* ссылки */
+$colorLinkHover: #0094ff;   /* ссылки при наведении */
+$colorError: #e81c30;       /* ошибка */
+
+
+$colorHeader: #e82111;       /* фон шапки */
+$colorHeaderDark: #ff2413;   /* фон второго ряда и активного поиска */
+$colorHeaderText: #fff;   /* текст в шапке */
+
+
+$colorFooter: #474645;       /* фон подвала */
+$colorFooterText: #fff;   /* текст в подвале */
+
+$SPINNER_COLOR: #e82111;
+
+$font: 'Inter', 'Arial', serif;
+$textMargin: 20px;

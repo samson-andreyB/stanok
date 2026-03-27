@@ -1,0 +1,75 @@
+.Legend--default {
+	.Legend__wrapper {
+		width: 450px;
+	}
+
+	.Box {
+		vertical-align: top;
+	}
+}
+
+.Legend--productPrices {
+	display: inline-flex;
+
+	.Legend__item {
+		&--closedChannel,
+		&--priceNotSet {
+			&:before {
+				content: '';
+				display: inline-block;
+				width: 15px;
+				height: 15px;
+				margin-right: .5em;
+				vertical-align: middle;
+			}
+		}
+
+		&--closedChannel {
+			&:before {
+				background-color: #efefef;
+			}
+		}
+
+		&--priceNotSet {
+			&:before {
+				background-color: #fee;
+			}
+		}
+	}
+
+	.Legend__item + .Legend__item {
+		margin-left: 20px;
+	}
+}
+
+.Legend--omrProductPrices {
+	.Legend__item {
+		&--notSaleStore,
+		&--priceNotSet {
+			&:before {
+				content: '';
+				display: inline-block;
+				width: 15px;
+				height: 15px;
+				margin-right: .5em;
+				vertical-align: middle;
+			}
+		}
+
+		&--notSaleStore {
+			&:before {
+				background-color: #efefef;
+			}
+		}
+
+		&--priceNotSet {
+			&:before {
+				background-color: #fee;
+			}
+		}
+	}
+
+	.Legend__item + .Legend__item {
+		margin-top: 10px;
+	}
+}

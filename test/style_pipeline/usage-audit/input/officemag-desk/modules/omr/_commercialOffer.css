@@ -1,0 +1,148 @@
+/* Commercial Offer
+---------------------------------------------------------------------------------------------------*/
+
+.FancyModal--personalManager {
+	width: 520px;
+
+	.FancyModal__content {
+		font-size: 14px;
+	}
+}
+
+.Form--personalManager {
+	.Form__field {
+		margin-left: 0;
+	}
+
+	.Form__input {
+		width: 340px;
+	}
+}
+
+.Field--chooseShop {
+	width: 180px;
+}
+
+.CompetitorDocuments {
+	background-color: #efefef;
+	margin-top: .2em;
+	margin-bottom: 25px;
+
+	&--tipError {
+		font-weight: bold;
+	}
+
+	&__header {
+		margin-y: 0;
+		font-size: 13px;
+		font-weight: bold;
+	}
+
+	&__controls {
+		margin-top: 9px;
+	}
+
+	.Items__list {
+		margin-top: 0;
+	}
+
+	.Item {
+		font-size: 13px;
+		line-height: 15px;
+
+		&__link {
+			padding-y: 2px;
+		}
+	}
+
+	.controlPanel {
+		border-top: 1px solid #dadada;
+	}
+}
+
+.Items--filesList {
+	.Item__box {
+		&--checkbox {
+			width: 1px;
+		}
+
+		&--fileIcon {
+			width: 25px;
+		}
+
+		&--fileName {
+			padding-left: 0;
+		}
+	}
+
+	.Item__link {
+		vertical-align: middle;
+	}
+
+	.File {
+		width: 100%;
+		margin-top: 0;
+		padding: 0;
+		vertical-align: middle;
+
+		&:after {
+			content: none;
+		}
+
+		&:hover {
+			cursor: default;
+		}
+	}
+
+	.File__remove {
+		cursor: pointer;
+		display: inline-block;
+		margin-left: .3em;
+		line-height: 1;
+
+		&:before {
+			content: "";
+			width: 10px;
+			height: 10px;
+			background-position: 50% 50%;
+			background-repeat: no-repeat;
+			display: inline-block;
+			vertical-align: middle;
+			background-image: resolve('icons/cross_9x9_777.png');
+		}
+
+		&:hover:before {
+			background-image: resolve('icons/cross_9x9_e55.png');
+		}
+	}
+
+	&.Items--onlyLinks {
+		.Item__box {
+			border-top-width: 0;
+		}
+	}
+}
+
+.Page--omrCommercialOffer {
+	.CommercialOfferInfo {
+		margin-bottom: 0;
+	}
+
+	.CommercialOfferSummary + .CommercialOfferSummary {
+		margin-top: -1.1em;
+	}
+
+	.CommercialOfferContents .Item__box--count .Item__aux {
+		min-width: 40px;
+		white-space: nowrap;
+	}
+
+	.Field--inn,
+	.Field--kpp {
+		width: 110px;
+	}
+
+	.Group .btn + .btn {
+		margin-left: .5em;
+	}
+}

@@ -1,0 +1,81 @@
+/* BLOCKS - LISTS
+---------------------------------------------------------------------*/
+
+ul.custom {
+	list-style-type: none;
+
+	& > li:before {
+		cursor: default;
+		margin-right: .35em;
+		position: absolute;
+		right: 100%;
+		top: 0;
+	}
+	&.inside > li:before {
+		position: static;
+	}
+
+	&.dashed > li:before {
+		content: '\2014';
+		margin-right: .5em;
+	}
+}
+
+
+
+/*
+<ul class="List">
+	<li class="List__item">Пункт меню, например</li>
+</ul>
+*/
+
+.List {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.List__item {
+	margin: 0;
+	
+	&:before {
+		content: "";
+	}
+}
+
+.List.ib {
+	& .List__item {
+		display: inline-block;
+	}
+}
+
+.ielte7 .List.ib .List__item {
+	display: inline;
+	zoom: 1;
+}
+
+.List.ib.separated {
+	cursor: default;
+}
+.List.ib.separated .List__item:after {
+	content: "|";
+	margin-left: .55em;
+	margin-right: .55em;
+	opacity: .75;
+}
+.List.ib.separated .List__item.last:after {
+	content: none;
+}
+
+.List.ib.justify {
+	text-align: justify;
+}
+.List.ib.justify .List__item {
+	text-align: left;
+}
+.List.ib.justify:after {
+	content: "";
+	display: inline-block;
+	height: 1px;
+	width: 100%;
+}

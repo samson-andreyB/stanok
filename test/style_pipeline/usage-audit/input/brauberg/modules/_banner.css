@@ -1,0 +1,84 @@
+.Banner {
+	max-width: 930px;
+	position: relative;
+	overflow: hidden;
+}
+
+.Slides {
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+}
+
+@keyframes fade {
+	from { opacity: .4 }
+	to { opacity: 1 }
+}
+
+.Slide {
+	display: none;
+	position: relative;
+	margin: 0;
+	width: 100%;
+	padding-top: 35.48387096774194%;
+	text-align: center;
+	animation-name: fade;
+	animation-duration: 1s;
+
+	&--active {
+		display: block;
+	}
+
+	&__img {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+	}
+}
+
+.Controls {
+	padding: 0;
+	margin: 0;
+	position: absolute;
+	bottom: 15px;
+	left: 25px;
+}
+
+.Control {
+	display: inline-block;
+	vertical-align: middle;
+	padding: 5px;
+	margin-top: 0;
+	line-height: 0;
+
+	&:before {
+		content: '';
+		display: inline-block;
+		vertical-align: middle;
+		width: 14px;
+		height: 14px;
+		border-radius: 50%;
+		text-align: center;
+		background-color: #727577;
+		box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, .25);
+	}
+
+	&:hover {
+		cursor: pointer;
+
+		&:before {
+			background-color: #c2c5c8;
+		}
+	}
+
+	&--active {
+		cursor: default;
+		pointer-events: none;
+
+		&:before {
+			background-color: #fff;
+		}
+	}
+}

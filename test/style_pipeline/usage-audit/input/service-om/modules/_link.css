@@ -1,0 +1,62 @@
+.Link {
+	padding: 0;
+	border: 0;
+	font: inherit;
+	line-height: 180%;
+	text-decoration: none;
+	color: $colorLink;
+	background: transparent;
+	cursor: pointer;
+
+	&:hover,
+	&:focus,
+	&:active {
+		outline: none;
+	}
+
+	&:hover,
+	&:focus {
+		text-decoration: underline;
+		color: $colorLinkHover;
+	}
+
+	&--dashed {
+		.Link__text {
+			border-bottom: 1px dashed;
+		}
+
+		&:hover,
+		&:focus {
+			text-decoration: none;
+		}
+	}
+
+	&--arrowRight {
+		position: relative;
+		padding-right: 15px;
+
+		&:after {
+			content: '';
+			position: absolute;
+			top: 50%;
+			right: 0;
+			width: width('arrow_10x5.svg');
+			height: height('arrow_10x5.svg');
+			margin-top: -2px;
+			background-image: svg('arrow_10x5.svg', '[color]: $colorLink');
+			transition: .3s;
+		}
+
+		&:hover {
+			&:after {
+				background-image: svg('arrow_10x5.svg', '[color]: $colorLinkHover');
+			}
+		}
+
+		&.active {
+			&:after {
+				transform: rotate(180deg);
+			}
+		}
+	}
+}

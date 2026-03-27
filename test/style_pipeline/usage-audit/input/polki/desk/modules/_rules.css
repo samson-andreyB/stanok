@@ -1,0 +1,24 @@
+.Rules--default {
+	.Rules__header {
+		margin-bottom: .3em;
+		font-weight: bold;
+	}
+
+	.Rules__paragraph {
+		.btnInfo {
+			position: absolute;
+		}
+	}
+
+	.Rules__paragraph + .Rules__paragraph {
+		margin-top: .2em;
+	}
+
+	.Rules__disclaimer {
+		margin-top: .5em;
+	}
+
+	.Rules__hint {
+		color: #666;
+	}
+}

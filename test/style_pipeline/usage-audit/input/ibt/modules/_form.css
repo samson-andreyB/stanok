@@ -1,0 +1,38 @@
+.Form--selectFiles {
+	width: 775px;
+
+	.Form__set {
+		width: auto;
+
+		&--submit {
+			margin-top: 10px;
+
+			& + .StatusMessagesWrapper {
+				margin-top: 10px;
+			}
+		}
+	}
+
+	.Form__field {
+		.Form__input {
+			width: 385px;
+		}
+	}
+
+	.controlPanel--uploadBox {
+		margin-top: 20px;
+
+		.controlPanel__header {
+			font-size: 13px;
+			margin-bottom: 10px;
+		}
+
+		.controlPanel__info {
+			color: #999;
+		}
+	}
+
+	.TabContent & {
+		margin-top: 20px;
+	}
+}

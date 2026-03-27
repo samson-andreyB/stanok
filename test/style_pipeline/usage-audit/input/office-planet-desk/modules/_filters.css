@@ -1,0 +1,93 @@
+.filters {
+	.filter {
+		&--btnContainer {
+			display: block;
+			margin-top: 20px;
+
+			button + button {
+				margin-left: 10px;
+			}
+		}
+
+		&--dealer {
+			max-width: none;
+
+			.Autocomplete {
+				display: inline-block;
+				width: 200px;
+			}
+
+			.btn {
+				top: -1px;
+				margin-left: 7px;
+			}
+		}
+	}
+
+	&--defined {
+		.filter {
+			margin-right: 35px;
+
+			&__link {
+				font-size: 13px;
+				font-weight: bold;
+			}
+
+			&__data {
+				top: -1px;
+				position: relative;
+				padding-top: 1px;
+
+				.SiteIcon {
+					top: -1px;
+					float: left;
+					margin-right: 5px;
+				}
+			}
+		}
+	}
+
+	&--dksDealerMonitoring {
+		.filter {
+			&--site,
+			&--site .RichSelect {
+				width: 150px;
+			}
+
+			&--domainName {
+				width: 200px;
+			}
+		}
+	}
+
+	&--orders {
+		padding: 0;
+		line-height: 18px;
+
+		.filter {
+			margin-right: 16px;
+			min-height: 30px;
+
+			&--operatorCall {
+				vertical-align: bottom;
+				line-height: 30px;
+			}
+		}
+
+		.filter__field {
+			min-width: 150px;
+			box-sizing: border-box;
+			height: 30px;
+
+			&--email {
+				width: 210px;
+			}
+		}
+	}
+
+	&--mailingList {
+		.filter--search {
+			width: 340px;
+		}
+	}
+}

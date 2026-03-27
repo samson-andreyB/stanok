@@ -1,0 +1,55 @@
+/* Shops list
+------------------------------------------------------------------------------*/
+
+.Items--shops {
+	.Item__box--matrix {
+		text-align: right;
+	}
+
+	.Item__box--name {
+		width: 120px;
+	}
+}
+
+
+.FancyModal--afterShop {
+	background-color: #fff;
+	width: 570px;
+	
+	.FancyModal__header,
+	.FancyModal__control {
+		text-align: center;
+	}
+
+	.Specs--divided {
+		margin-bottom: -.5em;
+		padding-top: 1.5em;
+	}
+}
+
+.FancyModal--addCity {
+	background-color: #fff;
+	width: 370px;
+	
+	.Form__label {
+		font-size: 14px;
+		font-weight: bold;
+	}
+	.Form__set {
+		width: 100%;
+	}
+}
+
+.filters--omrShopList {
+	.filter--city {
+		width: 180px;
+
+		.RichSelect {
+			width: 100%;
+		}
+	}
+
+	.filter--number {
+		width: 180px;
+	}
+}

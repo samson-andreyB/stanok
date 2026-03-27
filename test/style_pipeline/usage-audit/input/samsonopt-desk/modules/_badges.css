@@ -1,0 +1,23 @@
+.Badge {
+	@mixin BadgeOutlineType Badge--violet, #b75dde;
+	@mixin BadgeOutlineType Badge--orange, #f78040;
+	@mixin BadgeOutlineType Badge--olive, #6c8a42;
+	@mixin BadgeOutlineType Badge--green, #6fca3e;
+	@mixin BadgeOutlineType Badge--red, #ed3030;
+	@mixin BadgeOutlineType Badge--brown, #c4a360;
+	@mixin BadgeOutlineType Badge--gray, #999;
+	@mixin BadgeOutlineType Badge--blue, #309ac7;
+	@mixin BadgeOutlineType Badge--purple, #6365e0;
+}
+
+.Badge--tip {
+	cursor: help;
+}
+
+.BadgeOutline--gifts {
+	margin-top: 3px;
+	font-size: 10px;
+	background-color: $error;
+	border-color: $error;
+	color: #fff;
+}

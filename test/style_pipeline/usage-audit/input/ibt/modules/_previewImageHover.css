@@ -1,0 +1,15 @@
+.PreviewImageHover {
+	position: absolute;
+	z-index: 100;
+	display: none;
+	border-radius: 5px;
+	width: 258px;
+	overflow: hidden;
+	background-color: #fff;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, .2);
+
+	&__image {
+		width: 100%;
+		height: auto;
+	}
+}

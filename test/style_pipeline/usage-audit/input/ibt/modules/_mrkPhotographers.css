@@ -1,0 +1,96 @@
+.Page--mrkResponsiblePhotographers {
+	.Filter2 {
+		&--bkg {
+			width: 260px;
+		}
+
+		&--responsiblePhotographers {
+			width: 190px;
+		}
+	}
+
+	.Items--mrkResponsiblePhotographers {
+		margin-bottom: 3px;
+
+		& + .ControlPanel {
+			border-top-width: 0;
+		}
+	}
+
+	.Item {
+		cursor: pointer;
+
+		&--selected {
+			background-color: #fff2d9;
+		}
+
+		&:hover {
+			background-color: #e9f8f3;
+		}
+	}
+
+	.Item__box {
+		&--red {
+			color: #e35959;
+		}
+
+		&--checkbox {
+			width: 1%;
+
+			input {
+				pointer-events: none;
+			}
+		}
+		&--bkgCode {
+			width: 7%;
+		}
+		&--bkgName {
+			width: 32%;
+		}
+		&--count {
+			width: 20%;
+		}
+		&--photographerName {
+			width: 40%;
+		}
+	}
+
+	.controlPanel--photographers {
+		border-top: 1px solid #dadada;
+		position: sticky;
+		bottom: 0;
+		display: none;
+
+		.filter__label {
+			margin-right: 15px;
+		}
+
+		.filter__count {
+			
+		}
+		
+		.filter__checkbox {
+			margin-right: 8px;
+		}
+
+		.filter__select {
+			margin-right: 15px;
+			width: 190px;
+		}
+	}
+
+	.TipTip__selectedPhotographers {
+		padding: 5px 4px;
+	}
+
+	.filter__pseudoCheckbox {
+		position: absolute;
+		left: -3px;
+		width: 20px;
+		height: 20px;
+		top: 50%;
+		margin-top: -10px;
+		display: block;
+		cursor: pointer;
+	}
+}

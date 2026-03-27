@@ -1,0 +1,358 @@
+.Viewer__object,
+.View__target {
+	display: none !important;
+}
+
+.itemInfoPhotos {
+	order: -1;
+	margin-bottom: 10px;
+
+	.main {
+		width: 280px;
+		height: 280px;
+		margin-bottom: 16px;
+		margin-x: auto;
+
+		&:before {
+			display: none;
+		}
+
+		@media (min-width: 649px) {
+			width: 380px;
+			height: 380px;
+			margin-x: 0;
+		}
+
+		img {
+			width: 100%;
+			height: auto;
+		}
+	}
+
+	.itemPhotoAttention {
+		margin-top: 0;
+		margin-bottom: 16px;
+	}
+
+	.ProductPhotoThumbs {
+		overflow-x: auto;
+		overflow-y: hidden;
+		white-space: nowrap;
+		margin: 0 -20px;
+		padding-x: 20px;
+		padding-bottom: 10px;
+
+		.ProductPhotoThumb {
+			margin: 0;
+			padding-left: 0;
+
+			& + .ProductPhotoThumb {
+				margin-left: 8px;
+			}
+		}
+	}
+}
+
+.RubricDescription {
+	display: block;
+
+	.Rubric__box--photoWide {
+		.ProductPhotoThumbs {
+			overflow-x: auto;
+			overflow-y: hidden;
+			white-space: nowrap;
+			padding-x: 20px;
+			margin: 16px -20px 0;
+
+			.ProductPhotoThumb {
+				margin: 0;
+
+				& + .ProductPhotoThumb {
+					margin-left: 8px;
+				}
+			}
+		}
+	}
+}
+
+.itemInfoDetails {
+	margin-bottom: 30px;
+
+	.order {
+		&__wrapper {
+			padding:10px 0;
+			border: 0;
+		}
+
+		.buyWrapper {
+			margin-bottom: 10px;
+		}
+
+		.basket {
+			display: none;
+		}
+
+		.ProductSpecial {
+			display: inline-block;
+			margin-x: 0;
+
+			&__content {
+				width: auto;
+				margin-bottom: 0;
+			}
+
+			&__box {
+				padding: 4px 12px;
+			}
+		}
+
+		.itemInteract {
+			display: none;
+		}
+	}
+
+	.info {
+		.specialBar {
+			&__modifiers,
+			.ProductBrand {
+				&:not(:first-child) {
+					margin-top: 15px;
+				}
+			}
+
+			.Modifiers {
+				&__items {
+					overflow-x: auto;
+					overflow-y: hidden;
+					white-space: nowrap;
+					padding-x: 20px;
+					margin-x: -20px;
+					padding-bottom: 10px;
+				}
+
+				&__item:last-child {
+					margin-right: 0;
+				}
+
+				& + .Modifiers {
+					margin-top: 5px;
+				}
+			}
+		}
+
+		.itemInfoLinks {
+			display: none;
+		}
+
+		.itemInfoDetailsActions {
+			.actionsPreviewItem {
+				&__hint {
+					font-size: 12px;
+				}
+
+				.lifetime {
+					font-size: 12px;
+				}
+
+				.preview {
+					@media (max-width: 639px) {
+						float: none;
+						width: 100%;
+						max-width: 125px;
+						margin-right: 0;
+					}
+				}
+
+				.actionName,
+				.description,
+				.actionExplanation,
+				.lifetime {
+					margin-left: 0;
+				}
+			}
+		}
+	}
+
+	.attentionPlate {
+		margin-x: -$PAGE_WRAPPER_PADDING_MOBILE;
+		padding-x: $PAGE_WRAPPER_PADDING_MOBILE;
+	}
+
+	.Notify--accent.Notify--accent {
+		padding-x: $PAGE_WRAPPER_PADDING_MOBILE;
+	}
+}
+
+.itemInfo {
+	display: flex;
+	flex-direction: column;
+
+	.ProductHead {
+		margin-bottom: 10px;
+
+		&__name {
+			font-size: 18px;
+		}
+
+		&__promoIconWrapper {
+			margin-bottom: 10px;
+		}
+
+		&__infoItem {
+			&--mobileHidden {
+				display: none;
+			}
+		}
+	}
+}
+
+.itemInfo .tabsList {
+	display: none;
+}
+
+.itemInfo .tabsContent {
+	padding: 0;
+	border: 0;
+
+	&__item {
+		display: block !important;
+
+		& + .tabsContent__item {
+			margin-top: 16px;
+		}
+	}
+
+	.delivery {
+		.Availability__aux:first-child {
+			margin-top: 0;
+		}
+	}
+
+	.infoFeatures {
+		display: block;
+		width: 100%;
+		margin-bottom: 17px;
+		padding-right: 0;
+	}
+
+	.reviews {
+		& .Form__head,
+		& .ReviewInfo,
+		& .ReviewError {
+			padding-x: 0;
+		}
+
+		.Reviews {
+			margin-x: -$PAGE_WRAPPER_PADDING_MOBILE;
+			padding-x: $PAGE_WRAPPER_PADDING_MOBILE;
+
+			.Form {
+				width: calc(100% + 40px);
+				margin-x: -$PAGE_WRAPPER_PADDING_MOBILE;
+
+				.Form__set {
+					padding-x: $PAGE_WRAPPER_PADDING_MOBILE;
+
+					&.accent {
+						padding-y: 24px;
+					}
+
+					&.last {
+						padding-y: 12px;
+						border-radius: 0;
+					}
+				}
+			}
+
+			.ReviewData .ReviewInfo {
+				padding-x: 0;
+			}
+
+			.ToolBar {
+				margin-x: -$PAGE_WRAPPER_PADDING_MOBILE;
+				padding-x: $PAGE_WRAPPER_PADDING_MOBILE;
+			}
+
+			.ReviewsBox:last-child {
+				padding-bottom: 0;
+			}
+
+			.ReviewInfo, .ReviewError {
+				font-size: 14px;
+			}
+		}
+	}
+
+	.serviceInformation {
+		.serviceInformation__group {
+			display: block;
+			width: 100%;
+
+			& + .serviceInformation__group {
+				padding-left: 0;
+				margin-top: 10px;
+			}
+		}
+	}
+
+	.critique {
+		.themesList.guide {
+			margin-bottom: 0;
+		}
+
+		.Guides {
+			&__item:last-child {
+				.text {
+					padding-bottom: 0;
+				}
+			}
+
+			p {
+				line-height: 18px;
+			}
+		}
+	}
+
+	.kit {
+		li {
+			position: relative;
+			min-height: 60px;
+
+			.listItemPhoto {
+				position: absolute;
+				top: 10px;
+				left: 0;
+				width: 60px;
+				height: 60px;
+			}
+
+			.listItemInfo {
+				float: none;
+				margin-left: 70px;
+
+				.code {
+					margin-top: 5px;
+				}
+			}
+
+			.listItemAmount {
+				float: none;
+				width: auto;
+				margin-left: 70px;
+				margin-top: 5px;
+			}
+		}
+	}
+
+	.govProcurement {
+		.GovProcurementList--product {
+			margin: 0;
+
+			.GovProcurementList__item:last-child {
+				.Item__box--description {
+					padding-bottom: 0;
+				}
+			}
+		}
+	}
+}

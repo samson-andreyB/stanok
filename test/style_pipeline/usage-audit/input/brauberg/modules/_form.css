@@ -1,0 +1,107 @@
+@define-mixin Field {
+	padding: .4em 12px;
+	width: 470px;
+	line-height: 1.3;
+	height: 30px;
+
+	&:focus {
+		border: 1px solid #ffc300;
+	}
+
+	&--error {
+		border: 1px solid #f2453f;
+	}
+}
+
+.Form {
+	font-size: 15px;
+
+	&__field {
+		& + & {
+			margin-top: 30px;
+		}
+
+		&--indent {
+			padding-left: 18px;
+		}
+
+		&--personalData {
+			width: 470px;
+			margin-left: 150px;
+
+			.Form__error {
+				margin-left: 0;
+			}
+		}
+
+		.Form__label + div {
+			display: inline-block;
+			width: auto;
+			z-index: 1;
+		}
+	}
+
+	&__indent {
+		margin-left: -17px;
+	}
+
+	&__title {
+		display: inline-block;
+		vertical-align: middle;
+		margin-top: -.3em;
+		width: 150px;
+
+		&--required:after {
+			content: '*';
+			color: red;
+			font-size: 12px;
+			position: relative;
+			top: -2px;
+			left: 3px;
+		}
+	}
+
+	&__select {
+		@mixin Field;
+		padding: 0 5px;
+	}
+
+	&__input {
+		@mixin Field;
+		padding: .2em 12px .4em;
+	}
+
+	&__error {
+		color: #f2453f;
+		font-size: 12px;
+		margin: .3em 0 0 150px;
+	}
+
+	.btnSend {
+		margin-left: 150px;
+	}
+}
+
+.FormSuccess {
+	display: none;
+	font-size: 1.15em;
+}
+
+.PersonalData {
+	font-size: 14px;
+	width: 660px;
+
+	&__header {
+		font-size: 24px;
+		font-weight: normal;
+		line-height: 1em;
+		margin-top: 0;
+		margin-bottom: 20px;
+	}
+
+	&__accent {
+		color: #666;
+		font-size: 11px;
+		margin-bottom: 0;
+	}
+}

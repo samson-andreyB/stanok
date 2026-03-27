@@ -1,0 +1,9 @@
+.NavMenu--default .Nav--main {
+	background-color: $navMain;
+}
+
+.ErrorPageStatus2--404 .ErrorPageStatus2__image:after,
+.NavMenu--default .Nav--main .NavList__item--active .NavList__link,
+.NavMenu--default .Nav--sub {
+	background-color: $navSub;
+}

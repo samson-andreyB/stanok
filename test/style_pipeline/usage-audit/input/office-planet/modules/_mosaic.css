@@ -1,0 +1,73 @@
+/* MOSAIC
+---------------------------------------------------------------------*/
+
+/*
+<div class="Mosaic Mosaic--modifier">
+	<div class="Mosaic__container">
+		<div class="Mosaic__item">
+			1
+		</div><div class="Mosaic__item">
+			2
+		</div><div class="Mosaic__item">
+			3
+		</div>
+	</div>
+</div>
+*/
+
+@define-mixin tuneMosaic $columns: 4, $ratio: 0.1, $verticalIndent: 2em {
+
+	$itemIndent: calc(100% * $ratio / $columns);
+	$itemWidth: calc(100% / $columns - $itemIndent);
+
+	.Mosaic__item {
+		width: $itemWidth;
+		margin-left: $itemIndent;
+		margin-top: $verticalIndent;
+	}
+
+	.Mosaic__container {
+		margin-left: calc(100% * $ratio / calc($ratio - $columns) + 0.003%);
+		margin-top: calc(- $verticalIndent);
+	}
+}
+
+.Mosaic {
+	width: 100%;
+	overflow: hidden;
+
+	&__item {
+		display: inline-block;
+		vertical-align: top;
+		box-sizing: border-box;
+	}
+
+	.Product__name {
+		word-break: break-word;
+	}
+
+	@mixin tuneMosaic;
+}
+
+
+.Mosaic--productSetPreviews {
+	margin-top: 15px;
+
+	/* tuneMosaic(6, .15, 10px) */
+	@mixin tuneMosaic 6, 0.15, 10px;
+}
+
+.Mosaic--furnitureList,
+.Mosaic--productSets {
+	margin-top: 1.5em;
+
+	.Mosaic__item {
+		max-width: 240px;
+	}
+
+	@mixin tuneMosaic 4, 0.234, 40px;
+
+	@media(max-width: 1150px) {
+		@mixin tuneMosaic 4, 0.15, 40px;
+	}
+}

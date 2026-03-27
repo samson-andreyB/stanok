@@ -1,0 +1,85 @@
+/* Shop card
+------------------------------------------------------------------------------*/
+
+.Group--entityShop {
+	.EntityPhoto__blank--main {
+		max-width: 100%;
+		height: 93px;
+		line-height: 93px;
+	}
+
+	.Shop__city {
+		& + .pseudoLink {
+			margin-left: 1em;
+		}
+	}
+	.Shop__geoRegion {
+		margin-left: 1.5em;
+	}
+
+	.Stack {
+		.Specs__input {
+			width: 180px;
+		}
+	}
+
+	.PhoneControl {
+		&__item {
+		 	width: auto;
+	 	}
+	}
+
+	.Specs__group--shopGeo {
+		&:after {
+			content: "";
+			display: table-cell;
+			width: 100%;
+		}
+
+		.Specs__box--shopGPS {
+			width: 1px;
+			
+			.Specs__input {
+				width: 115px;
+			}
+		}
+		.Specs__box--shopGPS + .Specs__box--shopGPS {
+			padding-left: 10px;
+		}
+	}
+
+	.Specs__item--files {
+		.Specs__header,
+		.Specs__content {
+			margin: 0;
+		}
+	}
+}
+
+.Upload--shopList {
+	.Upload__btn {
+		background: transparent;
+		color: #16a474;
+		font-size: 13px;
+		padding: 9px 33px 8px;
+	}
+
+	& + .Form__error {
+		font-size: 1em;
+	}
+}
+
+
+.UploadShopPhotos--default {
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	margin-top: -15px;
+
+	.ImageUploader {
+		width: 218px;
+		height: 138px;
+		margin-top: 20px;
+	}
+}

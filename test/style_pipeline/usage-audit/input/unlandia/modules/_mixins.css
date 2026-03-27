@@ -1,0 +1,18 @@
+/* MIXINS
+---------------------------------------------------------------------*/
+
+@define-mixin headerUnlandia {
+	color: $color_main;
+}
+
+@define-mixin iconBefore $name, $color: $violet, $colorHover: $violet_active {
+	&:before {
+		background-image: svg('$name', '[color]: $color');
+	}
+
+	&:hover {
+		&:before {
+			background-image: svg('$name', '[color]: $colorHover');
+		}
+	}
+}

@@ -1,0 +1,125 @@
+.GovProcurement--default {
+	.GovProcurement__title {
+		font-size: 16px;
+	}
+
+	.GovProcurement__title + .GovProcurement__files {
+		margin-top: 3px;
+	}
+
+	.GovProcurement__number + .GovProcurement__files {
+		margin-top: 5px;
+	}
+}
+
+
+.GovProcurementList--default {
+	border: 1px solid #e2ddd9;
+	padding-x: 15px;
+
+	.Items__list {
+		margin-top: 0;
+	}
+
+	.Item:last-child {
+		.Item__box {
+			border-bottom: 0;
+		}
+	}
+
+	.Item__box {
+		&--logo {
+			padding-right: 45px;
+			padding-left: 25px;
+			vertical-align: middle;
+			text-align: center;
+		}
+
+		&--description {
+			width: 100%;
+			padding-y: 35px;
+			vertical-align: top;
+		}
+	}
+}
+
+.GovProcurementList--product {
+	.tabsContent__item & {
+		border-width: 0;
+		margin-x: -13px;
+		margin-y: -12px;
+	}
+
+	.GovProcurement__title {
+		color: #777;
+		font-size: 14px;
+	}
+
+	.GovProcurement__copy {
+		&:before {
+			content: '';
+			display: inline-block;
+			margin-top: -.2em;
+			margin-left: .2em;
+			width: width('copy_10x13.svg');
+			height: height('copy_10x13.svg');
+			vertical-align: middle;
+			background-image: svg('copy_10x13', '[color]: $ACTION_MAIN');
+			background-repeat: no-repeat;
+			background-position: center;
+			cursor: pointer;
+		}
+
+		&:hover:before {
+			background-image: svg('copy_10x13', '[color]: $BRAND__A');
+		}
+	}
+
+	.GovProcurement__item {
+		& + .GovProcurement__item,
+		& + .GovProcurement__files {
+			margin-top: 7px;
+		}
+	}
+
+	.Item__box {
+		&--description {
+			width: 355px;
+			padding-y: 15px;
+			padding-left: 0;
+		}
+
+		&--logo {
+			text-align: left;
+		}
+	}
+}
+
+.GovProcurementList--compact {
+	padding-x: 0;
+	border-width: 0;
+
+	.Items__list {
+		table-layout: fixed;
+	}
+
+	.GovProcurementList {
+		&__item {
+			.Item__box--description {
+				width: 100%;
+				padding-right: 0;
+			}
+
+			&:first-child {
+				.Item__box--description {
+					padding-top: 0;
+				}
+			}
+			&:last-child {
+				.Item__box--description {
+					padding-bottom: 0;
+				}
+			}
+		}
+	}
+}

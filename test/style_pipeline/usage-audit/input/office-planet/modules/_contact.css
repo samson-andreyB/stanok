@@ -1,0 +1,21 @@
+.Contact__info {
+	margin-bottom: 3em;
+}
+
+.Contact__group {
+	display: table;
+	width: 100%;
+	table-layout: fixed;
+}
+
+.Contact__box {
+	display: table-cell;
+	padding-x: 1.5em;
+
+	&:first-child {
+		padding-left: 0;
+	}
+	&:last-child {
+		padding-right: 0;
+	}
+}

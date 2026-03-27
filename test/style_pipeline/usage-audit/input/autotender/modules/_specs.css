@@ -1,0 +1,79 @@
+/* SPECS
+------------------------------------------------------------------------------*/
+.Specs {
+	&--currentBidAdd {
+		margin: 10px 0;
+
+		.Specs__header {
+			font-weight: normal;
+			font-size: 12px;
+		}
+
+		.Specs--files .Specs__item + .Specs__item {
+			padding-top: .75em;
+		}
+
+		.Upload__btn {
+			@mixin btnUploadMain;
+		}
+
+		.Upload__statusSuccess {
+			margin-top: 6px;
+			color: #28BD8B;
+			line-height: 20px;
+
+			&:before {
+				margin-right: 7px;
+			}
+		}
+
+		.Upload__statusError {
+			margin-top: 6px;
+			color: #E45959;
+			line-height: 20px;
+
+			&:before {
+				margin-right: 11px;
+			}
+
+			@mixin hocusac {
+				&:before {
+					background-image: resolve('icons/cross_10x10_e55.png');
+				}
+			}
+		}
+	}
+
+	&--userCard {
+		margin: 8px 0;
+
+		.Specs__item {
+			& + .Specs__item {
+				padding-top: .75em;
+			}
+
+			& + .Form__field {
+				margin-top: .75em;
+			}
+		}
+
+		.Specs__name,
+		.Form__title {
+			font-weight: bold;
+		}
+
+		.Form__field {
+			& + .Specs__item {
+				margin-top: .75em;
+			}
+
+			.Form__input {
+				max-width: 150px;
+			}
+		}
+
+		.Form__title {
+			color: #000;
+		}
+	}
+}

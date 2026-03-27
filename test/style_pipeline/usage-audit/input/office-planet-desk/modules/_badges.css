@@ -1,0 +1,17 @@
+.Badge {
+	&.bonus {
+		color: #9531da;
+	}
+
+	&.mail {
+		color: #6fca3e;
+	}
+
+	&.cpc {
+		color: #309ac7;
+	}
+
+	&.seo {
+		color: #f78040;
+	}
+}

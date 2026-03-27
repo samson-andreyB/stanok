@@ -1,0 +1,226 @@
+.PromoRubricConstructor {
+	.filter {
+		&--search {
+			width: 260px;
+		}
+
+		&--status,
+		&--customerType {
+			width: 170px;
+		}
+	}
+
+	.Items__list {
+		margin-top: 0;
+	}
+}
+
+.Header__button + .Header__button {
+	margin-left: 10px;
+}
+
+.Items--promoRubric {
+	&.Items--sortable {
+		border-top: none;
+
+		.Items__header,
+		.Items__group {
+			display: block;
+		}
+
+		.Item {
+			&:first-child {
+				border-top-width: 1px;
+			}
+
+			&:not(.Item--disabled):hover {
+				background-color: $mainLight;
+			}
+		}
+
+		.Item__box {
+			padding-left: 0;
+		}
+
+		.Item__box--drag {
+			width: 1.5%;
+			padding-left: 20px;
+		}
+
+		.Item__box--status {
+			width: 2.5%;
+			text-align: center;
+
+			.BadgeStatus {
+				padding: 0;
+			}
+
+			.BadgeStatus__indicator {
+				vertical-align: baseline;
+			}
+		}
+
+		.Item__box--name {
+			width: 21%;
+			padding-right: 35px;
+		}
+
+		.Item__box--visibility {
+			width: 39%;
+			padding-right: 35px;
+			vertical-align: top;
+		}
+
+		.Item__box--period {
+			width: 17%;
+			white-space: nowrap;
+		}
+
+		.Item--disabled {
+			cursor: default;
+		}
+	}
+}
+
+.Items--promoRubricConstructor {
+	.Item {
+		&__box {
+			&--name {
+				width: 100%;
+			}
+
+			&--number,
+			&--date,
+			&--period {
+				white-space: nowrap;
+			}
+
+			&--number {
+				padding-right: 20px;
+				padding-left: 5px;
+			}
+
+			&--period {
+				padding-right: 20px;
+			}
+		}
+
+		&__name {
+			font-weight: bold;
+		}
+
+		.Item__box {
+			vertical-align: top;
+		}
+	}
+
+	.BadgeStatus {
+		margin-top: 0;
+		padding: 0;
+
+		&__indicator {
+			margin-top: 0;
+		}
+	}
+}
+
+.Items--promoRubricConstructor,
+.Items--promoRubric {
+	.Spoiler--default {
+		display: flex;
+		flex-direction: column-reverse;
+
+		.Spoiler__header {
+			padding: 0;
+		}
+
+		.Spoiler__label {
+			font-size: 12px;
+			margin-left: 0;
+			margin-top: 2px;
+		}
+
+		.Spoiler__content {
+			padding: 0;
+		}
+	}
+}
+
+.Form--promoRubricConstructor {
+	.Form__field.inputFull {
+		.Form__input--name {
+			width: 230px;
+		}
+
+		.Form__input--link {
+			width: 470px;
+		}
+	}
+
+	.Form__set--customer{
+		.Form__input,
+		.RichSelect {
+			width: 230px;
+		}
+	}
+
+	.Form__indefinitely {
+		display: inline-block;
+		vertical-align: middle;
+		margin-left: 10px;
+		margin-top: 5px;
+	}
+
+	.Form__header {
+		border-bottom-width: 0;
+		margin-bottom: 0;
+		padding-bottom: 0;
+	}
+
+	.Form__title {
+		margin-top: 0;
+	}
+
+	.Form__set {
+		width: 610px;
+	}
+
+	.Form__set + .Form__set {
+		margin-top: 20px;
+	}
+
+	.contentWrapper.accent {
+		padding-y: 15px;
+	}
+
+	.contentWrapper + .controlPanel {
+		margin-top: 3px;
+	}
+}
+
+.FancyModal--promoConstructor {
+	.FancyModal__content {
+		font-size: 13px;
+		line-height: 19px;
+	}
+}
+
+.FancyModal--promoConstructorComplete {
+	width: 540px;
+}
+
+.FancyModal--promoConstructorDeactivate{
+	width: 505px;
+}
+
+.FancyModal--promoConstructorActivation {
+	width: 550px;
+}
+
+.FancyModal--promoConstructorDelete {
+	width: 335px;
+}
+
+.FancyModal--promoConstructorSave {
+	width: 355px;
+}

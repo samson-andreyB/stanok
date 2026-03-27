@@ -1,0 +1,36 @@
+.Items__list--multipleOrders {
+	margin-top: 0;
+
+	.Item__box {
+		&--number {
+			padding-left: 35px;
+			width: 75px;
+		}
+
+		&--date {
+			width: 160px;
+		}
+
+		&--responsible {
+			width: 230px;
+		}
+	}
+}
+
+.TipTipMultipleOrders {
+	&__title {
+		display: block;
+		color: #777;
+		font-size: 11px;
+		line-height: 14px;
+	}
+
+	&__name {
+		display: block;
+		color: #000;
+		font-size: 12px;
+		line-height: 14px;
+		max-width: 120px;
+		margin-top: 2px;
+	}
+}

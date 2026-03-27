@@ -1,0 +1,40 @@
+.OrderStatus--default {
+	display: inline-block;
+
+	.OrderStatus__currentStatus {
+
+		&--new {
+			font-weight: bold;
+		}
+	}
+
+	.OrderStatus__history {
+		display: inline-block;
+		vertical-align: middle;
+		margin-top: -.17em;
+		width: width('icons/history.png');
+		height: height('icons/history.png');
+		background-image: resolve('icons/history.png');
+		cursor: help;
+
+		&--expired {
+			width: width('icons/historyExpired.png');
+			height: height('icons/historyExpired.png');
+			background-image: resolve('icons/historyExpired.png');
+		}
+
+		&:hover {
+			opacity: .7;
+		}
+	}
+
+	.OrderStatus__expired {
+		color: #e35959;
+	}
+
+	.btnInfo {
+		padding: 0;
+		margin-top: -.17em;
+		margin-left: 4px;
+	}
+}

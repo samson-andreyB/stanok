@@ -1,0 +1,168 @@
+.ImageUploader {
+	border: 1px solid $neutral-9;
+	border-radius: $BD_RAD;
+	background-color: #fff;
+	cursor: pointer;
+	position: relative;
+	width: 80px;
+	height: 80px;
+	box-sizing: border-box;
+	overflow: hidden;
+
+	&--placeholder {
+		position: static;
+		border-style: dashed;
+		cursor: default;
+	}
+
+	&__field {
+		display: none;
+	}
+
+	&__label {
+		background-image: svg('upload_image_41x29');
+		background-repeat: no-repeat;
+		background-position: calc(50% + 3px) 50%;
+		display: block;
+		height: 100%;
+		width: 100%;
+		transition: background-color .15s ease;
+		position: relative;
+		z-index: 1;
+	}
+
+	&__preview {
+		width: 100%;
+		height: 100%;
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+		transition: z-index .15s ease;
+		position: absolute;
+		z-index: 2;
+	}
+
+	&:hover {
+		.ImageUploader__preview {
+			z-index: 0;
+		}
+
+		.ImageUploader__label {
+			background-color: rgba(130, 130, 130, .6);
+		}
+	}
+
+	&--withPreview {
+		background-image: resolve('transparent-bg_18x18.png');
+		cursor: default;
+
+		.ImageUploader__control {
+			position: absolute;
+			z-index: 2;
+			width: 20px;
+			height: 20px;
+			border: 0;
+			background-repeat: no-repeat;
+			background-position: 50% 50%;
+			transition: opacity .2s;
+			display: none;
+
+			&--remove {
+				top: 0;
+				right: 0;
+				background-color: #e5e5e5;
+				background-image: resolve('icons/cross_10x10_777.png');
+
+				&:hover {
+					background-image: resolve('icons/cross_10x10_e55.png');
+				}
+			}
+
+			&--edit {
+				display: inline-block;
+				right: 5px;
+				bottom: 5px;
+				width: 25px;
+				height: 25px;
+				padding: 0;
+				text-align: center;
+
+				&:before {
+					margin: 0;
+				}
+			}
+		}
+
+		&:hover {
+			.ImageUploader__control {
+				display: block;
+			}
+
+			.ImageUploader__label {
+				display: none;
+			}
+		}
+
+		.ImageUploader__label {
+			background-image: none;
+		}
+
+		&.ImageUploader--contain {
+			.ImageUploader__preview {
+				background-size: contain;
+			}
+		}
+	}
+
+	&--gallery {
+		&.ImageUploader--withPreview {
+			.ImageUploader__preview {
+				background-size: cover;
+
+				&:before {
+					content: '';
+					display: block;
+					position: absolute;
+					top: 0;
+					bottom: 0;
+					right: 0;
+					left: 0;
+					transition: background-color .15s ease;
+				}
+			}
+
+			&:hover {
+				.ImageUploader__preview:before {
+					background-color: rgba(109, 109, 109, .75);
+				}
+			}
+
+			.ImageUploader__control {
+				width: 35px;
+				height: 35px;
+				background-color: transparent;
+				opacity: .5;
+
+				&--remove {
+					background-image: resolve('icons/cross_11x11_fff.png');
+				}
+
+				&--move {
+					top: 0;
+					left: 0;
+					background-image: resolve('icons/move_16x16_fff.png');
+					cursor: move;
+				}
+
+				&--zoom {
+					left: 0;
+					bottom: 0;
+					background-image: resolve('icons/zoom_16x16_fff.png');
+				}
+
+				&:hover {
+					opacity: 1;
+				}
+			}
+		}
+	}
+}

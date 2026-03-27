@@ -1,0 +1,37 @@
+.Form--returnRequest {
+	&.Form {
+		margin: 0;
+	}
+
+	.Form__set {
+		border-radius: 0;
+		margin-x: -$PAGE_WRAPPER_PADDING_MOBILE;
+
+		&--description {
+			display: block;
+			max-width: none;
+
+			.Form__field {
+				color: $BRAND_BLACK;
+			}
+		}
+	}
+
+	@media screen and (max-width: 740px) {
+		.Form__set--controls {
+			position: relative;
+			margin-top: 0;
+			margin-bottom: 48px;
+
+			.Box {
+				text-align: left;
+			}
+
+			.btn {
+				position: absolute;
+				top: 100%;
+				margin-top: 16px;
+			}
+		}
+	}
+}

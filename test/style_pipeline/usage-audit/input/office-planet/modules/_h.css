@@ -1,0 +1,72 @@
+@define-mixin H {
+	cursor: default;
+	font-weight: normal;
+	font: inherit;
+	margin: 0;
+}
+.H {
+	@mixin H;
+}
+
+@define-mixin H--default {
+	font-size: 17px;
+	padding: 8px 25px;
+}
+.H--default {
+	@mixin H--default;
+}
+
+@define-mixin H--accent {
+	@mixin H;
+	@mixin H--default;
+	background-color: $theme_brand;
+
+	@if $theme_name == 'op' {
+		background-color: $theme_accent;
+	}
+
+	color: #fff;
+}
+.H--accent {
+	@mixin H--accent;
+}
+
+@define-mixin H--sub {
+	@mixin H;
+	@mixin H--default;
+	@mixin infoBg--img;
+	border: 1px solid $dividerColor;
+	position: relative;
+}
+.H--sub {
+	@mixin H--sub;
+}
+
+
+/*doc
+<div class="H__group">
+	<div class="H__box H--accent w-0">2321</div>
+	<div class="H__box H--sub">Подзаголовок с достаточно длинной акцентовой подписью, чтобы текст подзаголовка переносился на другую строку на большинстве экранов, увеличивая, в том числе, и саму акцентовую подпись, которая при этом остаётся выровнена посередине своей ячейки.</div>
+</div>
+*/
+
+
+@define-mixin H__group {
+	@mixin PseudoTable;
+	width: 100%;
+}
+.H__group {
+	@mixin H__group;
+}
+
+
+@define-mixin H__box {
+	@mixin PseudoTable__cell;
+}
+.H__box {
+	@mixin H__box;
+}
+
+.H__box.H--sub {
+	box-shadow: none;
+}

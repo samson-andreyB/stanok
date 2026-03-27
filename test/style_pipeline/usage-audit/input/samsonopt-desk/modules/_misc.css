@@ -1,0 +1,52 @@
+.mainContent--novelty .contentWrapper--tabContent {
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.mainContent--exchangeMarketplaces {
+	.Header__description {
+		line-height: 1.5;
+	}
+
+	.filter--search {
+		width: 325px;
+	}
+
+	.Form {
+		&__header {
+			border: none;
+			padding-bottom: 0;
+		}
+
+		& + .controlPanel--filters {
+			margin-top: 10px;
+		}
+	}
+
+	.Autocomplete__list {
+		max-width: 400px;
+	}
+}
+
+.SpinnerWrapper.Spinner--zIndex1 {
+	.Spinner {
+		z-index: 1;
+	}
+}
+
+.Specs--summary {
+	margin-y: 5px;
+	text-align: right;
+
+	.Specs {
+		&__name {
+			font-weight: normal;
+		}
+
+		&__item {
+			&--total {
+				font-size: 18px;
+			}
+		}
+	}
+}

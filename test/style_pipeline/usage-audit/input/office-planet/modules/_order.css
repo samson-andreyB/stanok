@@ -1,0 +1,105 @@
+.Order__group {
+	@mixin PseudoTable;
+	width: 100%;
+}
+
+.Order__box {
+	@mixin PseudoTable__cell;
+	vertical-align: top;
+
+	.AddedProducts {
+		margin-top: 0;
+	}
+}
+
+.Order__box.exist {
+	@mixin infoBg--img;
+	padding: 0 10px 10px;
+	width: 80%;
+
+	.AddedProducts__item,
+	.DeliveryBonus,
+	.DeliveryRequisites,
+	.OrderPrice {
+		background-color: #fff;
+	}
+
+	.Product,
+	.AddedProducts__header {
+		padding-right: 0;
+	}
+
+	.OrderPrice__group {
+		padding-x: 30px 0;
+	}
+
+	.Amount__input {
+		padding-right: 0.367em;
+	}
+}
+
+.Order__box.current {
+	padding-left: 10px;
+	width: 20%;
+
+	.Products__item {
+		display: block;
+	}
+
+	.Product__box.buy {
+		border: 1px solid $dividerColor;
+	}
+
+	.Product__priceWrapper--dropPrice {
+		margin-bottom: 7px;
+
+		.Price {
+			margin-bottom: 0;
+
+			&--best {
+				font-size: 16px;
+			}
+
+			&--initial {
+				font-size: 14px;
+			}
+		}
+	}
+
+	.Price {
+		font-size: 16px;
+		font-weight: bold;
+		margin-bottom: 4px;
+
+		&--discount { /* ^ oz */
+			font-weight: normal;
+			margin-bottom: 0;
+		}
+	}
+
+	.Amount {
+		display: block;
+		margin-bottom: 12px;
+
+		&__wrapper:before,
+		&__wrapper:after {
+			display: block;
+		}
+	}
+}
+
+.Order__clear {
+	@mixin Btn--sub;
+}
+
+.Order__recalc {
+	@mixin Btn--default;
+	@mixin Btn--main;
+	padding-y: 10px;
+	margin-left: 10px;
+
+	.Icon {
+		@mixin OtherIcon orderRecalc, #fff;
+		margin-right: 8px;
+	}
+}

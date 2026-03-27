@@ -1,0 +1,101 @@
+/* ACTION
+------------------------------------------------------------------------------*/
+.AddItems {
+
+	&__input {
+		width: 380px;
+	}
+
+	&__status {
+		display: block;
+		font-size: 13px;
+		margin-top: 25px;
+	}
+
+	&__searchBox + &__status {
+		margin-top: 15px;
+	}
+
+	.Item {
+		&__box {
+			border-bottom: 1px solid #dadada;
+			border-top: none;
+			padding: 12px 20px;
+			
+			&--info {
+				width: 100%;	
+			}
+
+			&--remove {
+				text-align: right;
+				width: 1px;
+			}
+		}
+
+		&__remove {
+			color: #000;
+			
+			&:hover,
+			&.hover {
+				color: #e45959;
+			}
+
+			&:before {
+				background-position: 100% 50%;
+			}
+		}
+	}
+
+	&__img {
+		margin-right: 15px;
+		max-width: 34px;
+		height: auto;
+	}
+
+	&__removeAll {
+		text-align: right;
+		padding: 20px;
+		
+		.Item__remove:before {
+			margin: -4px 6px 0 0;
+		}
+	}
+
+	&__searchList {
+		border: 1px solid #ccc;
+		border-top: none;
+		box-sizing: border-box;
+		box-shadow: 0px 8px 30px 0px rgba(204, 204, 204, 1);
+		background-color: #fff;
+		width: 380px;
+		position: absolute;
+		z-index: 10;
+		padding: 3px 0 4px 0;
+	}
+
+	&__searchItem {
+		color: #000;
+		cursor: pointer;
+		display: block;
+		
+		&.hover,
+		&:hover,
+		&.focus,
+		&:focus {
+			background-color: #E9F8F3;
+			margin: 0;
+			border: none;
+		}
+
+		.AddItems__img {
+			margin-right: 10px;
+		}
+	}
+
+	/* Усиление специфичности для переопределения `.ui-menu .ui-menu-item` */
+	.AddItems__searchItem {
+		padding: 10px 14px;
+		margin: 0;
+	}
+}
+

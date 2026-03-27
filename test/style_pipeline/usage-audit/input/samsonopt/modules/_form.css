@@ -1,0 +1,281 @@
+@import 'lib/modules/_form';
+
+.Form__set {
+	background-color: #e7e7e7;
+	padding: 20px;
+
+	&--currencySettings {
+		background-color: transparent;
+
+		& + .Box--control {
+			margin-top: 25px;
+		}
+	}
+}
+
+.Form__title {
+	color: #111;
+	height: auto;
+	min-height: 1em;
+}
+
+.Form__input {
+	border-color: #8a8a8a;
+}
+.Form__input:focus {
+	box-shadow: 0 0 5px rgba(130,203,255,.30);
+	border-color: #6da1c6;
+}
+
+.Form__field.inputFull {
+	.Form__title {
+		height: auto;
+		padding-bottom: 3px;
+	}
+
+	.Form__input--currency {
+		width: 260px;
+	}
+
+	.Form__input--minimumAmount,
+	.Form__input--rate,
+	.Form__input--vat {
+		width: 57px;
+	}
+
+	.Form__input--number {
+		width: 170px;
+	}
+
+	.Form__input--authority {
+		width: 370px;
+	}
+}
+
+.Form__aux {
+	color: $C_GRAY;
+	font-size: 12px;
+	margin-top: .35em;
+}
+
+.Field {
+	@mixin Field;
+}
+
+.Form__field.error .Form__input,
+.Form__input.error {
+	color: inherit;
+	border-color: $C_ERROR;
+
+	&:focus {
+		border-color: #6da1c6;
+	}
+}
+
+.Form__field .Form__field + .Form__field {
+	margin-top: 10px;
+}
+
+.Form__error {
+	@mixin ErrorNotify;
+}
+
+.Form__group {
+	margin-bottom: .5em;
+}
+
+.Form__group--checkable {
+	.Form__field {
+		position: relative;
+		padding-left: 20px;
+	}
+
+	input[type="checkbox"],
+	input[type="radio"] {
+		position: absolute;
+		top: 4px;
+		left: 0;
+	}
+
+	.Form__input {
+		& + input[type="checkbox"],
+		& + input[type="radio"] {
+			top: 10px;
+		}
+	}
+}
+
+.Form__inputWrapper {
+	position: relative;
+
+	.Form__inputSuffix {
+		position: absolute;
+		top: 0;
+		right: 10px;
+		display: inline-flex;
+		align-items: center;
+		height: 100%;
+	}
+
+	.Form__inputCount {
+		display: none;
+		color: $C_GRAY_LIGHT;
+		user-select: none;
+		pointer-events: none;
+	}
+
+	.Form__input.error + .Form__inputSuffix .Form__inputCount {
+		color: $C_ERROR;
+	}
+
+	&--counter {
+		.Form__input {
+			padding-right: 65px;
+		}
+
+		.Form__inputCount {
+			display: block;
+		}
+	}
+}
+
+.Form--filter {
+	.Form__field {
+		margin-left: 0;
+		display: inline-block;
+		vertical-align: middle;
+
+		&--alignBottom {
+			vertical-align: bottom;
+		}
+	}
+
+	.Form__field + .Form__field {
+		margin-left: 20px;
+		margin-top: 0;
+	}
+
+	.Form__title {
+		display: block;
+		margin-left: 0;
+		margin-right: 0;
+		text-align: left;
+		width: auto;
+		padding-top: 0;
+	}
+
+	.Form__input + .btn {
+		margin-left: 20px;
+	}
+
+	.btn {
+		vertical-align: middle;
+	}
+}
+
+.Form--voteForm {
+	.Form__set {
+		padding: 0;
+		background-color: transparent;
+
+		& + .Form__set {
+			margin-top: 25px;
+		}
+
+		.Form__header {
+			border-bottom: 0;
+			margin-bottom: 0;
+			padding-bottom: 0;
+		}
+
+		.Form__group {
+			margin-bottom: 0;
+
+			.Form__field + .Form__field {
+				margin-top: 5px;
+			}
+		}
+
+		.Form__field.inputFull select.Form__input {
+			width: auto;
+		}
+
+		.Form__field {
+			min-height: auto;
+		}
+
+		.Form__input[type="text"] {
+			width: 340px;
+		}
+	}
+}
+
+.Form__description {
+	& + .Form__group {
+		margin-top: 20px;
+	}
+}
+
+.Form__group--addFormField {
+	margin-bottom: 0;
+
+	.Form__field {
+		&--item {
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
+
+			.Form__input {
+				width: auto;
+				flex-grow: 1;
+			}
+		}
+
+		.Icon--cross {
+			margin-left: 12px;
+			width: 16px;
+			height: 16px;
+			background-image: resolve('cross_10x10_bbb.png');
+			background-position: 50% 50%;
+			background-repeat: no-repeat;
+			cursor: pointer;
+
+			&:hover {
+				background-image: resolve('cross_10x10_c11.png');
+			}
+		}
+	}
+}
+
+.Form--returnRequest {
+	width: 50%;
+	margin-bottom: 25px;
+
+	.Form__set {
+		background-color: transparent;
+		padding: 0;
+	}
+
+	.Form__header {
+		margin-bottom: 1em;
+		padding-bottom: 0;
+		border-bottom: 0;
+		font-weight: 700;
+	}
+
+	.Form__set + .Form__set {
+		margin-top: 25px;
+	}
+
+	.Form__group {
+		margin-bottom: 0;
+	}
+
+	.Form__field {
+		min-height: auto;
+
+		&--shrink {
+			width: 170px;
+		}
+	}
+}

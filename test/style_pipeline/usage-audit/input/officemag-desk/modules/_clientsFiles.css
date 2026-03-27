@@ -1,0 +1,60 @@
+/*
+ * ClientsFiles
+ */
+
+.ClientsFiles {
+	&.contentWrapper {
+		padding-bottom: 30px;
+	}
+
+	h3 {
+		margin: 15px 0;
+	}
+
+	&.contentWrapper.accent {
+		& + .contentWrapper.accent {
+			margin-top: 4px;
+		}
+
+		&:last-child {
+			padding-bottom: 30px;
+		}
+	}
+
+	&__dateUpdate {
+		color: #656565;
+		font-size: 12px;
+		margin: 8px 0 15px;
+		vertical-align: middle;
+
+		span& {
+			margin-left: 10px;
+		}
+	}
+
+	&__dateTime {
+		font-weight: bold;
+
+		&--accent {
+			color: #f59579;
+		}
+	}
+
+	&__cityList {
+		list-style: none;
+		line-height: 16px;
+		padding: 0;
+		margin: -5px 0 0;
+	}
+
+	&__cityItem + .ClientsFiles__cityItem {
+		margin-top: 15px;
+	}
+
+	&__cityListHeader {
+		color: #000;
+		font-size: 14px;
+		margin: 10px 0 10px;
+		font-weight: bold;
+	}
+}

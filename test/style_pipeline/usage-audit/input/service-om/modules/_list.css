@@ -1,0 +1,27 @@
+.List {
+	&:not(:last-child) {
+		margin-bottom: $textMargin;
+	}
+
+	&__header {
+		margin-bottom: .6em;
+		font-weight: bold;
+	}
+
+	&__items {
+		padding-left: 0;
+		list-style-type: none;
+		line-height: 180%;
+	}
+
+	&__item {
+		& + & {
+			margin-top: .25em;
+		}
+
+		&:before {
+			content: '\2014';
+			margin-right: .5em;
+		}
+	}
+}

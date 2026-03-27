@@ -1,0 +1,374 @@
+/*******************
+ *   БУХГАЛТЕРИЯ   *
+ *******************/
+
+/* Фильтр
+---------------------------------------------------------------------- */
+.Filter2 {
+	&--paymentStatus,
+	&--contractor,
+	&--contract {
+		max-width: 200px;
+	}
+
+	&--status {
+		.RichSelect2 {
+			width: 120px;
+		}
+	}
+}
+
+
+
+/* Спойлер
+---------------------------------------------------------------------- */
+.Spoiler--paymentsDocumentsList {
+	@mixin SpoilerArrows;
+	border: solid #dedede;
+	border-width: 1px 0;
+
+	& + & {
+		margin-top: -1px;
+	}
+
+	.ListControl li.Paginator__item {
+		margin-top: 0;
+	}
+
+	table {
+		border: solid #dedede;
+		border-width: 0 1px;
+	}
+
+	.Items--paymentStages {
+		border-top-width: 1px;
+		border-bottom-width: 1px;
+	}
+
+	.Spoiler__trigger {
+		user-select: auto;
+
+		&:hover {
+			background-color: #f5f5f5;
+		}
+	}
+}
+
+
+
+/* Описание клиента
+---------------------------------------------------------------------- */
+.Customer--accounting {
+	margin-bottom: 10px;
+	padding-right: 35px;
+
+	.Customer {
+
+		&__info {
+			font-size: 14px;
+			color: #666;
+		}
+
+		&__name {
+			font-weight: bold;
+			color: #5a783d;
+		}
+
+		&__debt {
+			margin-top: 5px;
+			color: #d23d3d;
+		}
+	}
+
+	.Icon--help {
+		cursor: help;
+	}
+
+	.Spoiler & {
+		padding: 12px 15px;
+		margin: 0;
+	}
+}
+
+.LinkDocument--default {
+	padding-y: 8px;
+
+	.LinkDocument__title {
+		padding-x: 10px;
+		color: #666;
+		margin-bottom: 4px;
+	}
+
+	.LinkDocument__desc {
+		padding-x: 10px;
+	}
+
+	.Icon--download,
+	.Icon--view {
+		margin-left: 8px;
+		cursor: pointer;
+	}
+
+	.Files--paymentDocuments {
+		display: none;
+		padding-x: 15px;
+		padding-top: 12px;
+		padding-bottom: 4px;
+		margin-top: 7px;
+		border-top: 1px solid #b3b3b3;
+		position: relative;
+
+		&:before,
+		&:after {
+			content: '';
+			position: absolute;
+			right: 0;
+			bottom: 100%;
+			margin-right: 36px;
+			border: 7px solid transparent;
+		}
+
+		&:before {
+			border-bottom-color: #b3b3b3;
+		}
+
+		&:after {
+			border-bottom-color: #fff;
+			margin-bottom: -1px;
+		}
+	}
+}
+
+/* Файлы для скачивания (содержимое ТипТипов)
+---------------------------------------------------------------------- */
+.Files--paymentDocuments {
+	padding: 8px 5px;
+
+	.File {
+		display: block;
+		margin: 0;
+
+		&__name {
+			white-space: nowrap;
+			margin-top: 7px;
+		}
+	}
+
+	.File + .File {
+		margin-top: 10px;
+	}
+}
+
+
+
+/* Список документов
+---------------------------------------------------------------------- */
+.Items--paymentDocuments {
+
+	.Item__box {
+		&--date,
+		&--check {
+			width: 1px;
+		}
+
+		&--count,
+		&--delay {
+			text-align: center;
+			width: 1%;
+		}
+
+		&--total,
+		&--paid,
+		&--debt,
+		&--penalty {
+			white-space: nowrap;
+			text-align: right;
+		}
+
+		&--note {
+			width: 15%;
+			position: relative;
+		}
+
+		&--number {
+			white-space: nowrap;
+		}
+
+		&--download {
+			width: width('export_gray.png');
+		}
+
+		&--view {
+			width: width('eye_gray.png');
+		}
+
+		@media (max-width: 1080px) {
+			padding-left: 4px;
+			padding-right: 4px;
+
+			&:first-child {
+				padding-left: 10px;
+			}
+
+			&:last-child {
+				padding-right: 10px;
+			}
+
+			&--delay {
+				padding-left: 0;
+				padding-right: 0;
+			}
+
+			&--download {
+				padding-left: 2px;
+				padding-right: 4px;
+			}
+
+			&--view {
+				padding-left: 4px;
+			}
+		}
+	}
+
+	.Item {
+		&__documentName {
+			position: absolute;
+			width: 100%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			left: 0;
+			padding: 0 6px;
+			box-sizing: border-box;
+		}
+	}
+
+	.Items__header--float {
+		position: fixed;
+		top: -1px;
+		box-shadow: 0 1px 4px 1px rgba(200, 200, 200, .5);
+		z-index: 10;
+	}
+
+	.Item--expired {
+
+		.Item__box {
+
+			&--debt,
+			&--deadline,
+			&--delay {
+				color: #d23d3d;
+			}
+		}
+	}
+
+	.Item--total {
+
+		.summPenalty {
+			color: #d13d3d;
+		}
+	}
+
+	.Icon--download,
+	.Icon--view {
+		cursor: pointer;
+	}
+}
+
+
+
+
+
+.Items--paymentDocuments {
+
+	.Items__header {
+		background-color: #fff;
+	}
+}
+
+.Items--paymentDocuments .Item--total td {
+	font-weight: bold;
+}
+.Items--paymentDocuments .Item--expired {
+	background-color: #fdf0f0;
+}
+
+.Items--paymentDocuments .Item--checked {
+	background-color: #f3f9ff;
+}
+
+.Items--paymentDocuments .Item--total {
+	border-top: 1px solid #dedede;
+}
+
+.Items--paymentStages {
+	margin-bottom: 20px;
+
+	.Item__box {
+		&--stage {
+			width: 15%;
+		}
+
+		&--delay {
+			width: 18%;
+		}
+	}
+}
+
+.Items--paymentInstallment {
+	.Item__box {
+		&--note {
+			width: 45%;
+		}
+
+		&--count {
+			width: 15%;
+		}
+	}
+}
+
+
+
+/* Итого
+---------------------------------------------------------------------- */
+.Items--paymentsTotal {
+	cursor: default;
+
+	.Items__header {
+
+		.Item__box {
+			font-weight: normal;
+			padding: 6px 6px 2px;
+			color: #666;
+			font-size: 12px;
+		}
+	}
+
+	.Item {
+		background-color: #e7e7e7;
+		border-top: 3px solid #fff;
+		font-size: 14px;
+	}
+
+	.Item__box {
+		text-align: right;
+		line-height: 1.4;
+		padding: 9px 6px 8px;
+		font-weight: bold;
+		width: 18%;
+
+		&--note {
+			text-align: left;
+			width: 41%;
+		}
+
+		&:first-child {
+			padding-left: 15px;
+		}
+
+		&:last-child {
+			width: 23%;
+			padding-right: 5%;
+		}
+	}
+}

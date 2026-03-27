@@ -1,0 +1,150 @@
+.Facets--default {
+	.Facets__empty {
+		color: #999;
+	}
+
+	.Facets__controls {
+		margin-top: 10px;
+	}
+
+	.Facet + .Facet {
+		margin-top: 18px;
+	}
+
+	.Facet + .Facets__controls {
+		margin-top: 20px;
+	}
+}
+
+.Facet--default {
+	$facetDefaultIndentLeft: 25px;
+
+	margin-left: $facetDefaultIndentLeft;
+
+	&.Facet--important {
+		.Facet__property {
+			&--indicator {
+				background-color: #edaa24;
+				cursor: help;
+				display: inline-block;
+				border-radius: 50%;
+				width: 6px;
+				height: 6px;
+				vertical-align: middle;
+			}
+		}
+	}
+
+	&.Facet--completed {
+		.Facet__title {
+			font-weight: bold;
+		}
+	}
+
+	&.Facet--empty {
+		.Switch--boolean {
+			.Switch__text {
+				border-color: $error;
+			}
+
+			.Switch__item + .Switch__item {
+				.Switch__text {
+					border-left-color: #bbb;
+				}
+			}
+		}
+
+		.Plaques,
+		.Facet__input {
+			border-color: $error;
+		}
+	}
+
+	.Facet__title {
+		position: relative;
+		margin-bottom: 5px;
+
+		.Badge {
+			margin-left: 5px;
+		}
+	}
+
+	.Facet__properties {
+		position: absolute;
+		top: -1px;
+		width: calc($facetDefaultIndentLeft - 7px);
+		margin-left: -$facetDefaultIndentLeft;
+		text-align: right;
+	}
+
+	.Facet__property {
+		position: relative;
+		display: inline-block;
+		vertical-align: middle;
+
+		&--indicator {
+			border-radius: 50%;
+			width: 6px;
+			height: 6px;
+			background-color: #dadada;
+		}
+
+		&--key {
+			width: width('icons/key_6x10_777.png');
+			height: height('icons/key_6x10_777.png');
+			background-image: resolve('icons/key_6x10_777.png');
+			cursor: help;
+		}
+
+		&:before {
+			content: '';
+			position: absolute;
+			top: -50%;
+			left: -50%;
+			width: 200%;
+			height: 200%;
+		}
+	}
+
+	.Facet__property + .Facet__property {
+		margin-left: 2px;
+	}
+
+	.Facet__value {
+		&--empty {
+			color: #999;
+		}
+	}
+
+	.Facet__addValues {
+		@mixin btn;
+
+		width: width('icons/plus_circle_12x12_2b8.png');
+		height: height('icons/plus_circle_12x12_2b8.png');
+		background-image: resolve('icons/plus_circle_12x12_2b8.png');
+		background-repeat: no-repeat;
+
+		@mixin hocus {
+			background-image: resolve('icons/plus_circle_12x12_3d9.png');
+		}
+	}
+
+	.Facet__plaques {
+		display: flex;
+		align-items: center;
+
+		.Facet__controls {
+			margin-left: 10px;
+		}
+	}
+}
+
+.Facet--focusedAutocomplete{
+	.Autocomplete {
+		width: auto;
+		max-width: 400px;
+		max-height: 185px;
+		min-width: 230px;
+		overflow: auto;
+	}
+}

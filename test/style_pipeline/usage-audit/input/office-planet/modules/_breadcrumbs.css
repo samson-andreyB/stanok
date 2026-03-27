@@ -1,0 +1,5 @@
+.Breadcrumbs2__item {
+	&:before {
+		display: none;
+	}
+}

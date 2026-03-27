@@ -1,0 +1,15 @@
+/* SETTLEMENT CLAIMS
+-------------------------------------------------------------*/
+
+.SettlementClaims__text {
+	line-height: 1.8;
+}
+
+.SettlementClaims__list {
+	padding-left: 3.5em;
+	margin-bottom: 1.2em;
+}
+
+.SettlementClaims__listItem + .SettlementClaims__listItem {
+	margin-top: 0.9em;
+}

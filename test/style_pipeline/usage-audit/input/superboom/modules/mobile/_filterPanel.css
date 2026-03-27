@@ -1,0 +1,156 @@
+.FilterPanel {
+	position: absolute;
+	left: -10000px;
+
+	&--active {
+		background-color: rgba(0, 0, 0, .5);
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 11;
+
+		.FilterPanel__wrapper {
+			position: fixed;
+			background-color: #fff;
+			left: 0;
+			bottom: 0;
+			top: 0;
+			width: 100%;
+			box-shadow: 20px 0 20px -20px rgba(0, 0, 0, .2);
+			overflow-y: auto;
+			min-width: 320px;
+			max-width: $MOBILE_NAVY_MENU_WIDTH;
+		}
+
+		.SideRubrics--productGuide,
+		.bannerMain--thin,
+		.Banner--static {
+			display: none;
+		}
+
+		.SideRubrics--multiple {
+			border-radius: 0;
+			border-left: none;
+			border-right: none;
+			padding-left: 0;
+			padding-right: 0;
+
+			.SideRubrics__item {
+				padding-left: 12px;
+				padding-right: 12px;
+
+			}
+
+			.SideRubrics__link {
+				padding: 8px;
+			}
+		}
+
+		.rubricExplorerSide {
+			border: none;
+			border-radius: 0;
+			padding-x: 12px;
+
+			&--listCritique {
+				padding-x: 0;
+			}
+
+			a,
+			span {
+				padding: 8px;
+			}
+
+			.rubricExplorerSide__amount {
+				padding: 0;
+			}
+
+			.rubricExplorerSide__item {
+				&--firstLevel {
+					padding-x: 12px;
+					margin-top: 0;
+				}
+			}
+		}
+
+		.SideRubrics + .rubricExplorerSide {
+			border-top: 1px solid #e6e1de;
+		}
+
+		.sidebarBlock {
+			border-radius: 0;
+		}
+
+		.ActionsFilter,
+		.AccentFilter {
+			width: auto;
+			border: 0;
+
+			&__header {
+				display: none;
+			}
+		}
+	}
+
+	.selectFacets__item {
+		padding-x: 20px;
+
+		&--single {
+			padding-left: 37px;
+		}
+
+		&.btnContainer {
+			display: none;
+
+			& + .selectFacets__item {
+				border-top: none;
+			}
+		}
+
+		.priceSlider {
+			.sliderLeft,
+			.sliderRight {
+				padding: 5px;
+				background-repeat: no-repeat;
+			}
+		}
+	}
+
+	&--rubricsOnly {
+		.SideRubrics {
+			&--multiple {
+				border: none;
+				padding: 0;
+			}
+		}
+	}
+
+	&__header {
+		display: block;
+		background-color: #f2eeea;
+		padding-x: 20px;
+		padding-top: 15px;
+		padding-bottom: 20px;
+		margin-bottom: 20px;
+		text-align: center;
+		position: relative;
+	}
+
+	&__title {
+		font-size: 16px;
+		font-weight: bold;
+	}
+
+	&__cancel {
+		position: absolute;
+		right: 14px;
+		background-image: svg('cross_14x14', '[color]: $BRAND_BLACK');
+		background-position: center;
+		background-repeat: no-repeat;
+		width: 34px;
+		height: 34px;
+		cursor: pointer;
+		top: 9px;
+	}
+}

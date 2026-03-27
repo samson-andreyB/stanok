@@ -1,0 +1,35 @@
+.FancyModal {
+	padding: 30px 35px;
+	box-sizing: border-box;
+
+	&__header {
+		font-size: 24px;
+		margin-bottom: 20px;
+		margin-top: 0;
+	}
+
+	&__description {
+		font-size: 16px;
+		line-height: 1.5;
+	}
+
+	&__controls {
+		margin-top: 20px;
+
+		.Btn + .Btn {
+			margin-left: 15px;
+		}
+	}
+}
+
+.FancyModal__paragraph + .FancyModal__paragraph {
+	margin-top: 10px;
+}
+
+.FancyModal--giveConsent {
+	width: 655px;
+}
+
+.FancyModal--uploadCodes {
+	width: 400px;
+}

@@ -1,0 +1,31 @@
+.VoteForm {
+	&__imgWrapper {
+		margin-top: 12px;
+	}
+
+	&__img {
+		max-width: 100%;
+		height: auto;
+	}
+
+	.Form__title {
+		display: block;
+		margin-right: 0;
+		padding-top: 0;
+		width: auto;
+		height: auto;
+	}
+
+	.Form__set {
+		width: 60%;
+	}
+
+	.Form__group {
+		margin-bottom: 0;
+	}
+
+	.Form__field .Form__input,
+	.Select__label {
+		width: 470px;
+	}
+}

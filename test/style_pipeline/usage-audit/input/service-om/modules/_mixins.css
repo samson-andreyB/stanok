@@ -1,0 +1,23 @@
+@define-mixin selectRemoveOutline { /* уничтожаем аутлайн тега select в FF */
+	color: #000;
+	color: rgba(0,0,0,0);
+	text-shadow: 0 0 0 #000;
+
+	option {
+		color: #000;
+	}
+}
+
+@define-mixin Limiter {
+	min-width: 1000px;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 20px;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+@define-mixin Disabled {
+	pointer-events: none;
+	cursor: default;
+}

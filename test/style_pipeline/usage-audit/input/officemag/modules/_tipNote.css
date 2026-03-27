@@ -1,0 +1,38 @@
+.TipNote--default {
+	padding-y: 3px;
+
+	.TipNote__title {
+		font-weight: bold;
+	}
+
+	.TipNote__title + .TipNote__content,
+	.TipNote__paragraph + .TipNote__paragraph {
+		margin-top: 5px;
+	}
+}
+
+.TipNote--govProcurement {
+	.TipNote__content {
+		margin-y: -5px;
+	}
+
+	.TipNote__link {
+		display: inline-block;
+		padding-y: 5px;
+
+		&:hover {
+			.CartActionLink--checkout:before {
+				background-image: svg('network_15x17', '[color]: $LINK_HOVER');
+			}
+
+			.pseudoLink {
+				color: $BRAND__A;
+			}
+		}
+	}
+}
+
+.TipNote--govProcurementList {
+	width: 340px;
+	padding: 10px 5px;
+}

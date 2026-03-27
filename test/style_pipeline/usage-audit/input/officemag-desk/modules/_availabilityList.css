@@ -1,0 +1,18 @@
+.AvailabilityList--default {
+	.AvailabilityList__item + .AvailabilityList__item {
+		margin-top: 5px;
+	}
+
+	.AvailabilityList__name {
+		display: block;
+
+		&--error {
+			color: $error;
+		}
+	}
+
+	.AvailabilityList__info {
+		display: block;
+		margin-top: 5px;
+	}
+}

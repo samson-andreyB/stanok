@@ -1,0 +1,101 @@
+.OrderByCode--header {
+	white-space: nowrap;
+
+	.OrderByCode__layer {
+		position: relative;
+		height: 36px;
+		overflow: hidden;
+		background-color: #fff;
+		transition: .4s;
+	}
+
+	.OrderByCode__layer + .OrderByCode__layer {
+		margin-top: -36px;
+	}
+
+	.OrderByCode__layer--panel {
+		direction: rtl;
+		max-width: 0;
+		margin-left: auto;
+		font-size: 0;
+	}
+
+	.OrderByCode__wrapper {
+		display: inline-block;
+		direction: ltr;
+	}
+
+	.OrderByCode__input {
+		@mixin Field;
+		vertical-align: middle;
+		height: 36px;
+		border: 2px solid $C_BRAND;
+		font-size: 14px;
+
+		&:focus {
+			border-color: $C_BRAND;
+		}
+
+		&--code {
+			width: 88px;
+			border-radius: 3px 0 0 3px;
+		}
+
+		&--quantity {
+			width: 33px;
+			margin-left: -2px;
+			padding-x: 3px;
+			border-radius: 0 3px 3px 0;
+			text-align: center;
+		}
+	}
+
+	.OrderByCode__button--invite {
+		@mixin Btn--gray;
+	}
+
+	.OrderByCode__button--add {
+		vertical-align: middle;
+		box-sizing: border-box;
+		width: 46px;
+		margin-left: 5px;
+		background-image: svg('cart_32x32.svg', '[color]: #fff');
+		background-size: 18px 18px;
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+		transition: .3s;
+
+		@mixin Btn--hasSpinner;
+
+		&.OrderByCode__button--loading {
+			background-image: none;
+			pointer-events: none;
+
+			@mixin Btn--spinnerActive;
+		}
+
+		&.OrderByCode__button--success {
+			background-image: svg('check_18x14.svg', '[color]: #fff');
+			background-color: $C_SUCCESS;
+			border-color: $C_SUCCESS;
+			pointer-events: none;
+		}
+	}
+
+	&.OrderByCode--active {
+		.OrderByCode__layer--invite {
+			opacity: 0;
+		}
+
+		.OrderByCode__layer--panel {
+			max-width: 180px;
+		}
+	}
+}
+
+
+.Form--orderByCode {
+	.btn + .Btn {
+		margin-left: .5em;
+	}
+}

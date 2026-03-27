@@ -1,0 +1,139 @@
+/* PSC CONTRACTS
+------------------------------------------------------------------------------*/
+
+.Group--contract {
+	table-layout: fixed;
+
+	.Box {
+		box-sizing: border-box;
+		vertical-align: top;
+
+		& + .Box {
+			padding-left: 20px;
+		}
+
+		&--switch {
+			width: 210px;
+		}
+
+		&--description {
+			border: 1px solid #ddd;
+			font-size: 13px;
+			padding: 20px;
+		}
+
+		&--priceCheck {
+			width: 215px;
+		}
+	}
+}
+
+.Contract {
+	&.contentWrapper {
+		padding-top: 0px;
+	}
+
+	&__header {
+		font-size: 22px;
+		margin: -.2em 0 .6em;
+	}
+
+	&__tabHeader {
+		margin: 2.4em 0 1em;
+		font-size: 18px;
+	}
+
+	&__list {
+		font-size: 13px;
+		padding: 15px;
+	}
+
+	&__item {
+		margin-top: .6em;
+		line-height: 1.5em;
+
+		&--active {
+			font-weight: bold;
+		}
+	}
+}
+
+.ContractDescription {
+	&__header {
+		font-weight: bold;
+		margin: .75em 0 .15em;
+
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+
+	&__list {
+		list-style: none;
+	}
+
+	&__item {
+		&:before {
+			content: '\2014';
+			margin-left: -20px;
+		}
+	}
+
+	&__limit {
+		color: #999;
+	}
+}
+
+.ContractSet {
+	& + & {
+		margin-top: 15px;
+	}
+
+	&__header {
+		font-size: 14px;
+		color: #555;
+	}
+}
+
+.ContractCheck {
+	&__wrapper {
+		display: block;
+
+		& + & {
+			border-top: 1px solid #dadada;
+			padding-top: 15px;
+			margin-top: 15px;
+		}
+
+		&--blank {
+			color: #555;
+			font-size: 13px;
+		}
+	}
+
+	&__header {
+		font-size: 14px;
+		font-weight: bold;
+		margin-top: -.3em;
+	}
+
+	&__result {
+		margin-top: 1em;
+
+		.Form__input {
+			vertical-align: middle;
+			width: 82px;
+		}
+
+		.btnMain {
+			margin-left: .4em;
+		}
+	}
+
+	&__price {
+		color: #000;
+		display: block;
+		font-weight: bold;
+		margin-top: .25em;
+	}
+}

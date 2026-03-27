@@ -1,0 +1,1121 @@
+$lineHeight: 1.3em;
+
+$offset: 25px;
+$bdrad: 4px;
+$shadowMainOffset: 3px;
+$shadowHeader: 0 0 0 $shadowMainOffset rgba(0,0,0,.15);
+
+$default: #ededed;
+$main: #00a1fe;
+$hover: #ff5400;
+$active: #d84700;
+$accent: #a6cf39;
+
+$divider: #d6d6d6;
+
+$error: #f61818;
+
+$SPINNER_COLOR: #00A1FE;
+
+$font: 'Open Sans', arial, sans-serif;
+$fontAccent: 'Nautilus', cursive;
+
+@font-face {
+	font-family: 'Nautilus';
+	src: url('/assets_tigerfamily/fonts/Nautilus/Nautilus.eot');
+	src: url('/assets_tigerfamily/fonts/Nautilus/Nautilus.eot#iefix') format('embedded-opentype'),
+	url('/assets_tigerfamily/fonts/Nautilus/Nautilus.woff') format('woff'),
+	url('/assets_tigerfamily/fonts/Nautilus/Nautilus.ttf') format('truetype'),
+	url('/assets_tigerfamily/fonts/Nautilus/Nautilus.otf') format('opentype'),
+	url('/assets_tigerfamily/fonts/Nautilus/Nautilus.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@import "lib/_base";
+@import "lib/_useful";
+@import "lib/stm/_file";
+@import "lib/stm/_mixins";
+@import "lib/stm/_fancybox";
+
+
+/* Useful
+------------------------------------------------------------------------------*/
+
+@define-mixin hideSr {
+	border: 0;
+	clip: rect(0,0,0,0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+}
+
+@define-mixin hocus {
+	&:hover,
+	&.hover,
+	&:focus,
+	&.focus {
+		@mixin-content;
+	}
+}
+
+@define-mixin hocusac {
+	&:hover,
+	&.hover,
+	&:focus,
+	&.focus,
+	&:active,
+	&.active {
+		@mixin-content;
+	}
+}
+
+@define-mixin Btn {
+	background-color: transparent;
+	border: 0 none;
+	box-sizing: border-box;
+	color: inherit;
+	cursor: pointer;
+	display: inline-block;
+	font: inherit;
+	line-height: 1em;
+	user-select: none;
+	vertical-align: middle;
+	position: relative;
+	text-decoration: none;
+	
+	&[disabled] {
+		cursor: default;
+	}
+
+	@mixin-content;
+}
+
+
+
+/* Text
+------------------------------------------------------------------------------*/
+
+html,
+body {
+	width: 100%;
+}
+
+html {
+	font-family: $font;
+}
+body {
+	background-image: resolve('bg_top.png');
+	background-position: 50% 0;
+	background-repeat: no-repeat;
+	
+	background-image: resolve('bg_top.png'), resolve('bg_bottom.png');
+	background-position: 50% 0, 50% 100%;
+	background-repeat: no-repeat, no-repeat;
+	
+	@media screen and (min-width: 2500px) {
+		background-size: auto, contain;
+	}
+
+	font-size: 1.4em;
+}
+
+
+h1 {
+	font-family: $fontAccent;
+	font-size: 42px;
+	font-weight: normal;
+}
+h2 {
+	font-size: 22px;
+	font-weight: normal;
+	margin-top: 2em;
+	margin-bottom: 1em;
+}
+h3 {
+	font-size: 14px;
+	font-weight: 600;
+	margin-top: 1.5em;
+	margin-bottom: .8em;
+}
+h4 {
+	font-size: 12px;
+	font-weight: normal;
+}
+
+p,
+pre {
+	margin-bottom: calc(strip($lineHeight)/2)em;
+}
+
+blockquote {
+	font-size: 18px;
+	margin-y: 2em;
+	position: relative;
+	padding-left: 1.5em;
+}
+blockquote:before {
+	content: "";
+	position: absolute;
+	left: 0;
+	background-color: $accent;
+	top: -.25em;
+	bottom: -.25em;
+	width: .5em;
+	border-radius: .5em;
+}
+
+
+@define-mixin Link {
+	color: $main;
+	
+	&:hover,
+	&.hover,
+	&:focus,
+	&.focus {
+		color: $hover;
+	}
+	
+	&:active,
+	&.active {
+		color: $active;
+	}
+}
+
+@define-mixin Pseudolink {
+	@mixin Link;
+	
+	border-bottom: 1px dotted;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+a,
+.Pseudolink {
+	@mixin Link;
+}
+
+a[href^="#"]:not([href$="#"]),
+.Pseudolink {
+	@mixin Pseudolink;
+}
+
+
+.Textnode {
+	table {
+		width: 100%;
+		text-align: left;
+	}
+	th,
+	td {
+		padding-y: 1em;
+	}
+	th {
+		color: #666;
+		font-weight: normal;
+		font-size: .86em;
+		padding-top: 0;
+	}
+	tr {
+		border-bottom: 1px solid $divider;
+	}
+
+	ul {
+		list-style-type: none;
+		
+		& > li:before {
+			content: '\2014';
+			margin-right: .5em;
+			cursor: default;
+			margin-right: .35em;
+			position: absolute;
+			right: 100%;
+			top: 0;
+		}
+	}
+
+	a:visited:not([href^="#"]):not(.BtnMain) {
+		color: #6895af;
+	}
+}
+
+
+
+/* Buttons
+------------------------------------------------------------------------------*/
+
+@define-mixin BtnTF {
+	@mixin Btn {
+		border: 1px solid transparent;
+		border-radius: $bdrad;
+		padding: 1em 2em;
+		transition: all .2s ease;
+	};
+
+	@mixin-content;
+}
+
+@define-mixin BtnDefault {
+	@mixin BtnTF;
+	
+	@mixin hocus {
+		background-color: $hover;
+		color: #fff;
+		outline: none;
+	}
+
+	&:active,
+	&.active {
+		background-color: $active;
+		color: #fff;
+	}
+
+	@mixin-content;
+}
+
+@define-mixin BtnOutline {
+	@mixin BtnDefault {
+		border: 1px solid #404040;
+	};
+	
+	@mixin hocusac {
+		border-color: transparent;
+	}
+}
+
+@define-mixin BtnMain {
+	@mixin BtnDefault;
+	background-color: $main;
+	color: #fff;
+}
+
+@define-mixin BtnSoft {
+	@mixin BtnTF;
+	
+	background-color: $default;
+	
+	@mixin hocus {
+		background-color: #ffe5d9;
+	}
+
+	&:active,
+	&.active {
+		background-color: #f3cebd;
+	}
+
+	@mixin-content;
+}
+
+.BtnOutline {
+	@mixin BtnOutline;
+}
+.BtnMain {
+	@mixin BtnMain;
+}
+.BtnSoft {
+	@mixin BtnSoft;
+}
+
+
+
+/* Forms
+------------------------------------------------------------------------------*/
+
+@import "lib/modules/_form";
+
+@define-mixin FormDefault {
+	width: 530px;
+	
+	.Form__set--submit {
+		margin-top: 3em;
+	}
+
+	.Form__submit {
+		font-size: 18px;
+		padding-y: 1.3em;
+		width: 100%;
+	}
+}
+
+
+.Form__title {
+	cursor: default;
+}
+.Form__field {
+	& + & {
+		margin-top: 2em;
+	}
+
+	&--indent .Form__error {
+		padding-left: 18px;
+	}
+}
+
+.Form__field.inputFull {
+	.Form__title {
+		color: #666;
+		margin-bottom: 0;
+		padding-bottom: 0;
+		height: auto;
+		overflow: visible;
+	}
+	.Form__label {
+		display: inline-block;
+		padding-bottom: 5px;
+	}
+
+	&.isFocused .Form__title,
+	&.isHovered .Form__label {
+		color: #000;
+	}
+}
+.Form__field.inputFull.error {
+	.Form__error {
+		display: inline-block;
+		font-size: inherit;
+		width: auto;
+	}
+}
+.Form__input {
+	border-width: 0 0 1px;
+	border-color: $divider;
+	font-size: 18px;
+	padding-x: 0;
+	
+	&:hover,
+	&:focus {
+		border-color: #000;
+	}
+
+	textarea& {
+		border-width: 1px;
+		height: 8em;
+		padding: .5em;
+	}
+}
+
+.Form__submit {
+	@mixin BtnMain;
+}
+
+
+@import "modules/_custom_inputs";
+
+
+.PersonalData {
+	padding: 30px;
+	width: 660px;
+
+	&__header {
+		font: 24px Arial, Helvetica, sans-serif;
+		line-height: 1em;
+		margin: 0 0 20px;
+	}
+
+	&__accent {
+		color: #666;
+		font-size: 11px;
+		margin-bottom: 0;
+	}
+}
+
+
+/* Layout
+------------------------------------------------------------------------------*/
+
+@define-mixin PageWrapper {
+	box-sizing: border-box;
+	margin: auto;
+	padding-x: $offset;
+	min-width: 960px;
+	max-width: 1190px;
+}
+
+.Page {
+	display: table;
+	table-layout: fixed;
+	height: 100vh;
+}
+
+.Page__main {
+	display: table-row;
+	height: 100%;
+}
+
+.Page__wrapper {
+	@mixin PageWrapper;
+}
+
+/* Header
+------------------------------------------------------------------------------*/
+
+.Page__header {
+	display: table-row;
+	height: auto;
+	background-color: #fff;
+	box-shadow: $shadowHeader;
+	position: relative;
+	z-index: 2;
+}
+
+.Header__group {
+	display: table;
+	width: 100%;
+}
+.Header__box {
+	display: table-cell;
+	vertical-align: bottom;
+	
+	&--logo {
+		padding-right: 40px;
+		vertical-align: middle;
+		width: 1px;
+	}
+	&--menu {
+		padding-top: 2em;
+		width: 100%;
+	}
+}
+
+.Logo {
+	background-image: resolve('logo.png?v=1');
+	width: width('logo.png');
+	height: height('logo.png');
+	background-repeat: no-repeat;
+	display: inline-block;
+	margin-top: -9px;
+	transition: .2s;
+	
+	a&:hover {
+		opacity: .75;
+	}
+}
+
+.Header__links {
+	margin-bottom: .7em;
+}
+.Header__link {
+	color: #404040;
+	font-size: 14px;
+	
+	& + & {
+		margin-left: 1em;
+	}
+
+	span& {
+		cursor: default;
+	}
+}
+
+.Action__link {
+	position: relative;
+	
+	&:before {
+		content: "";
+		background-image: resolve('action_mark.png');
+		width: width('action_mark.png');
+		height: height('action_mark.png');
+		position: absolute;
+		bottom: 100%;
+		left: 50%;
+		margin-left: -calc(width('action_mark.png')/2);
+	}
+}
+
+@import "modules/_Search";
+@import "modules/_Nav";
+
+
+
+/* Main
+------------------------------------------------------------------------------*/
+
+.Main__header {
+	margin-bottom: 1em;
+}
+
+
+
+/* Modules
+------------------------------------------------------------------------------*/
+
+@import "modules/_Breadcrumbs";
+@import "modules/_Banner";
+@import "modules/_Slider";
+
+
+
+/* Status
+------------------------------------------------------------------------------*/
+
+.Status {	
+	&__group {
+		display: table;
+		width: 100%;
+	}
+	&__box {
+		display: table-cell;
+		vertical-align: bottom;
+		
+		&--icon {
+			padding-right: 15px;
+			width: 1px;
+		}
+		&--info {
+			padding-bottom: 10px;
+			width: 100%;
+		}
+	}
+
+	&__icon {
+		background-repeat: no-repeat;
+	}
+	&--success &__icon {
+		background-image: resolve('success.png');
+		width: width('success.png');
+		height: height('success.png');
+	}
+	&--error &__icon {
+		background-image: resolve('cross_red.png');
+		width: width('cross_red.png');
+		height: height('cross_red.png');
+	}
+
+	&__header {
+		font-size: 18px;
+	}
+}
+
+
+
+/* Tabs
+------------------------------------------------------------------------------*/
+
+@import "modules/_Tabs";
+
+.Tab__list {
+	border-bottom: 1px solid $divider;
+}
+.Tab {
+	color: $main;
+	font-size: 16px;
+	font-weight: bold;
+	padding-y: .5em;
+	
+	& + & {
+		margin-left: 2em;
+	}
+
+	&:not(&--active):hover {
+		color: $hover;
+	}
+
+	&--active {
+		color: #000;
+		position: relative;
+		
+		&:after {
+			content: "";
+			position: absolute;
+			bottom: -1px;
+			left: 0;
+			right: 0;
+			height: 3px;
+			background-color: $accent;
+		}
+	}
+}
+
+
+
+/* Upload
+------------------------------------------------------------------------------*/
+
+/*
+<div class="Upload">
+	<label class="Upload__label">
+		<input type="file" name="" id="" class="Upload__field">
+		<span tabindex="0" class="Upload__btn">Загрузить баннер</span>
+	</label>
+</div>
+*/
+
+.Upload {
+	&__group {
+		display: table;
+		width: 100%;
+	}
+	&__box {
+		display: table-cell;
+		vertical-align: middle;
+
+		& + & {
+			padding-left: 1em;
+		}
+		
+		&--field {
+			width: 1px;
+		}
+
+		&--info {
+			cursor: default;
+			width: 100%;
+		}
+	}
+
+	&__btn {
+		@mixin BtnSoft;
+	}
+
+	&__file,
+	&__description {
+		color: #666;
+	}
+
+	&__field {
+		display: none;
+	}
+
+	&__file {
+		font-size: 18px;
+	}
+}
+
+
+
+
+/* Categories
+------------------------------------------------------------------------------*/
+
+.Categories {
+	display: block;
+	margin: 0;
+	padding: 0;
+	
+	&Item {
+		border-bottom: 1px solid $divider;
+		display: table;
+		width: 100%;
+		
+		& + & {
+			margin-top: 60px;
+		}
+
+		&__box {
+			display: table-cell;
+			
+			& + & {
+				padding-left: 40px;
+			}
+			
+			&--info {
+				vertical-align: top;
+				width: 100%;
+			}
+			&--image {
+				vertical-align: bottom;
+				width: 1px;
+			}
+		}
+
+		&__header {
+			font-family: $fontAccent;
+			font-size: 34px;
+			margin-top: 0;
+			margin-bottom: .5em;
+		}
+		&__link {
+			text-decoration: none;
+		}
+	}
+}
+
+
+
+/* Products
+------------------------------------------------------------------------------*/
+
+.Products {
+	display: block;
+	margin: 0;
+	padding: 0;
+	
+	&--fill {
+		margin: -3em -1.5% 0;
+	
+		.ProductsItem {
+			margin-top: 4em;
+			margin: 4em 1.5% 0;
+			width: 22%;
+		
+			@media screen and (min-width: 1100px) {
+				width: 17%;
+			}
+		}
+	}
+	
+	li&Item {
+		margin-top: 0;
+	}
+
+	&Item {
+		display: inline-block;
+		vertical-align: top;
+
+		&__image {
+			margin-bottom: 0.5em;
+		}
+
+		&__code {
+			color: #999;
+			font-size: 11px;
+			line-height: normal;
+			text-align: center;
+			margin-bottom: 10px;
+		}
+
+		&__link {
+			display: block;
+			text-decoration: none;
+		}
+		&__link &__image {
+			width: 100%;
+			height: auto;
+		}
+	}
+}
+
+.Product {
+	padding-bottom: 4em;
+
+	&__group {
+		display: table;
+		width: 100%;
+	}
+	&__box {
+		display: table-cell;
+		vertical-align: top;
+		
+		& + & {
+			padding-left: 40px;
+		}
+	}
+
+	&__code {
+		font-size: 12px;
+	}
+
+	&__name {
+		line-height: 1.2;
+		margin-bottom: .5em;
+	}
+
+	&__linkToBuy {
+		margin-top: 24px;
+		margin-bottom: 30px;
+
+		.BtnMain {
+			padding: 24px 64px;
+			font-size: 18px;
+		}
+	}
+}
+.Slider.Slider--productCard {
+	border-top: 3px solid $divider;
+	padding-top: 5em;
+}
+
+.Files {
+	margin-bottom: 20px;
+}
+
+.File {
+	&__name {
+		border-bottom: 1px solid;
+	}
+}
+
+
+@import "modules/_ProductViewer";
+
+
+
+/* Collection
+------------------------------------------------------------------------------*/
+
+.Collection {
+	&Items {
+		display: block;
+		margin: 0 -2em;
+		padding: 0;
+	}
+
+	&Item {
+		display: inline-block;
+		margin: 0;
+		padding-x: 2em;
+		
+		&__link {
+			display: inline-block;
+		}
+
+		&__image {
+			width: 100px;
+			height: 100px;
+		}
+		
+		&__name {
+			display: block;
+			margin-top: 1em;
+		}
+	}
+}
+
+
+
+/* Action
+------------------------------------------------------------------------------*/
+
+.ActionInfo {
+	position: relative;
+	z-index: 1;
+	
+	&__group {
+		display: table;
+		width: 100%;
+	}
+	&__box {
+		display: table-cell;
+		vertical-align: bottom;
+		
+		& + & {
+			padding-left: 30px;
+		}
+
+		&--formLink {
+			width: 240px;
+		}
+	}
+
+	&__header {
+		margin-top: 0;
+	}
+
+	&Formlink {
+		line-height: 1.5;
+
+		&:before {
+			content: "";
+			display: block;
+			padding-bottom: .75em;
+			background-image: resolve('photo_main.png');
+			width: width('photo_main.png');
+			height: height('photo_main.png');
+			background-repeat: no-repeat;
+		}
+
+		&:hover:before {
+			background-image: resolve('photo_hover.png');
+		}
+		
+		&__title {
+			padding-y: .5em;
+		}
+	}
+}
+
+
+.ActionPrize {
+	background-color: #ffefc7;
+	background-image: resolve('background-action.jpg');
+	height: height('background-action.jpg');
+	background-position: 50% 50%;
+	border-radius: $bdrad;
+	margin: 40px -$offset;
+	position: relative;
+	
+	&:before {
+		content: "";
+		background-image: resolve('action_ears.png');
+		width: width('action_ears.png');
+		height: height('action_ears.png');
+		position: absolute;
+		bottom: 100%;
+		right: 100px;
+	}
+
+	&__group {
+		display: table;
+		width: 100%;
+		
+		& + & {
+			border-top: 1px solid #968d75;
+		}
+	}
+	&__box {
+		display: table-cell;
+		padding: 2% 2% 0;
+		text-align: center;
+	}
+	
+	&__image {
+		width: 100%;
+		height: auto;
+		max-width: 240px;
+	}
+	
+	&__title {
+		font: 28px $fontAccent;
+	}
+}
+
+
+.ActionForm {
+	@mixin FormDefault;
+	
+	.ActionForm__permission {
+		font-size: 18px;
+	}
+}
+
+.ActionTerms--fancy {
+	width: 600px;
+	
+	.ActionTerms__header {
+		margin-top: 0;
+	}
+}
+
+
+.ActionResult {
+	&__photos {
+		margin-top: 2em;
+	}
+
+	&__item {
+		margin-right: 2em;
+	}
+	
+	&__photo {
+		width: auto;
+		max-height: 300px;
+	}
+}
+
+
+
+/* Feedback
+------------------------------------------------------------------------------*/
+
+.FeedbackForm {
+	@mixin FormDefault;
+	
+	.FeedbackForm__type {
+		width: 100%;
+	}
+}
+
+
+
+/* ShopAddresses
+------------------------------------------------------------------------------*/
+
+@import "modules/_shops";
+
+
+
+/* Blank
+------------------------------------------------------------------------------*/
+
+.Page--blank {
+	background-image: resolve('bg_empty.png');
+	background-repeat: no-repeat;
+	background-position: 50% 0;
+	text-align: center;
+	height: 100vh;
+	
+	@media screen and (min-height: height('bg_empty.png')) {
+		background-size: cover;
+	}
+}
+
+.Blank {
+	display: inline-block;
+	font-size: 18px;
+	vertical-align: middle;
+	
+	&__header {
+		font-size: 70px;
+		margin-top: 0;
+		margin-bottom: .5em;
+	}
+	
+	&__status {
+		font-family: $fontAccent;
+		font-size: 35px;
+	}
+
+	&__logo {
+		background-image: resolve('logo_big.png');
+		width: width('logo_big.png');
+		height: height('logo_big.png');
+		background-repeat: no-repeat;
+		display: inline-block;
+		margin-top: 3em;
+		margin-bottom: 8em;
+		transition: .2s;
+		
+		a&:hover {
+			opacity: .75;
+		}
+	}
+
+	&--503 {
+		.Blank__header {
+			font-size: 50px;
+			width: 60%;
+			margin: 0 auto;
+			line-height: 1.2em;
+
+			&:before {
+				content: '';
+				display: block;
+				background-image: resolve("tiger.png");
+				width: width("tiger.png");
+				height: height("tiger.png");
+				margin: 0 auto 15px;
+				transform: translate(-8%, -13%);
+			}
+		}
+
+		.Blank__message {
+			margin-top: 23px;
+		}
+	}
+}
+
+
+
+
+@import "modules/_AboutCompany";
+
+
+/* Footer
+------------------------------------------------------------------------------*/
+
+.Page__footer {
+	display: table-row;
+	height: auto;
+}
+
+.Page__footer .Page__wrapper {
+	padding-top: 170px;
+	padding-bottom: 30px;
+	position: relative;
+}
+
+
+@import "modules/_troubleReport";

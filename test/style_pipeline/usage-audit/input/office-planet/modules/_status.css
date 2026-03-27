@@ -1,0 +1,116 @@
+/* STATUS
+---------------------------------------------------------------------*/
+
+/*doc
+
+## Status
+
+<div class="Status Status--success">
+	<div class="Status__group">
+		<div class="Status__box icon">
+			<div class="Status__icon"></div>
+		</div>
+		<div class="Status__box info">
+			<h2 class="Status__header">Заказ принят</h2>
+			<div class="Status__text">
+				Спасибо за ваш интерес к нашим товарам.<br>
+				В ближайшее время мы свяжемся с вами, чтобы уточнить детали доставки каталога.</div>
+		</div>
+		<div class="Status__box t-a-r">
+			<a href="#" class="Status__btn">Вернуться на главную</a>
+		</div>
+	</div>
+</div>
+
+*/
+
+.Status {
+	border: 1px solid $dividerColor;
+	margin-bottom: calc($lineHeight * 1.5);
+	padding: 40px 40px;
+
+	&__group {
+		@mixin PseudoTable;
+		width: 100%;
+	}
+	&__box {
+		@mixin PseudoTable__cell;
+		vertical-align: top;
+
+		&.icon {
+			padding-right: 15px;
+			width: 0;
+		}
+		&.info {
+			width: 100%;
+		}
+	}
+
+	&__icon {
+		@mixin Icon;
+		cursor: default;
+	}
+	&--success &__icon {
+		@mixin OtherIcon statusSuccess_30x30, $theme_accent;
+		margin-top: -.35em;
+	}
+
+	&__header {
+		font-weight: normal;
+		margin-top: 0;
+	}
+
+	&__btn {
+		@mixin Btn--basic;
+		@mixin Btn--sub;
+		@mixin Btn--subBig;
+		@mixin Btn--subArrow-forward;
+
+		&:hover,
+		&.hover,
+		&:active,
+		&.active {
+			@mixin Btn--main;
+		}
+	}
+}
+
+
+/*
+<div class="Status--site">
+	<h1 class="Status__header">Страница не&nbsp;найдена</h1>
+	<hr class="Status__divider">
+	<div class="Status__appendix">
+		Вы можете подобрать товары <a href="#">по группам</a>, <a href="#">алфавиту</a> или <a href="#">бренду</a>.<br>
+		А также добавить <a href="#">товары по коду</a> из бумажного каталога.
+	</div>
+</div>
+*/
+
+.Status--site {
+	cursor: default;
+	padding-top: 50px;
+	text-align: center;
+
+	.Status__header,
+	.Status__appendix {
+		margin-x: auto;
+		width: 450px;
+	}
+
+	.Status__header {
+		color: $theme_brand;
+
+		@if $theme_name == 'op' {
+			color: $theme_accent;
+		}
+
+		font-size: 40px;
+		margin-y: 0;
+	}
+	.Status__divider {
+		border: 0;
+		border-top: 1px dotted $dividerColor;
+		margin-y: 25px 15px;
+	}
+}

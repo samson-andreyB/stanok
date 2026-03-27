@@ -1,0 +1,214 @@
+.Notification {
+	background: url(/img/icon/notification.png) no-repeat;
+	cursor: pointer;
+	position: absolute;
+	right: 330px;
+	top: 40px;
+	width: 28px;
+	height: 19px;
+	transition: .15s;
+}
+
+.Notification:hover {
+	opacity: .7;
+}
+
+.Notification.full span {
+	background-color: #db241f;
+	box-sizing: border-box;
+	border-radius: 8px;
+	color: #fff;
+	display: inline-block;
+	text-align: center;
+	padding: 1.5px 4px;
+	position: absolute;
+	top: -7px;
+	right: -7px;
+}
+
+.NotificationWindow {
+	display: flex;
+
+	&--empty {
+		display: block;
+		width: 660px;
+		padding: 85px 0;
+		color: #777;
+		font-size: 2em;
+		text-align: center;
+	}
+}
+
+.NotificationBox {
+	box-sizing: border-box;
+}
+
+.NotificationInfo {
+	display: none;
+	width: 410px;
+	padding: 25px;
+}
+
+.NotificationInfo.active {
+	display: block;
+}
+
+.NotificationInfo__title {
+	font-size: 18px;
+	line-height: 22px;
+	margin: 8px 0 15px;
+}
+
+.NotificationInfo__date {
+	color: #777;
+}
+
+.NotificationInfo__text {
+	word-wrap: break-word;
+	margin-bottom: 18px;
+	line-height: 1.5;
+}
+
+.NotificationInfo__text p {
+	margin-bottom: 1em;
+}
+
+.NotificationInfo__text .fine,
+.NotificationInfo__accent {
+	font-weight: bold;
+}
+
+.NotificationInfo__text a {
+	text-decoration: none;
+}
+
+.NotificationInfo__text ul {
+	padding-left: 1.5em;
+}
+
+.NotificationInfo__text li {
+	position: relative;
+
+	&:before {
+		content: '\2014';
+		position: absolute;
+		top: 0;
+		right: 100%;
+		margin-right: 0.5em;
+	}
+}
+
+.NotificationInfo__text a:hover {
+	text-decoration: underline;
+}
+
+.NotificationInfo__aux {
+	margin-top: .5em;
+}
+
+.NotificationInfo__button,
+.NotificationInfo__button:focus {
+	box-sizing: border-box;
+	padding: 7px 11px;
+}
+
+.NotificationList {
+	position: relative;
+	width: 260px;
+	min-height: 360px;
+	background-color: #f0f0f0;
+}
+
+.NotificationList__title {
+	box-sizing: border-box;
+	border-bottom: 1px solid #d4d4d4;
+	height: 50px;
+	margin: 0;
+	padding: 20px 0 15px 20px;
+	font-size: 14px;
+}
+
+.NotificationList__items {
+	position: absolute;
+	top: 50px;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	padding: 0;
+	margin: 0;
+	overflow-y: auto;
+}
+
+.NotificationList__item {
+	display: block;
+	border-bottom: 1px solid #d4d4d4;
+	margin: 0;
+	padding: 9px 10px 9px 20px;
+	line-height: 1.3;
+	cursor: pointer;
+	user-select: none;
+}
+
+.NotificationList__item.unread {
+	background: url(/img/icon/notification_unread.png) left 8px top 12px no-repeat;
+	font-weight: bold;
+}
+
+.NotificationList__item:hover {
+	background-color: #f8f8f8;
+}
+
+.NotificationList__item.active {
+	background-color: #fff;
+}
+
+.NotificationList__item.active:hover {
+	cursor: default;
+}
+
+.NotificationInfo--jackpot {
+	.NotificationInfo__date {
+		padding-top: 70px;
+		padding-right: 25px;
+		padding-bottom: 20px;
+		margin: -25px;
+		margin-bottom: 15px;
+		background-color: $C_JACKPOT;
+		background-image: resolve('jackpotLogo_183x61.png');
+		background-position: 25px 50%;
+		background-repeat: no-repeat;
+		text-align: right;
+		color: $C_JACKPOT_PALE;
+	}
+
+	.NotificationInfo__controls {
+		margin-top: 15px;
+	}
+}
+
+.NotificationInfo--preparedOrder {
+	.NotificationInfo__title {
+		&:after {
+			@mixin PreparedOrderIconSize 'size4';
+
+			content: '';
+			position: absolute;
+			margin-top: -.1em;
+			margin-left: .4em;
+		}
+	}
+}
+
+.NotificationContactBox {
+	&__preview {
+		margin-bottom: 10px;
+	}
+	&__manager {
+		font-weight: bold;
+	}
+	&__manager,
+	&__phone,
+	&__email {
+		line-height: 1.583;
+	}
+}

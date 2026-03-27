@@ -1,0 +1,144 @@
+@import 'modules/_caret';
+
+@define-mixin dropCaret {
+	.Drop__trigger {
+		&:after {
+			@mixin caret;
+			content: "";
+			margin-top: -.3em;
+			margin-left: .4em;
+		}
+	}
+}
+
+@define-mixin Drop--toLeft {
+	.Drop__content {
+		left: auto;
+		right: 0;
+	}
+}
+
+.Drop {
+	display: inline-block;
+	position: relative;
+
+	&__trigger {
+		cursor: pointer;
+		display: block;
+		position: relative;
+
+		a& {
+			cursor: pointer;
+			text-decoration: none;
+
+			&,
+			&:hover {
+				color: inherit;
+			}
+		}
+	}
+
+	&__content {
+		background-color: #fff;
+		box-shadow: 0 5px 7px rgba(0,0,0,.3);
+		display: none;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		min-width: 100%;
+		width: 140px;
+		z-index: 10;
+		line-height: 1.3;
+	}
+
+	&.Drop--active,
+	.Drop--onHover&:hover {
+		background-color: #fff;
+	}
+	&:hover &__trigger {
+		background-color: #e9e9e9;
+	}
+
+	&.Drop--active:hover &__trigger {
+		background-color: #fff;
+	}
+	.Drop--onHover&:hover &__trigger {
+		background-color: #fff;
+	}
+
+	&.Drop--active &__content,
+	.Drop--onHover&:hover &__content {
+		display: block;
+	}
+
+	&.Drop--active .Drop__trigger {
+		cursor: default;
+	}
+}
+
+.Drop--caret {
+	@mixin dropCaret;
+}
+
+.Drop--discount {
+	@mixin Drop--toLeft;
+
+	.Drop__content {
+		padding: 20px;
+	}
+}
+
+.Drop--contract {
+	.Drop__value {
+		font-weight: bold;
+	}
+
+	.Drop__content {
+		padding: 15px;
+		min-width: 135px;
+	}
+
+	.BtnMain {
+		width: 100%;
+	}
+
+	.Form__group {
+		margin-bottom: 0;
+	}
+
+	.Hint--default {
+		font-size: 12px;
+		color: #666;
+		margin-top: 10px;
+	}
+}
+
+@media (max-width: 1150px) {
+	.Drop--discount,
+	.Drop--filial,
+	.Drop--contract {
+		.Panel--main & .Drop__trigger {
+			font-size: 0;
+
+			&:before {
+				content: attr(data-trigger);
+				font-size: 13px;
+				vertical-align: middle;
+
+				.not-oldie & {
+					font-size: 14px;
+				}
+			}
+
+			&:after {
+				margin-top: 0;
+			}
+		}
+	}
+
+	.Drop--filial .FilialToggle__name,
+	.Drop--discount .Drop__value,
+	.Drop--contract .Drop__value {
+		display: none;
+	}
+}

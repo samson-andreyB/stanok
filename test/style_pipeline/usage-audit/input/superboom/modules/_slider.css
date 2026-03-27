@@ -1,0 +1,134 @@
+.Slider {
+	margin-x: -25px;
+	padding-x: 25px;
+
+	@media screen and (max-width: 1490px) {
+		overflow-x: hidden;
+	}
+
+	&__content {
+		overflow: hidden;
+	}
+
+	&__control {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		cursor: pointer;
+		width: 25px;
+		z-index: 3;
+		transition: all .2s ease-in-out;
+
+		&.disabled,
+		.Loading--active & {
+			display: none;
+		}
+
+		.Slider__arrow {
+			position: relative;
+			display: block;
+
+			&:before {
+				content: '';
+				position: absolute;
+				top: calc(50% - 24px);
+				z-index: 3;
+				width: 48px;
+				height: 48px;
+				border: 1px solid transparent;
+				border-radius: 50%;
+				background-image: svg('arrow_right_10x18', '[color]: $BRAND');
+				background-position: 56% 50%;
+				background-repeat: no-repeat;
+				background-clip: content-box;
+				cursor: pointer;
+				transition: width .2s ease-in-out, border-color .2s ease-in-out, background .2s ease-in-out, right .2s ease-in-out;
+				user-select: none;
+			}
+		}
+
+		&--prev {
+			left: 0;
+			background: linear-gradient(270deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 1) 42px, rgba(255, 255, 255, 0) 42px);
+
+			.Slider__arrow:before {
+				left: -10px;
+				transform: scaleX(-1);
+			}
+		}
+
+		&--next {
+			right: 0;
+			background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 1) 42px, rgba(255, 255, 255, 0) 42px);
+
+			.Slider__arrow:before {
+				right: -10px;
+			}
+		}
+	}
+
+	&:hover {
+		.Slider__control {
+			width: 65px;
+		}
+
+		.Slider__control {
+			.Slider__arrow:before {
+				border-color: $BRAND;
+				background-color: #fff;
+			}
+
+			&:hover .Slider__arrow:before {
+				border-color: #fff;
+				background-color: $BRAND;
+				background-image: svg('arrow_right_10x18', '[color]: #fff');
+			}
+		}
+
+		@media screen and (max-width: 1490px) {
+			.Slider__control--prev .Slider__arrow:before {
+				left: 5px;
+			}
+
+			.Slider__control--next .Slider__arrow:before {
+				right: 5px;
+			}
+		}
+	}
+
+	&--furniture {
+		&.Loading--active {
+			height: 227px;
+			overflow: hidden;
+		}
+
+		.Slider__arrow {
+			height: 175px;
+
+			@media screen and (max-width: 1270px) {
+				height: 13.85vw;
+			}
+
+			@media screen and (max-width: 1117px) {
+				height: 16.1vw;
+			}
+		}
+
+		.Slider__list {
+			margin-x: -11px;
+
+			.Tile {
+				width: 180px;
+				padding-x: 11px;
+			}
+		}
+	}
+
+ 	&__list {
+		scrollbar-width: none;
+	 }
+
+	 &.Loading--active {
+		 margin-x: 0;
+	 }
+}

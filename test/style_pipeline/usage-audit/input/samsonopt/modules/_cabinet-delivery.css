@@ -1,0 +1,12 @@
+.ShopBox--default {
+	.ShopBox__header {
+		font-weight: normal;
+		font-size: 18px;
+		margin-bottom: 10px;
+	}
+
+	.ShopBox__description {
+		margin-bottom: 10px;
+		line-height: 1.5;
+	}
+}

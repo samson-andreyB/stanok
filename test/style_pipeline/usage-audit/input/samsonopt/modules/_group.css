@@ -1,0 +1,31 @@
+.Group {
+	display: table;
+	width: 100%;
+
+	&__box {
+		display: table-cell;
+		vertical-align: middle;
+
+		&--thin {
+			width: 1px;
+			white-space: nowrap;
+		}
+	}
+}
+
+.Group--top {
+	.Group__box {
+		vertical-align: top;
+	}
+}
+
+.Group--productCard {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 20px;
+
+	.Group__box {
+		display: block;
+		width: calc((100% - 30px) / 3);
+	}
+}

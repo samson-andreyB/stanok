@@ -1,0 +1,240 @@
+$MENU_ITEM_PADDING_X: 15px;
+
+.CatalogMenu--default {
+	position: relative;
+	width: 200px;
+	font-size: 14px;
+	line-height: 1.5;
+	color: #333;
+	cursor: default;
+
+	@mixin hasOverlay {
+		transition: .25s;
+		background-color: transparent;
+	}
+
+	.CatalogMenu__trigger {
+		position: relative;
+		box-sizing: border-box;
+		width: 200px;
+		height: 40px;
+		padding-x: 15px;
+		border-radius: $B_RAD;
+		font-size: 15px;
+		font-weight: bold;
+		color: #fff;
+		background-color: $C_BRAND;
+		user-select: none;
+		cursor: pointer;
+		transition: .25s;
+
+		&:before {
+			content: '';
+			display: inline-block;
+			vertical-align: middle;
+			height: 105%;
+		}
+
+		&:hover {
+			background-color: $C_BRAND_ACTIVE;
+		}
+	}
+
+	.CatalogMenu__triggerIcon {
+		position: relative;
+		display: inline-block;
+		vertical-align: middle;
+		margin-top: -2px;
+		margin-right: 10px;
+
+		&,
+		&:before,
+		&:after {
+			width: 16px;
+			height: 2px;
+			border-radius: 2px;
+			background-color: #fff;
+			transition: .2s;
+		}
+
+		&:before,
+		&:after {
+			content: '';
+			position: absolute;
+			left: 0;
+		}
+
+		&:before {
+			bottom: 5px;
+		}
+
+		&:after {
+			top: 5px;
+		}
+	}
+
+	.CatalogMenu__link {
+		display: block;
+		padding: 7px $MENU_ITEM_PADDING_X;
+		color: #111;
+		text-decoration: none;
+
+		&--allBrands {
+			text-align: center;
+			border: 1px solid #ddd;
+			border-radius: 3px;
+
+			&:hover {
+				border-color: $C_BRAND;
+			}
+		}
+
+		.CatalogMenu__label {
+			height: 1.5em; /* One line */
+			overflow: hidden;
+		}
+	}
+
+	.CatalogMenu__rubricIcon {
+		display: inline-block;
+		width: 16px;
+		height: 16px;
+		vertical-align: middle;
+		margin-top: -2px;
+		margin-right: 4px;
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+
+		&--jackpot {
+			height: 17px;
+			background-image: resolve('safe_16x17_f90.svg');
+		}
+
+		&--brands {
+			background-image: resolve('brauberg_32x32.png');
+			background-size: contain;
+		}
+	}
+
+	.CatalogMenu__rubric {
+		&--special {
+			& > .CatalogMenu__link {
+				color: $C_BRAND;
+			}
+		}
+	}
+
+	.CatalogMenu__list {
+		box-shadow: 0 5px $MENU_ITEM_PADDING_X rgba(0, 0, 0, .3);
+	}
+
+	.CatalogMenu__list--main {
+		position: relative;
+
+		&:after {
+			content: '';
+			width: 15px;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			right: 0;
+			border-bottom-right-radius: $B_RAD;
+			background-color: #eee;
+		}
+
+		& > .CatalogMenu__rubric {
+			background-color: #eee;
+
+			&:last-child {
+				border-radius: 0 0 3px 3px;
+			}
+
+			& > .CatalogMenu__link {
+				&:hover {
+					color: $C_BRAND;
+				}
+			}
+
+			&:hover,
+			&.hover {
+				background-color: #fff;
+
+				& > .CatalogMenu__link {
+					position: relative;
+
+					&:after {
+						content: '';
+						width: $MENU_ITEM_PADDING_X;
+						height: 100%;
+						position: absolute;
+						top: 0;
+						right: 0;
+						background-color: #fff;
+						z-index: 1;
+					}
+				}
+			}
+
+			&.hover .CatalogMenu__list--sub {
+				display: block;
+			}
+		}
+	}
+
+	.CatalogMenu__list--sub {
+		display: none;
+		width: 300px;
+		position: absolute;
+		top: 0;
+		left: 100%;
+		border-radius: 0 $B_RAD $B_RAD 0;
+		background-color: #fff;
+		overflow: hidden;
+
+		.CatalogMenu__link:hover {
+			color: #fff;
+			background-color: $C_BRAND;
+		}
+	}
+
+	.CatalogMenu__list--brands {
+		width: auto;
+		padding: 20px;
+	}
+
+	.CatalogMenu__dropdown {
+		display: none;
+		padding-x: $MENU_ITEM_PADDING_X;
+		position: absolute;
+		top: 100%;
+		left: calc(-$MENU_ITEM_PADDING_X);
+		width: 100%;
+		padding-bottom: 25px;
+	}
+}
+
+
+.CatalogMenu--active {
+	@mixin showOverlay {
+		background-color: currentColor;
+	}
+
+	.CatalogMenu__trigger {
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
+	.CatalogMenu__triggerIcon {
+		background-color: transparent;
+
+		&:before {
+			bottom: 0;
+			transform: rotate(45deg);
+		}
+
+		&:after {
+			top: 0;
+			transform: rotate(-45deg);
+		}
+	}
+}

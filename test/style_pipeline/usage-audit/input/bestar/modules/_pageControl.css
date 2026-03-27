@@ -1,0 +1,9 @@
+/* Панель пагинации
+**********************************************************/
+
+.PageControl {
+	display: flex;
+	background-color: $colorFill;
+	padding: 15px 0;
+	justify-content: space-between;
+}

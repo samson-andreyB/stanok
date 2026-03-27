@@ -1,0 +1,25 @@
+.Delta {
+	color: #999;
+
+	&--green {
+		color: #48b28b;
+	}
+
+	&--red {
+		color: #e45959;
+	}
+
+	&--up:after {
+		content: '\2191';
+	}
+
+	&--down:after {
+		content: '\2193';
+	}
+
+	&--up:after,
+	&--down:after {
+		position: relative;
+		top: -.15em;
+	}
+}

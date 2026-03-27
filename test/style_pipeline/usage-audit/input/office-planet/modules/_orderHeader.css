@@ -1,0 +1,38 @@
+.OrderHeader {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 10px;
+	padding-y: 8px;
+	border: 1px solid $dividerColor;
+	@mixin infoBg--img;
+}
+
+.OrderHeader__box {
+	padding-x: 25px;
+	font-size: 14px;
+	box-sizing: border-box;
+
+	&--header {
+		margin: 0;
+		font-size: 17px;
+		padding-right: 30px;
+	}
+
+	&--status {
+		padding-left: 30px;
+		border-left: 1px #d5d5d5 dotted;
+
+		.OrderStatus--bonuses {
+			margin-right: 10px;
+		}
+	}
+
+	&--aux {
+		margin-left: auto;
+
+		.OrderCancelLink {
+			margin-left: 15px;
+		}
+	}
+}

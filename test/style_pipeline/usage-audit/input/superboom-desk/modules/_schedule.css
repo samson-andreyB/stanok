@@ -1,0 +1,14 @@
+.Schedule--default {
+	.Schedule__begin {
+		margin-right: 5px;
+	}
+
+	.Schedule__end {
+		margin-left: 10px;
+		margin-right: 5px;
+	}
+
+	.Schedule__checkbox {
+		margin-left: 15px;
+	}
+}

@@ -1,0 +1,58 @@
+@define-mixin hocus {
+	&:hover,
+	&.hover,
+	&:focus,
+	&.focus {
+		@mixin-content;
+	}
+}
+
+@define-mixin hocusac {
+	&:hover,
+	&.hover,
+	&:focus,
+	&.focus,
+	&:active,
+	&.active {
+		@mixin-content;
+	}
+}
+
+@define-mixin defhocus {
+	&,
+	&:hover,
+	&.hover,
+	&:focus,
+	&.focus {
+		@mixin-content;
+	}
+}
+
+@define-mixin defhocusac {
+	&,
+	&:hover,
+	&.hover,
+	&:focus,
+	&.focus,
+	&:active,
+	&.active {
+		@mixin-content;
+	}
+}
+
+@define-mixin groupIB {
+	box-sizing: border-box;
+	display: inline-block;
+	width: 100%;
+}
+
+@define-mixin Blocked {
+	filter: grayscale(100%);
+	pointer-events: none;
+	opacity: .6;
+	user-select: none;
+}
+
+.Blocked {
+	@mixin Blocked;
+}

@@ -1,0 +1,125 @@
+@define-mixin BadgeJackpot--default {
+	display: inline-block;
+	vertical-align: middle;
+	text-align: center;
+	cursor: help;
+	color: #fff;
+
+	.BadgeJackpot__body {
+		display: inline-block;
+		font-weight: bold;
+		line-height: 0;
+	}
+
+	.BadgeJackpot__hint {
+		margin-top: 3px;
+		font-size: 9px;
+	}
+}
+
+
+.BadgeJackpot--default {
+	@mixin BadgeJackpot--default;
+	font-size: 12px;
+	position: relative;
+
+	.BadgeJackpot__body {
+		padding: 11px 8px 10px;
+		border-radius: $B_RAD;
+		background-color: $C_JACKPOT;
+	}
+
+	.BadgeJackpot__hint {
+		color: $C_JACKPOT;
+		position: absolute;
+		top: 100%;
+		left: 0;
+	}
+
+	&:hover {
+		.BadgeJackpot__body {
+			background-color: $C_JACKPOT_LIGHT;
+		}
+
+		.BadgeJackpot__hint {
+			color: $C_JACKPOT_LIGHT;
+		}
+	}
+}
+
+
+.BadgeJackpot--small {
+	@mixin BadgeJackpot--default;
+	font-size: 12px;
+
+	.BadgeJackpot__body {
+		padding: 9px 5px 8px;
+		border-radius: 4px;
+		background-color: $C_JACKPOT;
+	}
+
+	.BadgeJackpot__times {
+		font-size: 10px;
+	}
+
+	&:hover {
+		.BadgeJackpot__body {
+			background-color: $C_JACKPOT_LIGHT;
+		}
+	}
+}
+
+
+.BadgeJackpot--big {
+	@mixin BadgeJackpot--default;
+	border-radius: $B_RAD;
+	padding: 10px 6px 5px;
+	color: #fff;
+	line-height: 1;
+	background-color: $C_JACKPOT;
+
+	.BadgeJackpot__body {
+		font-size: 18px;
+	}
+
+	.BadgeJackpot__hint {
+		font-size: 11px;
+	}
+
+	&:hover {
+		background-color: $C_JACKPOT_LIGHT;
+	}
+}
+
+
+.BadgeJackpot--stepsBig {
+	@mixin BadgeJackpot--default;
+	border-radius: $B_RAD;
+	padding: 8px 13px 6px;
+	background-color: $C_JACKPOT;
+	color: #fff;
+
+	.BadgeJackpot__body:before {
+		content: '';
+		display: inline-block;
+		width: width('safe_24x25_f90.svg');
+		height: height('safe_24x25_f90.svg');
+		background-image: resolve('safe_24x25_f90.svg');
+	}
+
+	&:hover {
+		background-color: $C_JACKPOT_LIGHT;
+
+		.BadgeJackpot__body:before {
+			background-image: resolve('safe_24x25_fa1.svg');
+		}
+	}
+}
+
+
+.BadgeJackpot--empty {
+	color: $C_DEFAULT;
+	cursor: default;
+	display: inline-block;
+	pointer-events: none;
+}

@@ -1,0 +1,265 @@
+.UploadPhoto--default {
+	.UploadPhoto__layout {
+		display: flex;
+	}
+
+	.UploadPhoto__main {
+		flex-shrink: 0;
+		width: 520px;
+	}
+
+	.UploadPhoto__workArea {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		box-sizing: border-box;
+		border: 1px solid #dadada;
+		min-height: 376px;
+		transition: background-color .2s;
+
+		&--empty {
+			justify-content: center;
+
+			.UploadPhoto__list {
+				display: none;
+			}
+
+			.UploadPhoto__interact {
+				border-top-width: 0;
+				width: 395px;
+				margin-top: 0;
+				margin-x: auto;
+				padding-left: 60px;
+				background-image: resolve('icons/picture_45x34_aaa.png');
+				background-repeat: no-repeat;
+				background-position: 0 50%;
+			}
+		}
+
+		&--dragover {
+			background-color: #f8f8f8;
+		}
+	}
+
+	.UploadPhoto__interact {
+		box-sizing: border-box;
+		border-top: 1px solid #dadada;
+		margin-top: auto;
+		padding: 15px 0 15px 20px;
+		color: $C_GRAY_DARK;
+		font-size: 12px;
+		line-height: 1.5;
+	}
+
+	.UploadPhoto__list {
+		padding-x: 20px;
+		max-height: 425px;
+		overflow: auto;
+	}
+
+	.UploadPhoto__item {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding-y: 10px;
+	}
+
+	.UploadPhoto__item + .UploadPhoto__item {
+		border-top: 1px solid #eee;
+	}
+
+	.UploadPhoto__itemThumbnailWrapper {
+		width: 40px;
+		height: 40px;
+		min-height: 0;
+
+		&:after {
+			width: 10px;
+			height: 10px;
+			border-width: 2px;
+		}
+
+		&.Loading--active {
+			.UploadPhoto__itemThumbnail {
+				display: none;
+			}
+		}
+	}
+
+	.UploadPhoto__itemThumbnail {
+		width: 40px;
+		height: 40px;
+		object-fit: contain;
+	}
+
+	.UploadPhoto__itemInfo {
+		flex: 1;
+		margin-left: 15px;
+	}
+
+	.UploadPhoto__itemName {
+		color: #000;
+		font-size: 12px;
+		line-height: 1.3;
+		max-width: 270px;
+		word-break: break-all;
+	}
+
+	.UploadPhoto__itemFileSize {
+		color: $C_GRAY_DARK;
+		font-size: 11px;
+		line-height: 1.45;
+	}
+
+	.UploadPhoto__itemStatus {
+		min-width: 105px;
+		color: #999;
+		font-size: 11px;
+		text-align: right;
+	}
+
+	.UploadPhoto__itemRemove {
+		width: calc(width('icons/cross_9x9_999.png') + 6);
+		height: calc(height('icons/cross_9x9_999.png') + 6);
+		background-image: resolve('icons/cross_9x9_999.png');
+		margin-left: 10px;
+		margin-right: -3px;
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+		cursor: pointer;
+
+		&:hover {
+			background-image: resolve('icons/cross_9x9_e55.png');
+		}
+	}
+
+	.UploadPhoto__progress {
+		display: inline-flex;
+		align-items: center;
+
+		&--success,
+		&--error {
+			.UploadPhoto__progressBar {
+				display: none;
+			}
+		}
+
+		&--error {
+			color: $error;
+		}
+	}
+
+	.UploadPhoto__progressBar {
+		width: 70px;
+		background-color: #e3e3e3;
+	}
+
+	.UploadPhoto__progressDone {
+		height: 2px;
+		background-color: $main;
+	}
+
+	.UploadPhoto__progressStatus {
+		min-width: 35px;
+		text-align: right;
+	}
+
+	.UploadPhoto__sidebar {
+		margin-left: 20px;
+		color: #777;
+	}
+
+	.UploadPhoto__requirements {
+		margin: 0;
+		padding: 0;
+		line-height: 16px;
+		list-style-type: none;
+
+		&:not(:first-child) {
+			margin-top: 12px;
+		}
+	}
+
+	.UploadPhoto__requirementsItem {
+		&:not(:first-child) {
+			margin-top: 4px;
+		}
+	}
+
+	.UploadPhoto__uploadProgress {
+		position: relative;
+		margin-top: 15px;
+		padding-left: 15px;
+		font-size: 12px;
+		line-height: 1;
+
+		&:before {
+			@mixin loadingIndicator 10px, 2px;
+
+			content: '';
+			position: absolute;
+			left: 5px;
+			box-sizing: border-box;
+		}
+	}
+
+	.UploadPhoto__statusContainer {
+		margin-top: 15px;
+	}
+
+	.UploadPhoto__status {
+		&--success {
+			.UploadPhoto__statusHeader {
+				color: $success;
+
+				&:before {
+					content: '';
+					display: inline-block;
+					margin-top: -.2em;
+					margin-right: .1em;
+					width: width('icons/check_14x11_2b8.png');
+					height: height('icons/check_14x11_2b8.png');
+					vertical-align: middle;
+					background-image: resolve('icons/check_14x11_2b8.png');
+					background-repeat: no-repeat;
+				}
+			}
+		}
+
+		&--error {
+			.UploadPhoto__statusContent {
+				background-color: #fee;
+				padding: 10px;
+			}
+		}
+	}
+
+	.UploadPhoto__status + .UploadPhoto__status {
+		margin-top: 10px;
+	}
+
+	.UploadPhoto__statusHeader {
+		font-size: 12px;
+	}
+
+	.UploadPhoto__statusContent {
+		margin-top: 3px;
+	}
+
+	.UploadPhoto__rejected {
+		margin: 0;
+		line-height: 1.45;
+	}
+
+	.UploadPhoto__trigger {
+		color: $link;
+
+		@mixin hocus {
+			color: $linkHover;
+		}
+	}
+
+	.UploadPhoto__field {
+		display: none;
+	}
+}

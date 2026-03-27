@@ -1,0 +1,391 @@
+@import 'modules/_var';
+
+
+
+.JackpotIntroduction {
+	display: table;
+	margin: 0 auto;
+
+	&__box {
+		display: table-cell;
+		vertical-align: top;
+
+		&--main {
+			width: 450px;
+			background-image: url('/assets/img/jackpot/logo_441x176.png');
+			background-repeat: no-repeat;
+			padding-top: 200px;
+		}
+
+		&--illustration {
+			width: 465px;
+			background-image: url('/assets/img/jackpot/animation.gif');
+			background-repeat: no-repeat;
+
+			&:before {
+				content: '';
+				display: inline-block;
+				vertical-align: top;
+				height: 388px;
+			}
+		}
+	}
+}
+
+
+
+.JackpotPrinciples {
+	&__item {
+		display: inline-block;
+		width: 235px;
+		height: 320px;
+		padding: 200px 20px 50px;
+		border-radius: 20px;
+		line-height: 22px;
+		background-color: #fff;
+		color: #333;
+		box-sizing: border-box;
+		text-align: center;
+		position: relative;
+		background-repeat: no-repeat;
+		background-position: 50% 45px;
+
+		& + & {
+			margin-left: 115px;
+
+			&:before {
+				content: '';
+				position: absolute;
+				width: 36px;
+				height: 39px;
+				background-image: url('/assets/img/jackpot/triangle_rounded_7ce.png');
+				top: 50%;
+				left: calc(-115px/2 - 36px/2);
+				margin-top: calc(-39px/2);
+			}
+		}
+
+		&--join {
+			background-image: url('/assets/img/jackpot/coin_power.png');
+		}
+
+		&--saveUp {
+			background-image: url('/assets/img/jackpot/coin_pig.png');
+		}
+
+		&--spend {
+			background-image: url('/assets/img/jackpot/coin_gift.png');
+		}
+	}
+
+	&__accent {
+		font-weight: bold;
+	}
+}
+
+
+
+.JackpotSteps {
+	color: #555;
+
+	&__item {
+		margin-top: 45px;
+	}
+
+	&__itemHeader {
+		font-size: 24px;
+		color: #333;
+		font-weight: bold;
+		margin-bottom: 15px;
+	}
+
+	&__itemNumber {
+		display: inline-block;
+		vertical-align: middle;
+		line-height: 0;
+		padding-top: 16px;
+		padding-bottom: 18px;
+		margin-top: -2px;
+		width: 34px;
+		margin-right: 3px;
+		text-align: center;
+		background-color: #83cf91;
+		color: #fff;
+		border-radius: 50%;
+		font-size: 20px;
+		font-weight: normal;
+	}
+
+	&__paragraph {
+		& + & {
+			margin-top: 20px;
+		}
+	}
+
+	&__item {
+		background-repeat: no-repeat;
+		background-position: 100% 50%;
+
+		&--join {
+			max-width: 640px;
+			padding: 15px 165px 15px 0;
+			margin-top: -15px;
+			margin-bottom: -15px;
+			background-image: url('/assets/img/jackpot/man_sits.png');
+		}
+
+		&--welcome {
+			position: relative;
+			max-width: 450px;
+			padding: 20px 220px 30px 0;
+			margin-top: 25px;
+			margin-bottom: 15px;
+
+			.Illustration--girlWithCoins {
+				position: absolute;
+				top: 0;
+				right: 0;
+				width: 187px;
+				height: 146px;
+				background-image: url('/assets/img/jackpot/girl_width_coins.png');
+
+				.Illustration__label {
+					position: absolute;
+					top: 15px;
+					right: 0;
+					width: 78px;
+					font-family: $F_SEGOE_UI;
+					font-weight: 900;
+					font-size: 27px;
+					text-align: center;
+					color: #fff;
+					cursor: default;
+				}
+			}
+		}
+
+		&--goal {
+			max-width: 720px;
+			padding-right: 130px;
+			background-image: url('/assets/img/jackpot/bags.png');
+			background-position: 100% 100%;
+		}
+
+		&--spend {
+			max-width: 700px;
+			padding-right: 130px;
+			background-image: url('/assets/img/jackpot/man_carries_boxes.png');
+		}
+
+		&--watchOut {
+			max-width: 550px;
+			padding-right: 130px;
+			padding-bottom: 5px;
+			background-image: url('/assets/img/jackpot/coin_burns.png');
+			background-position: 100% 100%;
+		}
+	}
+}
+
+
+
+.JackpotScaleDiagram {
+	position: relative;
+	width: 763px;
+	height: 380px;
+	background-image: url('/assets/img/jackpot/diagram.png');
+
+	&__level {
+		position: absolute;
+		width: 130px;
+		text-align: center;
+		line-height: 21px;
+
+		&--small {
+			bottom: 50px;
+			left: 40px;
+		}
+
+		&--middle {
+			bottom: 65px;
+			left: 168px;
+		}
+
+		&--big {
+			bottom: 95px;
+			left: 295px;
+		}
+
+		&--premium {
+			bottom: 185px;
+			left: 422px;
+		}
+
+		&--mega {
+			bottom: 334px;
+			left: 551px;
+		}
+	}
+
+	&__label {
+		font-family: $F_SEGOE_UI;
+		font-weight: 900;
+		color: #333;
+	}
+}
+
+
+
+.JackpotStatusScale {
+	border: 1px solid #c6c6c6;
+	border-radius: 20px;
+	padding: 10px 30px 15px;
+	position: relative;
+
+	&:after {
+		content: '';
+		position: absolute;
+		right: 0;
+		bottom: 5px;
+		width: 124px;
+		height: 243px;
+		background-image: url('/assets/img/jackpot/man_goes.png');
+	}
+
+	&__box {
+		padding: 12px;
+		vertical-align: top;
+		text-align: left;
+		line-height: 1.1;
+
+		&--status {
+			padding-left: 0;
+			white-space: nowrap;
+		}
+	}
+	&__header {
+		.JackpotStatusScale__box {
+			border-bottom: 2px solid #a7ddb0;
+			vertical-align: bottom;
+			font-weight: normal;
+		}
+	}
+
+	&__item {
+		& + & {
+			.JackpotStatusScale__box {
+				border-top: 1px solid #d6d6d6;
+			}
+		}
+	}
+}
+
+
+
+.JackpotAdvantages {
+	display: inline-block;
+	vertical-align: middle;
+	padding-right: 150px;
+	background-image: url('/assets/img/jackpot/main_speaks.png');
+	background-repeat: no-repeat;
+	background-position: 100% 100%;
+
+	&__item {
+		padding-y: 10px;
+		padding-left: 80px;
+		background-repeat: no-repeat;
+		background-position: 0 50%;
+
+		& + & {
+			margin-top: 30px;
+		}
+
+		&--prices {
+			background-image: url('/assets/img/jackpot/icon_like_rounded.png');
+		}
+
+		&--status {
+			background-image: url('/assets/img/jackpot/icon_growing_rounded.png');
+		}
+
+		&--exclusive {
+			background-image: url('/assets/img/jackpot/icon_bag_rounded.png');
+		}
+
+		&--safe {
+			background-image: url('/assets/img/jackpot/icon_safe_rounded.png');
+		}
+
+		&--speed {
+			background-image: url('/assets/img/jackpot/icon_speed_rounded.png');
+		}
+	}
+
+	&__itemTitle {
+		font-weight: bold;
+	}
+
+	&__itemTitle {
+		font-size: 20px;
+		color: #333;
+	}
+}
+
+
+
+.JackpotLanding {
+	line-height: 26px;
+	font-size: 16px;
+	color: #555;
+	font-family: $F_SEGOE_UI;
+
+	&__secion {
+		min-width: 980px;
+		background-color: #fff;
+	}
+
+	&__secionTitle {
+		margin-bottom: 40px;
+		font-family: $F_SEGOE_UI;
+		font-weight: 900;
+		font-size: 40px;
+		color: #333;
+	}
+
+	&__buttonContainer {
+		margin-top: 50px;
+	}
+}
+
+.JackpotLanding__secion--header {
+	.Page__wrapper {
+		padding-top: 50px;
+		padding-bottom: 85px;
+	}
+}
+
+.JackpotLanding__secion--principles {
+	padding: 100px 0;
+	background-color: #d8f3fc;
+	text-align: center;
+	background-image:
+		url(/assets/img/jackpot/wave_top_1.png),
+		url(/assets/img/jackpot/wave_bottom_1.png);
+	background-position: 50% 0, 50% 100%;
+	background-repeat: repeat-x;
+}
+
+.JackpotLanding__secion--steps {
+	.Page__wrapper {
+		padding-top: 65px;
+		padding-bottom: 85px;
+	}
+}
+
+.JackpotLanding__secion--advantages {
+	padding: 200px 0 130px;
+	background-color: #d8f3fc;
+	background-image: url(/assets/img/jackpot/wave_top_2.png);
+	background-repeat: repeat-x;
+	background-position: 50% 0;
+}

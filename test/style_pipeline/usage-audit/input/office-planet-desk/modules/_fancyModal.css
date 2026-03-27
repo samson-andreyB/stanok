@@ -1,0 +1,8 @@
+#fancybox-close {
+	margin: 0 0 -30px;
+	background-color: #fff;
+
+	&:before {
+		content: none;
+	}
+}

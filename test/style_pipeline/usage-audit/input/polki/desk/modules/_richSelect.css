@@ -1,0 +1,21 @@
+.RichSelect {
+	&--disabled {
+		.RichSelect__field {
+			color: $disableColor;
+			background-color: $neutral-8;
+			opacity: 1;
+		}
+	}
+
+	&__field {
+		.RichSelect--active & {
+			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+	}
+
+	&__options {
+		border-bottom-left-radius: $BD_RAD;
+		border-bottom-right-radius: $BD_RAD;
+	}
+}

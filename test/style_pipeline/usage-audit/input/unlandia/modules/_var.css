@@ -1,0 +1,16 @@
+/* VAR
+---------------------------------------------------------------------*/
+
+$selectionBG: #fbe100;
+
+$yellow: #fbe100;
+$yellow_active: #fff282;
+$violet: #82368b;
+$violet_active: #a788c0;
+$color_main: #30062e;
+$color_common: #5c465b;
+
+$fontFamilyR: 'CirceRoundedWebRegular', 'Comic Sans MS', 'Comic Sans', cursive;
+$fontFamilyB: 'CirceRoundedWebBold', 'Comic Sans MS', 'Comic Sans', cursive;
+
+$SPINNER_COLOR: #82368B;

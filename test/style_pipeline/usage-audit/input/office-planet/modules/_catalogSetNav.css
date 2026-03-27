@@ -1,0 +1,77 @@
+.CatalogSetNav {
+	margin-bottom: $lineHeight;
+	height: 47px;
+
+	& &__group &__list + &__list {
+		margin-left: 2em;
+	}
+	& &__list { /* чтобы бороться со специфичностью в момент переключения в летящий режим */
+		@mixin List--ib;
+		padding-y: .5em;
+		display: inline-block;
+	}
+	&__header {
+		@mixin List__item--ib;
+		background-image: resolve('interface/flags.png');
+		background-repeat: no-repeat;
+		margin-right: 1em;
+		height: 15px;
+		width: 22px;
+
+		&--en {
+			background-position: -27px 0;
+		}
+		&--ru {
+			background-position: 0 0;
+		}
+	}
+	&__item {
+		@mixin List__item--ib;
+	}
+	&__link {
+		border: 2px solid transparent;
+		border-radius: $CatalogSetLinkHeight;
+		display: inline-block;
+		height: $CatalogSetLinkHeight;
+		line-height: $CatalogSetLinkHeight;
+		padding-x: .5em;
+		text-align: center;
+		min-width: calc($CatalogSetLinkHeight / 2);
+
+		&.active {
+			border-color: $dividerColor;
+			cursor: default;
+		}
+	}
+	&__text {
+		@mixin pseudoLink;
+		font-size: 14px;
+		font-weight: bold;
+		line-height: 1;
+	}
+	&__link:focus &__text {
+		color: $theme_bHover;
+	}
+	&__link.active &__text {
+		border-bottom: 0;
+		color: #000;
+		cursor: default;
+	}
+
+	&__holder {
+		border-bottom: 1px solid transparent;
+	}
+	&--fly &__holder {
+		position: fixed;
+		top: 0;
+		left: 0;
+		background-color: #fff;
+		border-color: $dividerColor;
+		width: 100%;
+		z-index: 99;
+	}
+
+	&--fly &__group {
+		@mixin Page__wrapper;
+	}
+}

@@ -1,0 +1,180 @@
+.SearchChangesDates {
+	display: block;
+	word-spacing: 1.5em;
+	user-select: none;
+
+	&__item {
+		display: inline-block;
+		word-spacing: normal;
+		margin-top: .4em;
+		padding: 3px;
+
+		&--selected {
+			background-color: #e9f8f3;
+		}
+	}
+}
+
+.SearchChanges {
+
+	&__found {
+		font-size: 14px;
+		margin: .5em 0 .5em 0;
+	}
+
+	&__productsWrapper {
+		border-right: 1px solid #dadada;
+	}
+
+	&__downloadXLS {
+		margin-left: 10px;
+	}
+}
+
+.Items--searchChangesTable {
+	position: relative;
+	overflow: hidden;
+	max-width: 100%;
+	margin-top: -1px;
+
+	.Items__list {
+		width: calc(4 * 292px);
+		border-collapse: collapse;
+		table-layout: fixed;
+		margin-top: 0;
+	}
+
+	.Items__list--header {
+		margin-left: 22px;
+
+		.Item__box {
+			padding-left: .8em;
+		}
+	}
+
+	.Items__list--products {
+		margin-left: 22px;
+		border-right: none;
+
+		.Item:first-child {
+			border-top: 1px solid #dadada;
+		}
+
+		.Item:last-child {
+			border-bottom: 1px solid #dadada;
+		}
+
+		.Item__box {
+			border-right: none;
+		}
+	}
+
+	.Items__list--numbers {
+		position: absolute;
+		top: 0;
+		left: 0;
+		background: #f2f2f2;
+		width: 21px;
+		font-size: 11px;
+
+		.Items__header {
+			border-left: 1px solid #fff;
+			border-right: 1px solid #fff;
+			background: #fff;
+
+			.Item__box {
+				padding-bottom: 1em;
+			}
+		}
+
+		.Item__box {
+			width: 21px;
+			border-right: 1px solid #dadada;
+			text-align: center;
+			vertical-align: middle;
+			cursor: default;
+		}
+	}
+
+	.Item {
+		height: 60px;
+	}
+
+	.Item__box {
+		padding: 0;
+		border: 1px solid #dadada;
+		border-right: none;
+		vertical-align: top;
+
+		&--emptyColumn {
+			border-top: none;
+			border-bottom: none;
+			text-align: center;
+			font-size: 15px;
+			color: #aaa;
+			vertical-align: middle;
+		}
+	}
+
+	.Items__header .Item__box {
+		border: none;
+		padding-bottom: 1em;
+	}
+}
+
+.FloatingScroll {
+	overflow-x: scroll;
+
+	&__width {
+		height: 1px;
+	}
+
+	&--searchChangesTable {
+		width: 875px;
+		margin-top: .1em;
+		bottom: 0;
+		margin-left: auto;
+
+		.FloatingScroll__width {
+			width: calc(4 * 292px);
+		}
+	}
+}
+
+.Product {
+	padding-x: 9px;
+	padding-top: 10px;
+
+	&__photoContainer {
+		display: inline-block;
+		width: 35px;
+		height: 35px;
+		background-color: #ccc;
+		vertical-align: top;
+	}
+
+	&__photo {
+		width: 35px;
+		height: 35px;
+	}
+
+	&__description {
+		display: inline-block;
+		width: 225px;
+		vertical-align: top;
+		font-size: 11px;
+		margin-left: 1em;
+	}
+
+	&__name {
+		height: 2.6em;
+		margin-top: -3px;
+		overflow: hidden;
+	}
+
+	&__code {
+		margin-top: 2px;
+		color: #777;
+	}
+}
+

@@ -1,0 +1,91 @@
+/* Кнопки
+***********************************************************/
+
+/* Общее */
+.Button {
+	display: inline-block;
+	font: inherit;
+	background-color: $colorActive;
+	color: $colorActiveContrast;
+	cursor: pointer;
+	border: 1px solid $colorActive;
+	border-radius: 4px;
+	padding: 10px 25px 10px;
+	box-sizing: border-box;
+	outline: none;
+	vertical-align: middle;
+
+	&:hover,
+	&:focus,
+	&:active {
+		background-color: $colorActiveHover;
+		border-color: $colorActiveHover;
+		text-decoration: none;
+	}
+
+	&[disabled] {
+		opacity: .3;
+		pointer-events: none;
+	}
+
+	&__icon {
+		@mixin icon;
+	}
+}
+/* ~Общее */
+
+
+
+/* Композиции */
+.Button--icon { /* Только иконка */
+	padding: 0;
+	width: 40px;
+	height: 40px;
+	text-align: center;
+	line-height: 0;
+}
+
+.Button--outline {
+	background-color: transparent;
+}
+/* ~Композиции */
+
+
+
+/* Виды кнопок */
+.Button--plus {
+
+	.Button__icon {
+		@mixin iconPlusWhite;
+
+		.Button--outline& {
+			@mixin iconPlus;
+		}
+	}
+}
+
+.Button--minus {
+
+	.Button__icon {
+		@mixin iconMinusWhite;
+
+		.Button--outline& {
+			@mixin iconMinus;
+		}
+	}
+}
+
+.Button--right {
+
+	.Button__icon {
+		@mixin iconArrowRight;
+	}
+}
+
+.Button--left {
+
+	.Button__icon {
+		@mixin iconArrowLeft;
+	}
+}
+/* ~Виды кнопок */

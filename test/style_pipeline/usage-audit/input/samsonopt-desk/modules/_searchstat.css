@@ -1,0 +1,163 @@
+/* Search Statistics
+------------------------------------------------------------------------------*/
+
+.filter__searchEffectiveness {
+	text-align: center;
+	width: 45px;
+}
+.filter__searchQuery {
+	width: 150px;
+}
+
+.Items--search-queries {
+	.Items {
+		&__title {
+			padding-left: 20px;
+			margin: 0;
+			font-size: 14px;
+		}
+	}
+
+	.Item__box {
+
+		&--count,
+		&--cart,
+		&--effectiveness,
+		&--zeroResidue {
+			text-align: center;
+			white-space: nowrap;
+			width: 1px;
+			min-width: 130px;
+		}
+
+		&--look {
+			padding: 0 0 0 10px;
+			width: 1px;
+		}
+	}
+}
+
+.Items--search-products {
+	.Item__box {
+		&--code,
+		&--add {
+			text-align: center;
+			width: 160px;
+		}
+	}
+
+	.Item__img {
+		max-width: 49px;
+		height: auto;
+	}
+}
+
+.Search__effectivenessTrigger {
+	border-bottom: 1px dashed;
+	cursor: help;
+}
+.SearchStat {
+	display: table;
+	font-size: 11px;
+
+	&__item {
+		display: table-row;
+	}
+
+	&__box {
+		display: table-cell;
+		vertical-align: middle;
+		padding: 7px;
+
+		&--type {
+			width: 100%;
+		}
+		&--result {
+			text-align: right;
+			width: 1px;
+		}
+	}
+
+	&__item + &__item {
+		.SearchStat__box {
+			padding-top: 2px;
+		}
+	}
+}
+
+.Tabs2--search-query {
+	margin-top: 1.5em;
+}
+
+
+.Chart--stat-search {
+	.ChartLegendItem--1 {
+		.ChartLegendItem__icon {
+			background-color: #f39797;
+		}
+	}
+	.ChartLegendItem--2 {
+		.ChartLegendItem__icon {
+			background-color: #ebb57f;
+		}
+	}
+	.ChartLegendItem--3 {
+		.ChartLegendItem__icon {
+			background-color: #f2e38f;
+		}
+	}
+	.ChartLegendItem--4 {
+		.ChartLegendItem__icon {
+			background-color: #d5d3ca;
+		}
+	}
+	.ChartLegendItem--5 {
+		.ChartLegendItem__icon {
+			background-color: #9dc2e4;
+		}
+	}
+	.ChartLegendItem--6 {
+		.ChartLegendItem__icon {
+			background-color: #99dbbd;
+		}
+	}
+}
+
+
+/* правки стилей графиков */
+
+.Chart--stat-search {
+	.c3-line,
+	.c3-axis-x .tick line {
+		display: none;
+	}
+	.c3-bar {
+		opacity: .5 !important;
+		fill-opacity: 1 !important;
+	}
+	.c3-areas path,
+	.c3-tooltip__color {
+		opacity: .5 !important;
+	}
+	.c3-axis .tick line,
+	.c3-axis .domain {
+		stroke: #9f9f9f;
+	}
+	.c3-axis .domain {
+		transform: translateX(.5px);
+	}
+	.c3-ygrid-line line,
+	.c3-ygrid {
+		stroke: #000;
+		opacity: .075 !important;
+	}
+	.c3-xgrid,
+	.c3-ygrid {
+		transform: translateX(-1px);
+		stroke-dasharray: 0;
+	}
+	.c3-xgrid {
+		stroke: #000;
+		opacity: .11 !important;
+	}
+}

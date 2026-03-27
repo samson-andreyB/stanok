@@ -1,0 +1,52 @@
+.FeedbackBtn {
+	cursor: pointer;
+	padding: 23px 13px;
+	position: absolute;
+	top: 100%;
+	right: 0;
+	margin-top: 30px;
+	transition: .2s ease-out;
+	transition-property: padding, background-color;
+	text-align: center;
+	z-index: 5;
+	background-color: $theme_accent;
+
+	&:hover {
+		 background-color: $theme_aHover;
+	}
+
+	@media screen and (max-width: 1300px) {
+		padding: 14px 5px;
+	}
+
+	&:after {
+		content: "";
+		display: block;
+		background-image: resolve('interface/question.png');
+		background-repeat: no-repeat;
+		background-size: contain;
+		width: width('interface/question.png');
+		height: height('interface/question.png');
+
+		@media screen and (max-width: 1300px) {
+			width: 19px;
+			height: 19px;
+		}
+	}
+
+	&__text {
+		background-image: resolve('interface/questiontext.png');
+		background-repeat: no-repeat;
+		background-size: contain;
+		display: inline-block;
+		width: width('interface/questiontext.png');
+		height: height('interface/questiontext.png');
+		margin-bottom: 10px;
+
+		@media screen and (max-width: 1300px) {
+			width: 16px;
+			height: 148px;
+			margin-bottom: 5px;
+		}
+	}
+}

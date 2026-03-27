@@ -1,0 +1,42 @@
+.ac_results {
+	box-sizing: border-box;
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 0;
+	margin: 0;
+	margin-top: -1px;
+	max-height: 300px;
+	overflow-y: auto;
+	background-color: #fff;
+	box-shadow: 0 4px 12px 0px rgba(0, 0, 0, .2);
+	border: 1px solid #bbb;
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	z-index: 10;
+
+	&--modal {
+		z-index: 1101;
+	}
+
+	ul {
+		padding: 0;
+		margin: 0;
+	}
+
+	li {
+		display: block;
+		margin: 0;
+		padding: 6px 15px;
+		cursor: pointer;
+		color: #000;
+
+		&:hover,
+		&:focus,
+		&.hover,
+		&.focus,
+		&.ac_over {
+			background-color: #e2f3ed;
+		}
+	}
+}

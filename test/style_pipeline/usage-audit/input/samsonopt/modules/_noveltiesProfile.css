@@ -1,0 +1,275 @@
+.NoveltiesProfile {
+	display: flex;
+	flex-wrap: wrap;
+	margin-right: -10px;
+
+	&__item {
+		flex-basis: calc(100% / 5);
+		max-width: calc(100% / 5);
+		padding-right: 10px;
+		box-sizing: border-box;
+		margin-bottom: 10px;
+
+		@media (max-width: 1200px) {
+			flex-basis: calc(100% / 4);
+			max-width: calc(100% / 4);
+		}
+
+		.CounterBadge {
+			position: absolute;
+			top: 4px;
+			right: 4px;
+			z-index: 1;
+			pointer-events: none;
+		}
+	}
+
+	&__linkWrapper {
+		position: relative;
+		height: 100%;
+	}
+
+	&__link {
+		position: relative;
+		display: flex;
+		align-items: center;
+		border-radius: 5px;
+		font-weight: bold;
+		font-size: 13px;
+		line-height: 18px;
+		color: #000;
+		height: 100%;
+		padding: 23px 12px 24px;
+		box-sizing: border-box;
+		transition: .3s;
+
+		&:before {
+			content: '';
+			display: inline-flex;
+			width: 42px;
+			height: 35px;
+			flex-shrink: 0;
+			margin-right: 8px;
+			background-repeat: no-repeat;
+			background-position: center;
+		}
+
+		&:after {
+			content: '';
+			position: absolute;
+			top: -5px;
+			left: -5px;
+			right: -5px;
+			bottom: -5px;
+			border-radius: 8px;
+			border: 3px solid transparent;
+			opacity: 0;
+			transition: opacity .3s;
+		}
+
+		&:hover {
+			color: #000;
+			opacity: .8;
+		}
+
+		&--active {
+			color: #fff;
+
+			&:after {
+				opacity: 1;
+			}
+		}
+
+		&--active {
+			pointer-events: none;
+		}
+
+		&--corporateTrading {
+			background-color: #ffbbbb;
+
+			&:before {
+				background-image: svg('corporateTrading_42x35', '[color]: #000');
+			}
+
+			&.NoveltiesProfile__link--active {
+				background-color: #ff5555;
+
+				&:after {
+					border-color: #ff5555;
+				}
+
+				&:before {
+					background-image: svg('corporateTrading_42x35', '[color]: #fff');
+				}
+			}
+		}
+
+		&--stationeryRetail {
+			background-color: #ffe2b6;
+
+			&:before {
+				background-image: svg('stationeryRetail_36x35', '[color]: #000');
+			}
+
+			&.NoveltiesProfile__link--active {
+				background-color: #f9a424;
+
+				&:after {
+					border-color: #f9a424;
+				}
+
+				&:before {
+					background-image: svg('stationeryRetail_36x35', '[color]: #fff');
+				}
+			}
+		}
+
+		&--furnitureStores {
+			background-color: #b8e9ba;
+
+			&:before {
+				background-image: svg('furnitureStores_42x35', '[color]: #000');
+			}
+
+			&.NoveltiesProfile__link--active {
+				background-color: #28cc2f;
+
+				&:after {
+					border-color: #28cc2f;
+				}
+
+				&:before {
+					background-image: svg('furnitureStores_42x35', '[color]: #fff');
+				}
+			}
+		}
+
+		&--householdStores {
+			background-color: #a8e5de;
+
+			&:before {
+				background-image: svg('householdStores_36x35', '[color]: #000');
+			}
+
+			&.NoveltiesProfile__link--active {
+				background-color: #00baaf;
+
+				&:after {
+					border-color: #00baaf;
+				}
+
+				&:before {
+					background-image: svg('householdStores_36x35', '[color]: #fff');
+				}
+			}
+		}
+
+		&--onlineStores {
+			background-color: #cdd6f6;
+
+			&:before {
+				background-image: svg('onlineStores_37x35', '[color]: #000');
+			}
+
+			&.NoveltiesProfile__link--active {
+				background-color: #4e74ff;
+
+				&:after {
+					border-color: #4e74ff;
+				}
+
+				&:before {
+					background-image: svg('onlineStores_37x35', '[color]: #fff');
+				}
+			}
+		}
+
+		&--artRetail {
+			background-color: #d5bcff;
+
+			&:before {
+				background-image: svg('artRetail_38x35', '[color]: #000');
+			}
+
+			&.NoveltiesProfile__link--active {
+				background-color: #b519ff;
+
+				&:after {
+					border-color: #b519ff;
+				}
+
+				&:before {
+					background-image: svg('artRetail_38x35', '[color]: #fff');
+				}
+			}
+		}
+
+		&--childrensGoods {
+			background-color: #d5e76f;
+
+			&:before {
+				background-image: svg('childrensGoods_34x35', '[color]: #000');
+			}
+
+			&.NoveltiesProfile__link--active {
+				background-color: #a4c100;
+
+				&:after {
+					border-color: #a4c100;
+				}
+
+				&:before {
+					background-image: svg('childrensGoods_34x35', '[color]: #fff');
+				}
+			}
+		}
+
+		&--haberdashery {
+			background-color: #aed9f3;
+
+			&:before {
+				background-image: svg('haberdashery_33x35', '[color]: #000');
+			}
+
+			&.NoveltiesProfile__link--active {
+				background-color: #2da0e8;
+
+				&:after {
+					border-color: #2da0e8;
+				}
+
+				&:before {
+					background-image: svg('haberdashery_33x35', '[color]: #fff');
+				}
+			}
+		}
+
+		&--allNovelties {
+			background-color: #f7d4f8;
+
+			&:before {
+				background-image: svg('novelties_42x35', '[color]: #000');
+			}
+
+			&.NoveltiesProfile__link--active {
+				background-color: #ef4af2;
+
+				&:after {
+					border-color: #ef4af2;
+				}
+
+				&:before {
+					background-image: svg('novelties_42x35', '[color]: #fff');
+				}
+			}
+		}
+	}
+
+	& + .Products {
+		margin-top: 15px;
+	}
+
+	h1 + & {
+		margin-top: 25px;
+	}
+}

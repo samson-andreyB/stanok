@@ -1,0 +1,45 @@
+.ScrollToTop {
+	position: relative;
+	max-width: calc($maxContentWidth + $PAGE_WRAPPER_PADDING * 2 + $scrollButtonWidth * 2);
+	padding-x: 10px;
+	margin-x: auto;
+
+	&__trigger {
+		position: fixed;
+		bottom: 30px;
+		width: $scrollButtonWidth;
+		padding: 9px 0 10px 38px;
+		box-sizing: border-box;
+		font-weight: bold;
+		line-height: 1;
+		border-radius: $BD_RAD;
+		background-color: rgba(147, 143, 139, .8);
+		background-image: svg('arrow_up_13x12', '[color]: #fff');
+		background-repeat: no-repeat;
+		background-position: 20px 50%;
+		color: #fff;
+		visibility: hidden;
+		opacity: 0;
+		cursor: pointer;
+		transition: .2s;
+		z-index: 3;
+
+		&:before {
+			content: '';
+			display: inline-block;
+			height: 100%;
+			vertical-align: middle;
+		}
+
+		&:hover {
+			background-color: rgba(89, 87, 85, .9);
+		}
+	}
+
+	&--visible {
+		.ScrollToTop__trigger {
+			visibility: visible;
+			opacity: 1;
+		}
+	}
+}

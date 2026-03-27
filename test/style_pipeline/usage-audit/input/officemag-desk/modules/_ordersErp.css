@@ -1,0 +1,115 @@
+.Page--ordersErp {
+	.filter {
+		&--departments {
+			width: 160px;
+		}
+
+		&--result {
+			width: 165px;
+		}
+
+		&--search {
+			width: 445px;
+		}
+
+		.btn + .btn {
+			margin-left: 7px;
+		}
+	}
+}
+
+.Page--orderErp {
+	.filters {
+		display: inline-flex;
+	}
+
+	.filter {
+		margin-right: 50px;
+		font-size: 13px;
+
+		&--state {
+			max-width: 90px;
+		}
+
+		&--editor {
+			max-width: 220px;
+		}
+	}
+
+	.filter__header {
+		font-size: 13px;
+		line-height: 15px;
+	}
+
+	.filter__data {
+		line-height: 17px;
+		text-overflow: clip;
+		overflow: visible;
+	}
+}
+
+.Items--erp {
+	.Item__box {
+		&--number {
+			width: 100px;
+			padding-right: 0;
+		}
+
+		&--departments {
+			width: 110px;
+		}
+
+		&--sum {
+			text-align: right;
+			padding-right: 20px;
+		}
+
+		&--shippingDate {
+			width: 80px;
+		}
+
+		&--result {
+			width: 80px;
+		}
+
+		&--tender {
+			width: 40px;
+		}
+
+		&--rtu {
+			width: 90px;
+		}
+	}
+
+	.Item__box--number,
+	.Item__box--customer {
+		.Item__aux {
+			margin-top: 0;
+			margin-bottom: 3px;
+		}
+	}
+
+	.Item .Item__box {
+		vertical-align: top;
+	}
+}
+
+.OrderErpInfo--default {
+	.Group {
+		table-layout: fixed;
+	}
+
+	.Box {
+		font-size: 13px;
+		line-height: 18px;
+		vertical-align: top;
+	}
+
+	.Box + .Box {
+		padding-left: 35px;
+	}
+
+	.Specs__aux {
+		font-size: 11px;
+	}
+}

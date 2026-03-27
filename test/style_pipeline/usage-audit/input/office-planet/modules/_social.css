@@ -1,0 +1,59 @@
+.Social {
+	cursor: default;
+
+	&__label {
+		display: inline-block;
+		padding-right: 10px;
+	}
+
+	.Social__icon {
+		background-image: resolve('interface/social_media_icons.png');
+		background-repeat: no-repeat;
+		display: inline-block;
+		width: 25px;
+		height: 25px;
+		margin-left: 8px;
+		margin-top: -0.3em;
+		vertical-align: middle;
+		transition: all 0.1s linear;
+		border: 1px solid transparent;
+
+		&--facebook {
+			background-position: 0 0;
+			color: #3b569d;
+		}
+
+		&--twitter {
+			background-position: -30px 0;
+			color: #2aa9e0;
+		}
+
+		&--googlePlus {
+			background-position: -60px 0;
+			color: #d6492f;
+		}
+
+		&--vk {
+			background-position: -90px 0;
+			color: #4c75a3;
+		}
+
+		&--ok {
+			background-position: -120px 0;
+			color: #f48420;
+		}
+
+		&--mailRu {
+			background-position: -150px 0;
+			color: #004b88;
+		}
+
+		&:first-child {
+			margin-left: 0;
+		}
+
+		&:hover {
+			border-color: currentColor;
+		}
+	}
+}

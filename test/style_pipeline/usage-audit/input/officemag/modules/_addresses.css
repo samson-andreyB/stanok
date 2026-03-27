@@ -1,0 +1,233 @@
+.Addresses--default {
+	.ContactsTownChoose {
+		margin-bottom: 0;
+	}
+
+	.tabsContainer {
+		margin-top: -14px;
+		border-bottom-width: 0;
+	}
+
+	.MapStoresAddresses--default {
+		height: 655px;
+		margin-top: 15px;
+	}
+
+	.AddressList--default {
+		margin-top: 25px;
+
+		.Address__gallery {
+			margin-top: 20px;
+		}
+	}
+}
+
+.AddressList--default {
+	.AddressList__box + .AddressList__box {
+		margin-top: 35px;
+	}
+}
+
+.Address--default {
+	.Address__title {
+		margin-bottom: 6px;
+		font-weight: bold;
+		font-size: 16px;
+
+		.CollapsibleLink--default {
+			display: inline-block;
+			min-width: 140px;
+			font-size: 14px;
+			white-space: nowrap;
+			user-select: none;
+		}
+	}
+
+	.Address__titleText {
+		margin-right: 10px;
+	}
+
+	.Address__infoHeader {
+		color: #777;
+	}
+
+	.Address__schedule {
+		@mixin wordBreak;
+	}
+
+	.Address__aux {
+		display: none;
+		margin-top: 15px;
+	}
+
+	.Address__map {
+		position: relative;
+		box-sizing: border-box;
+		height: 260px;
+	}
+
+	.Address__gallery {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.Address__photoLink {
+		width: 16%;
+		transition: opacity .3s;
+
+		&:hover {
+			opacity: .6;
+		}
+	}
+
+	.Address__photoLink + .Address__photoLink {
+		margin-left: 1%;
+	}
+
+	.Address__photo {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+}
+
+.Address--balloonContent {
+	line-height: 1.4;
+
+	.Address__wrapper {
+		box-sizing: border-box;
+		padding: 17px 20px 20px;
+		background-color: #fff;
+		border-radius: .3em;
+		box-shadow: 0 2px 15px rgba(0,0,0,.4);
+		position: absolute;
+		bottom: 100%;
+		margin-bottom: 10px;
+
+		&:before {
+			content: '';
+			position: absolute;
+			top: 100%;
+			left: 0;
+			background-image: resolve('interface/bubble_arrow_to-bottom.png');
+			background-repeat: no-repeat;
+			background-position: 50% 0;
+			width: 100%;
+			height: 12px;
+		}
+	}
+
+	.Address__title {
+		margin-bottom: 0;
+	}
+
+	.Address__infoItem--printLink {
+		margin-top: -20px;
+		text-align: right;
+	}
+
+	.Address__gallery {
+		margin-top: 10px;
+	}
+
+	.Address__photoLink {
+		width: 32%;
+	}
+
+	.Address__photo {
+		width: 134px;
+		height: 85px;
+	}
+
+	.btnClose {
+		top: 5px;
+		right: 3px;
+		width: 18px;
+		height: 18px;
+	}
+}
+
+.AddressDescription--default {
+	margin-top: 30px;
+}
+
+.tabsList--addresses {
+	text-align: right;
+
+	.icon {
+		margin-right: 2px;
+
+		&--location {
+			width: width('interface/location_7x10_444.png');
+			height: height('interface/location_7x10_444.png');
+			background-image: resolve('interface/location_7x10_444.png');
+		}
+
+		&--hamburger {
+			width: width('interface/hamburger_11x9_444.png');
+			height: height('interface/hamburger_11x9_444.png');
+			background-image: resolve('interface/hamburger_11x9_444.png');
+		}
+	}
+
+	.active {
+		.icon {
+			&--location {
+				background-image: resolve('interface/location_7x10_fff.png');
+			}
+
+			&--hamburger {
+				background-image: resolve('interface/hamburger_11x9_fff.png');
+			}
+		}
+	}
+}
+
+.CollapsibleLink--default {
+	.CollapsibleLink__hide,
+	.CollapsibleLink__show {
+		position: relative;
+
+		&:after {
+			content: '';
+			position: absolute;
+			top: 50%;
+			right: -15px;
+			margin-top: -3px;
+			width: calc(width('interface/caret-down_10x6_06b.png') + 5);
+			height: height('interface/caret-down_10x6_06b.png');
+			background-position: top right;
+			background-repeat: no-repeat;
+		}
+	}
+
+	.CollapsibleLink__hide {
+		display: none;
+	}
+
+	.CollapsibleLink__show:after {
+		background-image: resolve('interface/caret-down_10x6_06b.png');
+	}
+
+	.CollapsibleLink__show:hover:after {
+		background-image: resolve('interface/caret-down_10x6_f03.png');
+	}
+
+	&.CollapsibleLink--active {
+		.CollapsibleLink__show {
+			display: none;
+		}
+
+		.CollapsibleLink__hide {
+			display: inline;
+
+			&:after {
+				background-image: resolve('interface/caret-up_10x6_06b.png');
+			}
+		}
+
+		.CollapsibleLink__hide:hover:after {
+			background-image: resolve('interface/caret-up_10x6_f03.png');
+		}
+	}
+}

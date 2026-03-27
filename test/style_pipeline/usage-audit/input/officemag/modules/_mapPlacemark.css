@@ -1,0 +1,114 @@
+.MapPlacemark {
+	cursor: pointer;
+
+	&--active {
+		cursor: default;
+	}
+}
+
+.MapPlacemark--default {
+	box-sizing: border-box;
+	width: width('interface/placemark_23x31_c10.png');
+	height: height('interface/placemark_23x31_c10.png');
+	padding-top: 3px;
+	color: #fff;
+	text-align: center;
+	background-image: resolve('interface/placemark_23x31_c10.png');
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	user-select: none;
+
+	&:hover {
+		opacity: .8;
+	}
+
+	&.MapPlacemark--active {
+		background-image: resolve('interface/placemark_23x31_391.png');
+		opacity: 1;
+	}
+}
+
+.MapPlacemark--brand {
+	background-image: resolve('interface/placemark_37x48_c21.png');
+	width: width('interface/placemark_37x48_c21.png');
+	height: height('interface/placemark_37x48_c21.png');
+
+	&.MapPlacemark--active,
+	&:hover {
+		background-image: resolve('interface/placemark_37x48_f03.png');
+	}
+
+	&.MapPlacemark--disabled {
+		background-image: resolve('interface/placemark_37x48_disabled.png');
+
+		&.MapPlacemark--active,
+		&:hover {
+			background-image: resolve('interface/placemark_37x48_disabled_hover.png');
+		}
+	}
+}
+
+.MapPlacemark--lPost {
+	background-image: resolve('interface/placemark_37x48_lpost.png');
+	width: width('interface/placemark_37x48_lpost.png');
+	height: height('interface/placemark_37x48_lpost.png');
+
+	&.MapPlacemark--active,
+	&:hover {
+		background-image: resolve('interface/placemark_37x48_lpost_hover.png');
+	}
+
+	&.MapPlacemark--disabled {
+		background-image: resolve('interface/placemark_37x48_lpost_disabled.png');
+
+		&.MapPlacemark--active,
+		&:hover {
+			background-image: resolve('interface/placemark_37x48_lpost_disabled_hover.png');
+		}
+	}
+}
+
+.MapPlacemark--dpd {
+	background-image: resolve('interface/placemark_37x48_dpd.png');
+	width: width('interface/placemark_37x48_dpd.png');
+	height: height('interface/placemark_37x48_dpd.png');
+
+	&.MapPlacemark--active,
+	&:hover {
+		background-image: resolve('interface/placemark_37x48_dpd_hover.png');
+	}
+
+	&.MapPlacemark--disabled {
+		background-image: resolve('interface/placemark_37x48_dpd_disabled.png');
+
+		&.MapPlacemark--active,
+		&:hover {
+			background-image: resolve('interface/placemark_37x48_dpd_disabled_hover.png');
+		}
+	}
+}
+
+.MapPlacemark--cluster {
+	box-sizing: border-box;
+	width: 39px;
+	height: 39px;
+	color: #000;
+	font-size: 14px;
+	line-height: 31px;
+	text-align: center;
+	border: 4px solid #c22119;
+	border-radius: 100%;
+	background-color: #fff;
+	cursor: pointer;
+	user-select: none;
+	transform: translate(-19px, -19px);
+
+	&.MapPlacemark--active {
+		cursor: default;
+	}
+
+	&.MapPlacemark--active,
+	&:hover {
+		border-color: #ff0030;
+	}
+}

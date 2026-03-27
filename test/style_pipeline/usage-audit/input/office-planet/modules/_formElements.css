@@ -1,0 +1,1081 @@
+/* BLOCKS - FORMS
+---------------------------------------------------------------------*/
+
+/*
+<form class="Form">
+	<div class="Form__field">
+		<label>
+			<input type="text">
+			Напишите что-нибудь
+		</label>
+	</div>
+</form>
+*/
+
+.Form__field {
+	margin-top: $lineHeight;
+	position: relative;
+
+	&:first-child {
+		margin-top: 0;
+	}
+	&.ib {
+		display: inline-block;
+		margin-top: 0;
+	}
+}
+
+
+/*
+<form action="#" class="FormSearch headerSearch">
+	<button class="FormSearch__submit" type="submit"><span class="textHide Icon enterBtn">Найти</span></button>
+	<label class="FormSearch__wrapper"><input class="FormSearch__field" type="text"><span class="Icon search"></span></label>
+</form>
+*/
+
+.FormSearch {
+	position: relative;
+	width: 100%;
+}
+.FormSearch__wrapper {
+	display: block;
+}
+.FormSearch__field {
+	width: 100%;
+}
+.FormSearch__submit {
+	float: right;
+}
+
+
+/*
+<form action="" class="Form Form--complex m-b-1">
+	<input type="text" name="" id="" class="Form__object--fillspace">
+	<button class="Btn--default Form__object--fillspace-gap">Найти</button>
+</form>
+*/
+
+.Form--complex {
+	display: flex;
+}
+.Form__object--fillspace {
+	flex-grow: 1; /* элемент будет стараться занять всё пространство, оставшиеся от других элементов, размер которых задаётся исходя из их значения `display` */
+
+	& + .Form__object--fillspace-gap { margin-left: .5em; }
+}
+
+
+/*
+<label class="FieldFile">
+	<span class="FieldFile__trigger">
+		Загрузить
+		<span class="FieldFile__wrapper">
+			<input type="file" class="FieldFile__input" />
+		</span>
+	</span>
+</label>
+*/
+
+.FieldFile {
+	display: inline-block;
+}
+.FieldFile__trigger {
+	@mixin Btn--default;
+}
+.FieldFile__wrapper {
+	bottom: 0;
+	cursor: pointer;
+	left: 0;
+	overflow: hidden;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+.FieldFile__input {
+	cursor: pointer;
+	font-size: 48em;
+	height: auto;
+	left: -11.416666em;
+	opacity: 0;
+	visibility: hidden;
+	position: absolute;
+	top: -.3em;
+	width: 12.5em;
+}
+
+
+
+/*doc
+
+## Формы
+
+Универсальная разметка для форм. Группы полей `Form__set` могут выделяться модификаторами `accent` (серый фон), `accent main` (жёлтый).
+
+Чтобы поле ввода заполняло всё доcтупное пространство, не влияя на подпись, нужен модификатор `w-full` у `Form__field`.
+
+Чтобы поле ввода заполняло всё пространство, подплывая под подпись, нужен модификатор `inputFull` у `Form__field`.
+
+У контейнера для
+
+<form action="" class="Form">
+	<fieldset class="Form__set accent main">
+		<h4 class="Form__header">Общие сведения</h4>
+		<div class="Form__field">
+			<span class="Form__title"><label class="Form__label" for="id2">Имя:</label></span><div class="Form__group">
+				<div class="Form__field">
+					<input type="text" class="Form__input" id="id2" size="40" /><span class="icon remove"></span>
+				</div>
+				<div class="Form__field">
+					<input type="text" class="Form__input" id="id5" size="40" /><span class="icon remove"></span>
+				</div>
+				<div class="Form__field">
+					<span class="pseudoLink add">Добавить</span>
+				</div>
+			</div>
+		</div>
+		<div class="Form__field">
+			<span class="Form__title"><label class="Form__label" for="id4">Фамилия:</label></span><input type="text" class="Form__input" id="id4" size="40" />
+		</div>
+		<hr class="Form__divider" />
+		<div class="Form__field w-full">
+			<span class="Form__title"><label class="Form__label" for="id1">Длинная подпись для поля, чтобы аж скрылась:</label></span><input type="text" class="Form__input" id="id1" size="40" />
+		</div>
+	</fieldset>
+
+	<fieldset class="Form__set accent">
+		<h4 class="Form__header">Общие сведения</h4>
+		<div class="Form__field inputFull">
+			<span class="Form__title"><label class="Form__label" for="id3">Комментарий:</label></span><textarea class="Form__input" name="" id="id3" cols="30" rows="10"></textarea>
+		</div>
+	</fieldset>
+
+	<fieldset class="Form__set">
+		<button class="but green">Сохранить документ</button>
+	</fieldset>
+</form>
+
+
+<script>
+$(document).ready(function () {
+
+// псевдонаведение для связанных полей ввода
+$('.Form__label').hover(
+	function () {
+		if ($(this).attr('for')) {
+			$('#'+ $(this).attr('for')).addClass('hover');
+		}
+	},
+	function () {
+		if ($(this).attr('for')) {
+			$('#'+ $(this).attr('for')).removeClass('hover');
+		}
+	}
+)
+
+// добавление новой строки
+$('.Form .pseudoLink.add').click(function () {
+	$(this).parent('.Form__field').before('<div class="Form__field"><input type="text" class="Form__input" size="40" /><span class="icon remove"></span></div>')
+})
+
+// удаление строки
+$('.Form__group .icon.remove').live('click', function () {
+	$(this).parent('.Form__field').remove();
+})
+
+})
+</script>
+*/
+
+.Form {
+	font-size: 14px;
+	&__wrapper &__footer {
+		font-size: inherit;
+		margin-top: 1.5em;
+		margin-bottom: -30px;
+		padding: 1.3em 2em 1em 2em;
+	}
+}
+
+.Form__set {
+	border: 0;
+	margin-top: 1em;
+	padding: 0;
+
+	&.buttonSet {
+		border-top: 1px dotted #bababa;
+		padding-top: 10px;
+	}
+}
+.Form__set:first-child {
+	margin-top: 0;
+}
+
+.Form__header {
+	border-bottom: 1px solid rgba(0,0,0,.15);
+	margin-top: 0;
+	margin-bottom: 1.5em;
+}
+
+.Form__field {
+	min-height: 1.4em;
+	margin-top: 1em;
+	margin-left: 230px;
+	position: relative;
+
+	&--inline .Form__title {
+		padding: 0;
+		line-height: inherit;
+	}
+
+	&--multiline .Form__title {
+		padding: 0;
+		height: auto;
+	}
+
+	&--multiline .Form__desc {
+		color: #777;
+		display: block;
+		font-size: 12px;
+	}
+}
+.Form__field:first-child {
+	margin-top: 0;
+}
+.Form__field .Form__field {
+	margin-left: 0;
+}
+
+.Form__divider {
+	box-sizing: content-box;
+	border: 0;
+	border-top: 1px solid rgba(0,0,0,.15);
+	margin-top: 1em;
+}
+
+.Form__label {
+	padding-y: .05em;
+	cursor: default;
+
+	label& {
+		cursor: pointer;
+	}
+}
+
+.Form__title {
+	color: rgba(0,0,0,.75);
+	display: inline-block;
+	line-height: 1.2em;
+	margin-right: 10px;
+	padding-top: 8px;
+	padding-bottom: 5px;
+	position: relative;
+	text-align: right;
+	vertical-align: top;
+	width: 220px;
+	height: 1em;
+	margin-left: -230px;
+
+	&.hiddenTitle {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	&:hover {
+		overflow: visible;
+		white-space: normal;
+	}
+}
+
+.Form__input {
+	border: 1px solid #d9d9d9;
+	box-sizing: border-box;
+	font: inherit;
+	margin: 0;
+	padding: 5px;
+	width: 100%;
+
+	&:hover,
+	&.hover,
+	&:focus {
+		border-color: #ababab;
+	}
+}
+select.Form__input {
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+textarea.Form__input {
+	resize: vertical;
+}
+.Form__input + .Form__input {
+	vertical-align: top;
+}
+.Form__input.w-300 {
+	max-width: 300px;
+}
+
+.Form__group {
+	display: inline-block;
+	margin-bottom: .75em;
+	width: 100%;
+}
+.Form__field .Form__field + .Form__field {
+	margin-top: .5em;
+}
+
+
+.Form .pseudoLink.add {
+	border-bottom: 1px dashed;
+	cursor: pointer;
+	color: #7c7c7c;
+}
+.Form__field:first-child .pseudoLink.add {
+	position: relative;
+	top: 5px;
+}
+.Form .pseudoLink.add:hover {
+	color: #4c4c4c;
+}
+
+.Form__field .icon.remove {
+	cursor: pointer;
+	margin-left: .4em;
+}
+.Form__field .icon.remove:hover {
+	background-position: 0 -71px;
+}
+
+
+.Form__set.accent,
+.Form__set.indent {
+	padding: 15px 19px;
+}
+.Form__set.accent,
+.Form__set.accent .Form__label {
+	background-color: #f0f0f0;
+}
+.Form__set.accent.main,
+.Form__set.accent.main .Form__label {
+	background-color: #f4f0d2;
+}
+
+
+.Form__field.w-full .Form__input {
+	width: 100%;
+}
+
+.Form__field.inputFull {
+	display: block;
+	margin-left: 0;
+}
+.Form__field.inputFull .Form__title {
+	margin-bottom: .5em;
+	margin-left: 0;
+	position: static;
+	text-align: left;
+}
+.Form__field.inputFull .Form__input {
+	width: 100%;
+}
+
+
+.Form__field.error .Form__title,
+.Form__title.error {
+	color: $errorColor;
+}
+.Form__field.error .Form__input,
+.Form__input.error {
+	border-color: $errorColor;
+}
+.Form__error {
+	color: $errorColor;
+	display: block;
+	font-size: .86em;
+	left: 0;
+	margin-top: 5px;
+	width: 100%;
+}
+
+
+/*doc
+<div class="Checkbox">
+	<input type="checkbox" checked="" value="yes" name="check" id="check1" class="Checkbox__input">
+	<label for="check1" class="Checkbox__label">
+		<span class="Checkbox__button"></span><span class="Checkbox__text">Vintage street-art capitalism sriracha whatever</span>
+	</label>
+</div>
+*/
+
+@define-mixin Checkbox {
+	display: inline-block;
+	margin-right: 1.5em;
+}
+.Checkbox {
+	@mixin Checkbox;
+}
+
+@define-mixin Checkbox__label {
+	display: inline-block;
+	padding-left: 20px;
+}
+.Checkbox__label {
+	@mixin Checkbox__label;
+}
+.Checkbox__input {
+	@mixin hideSr;
+}
+
+@define-mixin Checkbox__button {
+	@mixin v-a-m-true;
+	margin-x: 7px -20px;
+	width: 13px;
+	height: 13px;
+	background-color: #ebebeb;
+	border: 1px solid #a6a6a6;
+	cursor: pointer;
+	display: inline-block;
+
+	.Checkbox__input:checked + &,
+	&--checked {
+		background-color: #777;
+	}
+}
+.Checkbox__button {
+	@mixin Checkbox__button;
+}
+
+
+/*doc
+
+<div class="Radio">
+	<input type="radio" id="radio1" class="Radio__input">
+	<label for="radio1" class="Radio__label">
+		<span class="Radio__button"></span><span class="Radio__text">Радиобатон</span>
+	</label>
+</div>
+*/
+
+.Radio {
+	@mixin Checkbox;
+}
+.Radio__label {
+	@mixin Checkbox__label;
+}
+.Radio__input {
+	@mixin hideSr;
+}
+.Radio__button {
+	@mixin v-a-m-true;
+	@mixin Checkbox__button;
+	border-radius: 50%;
+
+	.Radio__input:checked + &,
+	&--checked {
+		background-color: #777;
+	}
+}
+
+
+/*doc
+
+<div class="Select">
+	<label class="Select__label">
+		<select class="Select__select" data-placeholder="Выберите нужное">
+			<option>Вариант первый</option>
+			<option>Вторая возможность</option>
+			<option>Третья опция</option>
+			<option>Кейс четвёртый</option>
+		</select>
+		<span class="Select__text">Пожалуйста, выберите</span>
+	</label>
+</div>
+*/
+
+.Select {
+	overflow: hidden;
+	max-width: 100%;
+
+	&__label {
+		display: block;
+		position: relative;
+	}
+
+	&__select {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		box-sizing: border-box;
+		right: 0;
+		height: 100%;
+		opacity: 0;
+		width: 100%;
+		z-index: 2;
+	}
+
+	&__text {
+		display: block;
+		min-height: calc($lineHeight + .75em);
+		overflow: hidden;
+		padding-right: 30px;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+
+		&:after {
+			position: absolute;
+			top: 14px;
+			right: 10px;
+			border-color: #777 transparent transparent;
+			border-style: solid;
+			border-width: 6px;
+			content: "";
+		}
+
+		&.placeholder {
+			color: $infoColor;
+		}
+
+		&.error {
+			border-color: $errorColor;
+		}
+	}
+
+	&__select:hover + &__text:after {
+		border-top-color: #999;
+	}
+}
+
+
+/*doc
+
+<div class="Range">
+	<div class="Range__group">
+		<div class="Range__box">
+			<input class="Range__field" type="text" name="" id="" value="0">
+		</div>
+		<div class="Range__box divider">&mdash;</div>
+		<div class="Range__box">
+			<input class="Range__field" type="text" name="" id="" value="1000">
+		</div>
+	</div>
+	<div class="Range__bar">
+		<div class="Range__selected"></div>
+		<div class="Range__handle left"></div>
+		<div class="Range__handle right"></div>
+	</div>
+</div>
+*/
+
+.Range {}
+
+.Range__box,
+.Range__group {
+	box-sizing: border-box;
+}
+.Range__group {
+	display: table;
+	width: 100%;
+}
+.Range__box {
+	box-sizing: border-box;
+	display: table-cell;
+	vertical-align: middle;
+}
+.Range__box.divider {
+	padding-x: .75em;
+	text-align: center;
+}
+.Range__field {
+	width: 100%;
+}
+
+.Range__bar {
+	border: 1px solid;
+	cursor: pointer;
+	position: relative;
+}
+.Range__handle {
+	position: absolute;
+	top: 50%;
+	cursor: move;
+	cursor: grab;
+
+	&:active,
+	&.active {
+		cursor: grabbing;
+	}
+}
+.Range__handle.left {
+	left: 0;
+}
+.Range__handle.right {
+	right: 0;
+}
+
+.Range__group + .Range__bar {
+	margin-top: 1em;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.Field {
+	position: relative;
+}
+.Field__icon {
+	display: inline-block;
+	vertical-align: middle;
+	height: 16px;
+	left: 7px;
+	margin-right: -16px;
+	position: relative;
+	text-align: center;
+	vertical-align: text-top;
+	width: 16px;
+	line-height: 16px;
+	z-index: 1;
+}
+
+@define-mixin Field__input {
+	border: 1px solid #a6a6a6;
+	box-sizing: border-box;
+	font: inherit;
+	line-height: inherit;
+	padding: .367em;
+
+	&:hover,
+	&.hover {
+		border-color: #7d7d7d;
+	}
+
+	&:focus,
+	&.focus {
+		border-color: $theme_bHover;
+	}
+
+	&[disabled],
+	&[readonly] {
+		@mixin infoBg--img;
+		border-color: $theme_layoutAccentColor;
+	}
+
+	.Field__icon + & {
+		padding-left: 28px;
+	}
+
+	&.clearable {
+		padding-right: 2em;
+	}
+}
+.Field__input {
+	@mixin Field__input;
+}
+
+.Field__clear {
+	@mixin Icon;
+	@mixin OtherIcon cross_9x9, #b4b4b4;
+	cursor: pointer;
+	margin-left: -1.5em;
+
+	&:hover {
+		background-image: svg('cross_9x9', '[color]: $errorColor');
+	}
+}
+.Field__error {
+	position: absolute;
+	top: 50%;
+	right: 0;
+	color: $errorColor;
+	line-height: 1em;
+	margin-top: -.5em;
+	margin-right: .5em;
+}
+
+.Form__input {
+	@mixin Field__input;
+}
+
+.Field--search {
+	display: inline-block;
+
+	.Field__input {
+		width: 100%;
+	}
+
+	.Field__clear {
+		display: inline-block;
+		width: 3em;
+		line-height: 3em;
+		margin-left: -3.5em;
+		margin-right: .5em;
+		background-position: center;
+		font-size: 8px;
+	}
+}
+
+
+
+.Form {
+	&__wrapper {
+		border: 1px solid $dividerColor;
+		padding: 30px 0;
+	}
+	&__wrapper &__header {
+		margin-top: -30px !important;
+		margin-bottom: 30px !important;
+		border-bottom: 0;
+	}
+
+	&__divider {
+		border-style: dotted;
+	}
+
+	&__set {
+		padding: 0 25px;
+	}
+
+	&--thin &__set {
+		margin-right: auto;
+		margin-left: auto;
+		max-width: 750px;
+	}
+
+	&__label {
+		padding: .2em 0;
+	}
+
+	&__field {
+		&--indent {
+			padding-left: 18px;
+		}
+	}
+	&__field--indent &__label {
+		padding: 0;
+	}
+
+	&__indent {
+		margin-left: -17px;
+	}
+
+	&__required {
+		&:after {
+			color: rgba(0,0,0,0.75);
+			content: "*";
+			font-size: 14px;
+			margin-left: 4px;
+		}
+	}
+}
+
+
+.Checkbox__label:hover,
+.Radio__label:hover {
+	.Radio__text,
+	.Checkbox__text,
+	.Facet__count {
+		color: $linkHoverColor;
+	}
+}
+
+.Checkbox--disabled {
+	pointer-events: none;
+	color: $disabledColor;
+
+	.Checkbox__button {
+		opacity: 0.5;
+	}
+}
+
+.Checkbox__button {
+	box-shadow: inset 0 0 0 2px #fff;
+
+	.Checkbox__input:focus + &,
+	&--focused {
+		border-color: $theme_bHover;
+	}
+
+	.Checkbox__input:checked + &,
+	&--checked {
+		background-color: $theme_accent;
+
+		@if $theme_name == 'op' {
+			background-color: $theme_brand;
+		}
+	}
+}
+
+.Checkbox--disabled {
+	pointer-events: none;
+	user-select: none;
+
+	.Checkbox__button {
+		filter: grayscale(100%);
+		opacity: 0.4;
+	}
+	.Checkbox__text {
+		color: #888;
+	}
+}
+
+.Radio__button {
+	box-shadow: inset 0 0 0 2px #fff;
+
+	.Radio__input:focus + &,
+	&--focused {
+		border-color: $theme_bHover;
+	}
+
+	.Radio__input:checked + &,
+	&--checked {
+		background-color: $theme_accent;
+
+		@if $theme_name == 'op' {
+			background-color: $theme_brand;
+		}
+	}
+}
+
+@define-mixin SelectBrand {
+	.Select__text:after {
+		border-top-color: $theme_accent;
+	}
+}
+.Select {
+
+	&__text {
+		@mixin Field__input;
+		padding-right: 30px;
+
+		&:after {
+			border-top-color: $theme_accent;
+
+			@if $theme_name == 'op' {
+				border-top-color: $theme_brand;
+			}
+		}
+
+		&.placeholder {
+			color: $infoColor;
+		}
+	}
+
+	&__select:focus + &__text {
+		border-color: $theme_bHover;
+	}
+
+	&__select:hover + &__text:after {
+		border-top-color: $theme_aHover;
+
+		@if $theme_name == 'op' {
+			border-top-color: $theme_bHover;
+		}
+	}
+
+	&.brand {
+		@mixin SelectBrand;
+	}
+
+}
+.Form__field.error .Select__text {
+	border-color: $errorColor;
+}
+
+
+.Range__field {
+	@mixin Field__input;
+	font-size: 15px;
+}
+
+.Range__bar {
+	border-color: #a6a6a6;
+	border-radius: 4px;
+	padding: 1px;
+}
+.Range__selected {
+	background-color: $theme_accent;
+
+	@if $theme_name == 'op' {
+		background-color: $theme_brand;
+	}
+
+	border-radius: 3px;
+	height: 6px;
+}
+.Range__handle {
+	@mixin Icon;
+	@mixin OtherIcon handle, $theme_accent;
+	margin-top: -8px;
+
+	&:hover {
+		background-image: svg('handle', '[color]: $theme_aHover');
+	}
+
+	@if $theme_name == 'op' {
+		background-image: svg('handle', '[color]: $theme_brand');
+
+		&:hover {
+			background-image: svg('handle', '[color]: $theme_bHover');
+		}
+	}
+}
+.Range__handle.left {
+	margin-left: -4px;
+}
+.Range__handle.right {
+	margin-right: -4px;
+}
+
+
+
+/*doc
+
+<span class="Amount">
+	<span class="Amount__wrapper">
+		<input type="text" name="" id="" class="Amount__input" value="1">
+		<span class="Amount__controls">
+			<span class="Amount__control Amount__control--more"><em>Больше</em></span>
+			<span class="Amount__control Amount__control--less"><em>Меньше</em></span>
+		</span>
+	</span>
+	<button class="Amount__btn">Купить</button>
+</span>
+
+*/
+
+.Amount {
+	white-space: nowrap;
+	user-select: none;
+}
+.Amount__wrapper {
+	@mixin arrowRight 4px, #fff, 1px, #a6a6a6;
+	background: #fff;
+	box-sizing: border-box;
+	display: inline-block;
+	margin-right: 1em;
+	position: relative;
+	vertical-align: top;
+	height: 30px;
+
+	&:before,
+	&:after {
+		margin-left: -1px;
+	}
+
+	&:hover {
+		&:before {
+			border-left-color: #7d7d7d;
+		}
+	}
+
+	.Amount.isFocused & {
+		border-color: $theme_bHover;
+
+		&:before {
+			border-left-color: $theme_bHover;
+		}
+	}
+
+	.Amount.isError & {
+		&:before {
+			border-left-color: $errorColor;
+		}
+	}
+}
+
+.Amount {
+	&__controls {
+		background: #fff;
+		display: inline-block;
+		position: absolute;
+		top: 1px;
+		bottom: 1px;
+		right: 1px;
+		width: 16px;
+	}
+
+	&__control {
+		box-sizing: border-box;
+		cursor: pointer;
+		display: block;
+		font-size: 4px;
+		text-align: center;
+		line-height: 14px;
+
+		.Icon {
+			margin-top: 0;
+		}
+	}
+}
+
+.Amount__input {
+	@mixin Field__input;
+	padding-right: 16px;
+	font-size: 15px;
+	font-weight: bold;
+	line-height: 1;
+	text-align: center;
+	width: 50px;
+	height: 30px;
+
+	.Amount.isError & {
+		border-color: $errorColor;
+	}
+}
+
+.Amount__btn {
+	@mixin Btn--default;
+	@mixin Btn--main;
+	padding-y: 5px 6px;
+	height: 30px;
+}
+
+
+.Textarea {
+	height: calc($lineHeight * 2 + .75em);
+	transition: height .2s ease-in-out;
+
+	&--open {
+		height: calc($lineHeight * 6 + .75em);
+	}
+}
+
+.Form__input--password {
+	padding-right: 36px;
+	vertical-align: middle;
+}
+
+.Form__passwordControl {
+	@mixin OtherIcon eye_close_16x16, #9f9f9f;
+
+	display: none;
+	cursor: pointer;
+	vertical-align: middle;
+	margin-left: calc((width('eye_close_16x16.svg') + 10px) * -1px);
+
+	&:hover {
+		opacity: .75;
+	}
+
+	&--active {
+		display: inline-block;
+	}
+
+	&--view {
+		@mixin OtherIcon eye_open_16x16, #9f9f9f;
+	}
+}

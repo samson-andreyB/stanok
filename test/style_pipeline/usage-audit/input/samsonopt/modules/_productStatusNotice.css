@@ -1,0 +1,22 @@
+.ProductStatusNotice--default {
+	display: inline-block;
+	box-sizing: border-box;
+	border-width: 1px;
+	border-style: solid;
+	border-radius: $B_RAD;
+	padding: .8em 1.25em;
+	line-height: 1;
+	text-align: center;
+}
+
+.ProductStatusNotice--discontinued {
+	color: $C_BRAND;
+}
+
+.ProductStatusNotice--comingSoon {
+	color: $C_VIOLET;
+}
+
+.ProductStatusNotice--returnRequest {
+	color: $C_BRAND;
+}

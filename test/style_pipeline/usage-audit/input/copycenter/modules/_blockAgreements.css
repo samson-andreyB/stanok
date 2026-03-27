@@ -1,0 +1,22 @@
+/* BLOCK AGREEMENTS
+-------------------------------------------------------------*/
+
+.BlockAgreementCheckbox {
+	display: table;
+	margin-top: 10px;
+}
+textarea + .BlockAgreementCheckbox {
+	margin-top: 12px;
+}
+.BlockAgreementCheckbox__checkbox,
+.BlockAgreementCheckbox__label {
+	display: table-cell;
+	vertical-align: top;
+}
+.BlockAgreementCheckbox__checkbox {
+	width: 21px;
+}
+.BlockAgreementCheckbox__label,
+.BlockAgreementCheckbox__label a {
+	line-height: 1.3;
+}

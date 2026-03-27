@@ -1,0 +1,95 @@
+.Nav {
+	display: block;
+	padding-left: 0;
+	margin-bottom: 0;
+	height: 70px;
+	
+	&__item {
+		display: inline-block;
+		margin: 0;
+		position: relative;
+		height: 100%;
+		
+		&:first-child {
+			margin-left: -.25em;
+		}
+		
+		& + & {
+			margin-left: 1em;
+		}
+	}
+
+	&__link {
+		font-family: $fontAccent;
+		font-size: 34px;
+		display: inline-block;
+		border-radius: $bdrad;
+		padding: 0 .25em;
+		line-height: 1.75;
+		text-decoration: none;
+		
+		.Nav__item:hover & {
+			background-color: $default;
+		}
+
+		.Nav__item--active a& {
+			background-color: #e4f1c3;
+		}
+
+		.Nav__item.Nav__item--active span& {
+			background-color: $accent;
+			cursor: default;
+		}
+	}
+}
+.NavMenu__wrapper {
+	position: absolute;
+	top: 100%;
+	left: -$shadowMainOffset;
+	opacity: 0;
+	visibility: hidden;
+	transition: .2s;
+	transition-delay: .1s;
+	
+	&:before {
+		content: "";
+		background-color: #fff;
+		position: absolute;
+		top: 0;
+		left: $shadowMainOffset;
+		right: $shadowMainOffset;
+		height: $shadowMainOffset;
+	}
+	
+	.Nav__item:hover & {
+		opacity: 1;
+		visibility: visible;
+	}
+}
+.NavMenu {
+	margin-top: $shadowMainOffset;
+	overflow: hidden;
+	padding: $shadowMainOffset;
+	padding-top: 0;
+	
+	&__content {
+		background-color: #fff;
+		border-radius: 0 0 $bdrad $bdrad;
+		box-shadow: $shadowHeader;
+		padding-bottom: .5em;
+	}
+	
+	&__link {
+		display: block;
+		padding: .75em 1em;
+		text-decoration: none;
+		max-width: 300px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		
+		&:hover {
+			background-color: $default;
+		}
+	}
+}

@@ -1,0 +1,11 @@
+.TipTipInfo {
+	&--default {
+		.TipTipInfo__header {
+			font-weight: bold;
+
+			& + .TipTipInfo__content {
+				margin-top: .5em;
+			}
+		}
+	}
+}

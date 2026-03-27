@@ -1,0 +1,71 @@
+
+.Notifications--default {
+	position: fixed;
+	bottom: 0;
+	box-sizing: border-box;
+	z-index: 100;
+	pointer-events: none;
+}
+
+
+.Notification--default {
+	display: none;
+	position: relative;
+	width: 200px;
+	padding: 25px 25px 20px;
+	box-sizing: border-box;
+	background-color: #eee;
+	text-align: center;
+	cursor: default;
+	pointer-events: all;
+
+	.Notification__controls {
+		margin-top: .8em;
+	}
+
+	.Notification__close {
+		position: absolute;
+		top: 7px;
+		right: 7px;
+		width: width('icons/cross_7x7_d99.png');
+		height: height('icons/cross_7x7_d99.png');
+		cursor: pointer;
+		opacity: .5;
+
+		&:hover {
+			opacity: 1;
+		}
+	}
+
+	.pseudoLink {
+		font-size: 11px;
+	}
+}
+
+.Notification--green {
+	background-color: #e6fae8;
+	color: #16a474;
+
+	.Notification__close {
+		background-image: resolve('icons/cross_7x7_8b8.png');
+	}
+}
+
+.Notification--peach {
+	background-color: #fcebd4;
+	color: orange;
+
+	.Notification__close {
+		background-image: resolve('icons/cross_7x7_c95.png');
+	}
+}
+
+.Notification--pink {
+
+	background-color: #fff0ed;
+	color: #e45959;
+
+	.Notification__close {
+		background-image: resolve('icons/cross_7x7_d99.png');
+	}
+}

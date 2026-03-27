@@ -1,0 +1,438 @@
+.HeaderPanel {
+	position: relative;
+	z-index: 100;
+
+	&__wrapper {
+		padding-top: 20px;
+		padding-bottom: 13px;
+	}
+
+	&--main {
+		z-index: 101;
+	}
+
+	&--catalog {
+		background-color: #fff;
+	}
+
+	&--fly {
+		 z-index: 10000;
+
+		.HeaderPanel__wrapper {
+			background-color: #fff;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, .13);
+			width: 100%;
+			position: fixed;
+			top: 0;
+			padding: 18px 0 15px;
+
+			@supports (width: var(--fancybox-scrollbar-width)) {
+				width: calc(100% - var(--fancybox-scrollbar-width, 0px));
+			}
+		}
+	}
+}
+
+.Header {
+	&__group {
+		box-sizing: border-box;
+		display: table;
+		width: 100%;
+	}
+
+	&__row {
+		display: table-row;
+	}
+
+	&__box {
+		box-sizing: border-box;
+		display: table-cell;
+		vertical-align: middle;
+		white-space: nowrap;
+
+		&--logo {
+			white-space: nowrap;
+			width: $SIDE_WIDTH;
+			padding-right: 30px;
+
+			.Logo {
+				display: inline-block;
+				vertical-align: middle;
+
+				&--default {
+					background-image: svg('logo_main_234x50', '[color]: $BRAND');
+					height: 50px;
+					width: 234px;
+				}
+			}
+		}
+
+		&--rubricatorButton {
+			width: 1%;
+			padding-right: 20px;
+		}
+
+		&--search {
+			width: 100%;
+			padding-right: 20px;
+		}
+
+		&--user,
+		&--orders {
+			padding-x: 10px;
+		}
+
+		&--orders {
+			.OrdersWidget {
+				@mixin headerWidget box_icon_20x20;
+
+				@media screen and (max-width: 1170px) {
+					font-size: 0;
+				}
+			}
+		}
+
+		&--cart {
+			padding-left: 10px;
+
+			.CartWidget {
+				@mixin headerWidget basket_icon_12x17;
+
+				&:not(.CartWidget--hasGoods) {
+					pointer-events: none;
+
+					&:before {
+						background-image: svg('basket_icon_12x17', '[color]: $GREY_2');
+					}
+				}
+
+				&__title {
+					user-select: none;
+					color: $GREY_2;
+
+					@media screen and (max-width: 1170px) {
+						display: inline-block;
+						vertical-align: middle;
+					}
+				}
+			}
+
+			.Price {
+				font-weight: bold;
+				height: 16px;
+				vertical-align: top;
+
+				@media screen and (max-width: 1170px) {
+					vertical-align: middle;
+				}
+			}
+		}
+	}
+}
+
+.HeaderMenu {
+	position: relative;
+
+	& + & {
+		border-top: 1px solid $GREY_3;
+	}
+
+	&__list {
+		text-align: left;
+		display: inline-block;
+		overflow: hidden;
+		vertical-align: top;
+
+		&--info {
+			position: relative;
+			white-space: nowrap;
+			visibility: hidden;
+		}
+
+		&--active {
+			overflow: visible;
+
+			.HeaderMenu__dropdownMenu {
+				visibility: visible;
+				opacity: 1;
+			}
+
+			.HeaderMenu__item--more {
+				& > .HeaderMenu__link,
+				& > .HeaderMenu__link:hover {
+					color: $BRAND_BLACK;
+					background-color: #fff;
+				}
+			}
+		}
+	}
+
+	&__item {
+		display: inline-block;
+		vertical-align: top;
+		position: relative;
+		cursor: default;
+
+		&--dropdownToggle {
+			> .HeaderMenu__link {
+				&:after {
+					@mixin arrowDown;
+				}
+
+				&.TipTip__active {
+					color: $BRAND_BLACK;
+					background-color: #fff;
+				}
+			}
+		}
+
+		&--more {
+			display: none;
+		}
+	}
+
+	&__dropdownMenu {
+		position: absolute;
+		z-index: -1;
+		top: 100%;
+		left: 0;
+		min-width: 105px;
+		overflow: hidden;
+		background-color: $BRAND_BLACK;
+		box-shadow: 0 0 20px rgba(0, 0, 0, .2);
+		border-radius: 0 0 8px 8px;
+		visibility: hidden;
+		opacity: 0;
+		transition: .2s;
+		white-space: nowrap;
+
+		.HeaderMenu {
+			&__item {
+				display: block;
+
+				&--information {
+					white-space: nowrap;
+				}
+			}
+
+			&__link {
+				display: block;
+				padding: 12px 15px;
+				height: auto;
+			}
+		}
+	}
+
+	&__itemBox,
+	&__link {
+		color: #fff;
+		display: inline-block;
+		padding: 13px 10px;
+		vertical-align: top;
+
+		&:before {
+			display: inline-block;
+			vertical-align: middle;
+			margin-top: -3px;
+			margin-right: 2px;
+		}
+	}
+
+	&__link {
+		&:not(.HeaderMenu__link--noHover) {
+			cursor: pointer;
+
+			&:hover {
+				background-color: rgba(255, 255, 255, .2);
+				color: #fff;
+			}
+		}
+
+		&--feedback {
+			&:before {
+				content: '';
+				background-image: svg('feedback_16x15', '[color]: #fff');
+				width: width('feedback_16x15.svg');
+				height: height('feedback_16x15.svg');
+			}
+		}
+
+		&--delivery {
+			&:before {
+				content: '';
+				background-image: svg('delivery_18x15', '[color]: #fff');
+				width: width('delivery_18x15.svg');
+				height: height('delivery_18x15.svg');
+			}
+		}
+
+		&--discounts {
+			&:before {
+				content: '';
+				background-image: svg('percent_14x14', '[color]: #fff');
+				width: width('percent_14x14.svg');
+				height: height('percent_14x14.svg');
+			}
+		}
+
+		&.CityDetector {
+			&:before {
+				content: '';
+				background-image: svg('placemark_11x16', '[color]: #fff');
+				width: width('placemark_11x16.svg');
+				height: height('placemark_11x16.svg');
+			}
+		}
+	}
+
+	&__itemBox {
+		color: $BRAND_BLACK;
+
+		.HeaderMenu__list--info & {
+			background-color: #fff;
+			user-select: none;
+		}
+	}
+
+	&--main {
+		z-index: 102;
+		background-color: $BRAND_BLACK;
+		text-align: right;
+	}
+
+	&--ready {
+		.HeaderMenu__list {
+			visibility: visible;
+		}
+	}
+
+	&--main {
+		.Page__wrapper {
+			display: flex;
+			justify-content: space-between;
+		}
+	}
+
+	&--offer {
+		@mixin overlay;
+
+		position: relative;
+	}
+
+	&__offerLinks {
+		border-collapse: collapse;
+		position: relative;
+		width: 100%;
+	}
+
+	.OfferLinks--header {
+		padding-y: 22px 20px;
+	}
+
+	.Price {
+		font-weight: bold;
+	}
+}
+
+
+/* Баннер в шапке сайта
+------------------------------------------------------------------------------*/
+
+.HeaderBanner {
+	overflow: hidden;
+
+	&__wrapper {
+		max-width: $maxContentWidth;
+		position: relative;
+		margin-x: auto;
+		padding: 0 $PAGE_WRAPPER_PADDING;
+	}
+
+	&__remove {
+		@mixin BtnRemove;
+
+		position: absolute;
+		right: $PAGE_WRAPPER_PADDING;
+		top: 23px;
+		z-index: 1;
+	}
+
+	&__link {
+		@mixin bannerHover;
+
+		display: block;
+		height: 70px;
+		background-position: center;
+		background-repeat: repeat-x;
+		min-width: 1920px;
+		position: relative;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+}
+
+
+
+/* Кнопка рубрикатора
+------------------------------------------------------------------------------*/
+
+.RubricatorButton {
+	&.btnDefault {
+		padding-right: 20px;
+		padding-left: 20px;
+		height: 40px;
+	}
+
+	&__icon {
+		position: relative;
+		display: inline-block;
+		vertical-align: middle;
+		margin-top: -2px;
+		margin-right: 6px;
+
+		&,
+		&:before,
+		&:after {
+			width: 16px;
+			height: 2px;
+			border-radius: 2px;
+			background-color: #fff;
+			transition: .2s;
+		}
+
+		&:before,
+		&:after {
+			content: '';
+			position: absolute;
+			left: 0;
+		}
+
+		&:before {
+			bottom: 5px;
+		}
+
+		&:after {
+			top: 5px;
+		}
+	}
+
+	&--active {
+		.RubricatorButton__icon {
+			background-color: transparent;
+
+			&:before {
+				width: 22px;
+				bottom: 1px;
+				left: -3px;
+				transform: rotate(45deg);
+			}
+
+			&:after {
+				width: 22px;
+				top: -1px;
+				left: -3px;
+				transform: rotate(-45deg);
+			}
+		}
+	}
+}

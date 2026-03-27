@@ -1,0 +1,19 @@
+/*
+ * Заявки на дизайн-проект
+ */
+.Items__list--designProject .Item__box {
+	vertical-align: top;
+
+	&--subdivision {
+		width: 80px;
+	}
+	&--organization {
+		width: 170px;
+	}
+	&--phone {
+		width: 105px;
+	}
+	&--date {
+		width: 75px;
+	}
+}

@@ -1,0 +1,175 @@
+@import 'modules/_var';
+@import 'modules/_mixin';
+@import 'modules/_drop';
+@import 'modules/_menuList';
+@import 'modules/_manager';
+@import 'modules/_counter';
+@import 'modules/_notification';
+@import 'modules/_btn';
+@import 'modules/_productBlock';
+@import 'modules/_jackpotBadge';
+
+$PAGE_CONTROLS_HEIGHT: 44px;
+
+.Panel--main {
+	font-family: Arial, Helvetica, sans-serif;
+	background-color: #eee;
+	cursor: default;
+
+	.Panel__wrapper {
+		@mixin PageWrapper;
+	}
+
+	.Panel__content {
+		display: table;
+		width: 100%;
+	}
+
+	.Panel__box {
+		display: table-cell;
+
+		&--sites {
+			.Panel__control {
+				padding-x: 10px;
+			}
+		}
+
+		&--controls {
+			text-align: right;
+		}
+	}
+
+	.Drop {
+		&__trigger {
+			height: 100%;
+			padding-x: 10px;
+			margin-x: -10px;
+
+			&:after {
+				content: '';
+				@mixin caretXY 7px, 4px;
+				margin-top: -1px;
+				margin-left: 4px;
+			}
+		}
+
+		.Drop__trigger { /* Increase selector weight */
+			color: inherit;
+			background-color: inherit;
+		}
+
+		&__content {
+			width: auto;
+			line-height: normal;
+			cursor: default;
+		}
+
+		&--active {
+			color: #111;
+			background-color: #fff;
+		}
+	}
+
+	.Panel__label {
+		user-select: none;
+	}
+
+	.Panel__control {
+		position: relative;
+		display: inline-block;
+		vertical-align: middle;
+		padding-x: 10px;
+		box-sizing: border-box;
+		height: $PAGE_CONTROLS_HEIGHT;
+		line-height: $PAGE_CONTROLS_HEIGHT;
+		text-align: left;
+		text-decoration: none;
+		color: #444;
+
+		&:not(.Panel__control--noHover):hover {
+			background-color: #ddd;
+			cursor: pointer;
+		}
+
+		&--active {
+			background-color: #fff;
+			color: #111;
+			pointer-events: none;
+		}
+
+		&--manager,
+		&--list {
+			@mixin Drop--toLeft;
+		}
+
+		&--list {
+			.Drop__trigger:after {
+				content: none;
+			}
+		}
+	}
+
+	.MenuList {
+		white-space: nowrap;
+	}
+
+	.Icon {
+		display: inline-block;
+		height: 100%;
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+
+		&--envelope {
+			width: width('envelope_22x16.svg');
+			background-image: svg('envelope_22x16.svg', '[color]: $C_GRAY');
+		}
+
+		&--list {
+			width: width('list_22x16.svg');
+			background-image: svg('list_22x16.svg', '[color]: $C_GRAY');
+		}
+	}
+
+	.CounterBadge {
+		position: absolute;
+		right: 3px;
+		top: 3px;
+	}
+
+	.Drop--active,
+	.Panel__control:not(.Panel__control--noHover):hover {
+		color: #111;
+
+		.Icon {
+			opacity: 1;
+		}
+	}
+
+	.Drop--active {
+		.Drop__trigger {
+			position: relative;
+			z-index: 11; /* Overlaps Drop__content with the shadow */
+		}
+	}
+
+	.Panel__label + .JackpotBadge {
+		margin-left: 2px;
+	}
+
+	.FilialToggle__name,
+	.Discount__value {
+		font-weight: bold;
+	}
+}
+
+.FancyboxNotification {
+	a#fancybox-close {
+		@mixin FancyboxClose {
+			background-color: transparent;
+		}
+	}
+
+	#fancybox-wrap {
+		overflow: hidden;
+	}
+}

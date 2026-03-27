@@ -1,0 +1,26 @@
+$theme_name: 'oz_wetAsphalt';
+$theme_brand: #58595b;
+$theme_bHover: #4b4c4d;
+$theme_accent: #3567ca;
+$theme_aHover: #2d58ac;
+$theme_layoutAccentColor: #f1f1f1;
+
+$brandColor: #00aff0;
+$brandColorLighter: #2dc6ff;
+
+@import 'modules/_themeVars_oz';
+
+$theme_logo: logo_oz.png;
+$theme_logo_width: 194px;
+$theme_logo_height: 79px;
+$theme_logo_s_width: 131px;
+$theme_logo_s_height: 36px;
+
+$theme_lowPrice_icon: low_price--oz.png;
+$theme_lowPrice_width: 70px;
+$theme_lowPrice_height: 70px;
+
+$theme_placemarkCluster: #58595b;
+$theme_placemarkClusterActive: #898a8c;
+
+@import '_modules';

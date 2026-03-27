@@ -1,0 +1,283 @@
+@define-mixin Icon {
+	@mixin v-a-m-true;
+	display: inline-block;
+	background-repeat: no-repeat;
+
+	a& {
+		text-decoration: none;
+	}
+	a &,
+	.withIcon & {
+		margin-right: .4em;
+	}
+}
+
+.Icon {
+	@mixin Icon;
+}
+
+
+@define-mixin RubricsIcon $iconName {
+	height: height('$iconName.svg');
+	background-image: svg('$iconName', '[color]: $theme_color_5');
+	background-position: center;
+
+	@if $theme_name == 'op' {
+		background-image: svg('$iconName', '[color]: $theme_accent');
+	}
+
+	.Rubrics__link:hover & {
+		background-image: svg('$iconName', '[color]: $brandColorLighter');
+	}
+}
+
+.Icon--rubricDefault {
+	@mixin RubricsIcon rubricDefault;
+}
+
+.Icon--medicine {
+	@mixin RubricsIcon medicine;
+}
+
+.Icon--stationery {
+	@mixin RubricsIcon stationery;
+}
+
+.Icon--paper {
+	@mixin RubricsIcon paper;
+}
+
+.Icon--food {
+	@mixin RubricsIcon food;
+}
+
+.Icon--home {
+	@mixin RubricsIcon home;
+}
+
+.Icon--household {
+	@mixin RubricsIcon household;
+}
+
+.Icon--mebel {
+	@mixin RubricsIcon mebel;
+}
+
+.Icon--officeEquip {
+	@mixin RubricsIcon officeEquip;
+}
+
+.Icon--domesticEquip {
+	@mixin RubricsIcon domesticEquip;
+}
+
+.Icon--office {
+	@mixin RubricsIcon office;
+}
+
+.Icon--artist {
+	@mixin RubricsIcon artist;
+}
+
+.Icon--school {
+	@mixin RubricsIcon school;
+}
+
+.Icon--electronics {
+	@mixin RubricsIcon electronics;
+}
+
+.Icon--gifts {
+	@mixin RubricsIcon gifts;
+}
+
+.Icon--auto {
+	@mixin RubricsIcon auto;
+}
+
+.Icon--demo {
+	@mixin RubricsIcon demo;
+}
+
+.Icon--instruments {
+	@mixin RubricsIcon instruments;
+}
+
+.Icon--books {
+	@mixin RubricsIcon books;
+}
+
+.Icon--householdChemic {
+	@mixin RubricsIcon householdChemic;
+}
+
+.Icon--beauty {
+	@mixin RubricsIcon beauty;
+}
+
+.Icon--hobby {
+	@mixin RubricsIcon hobby;
+}
+
+.Icon--toys {
+	@mixin RubricsIcon toys;
+}
+
+.Icon--light {
+	@mixin RubricsIcon light;
+}
+
+.Icon--boxes {
+	@mixin RubricsIcon boxes;
+}
+
+.Icon--dishes {
+	@mixin RubricsIcon dishes;
+}
+
+.Icon--sport {
+	@mixin RubricsIcon sport;
+}
+
+.Icon--toilet {
+	@mixin RubricsIcon toilet;
+}
+
+.Icon--kids {
+	@mixin RubricsIcon kids;
+}
+
+.Icon--siz {
+	@mixin RubricsIcon siz;
+}
+
+.Icon--everythingCleaning {
+	@mixin RubricsIcon everythingCleaning;
+}
+
+
+.Icon--edit {
+	width: width('edit.svg');
+	height: height('edit.svg');
+	background-image: svg('edit', '[color]: #818181');
+	transition: all .2s ease-in-out;
+
+	.Requisites__item.active & {
+		background-image: svg('edit', '[color]: #fff');
+	}
+
+	.Btn--icon:hover & {
+		background-image: svg('edit', '[color]: #fff');
+
+		.Requisites__item.active & {
+			background-image: svg('edit', '[color]: #818181');
+		}
+	}
+}
+
+@define-mixin OtherIcon $iconName, $color, $theme: false {
+	width: width('$iconName.svg');
+	height: height('$iconName.svg');
+	background-image: svg('$iconName', '[color]: $color');
+
+	@if $theme == true {
+		@if $theme_name == 'op' {
+			background-image: svg('$iconName', '[color]: $theme_accent');
+		}
+	}
+}
+
+.Icon--enter {
+	@mixin OtherIcon enter, #6c6c6c;
+
+	a:hover & {
+		background-image: svg('enter', '[color]: $linkHoverColor');
+	}
+
+	.User__link & {
+		margin-right: .5em;
+	}
+}
+
+.Icon--amountUp {
+	@mixin OtherIcon amountUp, #ababab;
+
+	.Amount__control:hover & {
+		background-image: svg('amountUp', '[color]: $theme_bHover');
+	}
+}
+
+.Icon--amountDown {
+	@mixin OtherIcon amountDown, #ababab;
+
+	.Amount__control:hover & {
+		background-image: svg('amountDown', '[color]: $theme_bHover');
+	}
+}
+
+.Icon--brand__arrow {
+	@mixin OtherIcon brandArrow, $theme_brand;
+	transform: rotate(180deg);
+}
+
+.Icon--brand__arrow2 {
+	@mixin OtherIcon brandArrow, $theme_brand;
+}
+
+.Icon--cross {
+	.Btn--icon & {
+		@mixin OtherIcon cross_12x12, #818181;
+		transition: all .2s ease-in-out;
+
+		.Requisites__item.active & {
+			background-image: svg('cross_12x12', '[color]: #fff');
+		}
+	}
+
+	.Btn--icon:hover & {
+		background-image: svg('cross_12x12', '[color]: #fff');
+
+		.Requisites__item.active & {
+			background-image: svg('cross_12x12', '[color]: #818181');
+		}
+	}
+
+	.Product__remove &,
+	.Btn--action & {
+		@mixin OtherIcon cross_16x16, #fff;
+	}
+}
+
+.Icon--search {
+	@mixin OtherIcon search_14x14, #b4b4b4;
+}
+
+.Icon--mainSearch {
+	@mixin OtherIcon mainSearch, #fff;
+}
+
+.Icon--geolocation {
+	@mixin OtherIcon geolocation, #b2b2b2;
+}
+
+.Icon--larr {
+	@mixin OtherIcon arrow_10x18, #fff;
+	transform: rotate(180deg);
+}
+
+.Icon--rarr {
+	@mixin OtherIcon arrow_10x18, #fff;
+}
+
+.Icon--orderCancel {
+	@mixin OtherIcon orderCancel, $linkColor;
+}
+
+.Icon--help {
+	@mixin OtherIcon help, #818181;
+	cursor: help;
+
+	&:hover {
+		opacity: .75;
+	}
+}

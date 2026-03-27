@@ -1,0 +1,131 @@
+/* ICON
+------------------------------------------------------------------------------*/
+.Icon {
+	&:before {
+		content: '';
+		display: inline-block;
+	}
+
+	&--crossRed {
+		&:before {
+			background-image: resolve('icons/cross_10x10_e55.png');
+			width: width('icons/cross_10x10_e55.png');
+			height: height('icons/cross_10x10_e55.png');
+		}
+
+		@mixin hocusac {
+			&:before {
+				background-image: resolve('icons/cross_10x10_fff.png');
+			}
+		}
+	}
+
+	&--crossSmall {
+		&:before {
+			background-image: resolve('icons/cross_7x7_999.png');
+			width: width('icons/cross_7x7_999.png');
+			height: height('icons/cross_7x7_999.png');
+		}
+
+		@mixin hocusac {
+			&:before {
+				background-image: resolve('icons/cross_7x7_e55.png');
+			}
+		}
+	}
+
+	&--jackdaw {
+		&:before {
+			background-image: resolve('icons/jackdaw_14x11_3b8.png');
+			width: width('icons/jackdaw_14x11_3b8.png');
+			height: height('icons/jackdaw_14x11_3b8.png');
+		}
+	}
+
+	&--lockLocked {
+		filter: grayscale(100%);
+
+		&:before {
+			width: 13px;
+			height: 10px;
+			background-image: resolve('icons/lock_locked_9x10_999.png');
+			background-repeat: no-repeat;
+			background-position: 50%;
+		}
+
+		@mixin hocusac {
+			&:before {
+				background-image: resolve('icons/lock_unlocked_13x10_fff.png');
+			}
+		}
+	}
+
+	&--lockUnlocked {
+		&:before {
+			width: 13px;
+			height: 10px;
+			background-image: resolve('icons/lock_unlocked_13x10_2b8.png');
+			background-repeat: no-repeat;
+			background-position: 50%;
+		}
+
+		@mixin hocusac {
+			&:before {
+				background-image: resolve('icons/lock_locked_9x10_fff.png');
+			}
+		}
+	}
+
+	&--prolongation {
+		padding: 4px;
+
+		&:before {
+			vertical-align: middle;
+			width: width('prolongation_32x17.svg');
+			height: 20px;
+			background-image: svg('prolongation_32x17', '[color]: #28bd8b');
+			background-repeat: no-repeat;
+			background-position: 50%;
+		}
+
+		@mixin hocusac {
+			&:before {
+				background-image: svg('prolongation_32x17', '[color]: #fff');
+			}
+		}
+	}
+
+	&--eye {
+		&:before {
+			width: 14px;
+			height: 10px;
+			background-image: resolve('icons/eye_14x8_2b8.png');
+			background-repeat: no-repeat;
+			background-position: 50%;
+		}
+
+		@mixin hocusac {
+			&:before {
+				background-image: resolve('icons/eyeCrossed_14x10_fff.png');
+			}
+		}
+	}
+
+	&--eyeCrossed {
+		filter: grayscale(100%);
+
+		&:before {
+			width: 14px;
+			height: 10px;
+			background-image: resolve('icons/eyeCrossed_14x10_999.png');
+			background-repeat: no-repeat;
+			background-position: 50%;
+		}
+
+		@mixin hocusac {
+			&:before {
+				background-image: resolve('icons/eye_14x8_fff.png');
+			}
+		}
+	}
+}

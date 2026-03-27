@@ -1,0 +1,67 @@
+/* для автоматически генерируемых таблиц стилей с изображениями */
+@define-mixin i-inline {
+	background-repeat: no-repeat;
+	display: inline-block;
+	margin-top: -.2em;
+	vertical-align: middle;
+}
+.i-inline {
+	@mixin i-inline;
+}
+
+/* чтобы плавающие элементы не выплывали наружу */
+@define-mixin groupIB {
+	box-sizing: border-box;
+	display: inline-block;
+	width: 100%;
+}
+.groupIB {
+	@mixin groupIB;
+}
+
+@define-mixin SPEC_PAD $n {
+
+	.ProductSpecial {
+		margin-left: -$n;
+		margin-right: -$n;
+
+		&__box {
+
+			&:first-child {
+				padding-left: $n;
+			}
+
+			&:last-child {
+				padding-right: $n;
+			}
+		}
+
+		&__income {
+			padding-x: $n;
+		}
+	}
+}
+
+@define-mixin Blocked {
+	filter: grayscale(100%);
+	pointer-events: none;
+	cursor: default;
+	user-select: none;
+	opacity: .6;
+}
+
+.Blocked {
+	@mixin Blocked;
+}
+
+@define-mixin promoIconWrapper $leftIndent: 4px, $topIndent: 3px {
+	display: flex;
+	flex-wrap: wrap;
+	margin-top: -$topIndent;
+	margin-left: -$leftIndent;
+
+	.promoIcon {
+		margin-top: $topIndent;
+		margin-left: $leftIndent;
+	}
+}

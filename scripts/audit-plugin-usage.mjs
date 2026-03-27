@@ -36,6 +36,109 @@ const ROOT = new URL('..', import.meta.url).pathname.replace(/^\/([A-Z]:)/, '$1'
 const INPUT_DIR = getArg('--input') ?? path.join(ROOT, 'test/style_pipeline/usage-audit/input');
 const OUTPUT_PATH = getArg('--output') ?? null;
 const FORMAT = getArg('--format') ?? 'all'; // 'all' | 'markdown' | 'json' | 'html'
+const LOCKFILE_PATH = path.join(ROOT, 'package-lock.json');
+
+function loadPackageVersions(lockfilePath) {
+  if (!fs.existsSync(lockfilePath)) return {};
+  try {
+    const lock = JSON.parse(fs.readFileSync(lockfilePath, 'utf8'));
+    const versions = {};
+
+    const packages = lock?.packages ?? {};
+    for (const [key, pkg] of Object.entries(packages)) {
+      if (!key.includes('node_modules/')) continue;
+      const packageName = key.split('node_modules/').pop();
+      if (packageName && pkg?.version && !versions[packageName]) {
+        versions[packageName] = String(pkg.version);
+      }
+    }
+
+    const deps = lock?.dependencies ?? {};
+    for (const [packageName, dep] of Object.entries(deps)) {
+      if (packageName && dep?.version && !versions[packageName]) {
+        versions[packageName] = String(dep.version);
+      }
+    }
+
+    return versions;
+  } catch {
+    return {};
+  }
+}
+
+const PACKAGE_VERSIONS = loadPackageVersions(LOCKFILE_PATH);
+
+function loadIntcssDependencySpecs(lockfilePath) {
+  if (!fs.existsSync(lockfilePath)) return {};
+  try {
+    const lock = JSON.parse(fs.readFileSync(lockfilePath, 'utf8'));
+    const deps = lock?.packages?.['node_modules/intcss']?.dependencies ?? {};
+    const specs = {};
+    for (const [packageName, versionSpec] of Object.entries(deps)) {
+      if (packageName && typeof versionSpec === 'string') {
+        specs[packageName] = versionSpec;
+      }
+    }
+    return specs;
+  } catch {
+    return {};
+  }
+}
+
+const INTCSS_DEP_SPECS = loadIntcssDependencySpecs(LOCKFILE_PATH);
+
+const PLUGIN_NPM_PACKAGE = {
+  'postcss-nested (BEM)': 'postcss-nested',
+  'postcss-nested (standard)': 'postcss-nested',
+};
+
+const PLUGIN_DESCRIPTIONS_RU = {
+  'postcss-import': 'Подставляет содержимое импортируемых CSS-файлов в итоговый файл на этапе сборки.',
+  'postcss-mixins': 'Добавляет поддержку миксинов: переиспользуемых CSS-блоков с параметрами.',
+  'postcss-axis': 'Преобразует осевые свойства вроде margin-x/padding-y в обычные CSS-свойства по сторонам.',
+  'postcss-property-lookup': 'Позволяет ссылаться на значение другого свойства внутри правила через @-lookup синтаксис.',
+  'postcss-assets': 'Работает с ассетами: вычисляет размеры, резолвит пути и подставляет данные файлов в CSS.',
+  'postcss-advanced-variables': 'Добавляет sass-подобные переменные, условия и циклы в CSS.',
+  'postcss-color-function': 'Расширяет функции цветовых вычислений: tint/shade/lighten/darken и подобные операции.',
+  'postcss-strip-units': 'Убирает единицы измерения из чисел внутри выражений, где это нужно.',
+  'postcss-conditionals': 'Добавляет условные конструкции @if/@else для генерации CSS по условиям.',
+  'postcss-nested (BEM)': 'Разворачивает BEM-вложенность с &__element и &--modifier в плоские селекторы.',
+  'postcss-nested (standard)': 'Разворачивает стандартную CSS-вложенность селекторов (&, дочерние и соседние комбинации).',
+  'postcss-extend': 'Добавляет механизм @extend для наследования стилей между селекторами.',
+  'postcss-calc': 'Вычисляет и упрощает выражения calc(), когда это возможно на этапе сборки.',
+  'postcss-svg': 'Встраивает и параметризует SVG-ресурсы в CSS, включая генерацию data URI.',
+  'postcss-url': 'Переписывает и нормализует пути в url() по заданным правилам.',
+  'postcss-svg-fallback': 'Генерирует fallback для SVG-ресурсов (например, альтернативы для старых браузеров).',
+  'postcss-color-rgba-fallback': 'Добавляет fallback-цвета для rgba() в форматах для устаревших браузеров.',
+  'autoprefixer': 'Добавляет вендорные префиксы в CSS по целевому списку браузеров.',
+  'postcss-data-packer': 'Упаковывает ресурсы в data URI и инлайнит их в CSS.',
+};
+
+function resolvePluginPackageMeta(pluginId, meta) {
+  const explicitNpm = typeof meta?.npm === 'string' ? meta.npm.trim() : '';
+  let npmPackage = '';
+  let npmUrl = '';
+
+  if (explicitNpm) {
+    if (/^https?:\/\//i.test(explicitNpm)) {
+      npmUrl = explicitNpm;
+      npmPackage = typeof meta?.npmPackage === 'string' ? meta.npmPackage.trim() : '';
+    } else {
+      npmPackage = explicitNpm;
+      npmUrl = `https://www.npmjs.com/package/${encodeURIComponent(npmPackage)}`;
+    }
+  } else {
+    npmPackage = PLUGIN_NPM_PACKAGE[pluginId] ?? pluginId;
+    npmUrl = `https://www.npmjs.com/package/${encodeURIComponent(npmPackage)}`;
+  }
+
+  const explicitVersion = typeof meta?.version === 'string' ? meta.version.trim() : '';
+  const lockVersion = npmPackage ? PACKAGE_VERSIONS[npmPackage] : '';
+  const depSpecVersion = npmPackage ? INTCSS_DEP_SPECS[npmPackage] : '';
+  const version = explicitVersion || lockVersion || depSpecVersion || '—';
+
+  return { npm: npmUrl || null, npmPackage: npmPackage || null, version };
+}
 
 // ---------------------------------------------------------------------------
 // Plugin definitions
@@ -525,7 +628,11 @@ $radius: 6px;
       { label: '_data.css ref (built)', re: /url\(['"][^'"]*_data\.css#/gm },
     ],
   },
-].map(p => ({ ...p, ...(PLUGINS_META[p.id] ?? {}) }));
+].map(p => {
+  const meta = PLUGINS_META[p.id] ?? {};
+  const description = meta.description ?? p.description ?? PLUGIN_DESCRIPTIONS_RU[p.id] ?? '';
+  return { ...p, ...meta, description, ...resolvePluginPackageMeta(p.id, meta) };
+});
 
 // ---------------------------------------------------------------------------
 // File discovery
@@ -560,6 +667,10 @@ function scanFiles(files, inputDir) {
       priority: plugin.priority,
       complexity: plugin.complexity ?? 'n/a',
       recommendation: plugin.recommendation,
+      description: plugin.description ?? '',
+      npm: plugin.npm ?? null,
+      npmPackage: plugin.npmPackage ?? null,
+      version: plugin.version ?? '—',
       transforms: plugin.transforms ?? [],
       totalMatches: 0,
       patterns: [],
@@ -642,6 +753,10 @@ function aggregatePlugins(projects) {
           priority: p.priority,
           complexity: p.complexity,
           recommendation: p.recommendation,
+          description: p.description ?? '',
+          npm: p.npm ?? null,
+          npmPackage: p.npmPackage ?? null,
+          version: p.version ?? '—',
           totalMatches: 0,
         });
       }
@@ -662,13 +777,13 @@ function renderMarkdown(projects, generatedDate) {
   const projectCount = Object.keys(projects).length;
   const results = aggregatePlugins(projects);
 
-  let md = `# Plugin Usage Audit\n\n`;
-  md += `Generated: ${now}  \n`;
-  md += `Files scanned: ${totalFiles} CSS files across ${projectCount} project(s)  \n`;
-  md += `Input dir: \`${INPUT_DIR}\`\n\n`;
+  let md = `# Аудит плагинов\n\n`;
+  md += `Сформировано: ${now}  \n`;
+  md += `Проверено файлов: ${totalFiles} CSS в ${projectCount} проект(ах)  \n`;
+  md += `Каталог входных данных: \`${INPUT_DIR}\`\n\n`;
   md += `---\n\n`;
-  md += `## Summary (All Projects)\n\n`;
-  md += `| Order | Plugin | Matches | Lightning CSS | Priority | Complexity |\n`;
+  md += `## Сводка (все проекты)\n\n`;
+  md += `| Порядок | Плагин | Совпадения | Lightning CSS | Приоритет | Сложность |\n`;
   md += `|---|---|---:|---|---|---|\n`;
   for (const r of results) {
     md += `| ${r.order} | ${r.id} | ${r.totalMatches} | ${r.lightning} | ${r.priority} | ${r.complexity} |\n`;
@@ -690,7 +805,7 @@ function renderHtml(projects, sources, generatedDate) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>intcss Plugin Audit</title>
+<title>intcss Аудит плагинов</title>
 <style>
 :root {
   --bg: #eef3f8; --surface: #fff; --border: #d3dde9; --text: #132238;
@@ -741,9 +856,18 @@ h1{font-size:22px;font-weight:800;letter-spacing:-.3px;line-height:1.2}
 .proj-dropdown{position:relative}
 .proj-trigger{padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;max-width:260px;transition:border-color .15s,color .15s,background-color .15s;color:var(--text)}
 .proj-trigger:hover{border-color:var(--accent)}
+.proj-trigger .trigger-clear{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;border:1px solid var(--border);color:var(--muted);background:transparent;font-size:10px;line-height:1;cursor:pointer;flex:0 0 16px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .12s ease}
+.proj-trigger .trigger-clear.is-visible{opacity:1;visibility:visible;pointer-events:auto}
+.proj-trigger .trigger-clear:hover{border-color:var(--accent);color:var(--accent)}
+.proj-trigger .trigger-clear:focus-visible{outline:none;box-shadow:0 0 0 2px var(--focus-ring)}
 .proj-trigger .trigger-arrow{margin-left:auto;color:var(--muted);font-size:10px}
-.proj-panel{position:absolute;top:calc(100% + 4px);left:0;min-width:200px;max-width:320px;background:var(--surface);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:100;overflow:hidden;display:none}
+.proj-panel{position:absolute;top:calc(100% + 4px);left:0;min-width:200px;max-width:320px;max-height:min(360px,50vh);background:var(--surface);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:100;overflow-x:hidden;overflow-y:auto;display:none}
 html.dark .proj-panel{box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.proj-panel{scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.proj-panel::-webkit-scrollbar{width:8px;height:8px}
+.proj-panel::-webkit-scrollbar-track{background:transparent}
+.proj-panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px;border:2px solid transparent;background-clip:padding-box}
+.proj-panel::-webkit-scrollbar-thumb:hover{background:var(--muted);background-clip:padding-box}
 .proj-panel.open{display:block}
 #export-panel{left:auto;right:0;min-width:170px;max-width:220px}
 .proj-option{display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;font-size:13px;transition:background .1s;color:var(--text)}
@@ -751,14 +875,12 @@ html.dark .proj-panel{box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .proj-option input[type="checkbox"]{cursor:pointer;accent-color:var(--accent)}
 .proj-option.all-option{border-bottom:1px solid var(--border);font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
 
-.ctrl-group--filters{display:grid;grid-template-columns:minmax(220px,280px) minmax(220px,280px) minmax(220px,280px) auto auto;align-items:end;gap:10px 12px}
+.ctrl-group--filters{display:grid;grid-template-columns:minmax(220px,280px) minmax(220px,280px) minmax(220px,280px) auto;align-items:end;gap:10px 12px}
 .select-field{display:flex;flex-direction:column;gap:4px;min-width:0}
 .select-field .ctrl-label{min-width:0}
 .select-field .proj-dropdown{width:100%}
 .select-field .proj-trigger{width:100%;max-width:none}
 .select-meta{font-size:11px;color:var(--muted);line-height:1.25}
-.toggle-zero{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer;white-space:nowrap;height:36px;align-self:end;padding-left:4px}
-.toggle-zero input{cursor:pointer;margin:0;width:18px;height:18px;flex:0 0 18px}
 .plugins-export-wrap{justify-self:end;align-self:end}
 #plugins-export-dropdown .proj-trigger{max-width:none;min-width:112px;background:var(--accent);border-color:var(--accent);color:#fff}
 #plugins-export-dropdown .proj-trigger .trigger-arrow{color:rgba(255,255,255,.9)}
@@ -768,9 +890,6 @@ html.dark .proj-panel{box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .search-input::placeholder{color:var(--muted)}
 .expand-all-btn{padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--muted);font-size:12px;cursor:pointer;transition:border-color .15s,color .15s;white-space:nowrap}
 .expand-all-btn:hover{border-color:var(--accent);color:var(--text)}
-.filter-summary{font-size:11px;color:var(--muted);margin-bottom:10px;min-height:18px}
-.filter-summary a{color:var(--accent);cursor:pointer;text-decoration:none}
-.filter-summary a:hover{text-decoration:underline}
 
 .view-toggle{display:inline-flex;gap:4px;margin-bottom:2px;padding:3px;border:1px solid var(--border);border-radius:10px;background:var(--surface-soft);width:max-content}
 .vbtn{padding:6px 16px;border:1px solid transparent;border-radius:8px;background:transparent;color:var(--muted);cursor:pointer;font-size:13px;font-weight:600;transition:all .15s}
@@ -779,7 +898,6 @@ html.dark .proj-panel{box-shadow:0 8px 24px rgba(0,0,0,.4)}
 @media (max-width: 980px){
   .ctrl-group--filters{grid-template-columns:1fr 1fr}
   .select-field--project{grid-column:1 / -1}
-  .toggle-zero{grid-column:1 / -1;padding-left:0}
   .plugins-export-wrap{grid-column:1 / -1;justify-self:end}
 }
 @media (max-width: 640px){
@@ -867,12 +985,12 @@ tr.fdr>td{padding:0}
   .sources-body{grid-template-columns:1fr}
   .sources-list{max-height:180px;border-right:none;border-bottom:1px solid var(--border)}
 }
-.tbl-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:auto;flex:1 1 0;min-height:0;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.tbl-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow-y:auto;overflow-x:hidden;flex:1 1 0;min-height:0;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
 .tbl-wrap::-webkit-scrollbar{width:6px;height:6px}
 .tbl-wrap::-webkit-scrollbar-track{background:transparent}
 .tbl-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 .tbl-wrap::-webkit-scrollbar-thumb:hover{background:var(--muted)}
-table{width:100%;border-collapse:collapse;table-layout:fixed}
+table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed}
 col.c-order{width:60px}
 col.c-plugin{width:auto}
 col.c-lightning{width:145px}
@@ -930,23 +1048,28 @@ tbody tr.hidden{display:none}
 .matches{font-weight:600}
 .matches-zero{color:var(--muted);font-weight:400}
 
-.detail{padding:12px 16px 16px 38px;background:var(--bg)}
-.d-section{margin-bottom:10px}
+.detail{padding:14px 16px 16px 38px;background:var(--bg);display:grid;gap:10px;overflow-x:hidden}
+.d-section{margin-bottom:0;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surface)}
 .d-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
 .pats{display:flex;gap:6px;flex-wrap:wrap}
 .pat-chip{background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:3px 8px;font-size:12px}
 .pat-chip .pcl{color:var(--muted)}
 .pat-chip .pcc{font-weight:600;margin-left:3px}
-.files-txt{font-size:12px;color:var(--muted);line-height:2}
+.files-txt{font-size:12px;color:var(--muted);line-height:1.6;display:flex;flex-wrap:wrap;gap:6px}
 .files-txt code{background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:0 3px;font-family:'SFMono-Regular',Consolas,monospace;color:var(--text);font-size:11px}
-.files-txt .file-jump{background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:0 3px;font-family:'SFMono-Regular',Consolas,monospace;color:var(--text);font-size:11px;cursor:pointer}
+.files-txt .file-jump{background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:2px 6px;font-family:'SFMono-Regular',Consolas,monospace;color:var(--text);font-size:11px;cursor:pointer;white-space:normal;overflow-wrap:anywhere;word-break:break-word;max-width:100%;text-align:left}
 .files-txt .file-jump:hover{border-color:var(--accent);color:var(--accent)}
 .files-txt .file-jump:focus-visible{outline:none;box-shadow:0 0 0 2px var(--focus-ring)}
-.proj-usage-row{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.proj-usage-row{display:flex;flex-direction:column;gap:8px;margin-bottom:8px;padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--bg)}
 .proj-usage-row:last-child{margin-bottom:0}
 .exs{display:flex;gap:5px;flex-wrap:wrap}
 .ex-chip{background:var(--bg);border-radius:4px;padding:2px 6px;font-size:12px;font-family:'SFMono-Regular',Consolas,monospace}
+.desc-txt{font-size:12px;color:var(--text);line-height:1.5}
 .rec-txt{font-size:12px;color:var(--muted);font-style:italic}
+.meta-link{display:inline-flex;align-items:center;text-decoration:none;color:var(--text)}
+.meta-link:visited{color:var(--text)}
+.meta-link:hover{border-color:var(--accent);color:var(--accent)}
+.meta-link:focus-visible{outline:none;box-shadow:0 0 0 2px var(--focus-ring)}
 .transforms{display:flex;flex-direction:column;gap:10px}
 .tf-item-label{font-size:11px;color:var(--muted);margin-bottom:4px}
 .tf-pair{display:grid;grid-template-columns:1fr 24px 1fr;gap:6px;align-items:start}
@@ -971,7 +1094,7 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
   <div class="top-panel">
     <header>
       <div class="hdr-title">
-        <h1>Plugin Audit</h1>
+        <h1>Аудит плагинов</h1>
         <span class="hdr-sub">PostCSS → Rust / Lightning CSS</span>
       </div>
       <div class="hdr-right">
@@ -990,6 +1113,7 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
       <div class="proj-dropdown" id="files-plugin-dropdown">
         <button class="proj-trigger" id="files-plugin-trigger">
           <span id="files-plugin-trigger-label">Все плагины</span>
+          <span class="trigger-clear" id="files-plugin-clear" title="Сбросить фильтр" aria-label="Сбросить фильтр">✕</span>
           <span class="trigger-arrow">▾</span>
         </button>
         <div class="proj-panel" id="files-plugin-panel"></div>
@@ -1001,6 +1125,7 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
         <div class="proj-dropdown" id="proj-dropdown">
           <button class="proj-trigger" id="proj-trigger" type="button">
             <span id="proj-trigger-label">…</span>
+            <span class="trigger-clear" id="proj-clear" title="Сбросить фильтр" aria-label="Сбросить фильтр">✕</span>
             <span class="trigger-arrow">▾</span>
           </button>
           <div class="proj-panel" id="proj-panel"></div>
@@ -1011,6 +1136,7 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
         <div class="proj-dropdown" id="priority-dropdown">
           <button class="proj-trigger" id="priority-trigger" type="button">
             <span id="priority-trigger-label">Все</span>
+            <span class="trigger-clear" id="priority-clear" title="Сбросить фильтр" aria-label="Сбросить фильтр">✕</span>
             <span class="trigger-arrow">▾</span>
           </button>
           <div class="proj-panel" id="priority-panel"></div>
@@ -1021,13 +1147,11 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
         <div class="proj-dropdown" id="complexity-dropdown">
           <button class="proj-trigger" id="complexity-trigger" type="button">
             <span id="complexity-trigger-label">Все</span>
+            <span class="trigger-clear" id="complexity-clear" title="Сбросить фильтр" aria-label="Сбросить фильтр">✕</span>
             <span class="trigger-arrow">▾</span>
           </button>
           <div class="proj-panel" id="complexity-panel"></div>
         </div>
-      </label>
-      <label class="toggle-zero">
-        <input type="checkbox" id="hide-zero"> Скрыть нулевые
       </label>
       <div class="proj-dropdown plugins-export-wrap" id="plugins-export-dropdown">
         <button class="proj-trigger" id="export-trigger" type="button" title="Скачать отчёт" aria-label="Скачать отчёт">
@@ -1040,7 +1164,6 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
     </div>
   </div>
   <div id="plugins-section" style="display:flex;flex-direction:column;flex:1 1 0;min-height:0">
-    <div class="filter-summary" id="filter-summary"></div>
     <div class="tbl-wrap">
       <table id="plugins-table">
         <colgroup>
@@ -1079,12 +1202,12 @@ const DATA = ${safeData};
 
 const PRIORITY_CYCLE = ['critical','high','native','out-of-scope','removed'];
 const PRIORITY_LABEL = {
-  critical: 'Critical', high: 'High',
-  native: 'Native', 'out-of-scope': 'Out of scope', removed: 'Removed'
+  critical: 'Критический', high: 'Высокий',
+  native: 'Нативный', 'out-of-scope': 'Не рассматривается', removed: 'Удален'
 };
 const PRIORITY_WEIGHT = {critical:0,high:1,native:2,'out-of-scope':3,removed:4};
-const LIGHTNING_LABEL = {yes:'Native', none:'None', partial:'Partial'};
-const COMPLEXITY_LABEL = {trivial:'Trivial', low:'Low', medium:'Medium', high:'High', 'n/a':'N/A'};
+const LIGHTNING_LABEL = {yes:'Нативно', none:'Нет', partial:'Частично'};
+const COMPLEXITY_LABEL = {trivial:'Минимальная', low:'Низкая', medium:'Средняя', high:'Высокая', 'n/a':'Без оценки'};
 const COMPLEXITY_WEIGHT = {trivial:0,low:1,medium:2,high:3,'n/a':4};
 
 const COMPLEXITY_CYCLE = ['trivial','low','medium','high','n/a'];
@@ -1098,11 +1221,11 @@ let filters = new Set();
 let complexityFilters = new Set();
 let sortCol = 'order';
 let sortDir = 1;
-let hideZero = false;
 let expanded = new Set();
 let fileExpanded = new Set();
 let filesProjKey = Object.keys(DATA.projects)[0] || '';
 let filePluginFilters = new Set();
+let filePluginNone = false;
 let sourceProjKey = Object.keys(DATA.projects)[0] || '';
 let sourceSelectedFile = '';
 let sourceHighlightLine = null;
@@ -1111,6 +1234,9 @@ let complexityOverrides = {};
 let searchQuery = '';
 let popover = { id: null, el: null };
 let expandAll = false;
+let projNone = false;
+let filtersNone = false;
+let complexityFiltersNone = false;
 
 function loadOverrides() {
   try { overrides = JSON.parse(localStorage.getItem(LS_KEY) || '{}'); } catch { overrides = {}; }
@@ -1136,6 +1262,7 @@ function toggleTheme() {
 }
 
 function getPlugins(keys) {
+  if (keys === undefined && projNone) return [];
   const sel = keys ?? (projSel.size === 0 ? Object.keys(DATA.projects) : [...projSel]);
   if (sel.length === 0) return [];
   if (sel.length === 1) return DATA.projects[sel[0]]?.plugins || [];
@@ -1263,6 +1390,7 @@ function renderFilesProjTabs() {
       filesProjKey = btn.dataset.proj;
       fileExpanded.clear();
       filePluginFilters.clear();
+      filePluginNone = false;
       renderFilesPluginDropdown();
       renderFilesTable();
       // update active tab
@@ -1279,21 +1407,31 @@ function renderFilesPluginDropdown() {
   const triggerLabel = document.getElementById('files-plugin-trigger-label');
 
   function updateLabel() {
+    const clearBtn = document.getElementById('files-plugin-clear');
+    if (clearBtn) clearBtn.classList.toggle('is-visible', (filePluginNone || filePluginFilters.size > 0));
+    if (filePluginNone) { triggerLabel.textContent = 'Ничего (0)'; return; }
     if (filePluginFilters.size === 0) { triggerLabel.textContent = \`Все (\${plugins.length})\`; return; }
     if (filePluginFilters.size === 1) { triggerLabel.textContent = [...filePluginFilters][0]; return; }
     triggerLabel.textContent = \`Выбрано: \${filePluginFilters.size}\`;
   }
 
   function renderPanel() {
+    const allSel = filePluginFilters.size === 0 && !filePluginNone;
     panel.innerHTML = [
-      \`<label class="proj-option all-option"><input type="checkbox" id="fpf-all" \${filePluginFilters.size === 0 ? 'checked' : ''}> Все (\${plugins.length})</label>\`,
+      \`<label class="proj-option all-option"><input type="checkbox" id="fpf-all" \${allSel ? 'checked' : ''}> Все (\${plugins.length})</label>\`,
       ...plugins.map(p =>
-        \`<label class="proj-option"><input type="checkbox" data-plugin="\${escAttr(p.id)}" \${filePluginFilters.has(p.id) ? 'checked' : ''}> \${escHtml(p.id)}</label>\`
+        \`<label class="proj-option"><input type="checkbox" data-plugin="\${escAttr(p.id)}" \${(allSel || filePluginFilters.has(p.id)) ? 'checked' : ''}> \${escHtml(p.id)}</label>\`
       ),
     ].join('');
     updateLabel();
     panel.querySelector('#fpf-all').onchange = () => {
-      filePluginFilters.clear();
+      if (allSel) {
+        filePluginNone = true;
+        filePluginFilters.clear();
+      } else {
+        filePluginNone = false;
+        filePluginFilters.clear();
+      }
       fileExpanded.clear();
       renderPanel();
       renderFilesTable();
@@ -1301,7 +1439,16 @@ function renderFilesPluginDropdown() {
     panel.querySelectorAll('[data-plugin]').forEach(cb => {
       cb.onchange = () => {
         const id = cb.dataset.plugin;
+        const wasAll = filePluginFilters.size === 0 && !filePluginNone;
+        if (filePluginNone) filePluginNone = false;
+        if (wasAll) filePluginFilters = new Set(plugins.map(p => p.id));
         if (cb.checked) filePluginFilters.add(id); else filePluginFilters.delete(id);
+        if (filePluginFilters.size === plugins.length) {
+          filePluginFilters.clear();
+          filePluginNone = false;
+        } else if (filePluginFilters.size === 0) {
+          filePluginNone = true;
+        }
         fileExpanded.clear();
         renderPanel();
         renderFilesTable();
@@ -1310,6 +1457,18 @@ function renderFilesPluginDropdown() {
   }
 
   renderPanel();
+  const filesClear = document.getElementById('files-plugin-clear');
+  if (filesClear) {
+    filesClear.onclick = e => {
+      e.preventDefault();
+      e.stopPropagation();
+      filePluginNone = false;
+      filePluginFilters.clear();
+      fileExpanded.clear();
+      renderPanel();
+      renderFilesTable();
+    };
+  }
   document.getElementById('files-plugin-trigger').onclick = e => {
     e.stopPropagation();
     const willOpen = !panel.classList.contains('open');
@@ -1320,12 +1479,17 @@ function renderFilesPluginDropdown() {
 
 function renderFilesTable() {
   const plugins = getFilesPlugins();
+  if (filePluginNone) {
+    document.getElementById('files-thead').innerHTML = \`<tr><th></th><th>Файл</th><th>Совпадения</th><th>Плагины</th></tr>\`;
+    document.getElementById('files-tbody').innerHTML = \`<tr><td colspan="4"><div class="empty-state">Нет файлов для выбранного фильтра</div></td></tr>\`;
+    return;
+  }
   let rows = buildFileIndex(plugins);
   if (filePluginFilters.size > 0) {
     rows = rows.filter(r => r.plugins.some(p => filePluginFilters.has(p.id)));
   }
   document.getElementById('files-thead').innerHTML =
-    \`<tr><th></th><th>Файл</th><th>Matches</th><th>Плагины</th></tr>\`;
+    \`<tr><th></th><th>Файл</th><th>Совпадения</th><th>Плагины</th></tr>\`;
   document.getElementById('files-tbody').innerHTML = rows.map(r => {
     const isOpen = fileExpanded.has(r.file);
     const sortedPlugins = r.plugins.slice().sort((a, b) => (PRIORITY_WEIGHT[a.priority] ?? 99) - (PRIORITY_WEIGHT[b.priority] ?? 99));
@@ -1436,6 +1600,12 @@ function renderSourcesList() {
       renderSourcesList();
     };
   });
+  const activeBtn = list.querySelector('.src-file-btn.active');
+  if (activeBtn) {
+    requestAnimationFrame(() => {
+      activeBtn.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    });
+  }
 }
 
 function renderSourcesContent() {
@@ -1487,6 +1657,7 @@ function openFileInFilesView(filePath) {
   const projectKey = String(filePath).split('/')[0] || '';
   if (projectKey && DATA.projects[projectKey]) filesProjKey = projectKey;
   filePluginFilters.clear();
+  filePluginNone = false;
   fileExpanded.clear();
   fileExpanded.add(filePath);
   switchView('files');
@@ -1539,31 +1710,49 @@ function renderProjSel() {
   const triggerLabel = document.getElementById('proj-trigger-label');
 
   function updateTriggerLabel() {
-    const allSel = projSel.size === 0;
+    const clearBtn = document.getElementById('proj-clear');
+    if (clearBtn) clearBtn.classList.toggle('is-visible', (projNone || projSel.size > 0));
+    const allSel = projSel.size === 0 && !projNone;
+    if (projNone) { triggerLabel.textContent = 'Ничего (0)'; return; }
     if (allSel) triggerLabel.textContent = \`Все (\${projects.length})\`;
     else if (projSel.size === 1) triggerLabel.textContent = [...projSel][0];
     else triggerLabel.textContent = \`Выбрано: \${projSel.size}\`;
   }
 
   function renderPanel() {
-    const allSel = projSel.size === 0;
+    const allSel = projSel.size === 0 && !projNone;
     panel.innerHTML = [
       \`<label class="proj-option all-option"><input type="checkbox" id="po-all" \${allSel ? 'checked' : ''}> Все (\${projects.length})</label>\`,
       ...projects.map(p =>
-        \`<label class="proj-option"><input type="checkbox" data-proj="\${escAttr(p)}" \${projSel.has(p) ? 'checked' : ''}> \${escHtml(p)}</label>\`
+        \`<label class="proj-option"><input type="checkbox" data-proj="\${escAttr(p)}" \${(allSel || projSel.has(p)) ? 'checked' : ''}> \${escHtml(p)}</label>\`
       )
     ].join('');
     updateTriggerLabel();
     panel.querySelector('#po-all').onchange = () => {
-      projSel.clear();
+      if (allSel) {
+        projNone = true;
+        projSel.clear();
+      } else {
+        projNone = false;
+        projSel.clear();
+      }
       expanded.clear(); expandAll = false;
       renderPanel(); renderAll();
     };
     panel.querySelectorAll('[data-proj]').forEach(cb => {
       cb.onchange = () => {
         const key = cb.dataset.proj;
+        const wasAll = projSel.size === 0 && !projNone;
+        if (projNone) projNone = false;
+        if (wasAll) projSel = new Set(projects);
         if (cb.checked) projSel.add(key);
         else projSel.delete(key);
+        if (projSel.size === projects.length) {
+          projSel.clear();
+          projNone = false;
+        } else if (projSel.size === 0) {
+          projNone = true;
+        }
         expanded.clear(); expandAll = false;
         renderPanel(); renderAll();
       };
@@ -1571,6 +1760,17 @@ function renderProjSel() {
   }
 
   renderPanel();
+  const projClear = document.getElementById('proj-clear');
+  if (projClear) {
+    projClear.onclick = e => {
+      e.preventDefault();
+      e.stopPropagation();
+      projNone = false;
+      projSel.clear();
+      expanded.clear(); expandAll = false;
+      renderPanel(); renderAll();
+    };
+  }
 
   document.getElementById('proj-trigger').onclick = e => {
     e.stopPropagation();
@@ -1585,7 +1785,7 @@ function renderProjSel() {
 }
 
 function renderMeta() {
-  const selectedProjects = projSel.size === 0 ? Object.keys(DATA.projects) : [...projSel];
+  const selectedProjects = projNone ? [] : (projSel.size === 0 ? Object.keys(DATA.projects) : [...projSel]);
   const total = selectedProjects.reduce((s, k) => s + (DATA.projects[k]?.filesScanned ?? 0), 0);
   const date = DATA.generated ? DATA.generated.slice(0,10) : '';
   document.getElementById('hdr-meta').textContent = \`\${total} файлов · \${date}\`;
@@ -1594,7 +1794,6 @@ function renderMeta() {
 function renderFtabs() {
   const allPlugins = getPlugins();
   const plugins = allPlugins.filter(p => {
-    if (hideZero && p.totalMatches === 0) return false;
     if (searchQuery && !p.id.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     return true;
   });
@@ -1605,15 +1804,19 @@ function renderFtabs() {
   }
   const options = ['all','critical','high','native','out-of-scope','removed'];
   const labels = {
-    all: 'Все', critical: 'Critical', high: 'High',
-    native: 'Native', 'out-of-scope': 'Out of scope', removed: 'Removed'
+    all: 'Все', critical: 'Критический', high: 'Высокий',
+    native: 'Нативный', 'out-of-scope': 'Не рассматривается', removed: 'Удален'
   };
   const panel = document.getElementById('priority-panel');
   const triggerLabel = document.getElementById('priority-trigger-label');
   const available = options.filter(t => t !== 'all' && counts[t]);
 
   function updateLabel() {
-    if (filters.size === 0) {
+    const clearBtn = document.getElementById('priority-clear');
+    if (clearBtn) clearBtn.classList.toggle('is-visible', (filtersNone || filters.size > 0));
+    if (filtersNone) {
+      triggerLabel.textContent = 'Ничего (0)';
+    } else if (filters.size === 0) {
       triggerLabel.textContent = \`Все (\${counts.all ?? 0})\`;
     } else if (filters.size === 1) {
       const key = [...filters][0];
@@ -1624,23 +1827,49 @@ function renderFtabs() {
   }
 
   panel.innerHTML = [
-    \`<label class="proj-option all-option"><input type="checkbox" id="pr-all" \${filters.size === 0 ? 'checked' : ''}> Все (\${counts.all ?? 0})</label>\`,
+    \`<label class="proj-option all-option"><input type="checkbox" id="pr-all" \${(filters.size === 0 && !filtersNone) ? 'checked' : ''}> Все (\${counts.all ?? 0})</label>\`,
     ...available.map(key =>
-      \`<label class="proj-option"><input type="checkbox" data-priority="\${key}" \${filters.has(key) ? 'checked' : ''}> \${labels[key]} (\${counts[key] ?? 0})</label>\`
+      \`<label class="proj-option"><input type="checkbox" data-priority="\${key}" \${((filters.size === 0 && !filtersNone) || filters.has(key)) ? 'checked' : ''}> \${labels[key]} (\${counts[key] ?? 0})</label>\`
     )
   ].join('');
   updateLabel();
+  const priorityClear = document.getElementById('priority-clear');
+  if (priorityClear) {
+    priorityClear.onclick = e => {
+      e.preventDefault();
+      e.stopPropagation();
+      filtersNone = false;
+      filters.clear();
+      renderFtabs();
+      renderBody();
+    };
+  }
 
   panel.querySelector('#pr-all').onchange = () => {
-    filters.clear();
+    if (filters.size === 0 && !filtersNone) {
+      filtersNone = true;
+      filters.clear();
+    } else {
+      filtersNone = false;
+      filters.clear();
+    }
     renderFtabs();
     renderBody();
   };
   panel.querySelectorAll('[data-priority]').forEach(cb => {
     cb.onchange = () => {
       const key = cb.dataset.priority;
+      const wasAll = filters.size === 0 && !filtersNone;
+      if (filtersNone) filtersNone = false;
+      if (wasAll) filters = new Set(available);
       if (cb.checked) filters.add(key);
       else filters.delete(key);
+      if (filters.size === available.length) {
+        filters.clear();
+        filtersNone = false;
+      } else if (filters.size === 0) {
+        filtersNone = true;
+      }
       renderFtabs();
       renderBody();
     };
@@ -1657,7 +1886,6 @@ function renderFtabs() {
 function renderCxtabs() {
   const allPlugins = getPlugins();
   const plugins = allPlugins.filter(p => {
-    if (hideZero && p.totalMatches === 0) return false;
     if (searchQuery && !p.id.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     return true;
   });
@@ -1667,13 +1895,17 @@ function renderCxtabs() {
     counts[cx] = (counts[cx] || 0) + 1;
   }
   const options = ['all', ...COMPLEXITY_CYCLE];
-  const labels = { all: 'Все', trivial: 'Trivial', low: 'Low', medium: 'Medium', high: 'High', 'n/a': 'N/A' };
+  const labels = { all: 'Все', trivial: 'Минимальная', low: 'Низкая', medium: 'Средняя', high: 'Высокая', 'n/a': 'Без оценки' };
   const panel = document.getElementById('complexity-panel');
   const triggerLabel = document.getElementById('complexity-trigger-label');
   const available = options.filter(t => t !== 'all' && counts[t]);
 
   function updateLabel() {
-    if (complexityFilters.size === 0) {
+    const clearBtn = document.getElementById('complexity-clear');
+    if (clearBtn) clearBtn.classList.toggle('is-visible', (complexityFiltersNone || complexityFilters.size > 0));
+    if (complexityFiltersNone) {
+      triggerLabel.textContent = 'Ничего (0)';
+    } else if (complexityFilters.size === 0) {
       triggerLabel.textContent = \`Все (\${counts.all ?? 0})\`;
     } else if (complexityFilters.size === 1) {
       const key = [...complexityFilters][0];
@@ -1684,23 +1916,49 @@ function renderCxtabs() {
   }
 
   panel.innerHTML = [
-    \`<label class="proj-option all-option"><input type="checkbox" id="cx-all" \${complexityFilters.size === 0 ? 'checked' : ''}> Все (\${counts.all ?? 0})</label>\`,
+    \`<label class="proj-option all-option"><input type="checkbox" id="cx-all" \${(complexityFilters.size === 0 && !complexityFiltersNone) ? 'checked' : ''}> Все (\${counts.all ?? 0})</label>\`,
     ...available.map(key =>
-      \`<label class="proj-option"><input type="checkbox" data-complexity="\${key}" \${complexityFilters.has(key) ? 'checked' : ''}> \${labels[key]} (\${counts[key] ?? 0})</label>\`
+      \`<label class="proj-option"><input type="checkbox" data-complexity="\${key}" \${((complexityFilters.size === 0 && !complexityFiltersNone) || complexityFilters.has(key)) ? 'checked' : ''}> \${labels[key]} (\${counts[key] ?? 0})</label>\`
     )
   ].join('');
   updateLabel();
+  const complexityClear = document.getElementById('complexity-clear');
+  if (complexityClear) {
+    complexityClear.onclick = e => {
+      e.preventDefault();
+      e.stopPropagation();
+      complexityFiltersNone = false;
+      complexityFilters.clear();
+      renderCxtabs();
+      renderBody();
+    };
+  }
 
   panel.querySelector('#cx-all').onchange = () => {
-    complexityFilters.clear();
+    if (complexityFilters.size === 0 && !complexityFiltersNone) {
+      complexityFiltersNone = true;
+      complexityFilters.clear();
+    } else {
+      complexityFiltersNone = false;
+      complexityFilters.clear();
+    }
     renderCxtabs();
     renderBody();
   };
   panel.querySelectorAll('[data-complexity]').forEach(cb => {
     cb.onchange = () => {
       const key = cb.dataset.complexity;
+      const wasAll = complexityFilters.size === 0 && !complexityFiltersNone;
+      if (complexityFiltersNone) complexityFiltersNone = false;
+      if (wasAll) complexityFilters = new Set(available);
       if (cb.checked) complexityFilters.add(key);
       else complexityFilters.delete(key);
+      if (complexityFilters.size === available.length) {
+        complexityFilters.clear();
+        complexityFiltersNone = false;
+      } else if (complexityFilters.size === 0) {
+        complexityFiltersNone = true;
+      }
       renderCxtabs();
       renderBody();
     };
@@ -1718,10 +1976,10 @@ function renderHead() {
   const cols = [
     {key:'order', label:'#', title:'Порядок в списке'},
     {key:'id', label:'Плагин', title:'Идентификатор плагина'},
-    {key:'lightning', label:'Lightning CSS', title:'Поддержка в Lightning CSS: yes / partial / none'},
+    {key:'lightning', label:'Lightning CSS', title:'Поддержка в Lightning CSS: нативно / частично / нет'},
     {key:'complexity', label:'Сложность', title:'Сложность реализации в Rust Pre-stage'},
     {key:'priority', label:'Приоритет', title:'Приоритет миграции (кликни на бейдж для изменения)'},
-    {key:'matches', label:'Matches', title:'Количество совпадений паттернов во всех файлах'},
+    {key:'matches', label:'Совпадения', title:'Количество совпадений паттернов во всех файлах'},
   ];
   document.getElementById('thead').innerHTML = \`<tr>\${cols.map(c => {
     const sorted = sortCol === c.key;
@@ -1743,13 +2001,13 @@ function renderBody() {
   closeCxPopover();
   const allPlugins = getPlugins();
   const plugins = allPlugins.filter(p => {
-    if (hideZero && p.totalMatches === 0) return false;
+    if (filtersNone) return false;
+    if (complexityFiltersNone) return false;
     if (filters.size > 0 && !filters.has(effectivePriority(p))) return false;
     if (complexityFilters.size > 0 && !complexityFilters.has(effectiveComplexity(p))) return false;
     if (searchQuery && !p.id.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     return true;
   });
-  renderFilterSummary(allPlugins.length, plugins.length);
 
   const sorted = [...plugins].sort((a, b) => {
     let av, bv;
@@ -1807,6 +2065,19 @@ function renderBody() {
     const detailHtml = isOpen ? \`<tr class="dr" id="dr-\${CSS.escape(p.id)}">
       <td colspan="6">
         <div class="detail">
+          <div class="d-section">
+            <div class="d-label">Пакет</div>
+            <div class="pats">
+              <span class="pat-chip"><span class="pcl">Версия</span><span class="pcc">\${escHtml(p.version || '—')}</span></span>
+              \${p.npm
+                ? \`<a class="pat-chip meta-link" href="\${escAttr(p.npm)}" target="_blank" rel="noopener noreferrer">npm: \${escHtml(p.npmPackage || p.id)}</a>\`
+                : \`<span class="pat-chip"><span class="pcl">npm</span><span class="pcc">—</span></span>\`}
+            </div>
+          </div>
+          <div class="d-section">
+            <div class="d-label">Описание</div>
+            <div class="desc-txt">\${escHtml(p.description || 'Описание не задано')}</div>
+          </div>
           \${matchHits.length ? \`
           <div class="d-section">
             <div class="d-label">Паттерны</div>
@@ -1825,7 +2096,7 @@ function renderBody() {
             <div class="d-label">Проекты (\${projectUsageList.length})</div>
             <div>\${projectUsageList.map(item => \`
               <div class="proj-usage-row">
-                <div class="pats"><span class="pat-chip"><span class="pcl">\${escHtml(item.project)}</span><span class="pcc">\${item.matches} / \${item.filesCount} ф.</span></span></div>
+                <div class="pats"><span class="pat-chip"><span class="pcl">\${escHtml(item.project)}</span><span class="pcc">\${item.matches} совпадений, \${item.filesCount} файлов</span></span></div>
                 <div class="files-txt">\${item.files.map(file => {
                   const short = file.startsWith(item.project + '/') ? file.slice(item.project.length + 1) : file;
                   return \`<button type="button" class="file-jump" data-file="\${escAttr(file)}">\${escHtml(short)}</button>\`;
@@ -1847,10 +2118,6 @@ function renderBody() {
               </div>
             \`).join('')}</div>
           </div>\` : ''}
-          <div class="d-section">
-            <div class="d-label">Рекомендация</div>
-            <div class="rec-txt">\${escHtml(p.recommendation)}</div>
-          </div>
         </div>
       </td>
     </tr>\` : '';
@@ -2026,17 +2293,20 @@ function initSearch() {
 
 function renderFilterSummary(total, shown) {
   const parts = [];
+  if (projNone) parts.push('проекты: <b>ничего</b>');
+  if (filtersNone) parts.push('приоритет: <b>ничего</b>');
+  if (complexityFiltersNone) parts.push('сложность: <b>ничего</b>');
   if (filters.size > 0) parts.push(\`приоритет: <b>\${[...filters].join(', ')}</b>\`);
   if (complexityFilters.size > 0) parts.push(\`сложность: <b>\${[...complexityFilters].join(', ')}</b>\`);
   if (searchQuery) parts.push(\`поиск: <b>\${escHtml(searchQuery)}</b>\`);
-  if (hideZero) parts.push('скрыты нулевые');
   const el = document.getElementById('filter-summary');
   if (parts.length === 0) { el.textContent = ''; return; }
   el.innerHTML = \`Показано \${shown} из \${total} · \${parts.join(' · ')} · <a id="reset-filters">Сбросить</a>\`;
   document.getElementById('reset-filters').onclick = () => {
-    filters.clear(); complexityFilters.clear(); searchQuery = ''; hideZero = false;
+    filters.clear(); complexityFilters.clear(); searchQuery = '';
+    projNone = false; filtersNone = false; complexityFiltersNone = false;
     document.getElementById('search-input').value = '';
-    document.getElementById('hide-zero').checked = false;
+    renderProjSel();
     renderFtabs(); renderCxtabs(); renderBody();
   };
 }
@@ -2110,11 +2380,11 @@ function buildMarkdownReport() {
   const day = generated.slice(0, 10);
   const totalFiles = projectKeys.reduce((sum, key) => sum + (projects[key]?.filesScanned || 0), 0);
   const plugins = buildUnifiedPluginsForExport();
-  let md = '# Plugin Usage Audit\\n\\n';
-  md += 'Generated: ' + day + '  \\n';
-  md += 'Files scanned: ' + totalFiles + ' CSS files across ' + projectKeys.length + ' project(s)\\n\\n';
-  md += '## Summary (All Projects)\\n\\n';
-  md += '| Order | Plugin | Matches | Lightning | Priority | Complexity |\\n';
+  let md = '# Аудит плагинов\\n\\n';
+  md += 'Сформировано: ' + day + '  \\n';
+  md += 'Проверено файлов: ' + totalFiles + ' CSS в ' + projectKeys.length + ' проект(ах)\\n\\n';
+  md += '## Сводка (все проекты)\\n\\n';
+  md += '| Порядок | Плагин | Совпадения | Lightning | Приоритет | Сложность |\\n';
   md += '|---|---|---:|---|---|---|\\n';
   plugins.forEach(p => {
     md += '| ' + (p.order ?? '') + ' | ' + p.id + ' | ' + (p.totalMatches ?? 0) + ' | ' + (p.lightning || '') + ' | ' + (p.priority || '') + ' | ' + (p.complexity || '') + ' |\\n';
@@ -2129,8 +2399,8 @@ function initExportButtons() {
   if (!panel || !trigger) return;
 
   panel.innerHTML = [
-    '<button type="button" class="proj-option export-option" data-format="md">Markdown (.md)</button>',
-    '<button type="button" class="proj-option export-option" data-format="json">JSON (.json)</button>',
+    '<button type="button" class="proj-option export-option" data-format="md">Скачать Markdown (.md)</button>',
+    '<button type="button" class="proj-option export-option" data-format="json">Скачать JSON (.json)</button>',
   ].join('');
 
   panel.querySelectorAll('[data-format]').forEach(btn => {
@@ -2159,11 +2429,6 @@ function escHtml(s) {
 }
 function escAttr(s) { return escHtml(s); }
 
-document.getElementById('hide-zero').onchange = e => {
-  hideZero = e.target.checked;
-  renderFtabs(); renderCxtabs(); renderBody();
-};
-
 init();
 </script>
 </body>
@@ -2177,12 +2442,12 @@ init();
 const { allFiles, projects, sources } = scanByProject(INPUT_DIR);
 
 if (allFiles.length === 0) {
-  console.log(`No CSS files found in: ${INPUT_DIR}`);
-  console.log(`Add anonymized project CSS files to: ${INPUT_DIR}/project-a/`);
+  console.log(`В каталоге не найдено CSS-файлов: ${INPUT_DIR}`);
+  console.log(`Добавьте анонимизированные CSS-файлы проекта в: ${INPUT_DIR}/project-a/`);
   process.exit(0);
 }
 
-console.log(`Scanning ${allFiles.length} CSS files across ${Object.keys(projects).length} project(s)...`);
+console.log(`Сканирование: ${allFiles.length} CSS-файлов в ${Object.keys(projects).length} проект(ах)...`);
 
 const generatedDate = new Date().toISOString();
 
@@ -2193,21 +2458,21 @@ if (FORMAT === 'html') {
   const out = OUTPUT_PATH ?? path.join(DEFAULT_REPORT_DIR, 'plugin-usage.html');
   fs.mkdirSync(path.dirname(out), { recursive: true });
   fs.writeFileSync(out, html, 'utf8');
-  console.log(`HTML report written to: ${out}`);
+  console.log(`HTML-отчет сохранен: ${out}`);
 
 } else if (FORMAT === 'json') {
   const json = JSON.stringify({ generated: generatedDate, plugins: aggregatePlugins(projects) }, null, 2);
   const out = OUTPUT_PATH ?? path.join(DEFAULT_REPORT_DIR, 'plugin-usage.json');
   fs.mkdirSync(path.dirname(out), { recursive: true });
   fs.writeFileSync(out, json, 'utf8');
-  console.log(`JSON report written to: ${out}`);
+  console.log(`JSON-отчет сохранен: ${out}`);
 
 } else if (FORMAT === 'markdown') {
   const md = renderMarkdown(projects, generatedDate);
   const out = OUTPUT_PATH ?? path.join(DEFAULT_REPORT_DIR, 'plugin-usage.md');
   fs.mkdirSync(path.dirname(out), { recursive: true });
   fs.writeFileSync(out, md, 'utf8');
-  console.log(`Markdown report written to: ${out}`);
+  console.log(`Markdown-отчет сохранен: ${out}`);
 
 } else {
   // FORMAT === 'all' (default): write all three formats
@@ -2222,7 +2487,7 @@ if (FORMAT === 'html') {
   fs.writeFileSync(htmlPath, renderHtml(projects, sources, generatedDate), 'utf8');
 
   // Console summary
-  console.log('\n=== Plugin Usage Summary ===\n');
+  console.log('\n=== Сводка по плагинам ===\n');
   const firstPlugins = Object.values(projects)[0]?.plugins ?? [];
   const maxId = Math.max(...firstPlugins.map(r => r.id.length));
   for (const r of firstPlugins) {

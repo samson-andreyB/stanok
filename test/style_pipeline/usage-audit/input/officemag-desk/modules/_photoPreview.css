@@ -1,0 +1,20 @@
+/* Photo Preview
+---------------------------------------------------------------------- */
+
+/*
+<span class="photoPreviewTrigger" data-photo-preview-src="http://img.officemag.ru/goods/601423/528ed9a355c6f_s.png">748239</span>
+*/
+
+.photoPreviewTrigger {
+	@mixin pseudoLink;
+	cursor: help;
+}
+
+#photoPreview {
+	position: absolute;
+	padding: 4px;
+	border-radius: 2px;
+	z-index: 100;
+	background-color: #fff;
+	box-shadow: 0 3px 5px rgba(0,0,0,.3);
+}

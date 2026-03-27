@@ -1,0 +1,72 @@
+.TableCaption {
+	&__title {
+		font-weight: bold;
+	}
+
+	&__hint {
+		color: $C_GRAY_DARK;
+	}
+}
+
+.TableCaption--competitorsPrices {
+	padding: 10px 15px;
+	color: #999;
+}
+
+.TableCaption--pricingRules {
+	padding: 15px 0;
+	margin-x: 20px;
+	border-top: 1px solid #dadada;
+
+	.TableCaption__title {
+		font-size: 14px;
+		margin-bottom: 5px;
+	}
+}
+
+.TableCaption--productPrices {
+	padding: 15px 20px;
+	line-height: 1.9;
+
+	.TableCaption__rrc {
+		font-weight: bold;
+	}
+
+	.TableCaption__legend {
+		margin-top: 17px;
+		font-size: 12px;
+		line-height: normal;
+	}
+}
+
+.TableCaption--omrProductPrices {
+	.TableCaption__list + .TableCaption__title,
+	.Legend + .TableCaption__title {
+		margin-top: 15px;
+	}
+
+	.TableCaption__list {
+		margin-top: .7em;
+	}
+
+	.TableCaption__legend {
+		margin-top: 15px;
+		font-size: 12px;
+		line-height: normal;
+	}
+}
+
+.TableCaption--mcpPrices {
+	display: flex;
+	border-top: 1px solid #dadada;
+	padding: 12px 13px;
+	color: #999;
+
+	.TableCaption__item + .TableCaption__item {
+		margin-left: 33px;
+	}
+
+	.TableCaption__name {
+		font-weight: bold;
+	}
+}

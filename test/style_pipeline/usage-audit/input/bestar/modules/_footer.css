@@ -1,0 +1,45 @@
+/* Подвал
+**********************************************************/
+
+.Footer {
+	background-color: $colorFooter;
+	color: $colorFooterText;
+	font-size: 13px;
+	cursor: default;
+
+	&__box {
+
+		& + & {
+			margin-left: 50px;
+		}
+	}
+
+	.Page__wrapper {
+		display: flex;
+		position: relative;
+		padding-y: 45px;
+	}
+
+	&__credits {
+		margin-top: .8em;
+	}
+
+	.Logo {
+		background-image: resolve('logo_grey.png');
+	}
+
+	.Menu {
+		margin-top: .4em;
+	}
+
+	a {
+		color: inherit;
+	}
+}
+
+.Error {
+
+	.Footer {
+		margin: 45px 0;
+	}
+}

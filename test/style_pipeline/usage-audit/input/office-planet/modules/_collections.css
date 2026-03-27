@@ -1,0 +1,30 @@
+.Collections {
+	@mixin List--ib;
+
+	&__item {
+		@mixin List__item--ib;
+		width: 50%;
+	}
+}
+
+.Collection {
+	display: inline-block;
+	padding: 15px;
+	vertical-align: top;
+
+	&__header {
+		display: block;
+		font-size: 18px;
+		margin-y: 10px;
+	}
+	&__description {
+		font-size: 14px;
+		margin-left: 175px;
+	}
+
+	&__img {
+		size: 160px;
+		float: left;
+		margin-right: 15px;
+	}
+}

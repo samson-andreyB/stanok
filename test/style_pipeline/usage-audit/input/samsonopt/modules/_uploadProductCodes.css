@@ -1,0 +1,78 @@
+.UploadProductCodes--default {
+	position: relative;
+	padding-right: 380px;
+	line-height: 1.5;
+	cursor: default;
+
+	.UploadProductCodes__title {
+		margin-top: 15px;
+		font-weight: bold;
+
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+
+	.UploadProductCodes__paragraph {
+		margin-top: 8px;
+	}
+
+	.UploadProductCodes__example {
+		position: absolute;
+		top: 0;
+		right: 0;
+	}
+
+	.UploadProductCodes__label,
+	.UploadProductCodes__checkbox {
+		cursor: pointer;
+	}
+
+	.UploadProductCodes__checkbox {
+		margin-right: 3px;
+	}
+
+	.UploadProductCodes__controls {
+		margin-top: 25px;
+	}
+
+	.UploadProductCodes__fileInput {
+		display: none;
+	}
+
+	.Btn + .Btn {
+		margin-left: .5em;
+	}
+}
+
+
+.UploadProductCodes--popup {
+	margin-top: 15px;
+	padding-right: 0;
+
+	.UploadProductCodes__example {
+		position: static;
+		margin-top: 15px;
+	}
+}
+
+
+.FancyModal--uploadProductCodes {
+	min-width: 450px;
+	cursor: default;
+
+	.FancyModal__header {
+		white-space: nowrap;
+	}
+
+	.FancyModal__paragraph + .FancyModal__paragraph {
+		margin-top: 8px;
+	}
+
+	.FancyModal__paragraph--error {
+		line-height: 22px;
+		font-size: 14px;
+		font-weight: bold;
+		color: #d13d3d;
+	}
+}

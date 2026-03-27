@@ -1,0 +1,253 @@
+.WeekPriceConstructor {
+	.filter {
+		&--search {
+			width: 280px;
+		}
+
+		&--status {
+			width: 150px;
+		}
+	}
+
+	.contentWrapper.accent + .contentWrapper.accent {
+		margin-top: 3px;
+	}
+
+	.ColorPicker--default {
+		margin-left: 7px;
+	}
+
+	.WeekPriceConstructorIcons__item:nth-child(5n) {
+		margin-right: 0;
+	}
+
+	.WeekPriceConstructorIcons--default + .Form__error {
+		margin-top: 0;
+	}
+}
+
+.Items--weekPriceConstructor {
+	.Item {
+		&__box {
+			&--indicator {
+				width: 1%;
+			}
+
+			&--number {
+				width: 85px;
+			}
+
+			&--date {
+				width: 90px;
+			}
+
+			&--period {
+				width: 165px;
+			}
+
+			&--status {
+				width: 90px;
+			}
+		}
+
+		.BadgeStatus {
+			margin-top: 0;
+			padding: 0;
+
+			&__indicator {
+				margin-top: 0;
+			}
+		}
+	}
+}
+
+.Form--weekPriceConstructor {
+	.contentWrapper {
+		padding-top: 0;
+	}
+
+	.Field--fixed {
+		width: 550px;
+	}
+
+	.Specs__content {
+		.Specs__name {
+			font-weight: normal;
+		}
+
+		.Specs__value {
+			margin-top: 5px;
+		}
+	}
+}
+
+.WeekPriceConstructorIcons--default {
+	.WeekPriceConstructorIcons__item {
+		display: inline-block;
+		width: 160px;
+		margin-right: 20px;
+		margin-bottom: 13px;
+	}
+
+	.WeekPriceConstructorIcons__title {
+		margin-bottom: 7px;
+		font-size: 12px;
+		line-height: 14px;
+	}
+}
+
+.WeekPriceConstructorIconsTip {
+	padding: 5px;
+
+	&__description {
+		margin-bottom: 10px;
+	}
+}
+
+.WeekPriceConstructorIconOptionsTip {
+	padding: 5px 5px 10px;
+
+	&__box {
+		& + & {
+			margin-top: 10px;
+		}
+
+		&:last-child {
+			margin-top: 15px;
+		}
+	}
+
+	&__fontSize {
+		font-weight: bold;
+	}
+
+	&__rotate {
+		font-size: 11px;
+		user-select: none;
+	}
+
+	&__error {
+		margin-top: 5px;
+		padding-left: 45px;
+		color: $error;
+		font-size: 11px;
+		line-height: 16px;
+	}
+}
+
+.ImageUploader--weekPriceConstructorIcon {
+	width: 160px;
+	height: 140px;
+
+	.ImageUploader__preview {
+		top: 50%;
+		left: 50%;
+	}
+
+	.ImageUploader__holder {
+		position: relative;
+		display: inline-block;
+		color: #fff;
+		font-size: 20px;
+		line-height: 1em;
+		text-align: center;
+		text-indent: 1px;
+
+		&--rotated {
+			transform: rotate(-35deg);
+		}
+	}
+
+	.ImageUploader__holderPercent {
+		padding-left: 2px;
+		padding-right: 1px;
+		font-weight: bold;
+	}
+
+	&.ImageUploader--withPreview {
+		background-position: 50%;
+	}
+
+	&.ImageUploader--contain {
+		.ImageUploader__preview {
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+		}
+	}
+
+	&.ImageUploader--editable {
+		.ImageUploader__holder {
+			box-shadow: 0 0 0 1px rgba(0, 255, 169, .7);
+			cursor: move;
+			user-select: none;
+
+			&:focus {
+				box-shadow: 0 0 0 1px rgba(0, 255, 169, 1);
+			}
+		}
+	}
+}
+
+.WeekPriceConstructorListTip {
+	max-height: 300px;
+	padding: 5px 10px;
+	overflow-y: auto;
+}
+
+.Items--weekPriceConstructorList {
+	.Items__list {
+		margin-top: 0;
+	}
+
+	.Item:first-child {
+		.Item__box {
+			border-top-width: 0;
+		}
+	}
+
+	.Item__box {
+		padding-y: 5px;
+		vertical-align: top;
+
+		&--date {
+			white-space: nowrap;
+		}
+
+		&:first-child {
+			padding-left: 0;
+		}
+
+		&:last-child {
+			padding-right: 0;
+		}
+	}
+}
+
+.FancyModal--weekPriceConstructor {
+	.FancyModal__content {
+		font-size: 13px;
+		line-height: 19px;
+	}
+}
+
+.FancyModal--weekPriceConstructorComplete {
+	width: 480px;
+}
+
+.FancyModal--weekPriceConstructorDeactivate {
+	width: 415px;
+}
+
+.FancyModal--weekPriceConstructorActivation {
+	width: 645px;
+}
+
+.FancyModal--weekPriceConstructorDelete {
+	width: 395px;
+}
+
+.FancyModal--weekPriceConstructorSave {
+	width: 455px;
+}

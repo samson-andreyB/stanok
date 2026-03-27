@@ -1,0 +1,82 @@
+.TipTip.TipTip--neo {
+	.TipTip__content {
+		position: relative;
+		border: none;
+		background-image: none;
+		background-color: #fff;
+	}
+
+	.TipTip__pointer {
+		display: none;
+	}
+
+	&.TipTip--bottom {
+		.TipTip__arrow {
+			position: static;
+			margin-x: auto;
+			width: 12px;
+			height: 12px;
+			margin-bottom: -6px;
+			transform: rotate(45deg);
+			box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, .2);
+		}
+
+		.TipTip__content:before {
+			content: '';
+			position: absolute;
+			bottom: 100%;
+			left: 50%;
+			margin-left: -8px;
+			border: 8px solid transparent;
+			border-top: none;
+			border-bottom-color: #fff;
+		}
+	}
+
+	&.TipTip--left {
+		padding-right: 0;
+
+		.TipTip {
+			&__arrow:before,
+			&__pointer {
+				width: 12px;
+				height: 12px;
+				transform: rotate(45deg);
+				transform-origin: top left;
+			}
+
+			&__arrow {
+				&:before {
+					content: '';
+					position: absolute;
+					top: 0;
+					left: 0;
+					margin-left: -1px;
+					box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.2);
+				}
+			}
+
+			&__pointer {
+				position: relative;
+				z-index: 1;
+				display: block;
+				background-color: #fff;
+				background-image: none;
+			}
+		}
+	}
+
+	.Menu--default {
+		font-size: 14px;
+		display: block;
+		border-radius: 3px;
+		overflow: hidden;
+	}
+
+	.Loading--active {
+		width: 150px;
+		min-height: 150px;
+		border-radius: 3px;
+		overflow: hidden;
+	}
+}

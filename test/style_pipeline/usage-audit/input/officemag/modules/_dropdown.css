@@ -1,0 +1,67 @@
+/* Выпадалка (работает на ТипТипе)
+***********************************************************/
+
+.Dropdown {
+	display: inline-block;
+
+	&__trigger {
+		cursor: pointer;
+	}
+
+	&__spinner {
+		@mixin Spinner;
+		@mixin Spinner--s;
+		display: none;
+		color: #b2adaa;
+	}
+
+	&__list {
+		list-style: none;
+		padding: 6px 2px;
+		color: #3b434f;
+	}
+
+	&__item {
+		padding-left: 17px;
+
+		& + & {
+			margin-top: 7px;
+		}
+	}
+
+	&__label {
+		color: #006cb5;
+
+		&:hover {
+			color: #ff0030;
+			cursor: pointer;
+		}
+	}
+
+	&__item--selected {
+		background-image: resolve('interface/check_mark.png');
+		background-repeat: no-repeat;
+		background-position: 0 50%;
+
+		.Dropdown__label {
+
+			&,
+			&:hover {
+				color: #777;
+				cursor: default;
+			}
+		}
+	}
+}
+
+.Dropdown--waiting {
+	padding-bottom: 1px; /* нивелируем отсутствие бордюра псевдоссылки */
+
+	.Dropdown__trigger {
+		display: none;
+	}
+
+	.Dropdown__spinner {
+		display: inline-block;
+	}
+}

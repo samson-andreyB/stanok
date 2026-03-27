@@ -1,0 +1,7 @@
+.FormControl {
+	&--short {
+		.FormControl__content {
+			width: 160px;
+		}
+	}
+}

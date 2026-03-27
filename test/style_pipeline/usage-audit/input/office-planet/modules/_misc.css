@@ -1,0 +1,83 @@
+.Sidebar .Facets {
+	@mixin SidebarBox;
+}
+
+
+.Sidebar__box {
+	@mixin SidebarBox;
+}
+
+
+
+/*doc
+<h3 class="HeaderCounter">
+	Избранные товары
+	<span class="HeaderCounter__count">(124)</span>
+</h3>
+*/
+
+.HeaderCounter {
+	@mixin H--sub;
+	margin-y: 20px 14px;
+	padding-x: 15px;
+
+	&__count {
+		color: $infoColor;
+	}
+
+	& + .Products .ProductsControl {
+		padding-left: 15px; /*  что я делаю?! :\ */
+	}
+}
+
+
+
+
+.Error__header {
+	margin-y: 0;
+}
+
+.ErrorForm {
+	padding-y: 20px;
+	width: 510px;
+
+	.Form__submit {
+		@mixin Btn--default;
+		@mixin Btn--main;
+	}
+}
+
+.FormStatus {
+	text-align: center;
+	font-size: 21px;
+	padding-y: 57px;
+	padding-x: 70px;
+}
+
+
+
+.OrderCancelForm {
+	padding-y: 20px;
+	width: 510px;
+
+	&__header {
+		margin-y: 0;
+	}
+
+	&__textarea {
+		min-height: 60px;
+	}
+
+	.Form__submit {
+		@mixin Btn--default;
+		@mixin Btn--main;
+	}
+}
+
+.OrderCancelFormSuccess {
+	width: 510px;
+
+	&__message {
+		padding: 30px 35px;
+	}
+}

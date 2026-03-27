@@ -1,0 +1,135 @@
+.OfferLinks--default {
+	display: flex;
+	box-sizing: border-box;
+	width: 100%;
+	height: 40px;
+	border: 1px solid #ddd;
+	border-radius: $B_RAD;
+	font-size: 14px;
+	cursor: default;
+
+	.OfferLinks__icon {
+		display: inline-block;
+		vertical-align: middle;
+		width: 20px;
+		height: 20px;
+		margin-top: -2px;
+		margin-right: 8px;
+		background-position: 50% 50%;
+		background-size: contain;
+		background-repeat: no-repeat;
+
+		@media (max-width: 1100px) {
+			margin-right: 4px;
+		}
+
+		@media (max-width: 1190px) {
+			display: none;
+		}
+	}
+
+	.OfferLinks__label {
+		position: relative;
+		line-height: 38px;
+		text-align: center;
+		color: #000;
+
+		.CounterBadge {
+			position: absolute;
+			top: -9px;
+			right: 4px;
+			z-index: 1;
+		}
+	}
+
+	.OfferLinks__item {
+		flex-grow: 1;
+		white-space: nowrap;
+
+		&:not(.OfferLinks__item--noHover):hover {
+			.OfferLinks__label {
+				color: $C_BRAND;
+				cursor: pointer;
+
+				.OfferLinks__icon {
+					opacity: .7;
+				}
+			}
+		}
+
+		&:last-child {
+			border-radius: 0 $B_RAD $B_RAD 0;
+		}
+
+		&:first-child {
+			border-radius: $B_RAD 0 0 $B_RAD;
+		}
+
+		&--img {
+			@media (min-width: 1191px) {
+				&:hover {
+					.OfferLinks__img {
+						opacity: .7;
+					}
+				}
+			}
+
+			@media (max-width: 1190px) {
+				background: none !important;
+			}
+		}
+	}
+
+	.OfferLinks__img {
+		position: relative;
+		top: -1px;
+		margin: -16px 0;
+		vertical-align: middle;
+
+		@media (max-width: 1190px) {
+			display: none;
+		}
+	}
+
+	.OfferLinks__title {
+		@media (min-width: 1191px) {
+			display: none;
+		}
+	}
+
+	.OfferLinks__item + .OfferLinks__item {
+		border-left: 1px solid #ddd;
+	}
+
+	.Drop {
+		&__content {
+			width: auto;
+
+			&--limited {
+				width: 330px;
+
+				.MenuList {
+					white-space: normal;
+				}
+			}
+
+			&--left {
+				left: auto;
+				right: 0;
+			}
+		}
+
+		.OfferLinks__label {
+			&:after {
+				content: '';
+				@mixin caretXY 7px, 3px;
+				margin-top: -1px;
+				margin-left: 3px;
+			}
+		}
+	}
+
+	.MenuList {
+		white-space: nowrap;
+	}
+}

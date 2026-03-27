@@ -1,0 +1,193 @@
+.Spoiler {
+	&.Spoiler--active {
+		.Spoiler__triggerText {
+			&--show {
+				display: none;
+			}
+
+			&--hide {
+				display: inline;
+			}
+		}
+	}
+
+	&__trigger {
+		user-select: none;
+		cursor: pointer;
+	}
+
+	&__triggerText {
+		&--show {
+			display: inline;
+		}
+
+		&--hide {
+			display: none;
+		}
+	}
+
+	&__content {
+		display: none;
+	}
+}
+
+.Spoiler--loading {
+	position: relative;
+
+	.Spoiler__trigger {
+		pointer-events: none;
+		opacity: .5;
+
+		&:hover {
+			background-color: transparent;
+		}
+	}
+
+	&:after {
+		content: '';
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 16px;
+		height: 16px;
+		margin-top: -8px;
+		margin-left: -8px;
+		border: 2px solid transparent;
+		border-radius: 50%;
+		border-top-color: red;
+		border-right-color: red;
+		animation: Spinner .8s linear infinite;
+	}
+}
+
+@define-mixin SpoilerArrows {
+
+	.Spoiler__trigger {
+		position: relative;
+		padding-right: 35px;
+
+		&:after {
+			content: '';
+			position: absolute;
+			top: 50%;
+			right: 13px;
+			margin-top: calc(- height('angle_down.png') / 2 + 1);
+			width: width('angle_down.png');
+			height: height('angle_down.png');
+			background-image: resolve('angle_down.png');
+		}
+	}
+
+	&.Spoiler--active {
+
+		.Spoiler__trigger:after {
+			background-image: resolve('angle_up.png');
+		}
+	}
+}
+
+.Spoiler--gray {
+
+	.Spoiler__trigger {
+		padding: 14px 16px 13px;
+		font-size: 14px;
+		font-weight: bold;
+		background-color: #e7e7e7;
+		color: #111;
+
+		&:hover,
+		&:focus {
+			opacity: .8;
+		}
+
+		&:active {
+			opacity: 1;
+		}
+	}
+
+	.Spoiler__content {
+		background-color: #f5f5f5;
+	}
+
+	@mixin SpoilerArrows;
+}
+
+.Spoiler--inline {
+	display: inline;
+}
+
+.Spoiler--partiallyDisclosed {
+	.Spoiler__content {
+		position: relative;
+		display: block;
+		overflow: hidden;
+	}
+}
+
+.Spoiler--triggerPseudoLink {
+	.Spoiler__trigger {
+		display: inline-block;
+		border-bottom: 1px dotted;
+		color: $C_LINK;
+
+		&:hover {
+			color: $C_LINK_H;
+		}
+	}
+}
+
+.Spoiler--curtain {
+	position: relative;
+
+	.Spoiler__trigger {
+		&:after {
+			content: '';
+			position: absolute;
+			right: 0;
+			bottom: 2em;
+			left: 0;
+			z-index: 1;
+			height: 32px;
+			background: linear-gradient(-180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+			transition: opacity .2s;
+		}
+	}
+
+	&.Spoiler--active {
+		.Spoiler__trigger {
+			&:after {
+				display: none;
+			}
+		}
+	}
+}
+
+.Spoiler--modifiersDesign {
+	margin-right: -15px;
+
+	.Spoiler__trigger {
+		display: none;
+	}
+
+	.Spoiler__triggerText--show {
+		display: inline-block;
+	}
+
+	.Spoiler__content {
+		max-height: 160px;
+	}
+
+	&.Spoiler--curtain {
+		.Spoiler__content {
+			max-height: 120px;
+		}
+
+		.Spoiler__trigger {
+			display: inline-block;
+			min-height: 1em;
+			padding-top: 1em;
+			font-size: 14px;
+			line-height: 1;
+		}
+	}
+}

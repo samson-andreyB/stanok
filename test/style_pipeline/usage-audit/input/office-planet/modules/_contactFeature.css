@@ -1,0 +1,46 @@
+.ContactFeature {
+
+	&__type {
+		color: $infoColor;
+		display: block;
+		font-size: 14px;
+
+		.Icon {
+			color: $theme_accent;
+			cursor: default;
+			margin-right: .3em;
+		}
+	}
+	&__value {
+		display: block;
+		font-size: 16px;
+
+		&--phone {
+			.ContactFeature__valueItem {
+				@mixin pseudoLink;
+				color: #000;
+			}
+		}
+	}
+
+	.Contact__info &__value {
+		@mixin H--sub;
+		border-width: 0;
+		box-shadow: none;
+		margin-top: .3em;
+		font-size: 18px;
+	}
+
+	& + & {
+		margin-top: 20px;
+	}
+
+	&.main + .Contact__group {
+		margin-top: 20px;
+	}
+	&.main {
+		.ContactFeature__value {
+			font-weight: bold;
+		}
+	}
+}

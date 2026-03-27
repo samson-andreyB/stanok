@@ -1,0 +1,90 @@
+.Panels--selectColumns {
+	display: inline-block;
+	height: 483px;
+	white-space: nowrap;
+
+	.Panels__divider--angle {
+		display: inline-block;
+		width: width('icons/angle_l_gray.png');
+		height: height('icons/angle_l_gray.png');
+		background-image: resolve('icons/angle_l_gray.png');
+		margin-x: 7px;
+	}
+}
+
+
+.Panel--default {
+	display: inline-flex;
+	vertical-align: middle;
+	flex-direction: column;
+	width: 340px;
+	height: 100%;
+	border: 1px solid #dadada;
+	box-sizing: border-box;
+	white-space: normal;
+
+	& + & {
+		margin-top: 0;
+		margin-left: -1px;
+	}
+
+	.Panel__box {
+		line-height: 1.4;
+
+		&--header {
+			padding: 5px 15px 4px;
+			border-bottom: 1px solid #dadada;
+
+			.Box--selected {
+				font-weight: bold;
+			}
+
+			.Box--removeAll {
+				width: 1px;
+				white-space: nowrap;
+			}
+		}
+
+		&--items {
+			flex-grow: 1;
+			max-height: 100%;
+			overflow-y: auto;
+		}
+	}
+
+	.Panel__hint {
+		margin: 10px;
+		line-height: 14px;
+		font-size: 11px;
+		color: #a9a9a9;
+	}
+
+	.pseudoLink {
+		font-size: 11px;
+	}
+}
+
+.Panel--groupsList {
+	width: 165px;
+}
+
+
+.Panel--product {
+	display: flex;
+	align-items: baseline;
+
+	&.Panel--top {
+		margin-top: 15px;
+	}
+
+	&.Panel--bottom {
+		border-top: 1px solid #dadada;
+		margin-top: 40px;
+		margin-bottom: 18px;
+		padding-top: 20px;
+	}
+
+	.btnMain + .ProductSwitch {
+		margin-left: 20px;
+	}
+}

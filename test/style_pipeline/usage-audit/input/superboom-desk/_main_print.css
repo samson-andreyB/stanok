@@ -1,0 +1,224 @@
+.PrintedDocument--default {
+	background: #fafafa;
+	font-family: Arial, Helvetica, Verdana, sans-serif;
+	font-size: 16px;
+	margin: 20px auto;
+	line-height: 1.2;
+
+	.PrintedDocument {
+		&__buttons {
+			box-sizing: border-box;
+			padding: 30px;
+			text-align: center;
+		}
+
+		&__wrapper {
+			width: 700px;
+			border-radius: 1px;
+			padding: 50px 40px 40px 30px;
+			page-break-after: always;
+
+			@media screen {
+				box-shadow: 0 10px 30px rgba(0, 0, 0, .1);
+				background: #FFF;
+				min-height: 1010px;
+				margin: 0 auto;
+
+				& + .PrintedDocument__wrapper {
+					margin-top: 30px;
+				}
+			}
+		}
+	}
+}
+
+.PrintBtn {
+	border: 0 none;
+	box-sizing: border-box;
+	border-radius: 5px;
+	background: #e5e5e5;
+	cursor: pointer;
+	color: #000;
+	display: inline-block;
+	font-size: 18px;
+	padding: 6px 14px 8px;
+	height: 41px;
+
+	& + & {
+		margin-left: 20px;
+	}
+
+	&:hover {
+		background: #ededed;
+		color: #272727;
+	}
+
+	&:active {
+		background: #d8d8d8;
+		box-shadow: 0 2px 0 rgba(0, 0, 0, .1) inset;
+	}
+
+	&--main {
+		color: #d20000;
+	}
+
+	&--main:hover {
+		color: #f00000;
+	}
+}
+
+.PrintedTable {
+	border-collapse: collapse;
+
+	&__header {
+		.PrintedTable__column {
+			font-weight: normal;
+			text-align: left;
+			padding-bottom: 10px;
+		}
+	}
+
+	&__column {
+		border-bottom: 1px solid #666;
+		padding: 10px 10px;
+		vertical-align: top;
+	}
+
+	&__summary {
+		font-size: 18px;
+		text-align: right;
+		margin-top: 25px;
+	}
+}
+
+@media print {
+	.PrintedDocument__buttons {
+		display: none;
+	}
+}
+
+
+
+/* Накладная на возврат
+------------------------------------------------------------------------------*/
+
+.ReturnInvoice {
+	font-size: 14px;
+
+	&__logo {
+		margin-bottom: 75px;
+	}
+
+	&__header {
+		& + .PrintedTable {
+			margin-top: 50px;
+		}
+	}
+
+	&__title {
+		font-size: 24px;
+		display: inline-block;
+	}
+
+	&__date {
+		font-size: 18px;
+		display: inline-block;
+		margin-left: 5px;
+	}
+
+	&__label {
+		float: left;
+		display: block;
+		background: #fff;
+	}
+
+	&__value {
+		display: inline-block;
+		width: 100px;
+		border-bottom: 1px solid #666;
+
+		&--day {
+			width: 30px;
+		}
+
+		&--month {
+			width: 100px;
+			margin-right: 10px;
+		}
+
+		&--year {
+			width: 14px;
+			border-bottom: none;
+		}
+	}
+
+	&__agree {
+		margin-top: 50px;
+	}
+
+	&__signature {
+		display: inline-block;
+		vertical-align: top;
+		width: 50%;
+
+		.ReturnInvoice__value {
+			margin-left: 3px;
+		}
+	}
+
+	&__person {
+		margin-top: 15px;
+	}
+
+	&__signatureDate {
+		display: inline-block;
+		vertical-align: top;
+		width: 50%;
+		text-align: right;
+	}
+
+	&__confirmation {
+		margin-top: 120px;
+
+		.ReturnInvoice__title {
+			font-size: 18px;
+		}
+
+		p {
+			margin-y: 15px;
+		}
+	}
+
+	&__acceptor {
+		margin-top: 15px;
+	}
+}
+
+.PrintedTable--returnInvoice {
+	.PrintedTable__header {
+		.PrintedTable__column {
+			white-space: nowrap;
+		}
+	}
+
+	.PrintedTable__column {
+		&--number {
+			padding-left: 0;
+		}
+
+		&--name {
+			width: 33%;
+		}
+
+		&--reason {
+			width: 16%;
+		}
+
+		&--quantity,
+		&--price,
+		&--sum {
+			white-space: nowrap;
+			text-align: right;
+		}
+	}
+}

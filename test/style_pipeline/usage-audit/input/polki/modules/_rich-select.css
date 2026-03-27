@@ -1,0 +1,603 @@
+/* RichSelect
+------------------------------------------------------------------------------*/
+
+/*
+<div class="RichSelect">
+	<span class="RichSelect__field RichSelect__trigger">Выбрано 3 группы</span>
+	<ul class="RichSelect__options">
+		<li class="RichSelect__option"><label><input class="RichSelect__input" type="checkbox">Выбрать все</label></li>
+		<li class="RichSelect__option"><label><input type="checkbox" class="RichSelect__input">Товары для офиса, канцтовары<span class="RichSelect__info">(251)</span></label></li>
+		<li class="RichSelect__option level2"><label><input type="checkbox" class="RichSelect__input">Демонстрационное оборудование&nbsp;<span class="RichSelect__info">(30)</span></label></li>
+	</ul>
+</div>
+*/
+
+$RichSelectPaddingLeft: 25px;
+
+.RichSelect {
+	display: inline-block;
+	line-height: 0;
+	position: relative;
+	user-select: none;
+	vertical-align: middle;
+	
+	.RichSelect--active&:after {
+		content: "";
+		position: absolute;
+		height: 1px;
+		width: 100%;
+		bottom: 0;
+		left: 0;
+		box-sizing: border-box;
+		background-color: #fff;
+		border-x: 1px solid #bbb;
+		z-index: 100;
+	}
+
+	&--wrap {
+		.RichSelect__option {
+			white-space: normal;
+			padding-right: 5px;
+		}
+	}
+}
+
+.RichSelect__field {
+	background: #fff;
+	box-sizing: border-box;
+	color: #222;
+	cursor: pointer;
+	display: inline-block;
+	margin-right: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding-right: 1.8em;
+	position: relative;
+	white-space: nowrap;
+	width: 100%;
+	
+	&:after {
+		content: "";
+		border-style: solid;
+		border-width: 4px;
+		border-x-color: transparent;
+		border-bottom-width: 0;
+		position: absolute;
+		top: 1em;
+		right: .5em;
+	}
+
+	&:hover {
+		border-color: #ababab;
+	}
+
+	&:focus {
+		box-shadow: none;
+	}
+
+	.RichSelect--error & {
+		border-color: $error;
+	}
+
+	.RichSelect--active & {
+		border-color: #bbb;
+		border-bottom-color: #fff;
+		z-index: 100;
+	}
+}
+
+.RichSelect__options {
+	background: #fff;
+	border: 1px solid #bbb;
+	box-shadow: 0 9px 12px rgba(0,0,0,.25);	   
+	box-sizing: border-box;
+	display: none;
+	line-height: 1.3;
+	margin-top: -1px;
+	max-height: 300px;
+	overflow: auto;
+	padding: 0;
+	position: absolute;
+	left: 0;
+	top: 100%;
+	min-width: 100%;
+	max-width: 600px;
+	z-index: 99;
+	
+	&--disabled {
+		.RichSelect__option {
+			@mixin Blocked;
+		}
+	}
+
+	.RichSelect--alignRight & {
+		left: auto;
+		right: 0;
+	}
+}
+
+.RichSelect__option {
+	display: block;
+	font-weight: bold;
+	
+	/* место под возможную полосу прокрутки */
+	padding-right: 20px;
+	padding-left: $RichSelectPaddingLeft;
+	white-space: nowrap;
+	
+	& + & {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+
+	&--active,
+	&.active {
+		background-color: #e9f8f3;
+	}
+
+	&--faded {
+		color: #999;
+	}
+
+	label {
+		display: block;
+		padding-y: 3px;
+	}
+}
+
+/* Для группировки опций одноуровневого ричселекта */
+.RichSelect__groupLabel {
+	margin-top: .5em;
+	font-weight: bold;
+	padding: 3px 6px;
+}
+
+.RichSelect--oneLevel .RichSelect__option {
+	font-weight: normal;
+
+	&--accent {
+		font-weight: bold;
+	}
+}
+
+.RichSelect__input {
+	margin-top: -1px;
+	margin-right: .4em;
+	margin-left: -19px;
+	vertical-align: middle;
+}
+.RichSelect__info {
+	color: #888;
+	display: inline-block;
+	font-weight: normal;
+	margin-left: 3px;
+}
+.RichSelect__templates {
+	display: none;
+}
+.RichSelect__hint {
+	display: none;
+	padding: 10px;
+	padding-top: 0;
+	color: #999;
+
+	&--show {
+		display: block;
+	}
+}
+
+.RichSelect__showInactive {
+	padding: 10px;
+	padding-bottom: 0;
+	font-size: 11px;
+}
+
+.RichSelect .level2 {
+	font-weight: normal;
+	padding-left: calc(20px + $RichSelectPaddingLeft);
+}
+
+.RichSelect__aux {
+	display: block;
+	color: $info;
+	pointer-events: none;
+}
+
+.RichSelect--nested {
+	.RichSelect__options {
+		width: 300px;
+		max-height: none;
+
+		& > .RichSelect__list {
+			height: auto;
+			padding-left: 15px;
+			padding-bottom: 10px;
+		}
+	}
+
+	&.RichSelect--open {
+		.RichSelect__options {
+			& > .RichSelect__list {
+				padding-left: 8px;
+			}
+		}
+	}
+
+	.RichSelect__filter {
+		margin: 15px;
+
+		.Field {
+			width: 100%;
+		}
+	}
+
+	.RichSelect__list {
+		margin: 0;
+		padding: 0;
+	}
+
+	.RichSelect__item {
+		display: block;
+		margin: 0;
+		padding-left: 17px;
+		position: relative;
+
+		.RichSelect__list {
+			margin-left: 5px;
+
+			&:before {
+				content: '';
+				position: absolute;
+				top: 6px;
+				left: 1px;
+				width: height('icons/triangle_right.png');
+				height: height('icons/triangle_right.png');
+				background-image: resolve('icons/triangle_right.png');
+				background-repeat: no-repeat;
+				background-position: 50% 50%;
+				pointer-events: none;
+				transition: transform .2s;
+			}
+		}
+
+		> .RichSelect__list > .RichSelect__item {
+			display: none;
+		}
+	}
+
+	.RichSelect__item--open {
+
+		> .RichSelect__list:before {
+			transform: rotate(90deg);
+		}
+
+		> .RichSelect__list > .RichSelect__item {
+			display: block;
+		}
+	}
+
+	.RichSelect__itemLabel {
+		display: block;
+		padding: 3px;
+		padding-left: 4px;
+		position: relative;
+		cursor: pointer;
+		
+		&:before {
+			content: '';
+			position: absolute;
+			top: 0;
+			right: 100%;
+			width: 100vw;
+			height: 100%;
+		}
+
+		&:hover {
+
+			&,
+			&:before {
+				background-color: #e9e9e9;
+			}
+		}
+	}
+
+	a.RichSelect__itemLabel {
+		color: inherit;
+		text-decoration: none;
+
+		&:focus {
+			outline: none;
+		}
+	}
+
+	.RichSelect__item--selected {
+
+		> .RichSelect__itemLabel {
+			
+			&,
+			&:before {
+				background-color: #e9f8f3;
+			}
+		}
+	}
+
+	.RichSelect__item--disabled {
+		& > .RichSelect__itemLabel {
+			color: #666;
+			cursor: default;
+		}
+	}
+
+	input[type="radio"] {
+		position: absolute;
+		left: -18px;
+		top: 5px;
+	}
+
+	input[type="checkbox"] {
+		margin-right: 5px;
+	}
+}
+
+.RichSelect--nestedRadio {
+	input[type="radio"] {
+		position: static;
+		margin-right: 5px;
+	}
+}
+
+
+/* Подразумевается использование без триггера */
+.RichSelect--open {
+
+	.RichSelect__options {
+		display: block;
+		position: static;
+		box-shadow: none;
+		z-index: 200;
+	}
+}
+
+
+/* Для использования в качестве содержимого ТипТипа */
+.RichSelect--inTip {
+	.RichSelect__options {
+		border: none;
+		max-height: 450px;
+		margin-top: 0;
+	}
+
+	&.RichSelect--filtering {
+		.RichSelect__options {
+			max-height: none;
+		}
+
+		.RichSelect__list {
+			max-height: 400px;
+			overflow-y: auto;
+		}
+	}
+}
+
+
+/* Серый триггер (дополнительные фильтры) */
+.RichSelect--gray {
+
+	.RichSelect__field {
+		padding-left: 10px;
+	}
+}
+
+.RichSelect--gray:not(.RichSelect--active) {
+
+	.RichSelect__field {
+		border-color: #e0e0e0;
+		background-color: #e0e0e0;
+
+		&:hover {
+			border-color: #e6e6e6;
+			background-color: #e6e6e6;
+		}
+
+		&:after {
+			border-top-color: #888;
+		}
+	}
+}
+
+
+/* Имеется встроенный фильтр опций */
+.RichSelect--filtering {
+
+	.RichSelect__filter {
+		padding: 10px;
+
+		.Field {
+			width: 100%;
+		}
+	}
+
+	.RichSelect__groupLabel {
+		padding-x: 10px;
+		margin-top: 0;
+	}
+
+	.RichSelect__options {
+		max-height: none;
+
+		& > .RichSelect__list {
+			max-height: 300px;
+			overflow-y: auto;
+		}
+	}
+
+	.RichSelect__option {
+		padding-left: 29px;
+		padding-right: 10px;
+		white-space: normal;
+
+		&.level2 {
+			padding-left: 50px;
+		}
+	}
+
+	.RichSelect__filter + .RichSelect__groupLabel {
+		padding-top: 0;
+	}
+
+	.RichSelect__option + .RichSelect__groupLabel {
+		margin-top: .5em;
+	}
+}
+
+
+.RichSelect--finder {
+	.RichSelect__options {
+		min-width: 250px;
+		max-height: none;
+	}
+
+	.RichSelect__list {
+		max-height: 300px;
+		overflow-y: auto;
+	}
+
+	.RichSelect__option {
+		display: none;
+
+		&--active {
+			display: block;
+			background-color: transparent;
+		}
+	}
+}
+
+
+/* Вывод найденных опций */
+.RichSelect--searchActive {
+
+	.RichSelect__option {
+		display: none;
+
+		&--active {
+			background-color: transparent;
+		}
+
+		&--matches {
+			display: block;
+		}
+
+		&:hover {
+			background-color: #e9e9e9;
+		}
+	}
+}
+
+
+/* Нормализация отступов у этой комбинации */
+.RichSelect--nested.RichSelect--filtering {
+
+	.RichSelect__filter {
+		padding: 0;
+	}
+}
+
+
+/* Кастомный селект (без чекбоксов) */
+.RichSelect--poor {
+
+	.RichSelect__option {
+		padding: 5px 10px;
+		cursor: pointer;
+
+		&:hover {
+			background-color: #e9f8f3;
+		}
+	}
+}
+
+
+/* Занимает всё доступное пространство */
+.RichSelect--fillSpace {
+	display: block;
+
+	&.RichSelect--open {
+		.RichSelect__options {
+			width: 100%;
+		}
+	}
+}
+
+
+/* Борьба с багом FF: https://bugzilla.mozilla.org/show_bug.cgi?id=764076 */
+.RichSelect--protectFromDestroy {
+	.RichSelect__option {
+		padding-right: 28px;
+	}
+}
+
+
+.RichSelect--hasResetButton {
+	.RichSelect__field {
+		padding-right: 38px;
+	}
+
+	.RichSelect__reset {
+		position: absolute;
+		right: 20px;
+		top: 50%;
+		margin-top: -7px;
+		width: 15px;
+		height: 15px;
+		background-image: resolve('icons/cross_7x7_999.png');
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+
+		&:hover {
+			background-image: resolve('icons/cross_7x7_e55.png');
+		}
+	}
+
+	.RichSelect__label:empty {
+		&:before {
+			content: attr(data-default);
+		}
+
+		& + .RichSelect__reset {
+			display: none;
+		}
+	}
+
+}
+
+
+.RichSelect--disabled {
+	.RichSelect__field {
+		color: rgba(0, 0, 0, .7);
+		background-color: #f1f1f1;
+		opacity: .6;
+		pointer-events: none;
+
+		&:after {
+			border-top-color: currentColor;
+		}
+	}
+}
+
+/* Для коротких списков, у которых нет прокрутки */
+.RichSelect--noOverflow {
+	.RichSelect__option {
+		padding-right: 10px;
+	}
+}
+
+.RichSelect--simple {
+	.RichSelect__options {
+		max-height: none;
+
+		.RichSelect__list {
+			max-height: 300px;
+			overflow-y: auto;
+		}
+	}
+}

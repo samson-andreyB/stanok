@@ -1,0 +1,158 @@
+/*
+ * Опросы
+ */
+
+.Vote {
+	.filter {
+		max-width: none;
+	}
+
+	&__list {
+		list-style: none;
+		padding: 0;
+		margin: 15px 0 15px;
+		font-size: 12px;
+		max-width: 600px;
+		line-height: 21px;
+	}
+
+	&__item + .Vote__item {
+		margin-top: 20px;
+	}
+
+	&__header {
+		font-weight: bold;
+		font-size: 13px;
+	}
+
+	&__answerList {
+		list-style: none;
+		padding-left: 0;
+		margin: 10px 0;
+		line-height: 16px;
+	}
+
+	&__radio,
+	&__checkbox {
+		margin-right: 10px;
+	}
+
+	&__select {
+		width: 200px;
+		display: block;
+		margin: 8px 0 10px;
+	}
+
+	&__textarea {
+		display: block;
+		width: 300px;
+		height: 65px;
+		margin: 4px 0;
+	}
+
+	&__input {
+		width: 300px;
+		display: block;
+		margin: 8px 0 10px 22px;
+	}
+
+	&__label {
+		cursor: auto;
+
+		.Vote__input {
+			margin-left: 0;
+		}
+	}
+
+	&__select[disabled],
+	&__textarea[disabled],
+	&__input[disabled] {
+		background-color: transparent;
+		border: 1px solid #d7d5d2;
+	}
+}
+
+.Vote__list--result {
+	.Vote__item + .Vote__item {
+		margin-top: 35px;
+	}
+
+	.Vote__answerList {
+		list-style: none;
+		padding: 0;
+		color: #656565;
+		font-size: 12px;
+		margin-top: 15px;
+	}
+
+	.Vote__answerItem {
+		line-height: 16px;
+	}
+
+	.Vote__answerItem + .Vote__answerItem {
+		margin-top: 20px;
+	}
+
+	.Vote__result {
+		position: relative;
+		background-color: #e7e7e7;
+		border-radius: 10px;
+		height: 17px;
+		line-height: 17px;
+		box-sizing: border-box;
+		padding: 0 15px;
+		margin-top: 8px;
+		overflow: hidden;
+	}
+
+	.Vote__resultLine {
+		height: 100%;
+		position: absolute;
+		left: 0;
+		top: 0;
+		background-color: #beebdc;
+	}
+
+	.Vote__rate {
+		position: relative;
+		z-index: 1;
+		font-size: 11px;
+	}
+
+	.Vote__rateCount {
+		font-weight: bold;
+		margin-right: 4px;
+	}
+}
+
+.Items__list--vote {
+	.Item__box {
+		vertical-align: top;
+
+		&--intIndicator {
+			width: 10px;
+			padding-right: 0;
+		}
+
+		&--status {
+			width: 80px;
+		}
+
+		&--period {
+			width: 125px;
+		}
+
+		&--voteCount {
+			width: 95px;
+			text-align: right;
+		}
+
+		&--result {
+			padding-right: 20px;
+		}
+	}
+
+	.Items__header .Item__box {
+		vertical-align: bottom;
+	}
+}

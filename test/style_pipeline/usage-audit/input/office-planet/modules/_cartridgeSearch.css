@@ -1,0 +1,86 @@
+.CartridgeSearch {
+	border: 1px solid $dividerColor;
+
+	&__header {
+		padding-x: 20px;
+	}
+
+	&__form {
+		padding: 30px 20px;
+		position: relative;
+	}
+
+	&.inactive &__header {
+		@mixin H--sub;
+		border: 0;
+		font-size: 18px;
+	}
+
+	&.active &__header {
+		@mixin H--accent;
+	}
+
+	.Select {
+		margin-top: 10px;
+
+		&:first-child {
+			margin-top: 0;
+		}
+
+		&__text:after {
+			border-top-color: $theme_accent;
+		}
+	}
+
+	.Select__select:focus + .Select__text {
+		border-color: $theme_bHover;
+
+		@if $theme_name == 'op' {
+			border-color: $theme_aHover;
+		}
+	}
+
+	.Select__select:hover + .Select__text:after {
+		border-top-color: $theme_bHover;
+
+		@if $theme_name == 'op' {
+			border-top-color: $theme_aHover;
+		}
+	}
+
+	&--articul &__field {
+		white-space: nowrap;
+	}
+
+	&--articul &__field .Field__input {
+		height: 33px;
+		width: 100%;
+		vertical-align: middle;
+	}
+
+	&--articul &__submit {
+		@mixin textHide;
+		@mixin Icon;
+		@mixin OtherIcon search_16x16, $theme_brand, true;
+		background-color: transparent;
+		padding: 0;
+		margin-left: -25px;
+	}
+
+
+	&__overlay {
+		@mixin Overlay--before;
+		background-color: rgba(255,255,255,.75);
+		text-align: center;
+		z-index: 2;
+
+		.Spinner {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			font-size: 2em;
+			margin-top: -.75em;
+			margin-left: -.75em;
+		}
+	}
+}

@@ -1,0 +1,40 @@
+.Error {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	min-height: height('error_404.png');
+	margin: auto 0;
+	padding-left: calc(width('error_404.png') + 50px);
+
+	&__header {
+		max-width: 400px;
+		margin: .67em 0;
+	}
+
+	&__picture {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: width('error_404.png');
+		height: 100%;
+		background: resolve('error_404.png') no-repeat center;
+		background-size: contain;
+	}
+
+	.Footer {
+		display: flex;
+		align-items: flex-end;
+		margin: 45px 0;
+		color: inherit;
+		background-color: transparent;
+
+		.Logo {
+			background-image: svg('logo', '[color]: $colorActive');
+		}
+
+		a {
+			color: $colorLink;
+		}
+	}
+}

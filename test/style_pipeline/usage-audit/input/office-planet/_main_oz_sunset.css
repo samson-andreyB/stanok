@@ -1,0 +1,26 @@
+$theme_name: 'oz_sunset';
+$theme_brand: #be3212;
+$theme_bHover: #9c270d;
+$theme_accent: #529ae3;
+$theme_aHover: #4583c3;
+$theme_layoutAccentColor: #f1f1f1;
+
+$brandColor: #00aff0;
+$brandColorLighter: #2dc6ff;
+
+@import 'modules/_themeVars_oz';
+
+$theme_logo: logo_oz.png;
+$theme_logo_width: 194px;
+$theme_logo_height: 79px;
+$theme_logo_s_width: 131px;
+$theme_logo_s_height: 36px;
+
+$theme_lowPrice_icon: low_price--oz.png;
+$theme_lowPrice_width: 70px;
+$theme_lowPrice_height: 70px;
+
+$theme_placemarkCluster: #bd3111;
+$theme_placemarkClusterActive: #d94725;
+
+@import '_modules';

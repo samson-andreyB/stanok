@@ -1,0 +1,97 @@
+/* Платёжный документ — контент фенсибокса
+---------------------------------------------------------------------- */
+
+.PaymentDocument {
+	padding: 20px;
+	width: 900px;
+	box-sizing: border-box;
+
+	&__header {
+		margin-bottom: 15px;
+
+		& + .PaymentDocument__specs {
+			margin-top: -5px;
+		}
+	}
+
+	&__title {
+		font-size: 16px;
+		font-weight: bold;
+		margin-right: 9px;
+		vertical-align: middle;
+	}
+
+	&__specs {
+		margin-bottom: 15px;
+	}
+
+	&__spec {
+		& + & {
+			&:before {
+				content: '|';
+				display: inline-block;
+				margin: 0 5px;
+				color: #dadada;
+			}
+		}
+	}
+
+	&__specName {
+		color: #666;
+	}
+
+	&__list {
+		overflow-y: auto;
+
+		.Items--productsList {
+			border-top: none;
+		}
+	}
+
+	&--invoiceBlank {
+		.ListControl__box--sort {
+			width: 1px;
+			white-space: nowrap;
+		}
+	}
+}
+
+
+
+/* Список товаров (платёжный документ)
+---------------------------------------------------------------------- */
+
+.Items--productsList {
+	border-x: 1px solid #dedede;
+
+	.Item__box {
+		&--count {
+			padding-left: 20px;
+			white-space: nowrap;
+		}
+
+		&--price,
+		&--sum,
+		&--jackpot {
+			text-align: right;
+			white-space: nowrap;
+		}
+	}
+
+	.Item {
+		&:first-child {
+			.Item__box {
+				border: none;
+			}
+		}
+
+		.Item__box {
+			padding-top: 13px;
+			padding-bottom: 12px;
+
+			&--sum {
+				font-weight: bold;
+			}
+		}
+	}
+}

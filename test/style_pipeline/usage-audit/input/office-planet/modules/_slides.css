@@ -1,0 +1,147 @@
+.Slides--fancy {
+	padding: 10px 20px;
+	width: 900px;
+}
+
+.Slides__header {
+	margin-top: 0;
+	margin-bottom: 1em;
+}
+
+.SlidesList {
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.Slide {
+	display: inline-block;
+	vertical-align: top;
+	width: 100%;
+	white-space: normal;
+	font-size: 14px;
+	transition: .2s margin;
+
+	&__content {
+		display: inline-block;
+		width: 100%;
+	}
+
+	&__group {
+		display: table;
+		width: 100%;
+	}
+	&__box {
+		display: table-cell;
+		vertical-align: top;
+
+		& + & {
+			padding-left: 30px;
+		}
+
+		&--title,
+		&--back,
+		&--wide {
+			width: 100%;
+		}
+
+		&--image,
+		&--next,
+		&--thin {
+			width: 1px;
+			white-space: nowrap;
+		}
+		&--next {
+			text-align: right;
+		}
+	}
+
+	&Title {
+		position: relative;
+
+		&[data-slide-count] {
+			padding-left: 30px;
+			padding-top: .2em;
+		}
+		&:before {
+			 background-color: $theme_brand;
+			content: attr(data-slide-count);
+			border-radius: 1.5em;
+			color: #fff;
+			font-size: 1.2em;
+			margin-right: -25px;
+			padding: 0 .5em;
+			position: absolute;
+			right: 100%;
+			top: 0;
+		}
+
+		&__header {
+			font-size: 18px;
+			margin-top: 0;
+		}
+	}
+
+	&Splash {
+		padding: 4em;
+		text-align: center;
+
+		&__header {
+			 color: $theme_brand;
+			font-size: 30px;
+			margin-bottom: 1.5em;
+		}
+
+		p {
+			font-size: 1.1em;
+			margin-bottom: 1em;
+		}
+	}
+
+	&__controls {
+		border-top: 1px solid $dividerColor;
+		display: inline-block;
+		margin-top: 3em;
+		padding-top: 1em;
+		width: 100%;
+	}
+
+	&__btn {
+		text-align: center;
+		min-width: 180px;
+
+		&:focus {
+			outline: 0;
+		}
+
+		/*Btn Btn--default Btn--main Btn--big Btn--arrow-forward */
+		&--back {
+			@mixin Btn--basic;
+			@mixin Btn--sub;
+			@mixin Btn--subBig;
+			@mixin Btn--subArrow-back;
+
+			&:hover,
+			&.hover,
+			&:focus,
+			&.focus {
+				@mixin Btn--main;
+			}
+		}
+		&--next,
+		&--finish {
+			@mixin Btn--default;
+			@mixin Btn--main;
+		 	@mixin Btn--big;
+			@mixin Btn--arrow-forward;
+			float: right;
+		}
+	}
+}
+
+
+.Slides--orderHint {
+
+	.Slide__content {
+		height: 340px;
+	}
+}

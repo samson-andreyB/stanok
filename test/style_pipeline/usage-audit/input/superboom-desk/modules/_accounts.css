@@ -1,0 +1,123 @@
+/* ACCOUNTS
+------------------------------------------------------------------------------*/
+
+.Account {
+	&__main.contentWrapper {
+		padding: 0;
+
+		.Form__set {
+			width: 100%;
+			box-sizing: border-box;
+		}
+
+		.Items {
+			border: 0;
+
+			&.CommercialOfferContents {
+				.Items__title {
+					margin-bottom: 7px;
+				}
+
+				.Items__list {
+					border: 0;
+					margin-top: 0;
+				}
+			}
+		}
+
+		.CommercialOfferSummary {
+			margin-bottom: 0;
+		}
+	}
+}
+
+.Specs--accountInfo {
+	.Specs__item {
+		padding-top: 0;
+	}
+
+	.Specs__item + .Specs__item {
+		margin-top: 1.2em;
+	}
+
+	.Specs__header {
+		margin-bottom: 0;
+		font-size: inherit;
+	}
+
+	.Specs__content {
+		margin-top: .3em;
+
+		.pseudoLink {
+			margin-left: 8px;
+			font-size: 11px;
+		}
+
+		.Field {
+			vertical-align: middle;
+		}
+
+		.Field + .btn {
+			margin-left: .6em;
+		}
+	}
+
+	.Specs__list {
+		list-style: none;
+		padding-left: 0;
+
+		& + .pseudoLink {
+			margin-left: 0;
+		}
+	}
+
+	.Specs__hint {
+		color: #777;
+	}
+}
+
+.Items--account {
+	.Items__header .Item__box {
+		vertical-align: bottom;
+	}
+
+	.Item {
+		&__box {
+			vertical-align: top;
+
+			&--client {
+				width: 25%;
+			}
+		}
+	}
+}
+
+.AccountResetPass {
+	font-size: 13px;
+	padding: 12px;
+
+	&__box {
+		& + & {
+			margin-top: 1em;
+		}
+
+		&--title {
+			color: #4c4c4c;
+			line-height: 1em;
+		}
+	}
+
+	&__link {
+		color: #999;
+		width: 290px;
+		text-overflow: ellipsis;
+	}
+
+	&__notice {
+		color: #b2b2b2;
+		font-size: 12px;
+		vertical-align: middle;
+		margin-left: 10px;
+		display: none;
+	}
+}

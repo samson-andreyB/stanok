@@ -1,0 +1,148 @@
+/* COMMON */
+@import "lib/desk/_common";
+@import "lib/modules/_rub";
+
+
+/* OMR THEME*/
+@import "modules/omr/_theme";
+
+
+/* MIXINS
+---------------------------------------------------*/
+@import "modules/_mixins";
+
+
+/* BLOCKS
+---------------------------------------------------*/
+@import "modules/_badge";
+@import "modules/_lock";
+@import "modules/_editor";
+@import "modules/omr/_stack";
+@import "modules/_photoPreview";
+@import "modules/_finderSelect";
+@import "modules/_orderStatus";
+@import "modules/_statusHistory";
+@import "modules/_richSelect";
+@import "modules/_items";
+@import "modules/_fancyModal";
+@import "modules/_tipContent";
+@import "modules/_availabilityList";
+@import "modules/_productCard";
+@import "modules/_form";
+@import "modules/_filter";
+
+
+/* CONTEXTS
+---------------------------------------------------*/
+@import "modules/_mailing";
+@import "modules/_mail-dev";
+@import "modules/_reviews";
+@import "modules/_feedback";
+@import "modules/_accounts";
+@import "modules/_promo";
+@import "modules/_relinking";
+@import "modules/_tracking";
+@import "modules/_routes";
+@import "modules/_contact";
+@import "modules/_calculator";
+@import "modules/_reports";
+@import "modules/_itemsAction";
+@import "modules/_searchStatistics";
+@import "modules/_webPush";
+@import "modules/_searchChanges";
+@import "modules/_contactsJournal";
+@import "modules/_commercialOffer";
+@import "modules/_addCustomerContact";
+@import "modules/_contactCard";
+@import "modules/_newClientCardRequest";
+@import "modules/_marketing";
+@import "modules/_okt";
+@import "modules/_expenseReport";
+@import "modules/_contracts";
+@import "modules/_status2";
+@import "modules/_subscribers";
+@import "modules/_ordersOKT";
+@import "modules/_customerVisitRequests";
+@import "modules/_banners";
+@import "modules/_okbReport";
+@import "modules/_attractionChannels";
+@import "modules/_hurryToBuy";
+@import "modules/_scheme";
+@import "modules/_territories";
+@import "modules/_industryIcon";
+@import "modules/_vote";
+@import "modules/_clientsFiles";
+@import "modules/_tender";
+@import "modules/_designProject";
+@import "modules/_goodsIndicators";
+@import "modules/_statistics";
+@import "modules/_indicatorsByDepartment";
+@import "modules/_commonIndicators";
+@import "modules/_unsubscribe";
+@import "modules/_unsubscribeOwnOption";
+@import "modules/_multipleOrders";
+@import "modules/_exportForExternalServices";
+@import "modules/_customerForm";
+@import "modules/_changeRequests";
+@import "modules/_phoneControl";
+@import "modules/_erp";
+@import "modules/_weekPriceConstructor";
+@import "modules/_ordersErp";
+@import "modules/_promoButtonConstructor";
+@import "modules/_promoRubricConstructor";
+@import "modules/_showcases";
+@import "modules/_holidayDecorations";
+@import "modules/_externalIdsProducts";
+@import "modules/_loyaltyProgram";
+@import "modules/_report";
+@import "modules/_bcCatalog";
+@import "lib/modules/_autocomplete";
+@import "modules/_schedule";
+@import "modules/_timeField";
+@import "modules/_ordersTotal";
+@import "modules/_photoList";
+@import "modules/_invoices";
+@import "modules/_badgeStatus";
+@import "modules/_returnRequests";
+
+
+/* CONTEXTS (OMR)
+---------------------------------------------------*/
+@import "modules/omr/_action";
+@import "modules/omr/_actionsList";
+@import "modules/omr/_actionsOrder";
+@import "modules/omr/_entity";
+@import "modules/omr/_newsletter";
+@import "modules/omr/_orders";
+@import "modules/omr/_print";
+@import "modules/omr/_shopCard";
+@import "modules/omr/_shopsList";
+@import "modules/omr/_vacancies";
+@import "modules/omr/_commercialOffer";
+
+
+/* CONTEXTS (OET)
+---------------------------------------------------*/
+@import "modules/oet/_customerOrders";
+@import "modules/oet/_overages";
+@import "modules/oet/_refunds";
+@import "modules/oet/_returnShortage";
+@import "modules/oet/_settlementsMutual";
+
+
+/* HELPERS
+---------------------------------------------------*/
+@import "lib/_helpers";
+
+/* MISC
+---------------------------------------------------*/
+@import "modules/_misc";
+@import "modules/_legacy";
+
+
+
+/* Удалить после внедрения UI autocomplete */
+.js-hiddenUI {
+	width: 0;
+	height: 0;
+}

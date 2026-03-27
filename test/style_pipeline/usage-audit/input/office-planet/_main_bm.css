@@ -1,0 +1,26 @@
+$theme_name: 'bm';
+$theme_brand: #21b04c;
+$theme_bHover: #27cc58;
+$theme_accent: #f59f0a;
+$theme_aHover: #ffbb33;
+$theme_layoutAccentColor: #f1ede4;
+
+$brandColor: #0990d9;
+$brandColorLighter: #00aff0;
+
+@import 'modules/_themeVars_op';
+
+$theme_logo: logo_bm.png;
+$theme_logo_width: 230px;
+$theme_logo_height: 73px;
+$theme_logo_s_width: 136px;
+$theme_logo_s_height: 43px;
+
+$theme_lowPrice_icon: low_price--3.png;
+$theme_lowPrice_width: 56px;
+$theme_lowPrice_height: 56px;
+
+$theme_placemarkCluster: #21af4b;
+$theme_placemarkClusterActive: #27cb57;
+
+@import '_modules';

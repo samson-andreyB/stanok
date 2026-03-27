@@ -1,0 +1,32 @@
+.CatalogBubble {
+	border: 1px solid #cdcdcd;
+	columns: 2;
+	margin-top: 15px;
+	padding: 10px 15px;
+	page-break-inside: avoid;
+	position: relative;
+	
+	&:before {
+		content: "";
+		background-image: resolve('arrow_grey_top.png');
+		width: width('arrow_grey_top.png');
+		height: height('arrow_grey_top.png');
+		position: absolute;
+		bottom: 100%;
+		left: 16px;
+	}
+
+	&__item {
+		display: block;
+	}
+
+	&__link {
+		display: inline-block;
+		padding-y: .4em;
+	}
+
+	&__counter {
+		color: #666;
+		font-size: 12px;
+	}
+}

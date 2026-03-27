@@ -1,0 +1,255 @@
+.Page--rubricator {
+	.Filter2 {
+		&--website {
+			width: 160px;
+		}
+
+		&--status {
+			width: 180px;
+		}
+	}
+
+	.ProductCardLayout {
+		margin-top: 5px;
+
+		.Form__field + .Tabs2--default,
+		.Tabs2--default + .controlPanel,
+		.ProductCardLayout__aux {
+			margin-top: 20px;
+		}
+	}
+
+	.ProductCardLayout__box--media {
+		flex-basis: 290px;
+	}
+
+	.ProductPhotos__preview {
+		height: 288px;
+	}
+
+	.Form__field--requirements {
+		margin-top: 20px;
+	}
+
+	.controlPanel + .Items--photoRequirements {
+		margin-top: 5px;
+	}
+
+	.Items--byCode {
+		.Items__list {
+			margin-top: 0;
+		}
+
+		.Items__header {
+			.Item__box {
+				padding-top: 0;
+			}
+		}
+
+		.Item__box {
+			&--number {
+				padding-right: 5px;
+			}
+
+			&--code {
+				.Field {
+					width: 90px;
+					text-align: left;
+				}
+			}
+
+			&--count {
+				.Field {
+					width: 40px;
+				}
+			}
+
+			&--info {
+				width: 100%;
+			}
+		}
+
+		.Item__remove {
+			margin-left: 8px;
+		}
+
+		.Items__add {
+			margin-top: 5px;
+		}
+	}
+
+	.Item__link {
+		padding-y: .2em;
+	}
+
+	.controlPanel--fixed {
+		border-top: 1px solid #dadada;
+		bottom: 0;
+		z-index: 1;
+		display: none;
+
+		&.controlPanel--active {
+			position: sticky;
+		}
+
+		.filter__checkbox {
+			margin-right: 7px;
+		}
+
+		.RichSelect2 {
+			width: 300px;
+		}
+
+		.btnError {
+			margin-left: 10px;
+		}
+	}
+
+	.Filters2--rubricCardGoods {
+		margin-top: 40px;
+
+		.Filter2--code {
+			width: 75px;
+		}
+	}
+}
+
+
+.Rubric {
+	&__header {
+		position: relative;
+		padding-left: 25px;
+		margin-left: -25px;
+	}
+
+	&__name {
+		font-size: 14px;
+		line-height: 20px;
+		font-weight: bold;
+	}
+
+	&__count {
+		margin-top: 8px;
+	}
+
+	&__countItem {
+		display: inline-block;
+
+		& + & {
+			margin-left: 10px;
+		}
+	}
+
+	&__amount {
+		font-weight: bold;
+	}
+
+	&__image {
+		margin-top: 20px;
+	}
+
+	&__controls {
+		position: absolute;
+		left: 0;
+		display: none;
+	}
+}
+
+.Rubricator {
+	display: flex;
+	flex-wrap: wrap;
+	margin-right: -40px;
+	padding-x: 20px;
+
+	&__item {
+		margin-right: 40px;
+		margin-top: 45px;
+		width: calc(25% - 40px);
+	}
+}
+
+.Rubrics--sub {
+	margin-top: 25px;
+
+	.Rubrics__item {
+		position: relative;
+		margin-y: 8px;
+		padding-left: 25px;
+		margin-left: -25px;
+	}
+
+	.Rubric__controls {
+		top: -2px;
+	}
+
+	.Rubrics__link {
+		line-height: 16px;
+		padding-y: .2em;
+	}
+
+	.Badge--clone {
+		margin-top: -1px;
+	}
+}
+
+.Rubric__header,
+.Rubrics__item {
+	&:hover,
+	&--active {
+		.Rubric__controls {
+			display: block;
+		}
+	}
+}
+
+.TipNote--action {
+	.TipNote__paragraph {
+		display: block;
+		color: $info;
+
+		&:hover {
+			color: $main;
+		}
+	}
+}
+
+.ProductCard--rubric {
+	.Box {
+		vertical-align: top;
+	}
+
+	.ProductCard__code {
+		padding-right: 10px;
+
+		.Field {
+			margin-left: 7px;
+			width: 112px;
+		}
+	}
+
+	.ProductCard__photoWrapper {
+		padding-right: 10px;
+	}
+
+	.ProductCard__photo {
+		width: 40px;
+		height: 40px;
+	}
+
+	.ProductCard__error {
+		vertical-align: middle;
+		color: $error;
+	}
+
+	.ProductCard__link {
+		padding-y: .2em;
+	}
+}
+
+.controlPanel--descriptionEtalon {
+	margin-top: 20px;
+}
+
+.TipNote2--scrollable.TipNote2--productDescriptionEtalon {
+	max-height: 322px;
+}

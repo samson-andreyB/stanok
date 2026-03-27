@@ -1,0 +1,109 @@
+.Invoices--default {
+	.filter {
+		&--branchSubdivision {
+			width: 145px;
+		}
+
+		&--result {
+			width: 180px;
+		}
+
+		&--type {
+			width: 110px;
+		}
+
+		&--printedForm,
+		&--author,
+		&--changed {
+			width: 150px;
+		}
+
+		&--clientOrderCodeName {
+			width: 300px;
+		}
+
+		.RichSelect__field {
+			min-width: 110px;
+		}
+	}
+
+	.filters--invoicesSent {
+		.filter {
+			&--author {
+				width: 190px;
+			}
+		}
+	}
+
+	.controlPanel {
+		& + .contentWrapper.accent {
+			margin-top: 3px;
+		}
+	}
+
+	.contentWrapper {
+		&.accent {
+			padding-top: 20px;
+			padding-bottom: 15px;
+		}
+
+		.Box {
+			vertical-align: top;
+
+			&--first {
+				width: 30%;
+
+				& + .Box {
+					padding-left: 2%;
+				}
+			}
+		}
+	}
+}
+
+.Spoiler--invoicesSent {
+	margin-top: 3px;
+	background-color: #efefef;
+
+	.Spoiler__header {
+		padding-y: 15px;
+	}
+
+	.Page--ordersOKT & {
+		.Specs {
+			max-width: none;
+			padding-right: 0;
+		}
+	}
+
+	.Specs + .Files {
+		margin-top: 5px;
+	}
+}
+
+.Spoiler--invoicesChangeHistory {
+	margin-top: 15px;
+
+	.Spoiler {
+		&__header {
+			padding: 0;
+		}
+
+		&__label {
+			font-size: 12px;
+		}
+
+		&__content {
+			padding: 5px 0 0;
+		}
+	}
+
+	.File {
+		cursor: default;
+
+		&:hover .File__name,
+		&__name {
+			color: #000;
+		}
+	}
+}

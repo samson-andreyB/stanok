@@ -1,0 +1,9 @@
+.Page--reportsPhotoRequirement {
+	.Report--productsDescription .controlPanel {
+		width: 920px;
+	}
+
+	.Upload--singleAttachment .File__name {
+		max-width: 620px;
+	}
+}

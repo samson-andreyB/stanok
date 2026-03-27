@@ -1,0 +1,50 @@
+.Page--favoriteOrder {
+	.tabsList--favoriteOrder {
+		margin-bottom: 20px;
+	}
+
+	.Items--productCompact .Item__box {
+		$MinWidth: 960;
+
+		&--checkbox {
+			width: calc(42 / $MinWidth * 100)%;
+		}
+		&--photo {
+			width: calc(95 / $MinWidth * 100)%;
+		}
+		&--price {
+			width: calc(95 / $MinWidth * 100)%;
+		}
+		&--prevOrder {
+			width: calc(85 / $MinWidth * 100)%;
+		}
+		&--quantity {
+			width: calc(62 / $MinWidth * 100)%;
+		}
+		&--availability {
+			width: calc(210 / $MinWidth * 100)%;
+		}
+		&--sum {
+			width: calc(115 / $MinWidth * 100)%;
+		}
+
+		.BuyCheaper {
+			width: auto;
+			word-wrap: break-word;
+		}
+	}
+
+	.listItemsPageControl {
+		margin-bottom: 15px;
+	}
+
+	@media (max-width: 1200px) {
+		.Content__box.Content__box--side {
+			display: none;
+		}
+
+		.Content__box.Content__box--products {
+			padding-left: 0;
+		}
+	}
+}

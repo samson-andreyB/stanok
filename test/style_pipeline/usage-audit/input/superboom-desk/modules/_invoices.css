@@ -1,0 +1,39 @@
+.Files--invoicesSent {
+	.Files__item + .Files__item,
+	.Files__hint {
+		margin-top: 5px;
+	}
+}
+
+.Spoiler--invoicesSent {
+	.Specs + .Files {
+		margin-top: 5px;
+	}
+}
+
+.Spoiler--invoicesChangeHistory {
+	margin-top: 15px;
+
+	.Spoiler {
+		&__header {
+			padding: 0;
+		}
+
+		&__label {
+			font-size: 12px;
+		}
+
+		&__content {
+			padding: 5px 0 0;
+		}
+	}
+
+	.File {
+		cursor: default;
+
+		&:hover .File__name,
+		&__name {
+			color: #000;
+		}
+	}
+}

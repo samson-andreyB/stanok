@@ -1,0 +1,118 @@
+@define-mixin ProductBlock--default $photoSize: '', $descriptionIndent: '', $infoIndent: '' {
+	display: table;
+
+	.ProductBlock__photoContainer {
+		display: table-cell;
+		width: 1px;
+		vertical-align: top;
+
+		@if $descriptionIndent != '' {
+			padding-right: $descriptionIndent;
+		}
+	}
+
+	.ProductBlock__photo {
+		display: inline-block;
+		vertical-align: middle;
+
+		@if $photoSize != '' {
+			width: $photoSize;
+			height: $photoSize;
+		}
+	}
+
+	.ProductBlock__description {
+		display: table-cell;
+		vertical-align: middle;
+	}
+
+	@if $infoIndent != '' {
+		.ProductBlock__info + .ProductBlock__info {
+			margin-top: $infoIndent;
+		}
+	}
+}
+
+
+.ProductBlock--notification {
+	@mixin ProductBlock--default 70px, 15px, 5px;
+	font-size: 14px;
+	line-height: 1.4;
+
+	.ProductBlock__info--points {
+		font-weight: bold;
+		font-size: 14px;
+	}
+}
+
+
+.ProductBlock--changeJackpotGoal {
+	@mixin ProductBlock--default 50px, 13px, 9px;
+
+	.ProductBlock__count {
+		font-weight: bold;
+	}
+
+	.ProductBlock__points {
+		color: $C_GRAY;
+		font-size: 14px;
+	}
+
+	.ProductBlock__pointsValue {
+		font-weight: bold;
+		color: $C_JACKPOT;
+	}
+
+	.ProductBlock__progressHint {
+		display: inline-block;
+		margin-left: 5px;
+		font-size: 12px;
+		color: $C_GRAY;
+	}
+
+	.Progress {
+		width: 13px;
+
+		.Progress__done {
+			min-height: 4px;
+		}
+	}
+
+	.Progress--jackpot {
+		margin-left: 15px;
+		width: 130px;
+
+		.Progress__done {
+			min-height: 4px;
+		}
+	}
+}
+
+
+.ProductBlock--getJackpotGift {
+	@mixin ProductBlock--default 32px, 13px, 5px;
+
+	.ProductBlock__count {
+		font-weight: bold;
+	}
+
+	.ProductBlock__points {
+		font-weight: bold;
+		font-size: 14px;
+	}
+}
+
+.ProductBlock--returnRequest {
+	@mixin ProductBlock--default 45px, 10px, 6px;
+
+	.ProductBlock__missingPhoto {
+		display: inline-block;
+		width: width('missing_photo_45x45.png');
+		height: height('missing_photo_45x45.png');
+		background-image: resolve('missing_photo_45x45.png');
+	}
+
+	.ProductBlock__info--name {
+		line-height: 1.15;
+	}
+}

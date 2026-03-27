@@ -1,0 +1,53 @@
+#fancybox-close {
+	margin: 0 0 -30px;
+	background-color: #fff;
+
+	&:before {
+		content: none;
+	}
+}
+
+.FancyModal--deactivateAccount,
+.FancyModal--activateAccount {
+	width: 340px;
+
+	.FancyModal__content {
+		word-break: break-all;
+		line-height: 1.6;
+	}
+}
+
+.FancyModal--loadingBonusesWarning {
+	width: 530px;
+}
+
+.FancyModal--oetReturnDeciding {
+	width: 490px;
+
+	.FancyModal__content {
+		line-height: 1.5;
+	}
+}
+
+.FancyModal--promoRubricConstructor {
+	width: 730px;
+
+	.FancyModal__content {
+		padding-x: 0;
+		padding-top: 10px;
+	}
+
+	.FancyModal__description {
+		font-size: 13px;
+		padding-x: 20px;
+		padding-top: 10px;
+	}
+
+	.FancyModal__control {
+		margin-top: 0;
+	}
+}
+
+.FancyModal--requestSaveError {
+	width: 520px;
+}

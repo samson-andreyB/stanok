@@ -1,0 +1,192 @@
+.Items--orders {
+	.Items {
+		&__header {
+			font-size: 12px;
+
+			.Item__box {
+				border-top: 0;
+				color: #777;
+				vertical-align: bottom;
+			} 
+		}
+	}
+
+	.Item {
+		&__aux {
+			font-size: 12px;
+			line-height: 1.4;
+			margin-top: 5px;
+		}
+
+		&__field {
+			margin-bottom: 1px;
+
+			&--bold {
+				font-weight: bold;
+			}
+		}
+
+		&__box {
+			border-top: 1px solid #dfdfdf;
+			color: #000;
+			cursor: default;
+			padding: 7px 6px;
+			line-height: 1.4;
+
+			@media (max-width: 1200px) {
+				font-size: 12px;
+			}
+
+			&--flags {
+				padding: 10px 0 10px 8px;
+
+				.Icon,
+				.icon {
+					display: block;
+					cursor: help;
+				}
+			}
+
+			&--responsible {
+				padding-right: 8px;
+				width: 17%;
+			}
+
+			&--number {
+				min-width: 120px;
+			}
+
+			&--status {
+				width: 13%;
+			}
+
+			&--items,
+			&--amount {
+				width: 1%;
+				padding-right: 12px;
+				text-align: right;
+
+				@media (max-width: 1200px) {
+					padding-right: 0;
+				}
+			}
+		}
+
+		&--fail {
+			background-color: #f0f0f0;
+		}
+
+		&--success {
+			background-color: #e6fad6;
+		}
+
+		&:not(.Item--fail):hover {
+			background-color: #fbf6cc;
+
+			.Item__box {
+				cursor: pointer;
+			}
+		}
+	}
+
+	.Icon--preparedOrder {
+		@mixin PreparedOrderIconSize 'size1';
+	}
+
+	.Icon--safe {
+		width: width('safe_13x13_4b6.png');
+		height: height('safe_13x13_4b6.png');
+		background-image: resolve('safe_13x13_4b6.png');
+	}
+
+	.icon + .icon,
+	.icon + .Icon,
+	.Icon + .icon,
+	.Icon + .Icon {
+		margin-top: 10px;
+	}
+}
+
+.OrderComments {
+	display: table;
+	width: 100%;
+	margin-bottom: 25px;
+	background-color: #e7e7e7;
+
+	&__box {
+		display: table-cell;
+		width: 50%;
+		padding: 20px 7px;
+
+		&:first-child {
+			padding-left: 15px;
+		}
+
+		&:last-child {
+			padding-right: 15px;
+		}
+	}
+}
+
+.OrderComment {
+	& + & {
+		margin-top: 18px;
+	}
+
+	&__value,
+	&__field {
+		padding-left: 5px;
+	}
+
+	&__field {
+		display: block;
+	}
+
+	&__value {
+		display: inline-block;
+		font-weight: bold;
+		margin-top: 6px;
+		line-height: 1.3;
+	}
+
+	&--status {
+		.OrderComment__value{
+			background-color: transparent;
+			padding: 5px 6px;
+			margin: 1px 0 -3px;
+			transition: all .5s ease;
+
+			&--success {
+				background-color: $C_STOWAGE;
+				color: #fff;
+			}
+
+			&--fail {
+				background-color: #ca130c;
+				color: #fff;
+			}
+		}
+	}
+}
+
+.FancyModal--changeOrderStatus {
+	width: 400px;
+}
+
+.OrderHeader--cabinet {
+	display: flex;
+	align-items: baseline;
+
+	.OrderHeader__badges {
+		margin-left: 1em;
+		cursor: default;
+
+		.PaidWithPoints + .PreparedOrder {
+			margin-left: .7em;
+		}
+
+		.PreparedOrder {
+			cursor: help;
+		}
+	}
+}

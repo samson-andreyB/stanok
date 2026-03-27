@@ -1,0 +1,128 @@
+.CatalogBrands--default {
+	.CatalogBrands__list {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-start;
+	}
+
+	.CatalogBrands__item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		box-sizing: border-box;
+		min-width: 130px;
+		margin-bottom: 10px;
+		border: 1px solid #ddd;
+		border-radius: $B_RAD;
+		background-color: #fff;
+		overflow: hidden;
+		color: $C_DEFAULT;
+		line-height: 19px;
+
+		&:hover {
+			border-color: $C_BRAND;
+			color: $C_BRAND;
+		}
+	}
+
+	.CatalogBrands__image {
+		max-width: 100%;
+		max-height: 100%;
+	}
+
+	.CatalogBrands__title {
+		max-width: 100%;
+	}
+
+	.CatalogBrands__list + .CatalogBrands__list {
+		margin-left: 10px;
+	}
+}
+
+.CatalogBrands--otherBrands {
+	.CatalogBrands__list {
+		margin-x: -7px;
+		margin-bottom: -15px;
+	}
+
+	.CatalogBrands__item {
+		height: 70px;
+		width: calc(100% / 6 - 14px);
+		margin-x: 7px;
+		padding: 10px;
+		margin-bottom: 15px;
+
+		@media (max-width: 1140px) {
+			width: calc(20% - 14px);
+		}
+	}
+}
+
+.CatalogBrands--stmBrands {
+	.CatalogBrands__list {
+		margin-x: -10px;
+		margin-bottom: -30px;
+	}
+
+	.CatalogBrands__item {
+		border-width: 0;
+		border-radius: 0;
+		overflow: visible;
+		width: calc(20% - 20px);
+		margin-x: 10px;
+		margin-bottom: 30px;
+
+		@media (max-width: 1080px) {
+			width: calc(25% - 20px);
+		}
+
+		&:hover {
+			.CatalogBrands__image {
+				border-color: $C_BRAND;
+			}
+		}
+	}
+
+	.CatalogBrands__title,
+	.CatalogBrands__image {
+		width: 212px;
+	}
+
+	.CatalogBrands__image {
+		border: 1px solid #ddd;
+		border-radius: $B_RAD;
+		margin-bottom: 8px;
+	}
+}
+
+.CatalogBrands--catalogMenu {
+	display: flex;
+
+	.CatalogBrands__list {
+		flex-direction: column;
+	}
+
+	.CatalogBrands__image {
+		width: 128px;
+	}
+}
+
+.CatalogBrands--single {
+	.CatalogBrands__link {
+		display: block;
+		max-width: 212px;
+		margin-x: auto;
+		transition: .2s;
+
+		&:hover {
+			opacity: 0.7;
+		}
+	}
+
+	.CatalogBrands__image {
+		display: block;
+		max-width: 100%;
+		border-radius: 10px;
+	}
+}

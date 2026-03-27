@@ -1,0 +1,51 @@
+.Switch--boolean {
+	display: inline-flex;
+	user-select: none;
+
+	.Switch__item {
+		&--positive {
+			.Switch__input:checked + .Switch__text {
+				border-color: $main;
+				background-color: $main;
+			}
+		}
+
+		&--negative {
+			.Switch__input:checked + .Switch__text {
+				border-color: $error;
+				background-color: $error;
+			}
+		}
+
+		.Switch__input:checked + .Switch__text {
+			z-index: 2;
+			color: #fff;
+		}
+	}
+
+	.Switch__item + .Switch__item {
+		margin-left: -1px;
+	}
+
+	.Switch__input {
+		display: none;
+	}
+
+	.Switch__text {
+		position: relative;
+		z-index: 1;
+		display: inline-block;
+		border: 1px solid #bbb;
+		width: 37px;
+		padding-y: 7px;
+		color: $C_GRAY_DARK;
+		font-size: 11px;
+		line-height: 1;
+		text-align: center;
+		background-color: #fff;
+
+		&:hover {
+			color: #000;
+		}
+	}
+}

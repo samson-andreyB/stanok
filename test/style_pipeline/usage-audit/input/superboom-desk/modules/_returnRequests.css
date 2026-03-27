@@ -1,0 +1,69 @@
+.ReturnRequests--default {
+	.filter {
+		.RichSelect {
+			width: 100%;
+		}
+
+		&--shop,
+		&--status {
+			width: 160px;
+		}
+		
+		&--accountable {
+			width: 240px;
+		}
+
+		&--search {
+			width: 220px;
+		}
+	}
+
+	.ProductCard__code {
+		margin-bottom: 5px;
+	}
+
+	.Form {
+		&__title {
+			color: #000;
+			font-weight: bold;
+		}
+
+		.Form__field {
+			.Form__input--reason {
+				width: 415px;
+			}
+
+			.Form__input--status {
+				width: 240px;
+			}
+
+			.Form__input--quantity {
+				width: 100px;
+			}
+
+			.Form__input--textarea {
+				width: 600px;
+			}
+		}
+	}
+
+	.Header.contentWrapper + .controlPanel {
+		.btn  + .btn {
+			margin-left: 7px;
+		}
+	}
+
+	.Group--info {
+		.Specs--default .Specs__name + .Specs__value {
+			padding-left: 0;
+		}
+
+		.Specs__value {
+			&--truncated {
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+		}
+	}
+}

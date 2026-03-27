@@ -1,0 +1,12 @@
+/* E-mail MARKETING
+------------------------------------------------------------------------------*/
+
+.Items--marketing {
+	.Item__box {
+		text-align: right;
+
+		&--client {
+			text-align: left;
+		}
+	}
+}

@@ -1,0 +1,15 @@
+.Logo {
+	display: block;
+	width: width('logo.svg');
+	height: 65px;
+	background-image: svg('logo', '[color]: #fff');
+	background-repeat: no-repeat;
+	background-position: center;
+	text-indent: 120%;
+	white-space: nowrap;
+	overflow: hidden;
+
+	.Page--main & {
+		@mixin Disabled;
+	}
+}

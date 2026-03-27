@@ -1,0 +1,27 @@
+@define-mixin PseudoTable {
+	display: table;
+	box-sizing: border-box;
+}
+
+@define-mixin PseudoTable__row {
+	display: table-row;
+	box-sizing: border-box;
+}
+
+@define-mixin PseudoTable__cell {
+	display: table-cell;
+	vertical-align: middle;
+	box-sizing: border-box;
+}
+
+.PseudoTable {
+	@mixin PseudoTable;
+}
+
+.PseudoTable__row {
+	@mixin PseudoTable__row;
+}
+
+.PseudoTable__cell {
+	@mixin PseudoTable__cell;
+}

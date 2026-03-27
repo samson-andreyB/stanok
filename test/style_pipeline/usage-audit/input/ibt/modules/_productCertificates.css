@@ -1,0 +1,120 @@
+.ProductCertificates--default {
+	display: flex;
+
+	.ProductCertificates__item {
+		flex: 1 1 50%;
+	}
+
+	.ProductCertificates__item + .ProductCertificates__item {
+		margin-left: 25px;
+	}
+}
+
+
+.ProductCertificate--default {
+	display: flex;
+
+	.ProductCertificate__gallery {
+		display: flex;
+	}
+
+	.ProductCertificate__thumbnailsItem {
+		position: relative;
+		box-sizing: border-box;
+		width: 40px;
+		height: 40px;
+		background-color: #fff;
+		cursor: pointer;
+
+		&:after {
+			content: '';
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			z-index: 1;
+			border: 1px solid #d7d7d7;
+			background: rgba(238, 238, 238, .25);
+		}
+
+		&:not(.ProductCertificate__thumbnailsItem--active):hover:after {
+			border-color: #aaa;
+			background: none;
+		}
+
+		&--active {
+			&:after {
+				border-width: 2px;
+				border-color: $main;
+				background: none;
+			}
+		}
+	}
+
+	.ProductCertificate__thumbnailsItem + .ProductCertificate__thumbnailsItem {
+		margin-top: 10px;
+	}
+
+	.ProductCertificate__thumbnail {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+
+	.ProductCertificate__thumbnails + .ProductCertificate__main {
+		margin-left: 10px;
+	}
+
+	.ProductCertificate__preview {
+		box-sizing: border-box;
+		border: 1px solid #d7d7d7;
+		width: 200px;
+		height: 285px;
+
+		&--empty {
+			background-color: #efefef;
+			background-image: resolve('icons/camera_60x47_ccc.png');
+			background-repeat: no-repeat;
+			background-position: 50% 43%;
+
+			.ProductCertificate__previewText {
+				margin-top: 165px;
+				color: #bbb;
+				font-weight: bold;
+				font-size: 14px;
+				text-align: center;
+				user-select: none;
+			}
+		}
+	}
+
+	.ProductCertificate__previewImage {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.ProductCertificate__controls {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 18px;
+	}
+
+	.ProductCertificate__specs {
+		margin-top: 10px;
+		margin-left: 20px;
+
+		.Specs__name {
+			font-weight: normal;
+		}
+
+		.Specs__value {
+			font-weight: bold;
+		}
+	}
+
+	.ProductCertificate__field {
+		display: none;
+	}
+}

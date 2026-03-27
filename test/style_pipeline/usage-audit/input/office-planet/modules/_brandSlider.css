@@ -1,0 +1,102 @@
+.brandSlider {
+	margin-bottom: 20px;
+
+	&__title {
+		color: #a4a4a4;
+		font-size: 14px;
+		text-align: center;
+		text-transform: uppercase;
+		letter-spacing: 2px;
+		margin-bottom: 0;
+	}
+
+	&__wrapper {
+		position: relative;
+		border: 1px solid #d6d6d6;
+	}
+
+	&__container {
+		position: relative;
+		margin: 0 45px;
+	}
+
+	&__list {
+		cursor: default;
+		overflow: hidden;
+		white-space: nowrap;
+		height: 58px;
+	}
+
+	&__set {
+		display: inline-block;
+		width: 100%;
+		height: 100%;
+		text-align: justify;
+		white-space: normal;
+		transition: all .7s ease;
+		vertical-align: middle;
+
+		&:before {
+			content: "";
+			display: inline-block;
+			height: 100%;
+			width: 1px;
+			vertical-align: middle;
+		}
+
+		&:after {
+			content: "";
+			display: inline-block;
+			width: 100%;
+			height: 1px;
+		}
+	}
+
+	&__item {
+		display: inline-block;
+		vertical-align: middle;
+		opacity: .8;
+		transition: opacity .2s ease;
+
+		& + .brandSlider__item {
+			margin-left: 0;
+		}
+
+		&:hover {
+			opacity: 1;
+		}
+	}
+
+	&__nav {
+		cursor: pointer;
+		font-size: 22px;
+		line-height: 1em;
+		padding: 18px 14px;
+		position: absolute;
+		top: 0;
+		transition: color .2s ease;
+
+		&--left {
+			left: 0;
+		}
+
+		&--right {
+			right: 0;
+		}
+
+		&:hover {
+			.Icon {
+				background-image: svg('brandArrow', '[color]: $theme_bHover');
+			}
+		}
+	}
+
+	&__img {
+		max-width: 95px;
+		max-height: 45px;
+	}
+}
+
+.brandSlider--mainPage {
+	margin-bottom: 0;
+}

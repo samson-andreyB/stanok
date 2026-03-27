@@ -1,0 +1,512 @@
+.pseudoLink.pseudoLink--loyaltyProgram {
+	color: #7518db;
+	font-size: 12px;
+	font-weight: bold;
+	cursor: help;
+	border: 0;
+
+	&:hover {
+		color: #7518db;
+	}
+
+	&:before {
+		content: '';
+		display: inline-block;
+		background-image: resolve('interface/loyaltyProgram_18x18.png');
+		width: width('interface/loyaltyProgram_18x18.png');
+		height: height('interface/loyaltyProgram_18x18.png');
+		margin-right: 4px;
+		vertical-align: middle;
+		margin-top: -3px;
+	}
+
+	&.pseudoLink--noText:before {
+		margin-right: 0;
+	}
+
+	.Order &.pseudoLink--noTipTip {
+		cursor: auto;
+	}
+
+	.LoyaltyProgramContent {
+		display: inline;
+
+		&--negative {
+			color: #c22119;
+		}
+	}
+
+	.Product__priceWrapper & {
+		font-weight: normal;
+	}
+
+	&.pseudoLink--loyaltyProgramGolden {
+		color: #d66700;
+		font-weight: bold;
+
+		&:before {
+			background-image: resolve('interface/loyaltyProgramGolden_18x18.png');
+		}
+
+		&:hover {
+			color: #ED8E00;
+
+			&:before {
+				background-image: resolve('interface/loyaltyProgramGolden_18x18_h.png');
+			}
+		}
+	}
+}
+
+.pseudoLink.pseudoLink--loyaltyProgramDefault {
+	cursor: default;
+}
+
+.TipTip--loyaltyProgram {
+	.TipTip__content {
+		padding: 10px 15px;
+	}
+
+	p + p {
+		margin-top: 5px;
+	}
+}
+
+.Form__field--loyaltyProgram {
+	.Form__input {
+		width: 85px;
+		margin-right: 4px;
+	}
+
+	.Form__error {
+		display: inline-block;
+		width: 180px;
+		margin-left: 10px;
+		margin-top: -4px;
+		vertical-align: middle;
+	}
+
+	.btn {
+		margin-left: 10px;
+	}
+
+	.hint {
+		margin-top: 5px;
+		color: #656565;
+		font-size: 12px;
+
+		.pseudoLink {
+			color: inherit;
+
+			&:hover {
+				color: #ff0030;
+			}
+		}
+	}
+}
+
+.tabsList.tabsList--loyaltyProgram.accent {
+	border-color: #8118e3;
+	margin-y: 35px 0;
+
+	li.active {
+		background: #8118e3;
+		border-color: #8118e3;
+	}
+}
+
+.ordersCompletedInfo.ordersCompletedInfo--loyaltyProgram {
+	padding: 20px;
+	border: 1px solid #E2DDD9;
+	border-width: 0 1px 1px;
+}
+
+.LoyaltyProgram {
+	&__group {
+		display: table;
+	}
+
+	&__box {
+		display: table-cell;
+	}
+
+	&__priceBonus {
+		margin-top: 1px;
+		color: #6b10b7;
+		font-size: 12px;
+
+		&--golden {
+			color: #d66700;
+		}
+	}
+
+	&__banner {
+		padding: 15px 25px 15px 40px;
+		max-width: 830px;
+		border-radius: 50px;
+		background: linear-gradient(to top, #7113d9, #a522f9);
+
+		&--pvs {
+			display: inline-block;
+			padding-x: 50px;
+			padding-y: 5px;
+			max-width: 100%;
+
+			.LoyaltyProgram__group,
+			.LoyaltyProgram__box {
+				height: 100%;
+			}
+
+			.LoyaltyProgram__balance {
+				margin-y: 10px;
+
+				& + .LoyaltyProgram__balance {
+					margin-left: 40px;
+				}
+			}
+
+			.LoyaltyProgram__balance--total {
+				margin: 0;
+				padding-y: 10px;
+				box-sizing: border-box;
+				padding-right: 43px;
+				min-height: 100%;
+
+				&:after {
+					content: '';
+					position: absolute;
+					display: block;
+					width: 3px;
+					top: 7px;
+					bottom: 7px;
+					right: 20px;
+					background-color: #000000;
+					background-color: rgba(0, 0, 0, .2);
+					border-radius: 1px;
+				}
+			}
+
+			.LoyaltyProgram__balance--personal + .LoyaltyProgram__balance--collegial {
+				@media (max-width: 1250px) {
+					display: block;
+					margin-left: 0;
+				}
+			}
+		}
+	}
+
+	&__logo {
+		position: relative;
+		display: inline-block;
+		vertical-align: top;
+		margin-right: 43px;
+		background-image: resolve('brand/logo_loyaltyProgram.png');
+		width: width('brand/logo_loyaltyProgram.png');
+		height: height('brand/logo_loyaltyProgram.png');
+
+		&:after {
+			content: '';
+			position: absolute;
+			display: block;
+			height: 70px;
+			width: 3px;
+			top: -3px;
+			right: -23px;
+			background-color: rgba(0, 0, 0, .2);
+			border-radius: 1px;
+		}
+	}
+
+	&__balance {
+		display: inline-block;
+		vertical-align: top;
+		color: #fff;
+		font-weight: bold;
+		font-size: 24px;
+		position: relative;
+	}
+
+	&__feature {
+		color: #ffd200;
+		font-size: 14px;
+		margin-bottom: 5px;
+	}
+
+	&__amount {
+		font-size: 34px;
+	}
+
+	&__aux {
+		color: #d2aced;
+		font-size: 12px;
+		font-weight: normal;
+		margin-top: 3px;
+	}
+
+	&__btn {
+		float: right;
+		margin-top: 15px;
+		padding: 9px 30px;
+		color: #fff;
+		font-size: 12px;
+		background: linear-gradient(to bottom, #b950fc, #9a34f0);
+		border-radius: 17px;
+		cursor: pointer;
+
+		&:hover {
+			color: #fff;
+			background: linear-gradient(to bottom, #d56fff, #af49f7);
+		}
+	}
+
+	&__description {
+		margin-top: 35px;
+		margin-left: 75px;
+		font-size: 18px;
+		line-height: 22px;
+	}
+
+	&__bonus {
+		display: table-cell;
+		white-space: nowrap;
+		vertical-align: middle;
+		padding-x: 15px;
+		width: 1%;
+
+		.btn {
+			width: 100%;
+			margin-top: 10px;
+		}
+	}
+}
+
+
+.LoyaltyProgram--promo {
+	margin-top: 0;
+	font-family: Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif;
+
+	.LoyaltyProgram__header {
+		background-image: resolve('loyaltyProgram/loyaltyProgramPromo_bg.png');
+		background-position: 550px 3px;
+		background-repeat: no-repeat;
+		padding: 92px 25px 124px;
+		margin: -20px -25px 0;
+
+		@media (max-width: 1100px) {
+			background-position: 400px 3px;
+		}
+	}
+
+	.LoyaltyProgram__banner {
+		display: inline-block;
+		padding: 32px 73px 25px;
+		border-radius: 89px;
+
+		.LoyaltyProgram__logo {
+			margin-right: 0;
+			background-image: resolve('brand/logo_loyaltyProgramPromo.png');
+			width: width('brand/logo_loyaltyProgramPromo.png');
+			height: height('brand/logo_loyaltyProgramPromo.png');
+
+			&:after {
+				display: none;
+			}
+		}
+	}
+
+	.LoyaltyProgram__content {
+		text-align: center;
+		padding-bottom: 100px;
+	}
+
+	.LoyaltyProgram__title {
+		padding: 50px 0 0;
+		font-size: 54px;
+		color: #111;
+		font-weight: bold;
+	}
+
+	.LoyaltyProgram__box {
+		display: inline-block;
+		width: 30%;
+		margin-top: 40px;
+		margin-bottom: 70px;
+		padding: 40px 0 30px;
+		vertical-align: top;
+		box-sizing: border-box;
+		border-radius: 18px;
+		background-color: #fff;
+		box-shadow: 0 8px 36px rgba(135, 135, 135, .25);
+
+		@media (max-width: 1100px) {
+			width: 31.5%;
+			padding: 32px 0 26px;
+		}
+	}
+
+	.LoyaltyProgram__box + .LoyaltyProgram__box {
+		margin-left: 5%;
+
+		@media (max-width: 1100px) {
+			margin-left: 2.75%;
+		}
+	}
+
+	.LoyaltyProgram__imgContainer {
+		position: relative;
+		display: inline-block;
+		overflow: hidden;
+		width: 280px;
+		height: 175px;
+
+		&:after {
+			content: '';
+			display: block;
+			position: absolute;
+			left: 0;
+			top: 0;
+			background-image: resolve('loyaltyProgram/overlay.png');
+			width: width('loyaltyProgram/overlay.png');
+			height: height('loyaltyProgram/overlay.png');
+		}
+
+		@media (max-width: 1100px) {
+			width: 240px;
+			height: 150px;
+
+			&:after {
+				background-image: resolve('loyaltyProgram/overlay_small.png');
+				width: width('loyaltyProgram/overlay_small.png');
+				height: height('loyaltyProgram/overlay_small.png');
+			}
+		}
+	}
+
+	.LoyaltyProgram__img {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.LoyaltyProgram__text {
+		height: 87px;
+		font-size: 16px;
+		line-height: 20px;
+		color: #333;
+	}
+
+	.LoyaltyProgram__textHeader {
+		margin: 27px 0 7px;
+		font-size: 20px;
+		font-weight: bold;
+	}
+
+	.LoyaltyProgram__list {
+		width: 880px;
+		margin: 45px auto 0;
+
+		& + .btn {
+			margin-top: 60px;
+		}
+	}
+
+	.LoyaltyProgram__item {
+		display: inline-block;
+		width: 45%;
+		height: 130px;
+		padding-top: 30px;
+		margin-bottom: 20px;
+		text-align: left;
+		background-position: 0 0;
+		background-repeat: no-repeat;
+		padding-left: 150px;
+		box-sizing: border-box;
+		font-size: 16px;
+		vertical-align: top;
+
+		&:nth-child(even) {
+			margin-left: 10%;
+		}
+
+		&--shopBag {
+			background-image: resolve('loyaltyProgram/shopBag.png');
+			background-position: 45px 17px;
+		}
+		&--payment {
+			background-image: resolve('loyaltyProgram/payment.png');
+			background-position: 26px 6px;
+		}
+		&--discount {
+			background-image: resolve('loyaltyProgram/discount.png');
+			background-position: 43px 16px;
+		}
+		&--shopping {
+			background-image: resolve('loyaltyProgram/shopping.png');
+			background-position: 28px 20px;
+		}
+	}
+
+	.LoyaltyProgram__listTitle {
+		margin-bottom: 5px;
+		font-size: 24px;
+		line-height: 24px;
+		font-weight: bold;
+	}
+}
+
+.tabsContent--loyaltyProgram {
+	.Filter--date {
+		.Form__input {
+			width: 110px;
+		}
+	}
+
+	.Filter--operation {
+		min-width: 125px;
+	}
+
+	.Items__list {
+		margin-top: 0;
+	}
+
+	.Item:last-child .Item__box {
+		border-bottom-width: 0;
+	}
+
+	.Items + .listItemsPageControl {
+		margin-top: 0;
+	}
+
+	.Item__box--date {
+		padding-left: 0;
+	}
+
+	.Item__box {
+		&--personalAccount,
+		&--collegialAccount {
+			text-align: right;
+			width: 1%;
+			white-space: nowrap;
+		}
+
+		&:last-child {
+			padding-right: 0;
+		}
+	}
+
+}
+
+.Page--loyaltyProgramPromo {
+	.Page__content .Content {
+		margin-bottom: 0;
+	}
+
+	.Page__main {
+		padding-bottom: 0;
+		background-image: linear-gradient(to top, #f4f4f4,
+		#fff), resolve('loyaltyProgram/loyaltyProgramPromoContent_bg.jpg');
+		background-position: 0 0, 50% 320px;
+		background-size: 1px 462px, auto;
+		background-repeat: repeat-x, no-repeat;
+	}
+}

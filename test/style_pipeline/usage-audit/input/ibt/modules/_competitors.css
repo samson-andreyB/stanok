@@ -1,0 +1,99 @@
+.Competitors--management {
+	.controlPanel {
+		padding-y: 15px;
+	}
+
+	.Box--searchItems {
+		.searchItems__field {
+			width: 12em;
+		}
+	}
+
+	.btnAdd + .pseudoLink {
+		margin-left: 17px;
+	}
+
+	$fixedColumnWidth: 190px;
+
+	.ScrollableTable {
+		&__fixed {
+			border-right-width: 0;
+			width: $fixedColumnWidth;
+
+			&--hasScrolled {
+				.Items__header {
+					&--floating {
+						z-index: 101;
+						width: $fixedColumnWidth;
+					}
+				}
+			}
+
+			.Items__header {
+				.Item__box {
+					white-space: nowrap;
+				}
+			}
+		}
+
+		&__scrollable {
+			margin-left: $fixedColumnWidth;
+
+			.Item__box {
+				white-space: nowrap;
+			}
+		}
+	}
+
+	.Item__box {
+		line-height: 1.333;
+		vertical-align: top;
+
+		&--controls {
+			width: 1%;
+			padding-x: 0;
+			white-space: nowrap;
+
+			.btnEdit {
+				margin-top: -.5em;
+				margin-bottom: -.1em;
+			}
+
+			.btnRemove {
+				margin-top: -.4em;
+				margin-bottom: -.1em;
+			}
+
+			.btnRemove {
+				padding: 0;
+			}
+		}
+
+		&--region {
+			padding-right: 35px;
+		}
+
+		&--priceType {
+			text-align: center;
+
+			.BadgeStatus {
+				margin-top: 0;
+				padding: 0;
+
+				&__indicator {
+					margin-top: 0;
+					cursor: default;
+				}
+			}
+		}
+
+		&--fill {
+			width: 100%;
+			padding-right: 0;
+		}
+	}
+
+	.Search2--itemsFilter .Search2__field {
+		width: 12em;
+	}
+}

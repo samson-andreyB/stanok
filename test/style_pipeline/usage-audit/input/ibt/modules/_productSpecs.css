@@ -1,0 +1,23 @@
+.ProductSpecs--default {
+	.ProductSpecs__list {
+		margin-bottom: 0;
+		padding-left: 15px;
+	}
+
+	.ProductSpecs__listItem + .ProductSpecs__listItem {
+		margin-top: 3px;
+	}
+
+	.ProductSpecs__value {
+		display: inline-block;
+		padding-y: 3px;
+	}
+
+	.ProductSpecs__controls {
+		margin-top: 10px;
+	}
+
+	.ProductSpecs__empty {
+		color: #999;
+	}
+}

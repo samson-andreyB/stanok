@@ -1,0 +1,105 @@
+.PrintLink {
+	white-space: nowrap;
+
+	& .Icon {
+		@mixin OtherIcon print, $linkColor;
+	}
+
+	&:hover {
+		text-decoration: underline;
+
+		.Icon {
+			background-image: svg('print', '[color]: $linkHoverColor');
+		}
+	}
+}
+
+.OrderCancelLink {
+	@mixin a;
+	white-space: nowrap;
+	cursor: pointer;
+
+	.Icon {
+		margin-top: -.1em;
+		margin-right: 0.35em;
+	}
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+.ErrorLink {
+	color: $theme_accent;
+	border-bottom: 1px dotted;
+	cursor: pointer;
+	font-size: 1.15em;
+	font-weight: bold;
+	margin-right: 28px;
+
+	&:hover {
+		 color: $theme_aHover;
+
+		.ErrorLink__icon {
+			@mixin OtherIcon feedbackRecieved, $theme_aHover;
+		}
+	}
+
+	&__icon {
+		@mixin Icon;
+		@mixin OtherIcon feedbackRecieved, $theme_accent;
+		margin-top: -.2em;
+	}
+
+	&__icon&__icon {
+		margin-x: -28px 6px;
+	}
+}
+
+.UploadLink,
+.DownloadLink {
+	white-space: nowrap;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+.UploadLink {
+	& .Icon {
+		@mixin OtherIcon upload, $linkColor;
+	}
+
+	&:hover {
+		.Icon {
+			background-image: svg('upload', '[color]: $linkHoverColor');
+		}
+	}
+}
+
+.DownloadLink {
+	& .Icon {
+		@mixin OtherIcon download, $linkColor;
+	}
+
+	&:hover {
+		.Icon {
+			background-image: svg('download', '[color]: $linkHoverColor');
+		}
+	}
+}
+
+.ClearCart {
+	& .Icon {
+		@mixin OtherIcon сlearCart, $linkColor;
+		margin-right: .35em;
+	}
+
+	&:hover {
+		text-decoration: underline;
+
+		.Icon {
+			background-image: svg('сlearCart', '[color]: $linkHoverColor');
+		}
+	}
+}

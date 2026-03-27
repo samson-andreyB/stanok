@@ -1,0 +1,44 @@
+.RichSelect {
+	&__option {
+		padding-left: 28px;
+
+		&--active {
+			background-color: #eee;
+		}
+	}
+}
+
+.RichSelect__field {
+	@mixin Field;
+
+	&.RichSelect__field {
+		line-height: 1.3;
+		padding-top: 5px;
+		padding-right: 1.8em;
+	}
+	&:after {
+		top: 0.95em;
+	}
+
+	&--oneLevel {
+		.RichSelect__itemLabel {
+			font-weight: normal;
+		}
+	}
+
+	.RichSelect--error & {
+		border-color: $C_ERROR;
+	}
+}
+
+.RichSelect--counterparties {
+	width: 100%;
+
+	.RichSelect__options {
+		max-height: 175px;
+	}
+}
+
+.RichSelect--wide {
+	width: 100%;
+}

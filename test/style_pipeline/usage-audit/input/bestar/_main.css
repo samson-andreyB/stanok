@@ -1,0 +1,50 @@
+@charset "utf-8";
+
+
+/* Переменные, примеси */
+@import "modules/_var";
+@import "modules/_mixins";
+
+
+/* Общие стили */
+@import "lib/_base";
+@import "lib/stm/_file";
+@import "modules/_common";
+@import "lib/stm/_mixins";
+@import "lib/stm/_fancybox";
+
+
+/* Простые блоки */
+@import "modules/_page";
+@import "modules/_icon";
+@import "modules/_agreement";
+@import "modules/_logo";
+@import "modules/_button";
+@import "modules/_search";
+@import "modules/_viewer";
+@import "modules/_form";
+@import "modules/_product";
+@import "modules/_list";
+@import "modules/_breadcrumbs";
+@import "modules/_message";
+@import "modules/_pagination";
+@import "modules/_slider";
+@import "modules/_section";
+
+
+/* Составные блоки */
+@import "modules/_header";
+@import "modules/_footer";
+@import "modules/_menu";
+@import "modules/_pageControl";
+@import "modules/_showcase";
+@import "modules/_productList";
+@import "modules/_productCard";
+@import "modules/_error";
+@import "modules/_troubleReport";
+@import "modules/_shops";
+
+/* Разное */
+@import "modules/_animations";
+@import "modules/_helpers";
+@import "modules/_misc";

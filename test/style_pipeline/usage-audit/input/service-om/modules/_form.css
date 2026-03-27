@@ -1,0 +1,101 @@
+.Form {
+	box-sizing: border-box;
+	max-width: 850px;
+	padding: 20px 25px;
+	background-color: #f9f9f9;
+
+	&__container {
+		margin-left: 160px;
+	}
+
+	&__controls {
+		margin: 1.5em 0;
+	}
+
+	&__field {
+		position: relative;
+
+		& + & {
+			margin-top: 1.5em;
+		}
+	}
+
+	&__label {
+		display: inline-block;
+		width: 0;
+		margin-left: -160px;
+		margin-right: 160px;
+		padding-top: 11px;
+		vertical-align: top;
+		white-space: nowrap;
+		cursor: pointer;
+	}
+
+	&__input {
+		box-sizing: border-box;
+		width: 100%;
+		height: 40px;
+		padding: 4px 8px 2px;
+		border: 1px solid #d1d1d1;
+		border-radius: 2px;
+		color: $colorText;
+		outline: none;
+
+		textarea& {
+			height: 150px;
+			padding-top: 10px;
+			padding-bottom: 9px;
+		}
+
+
+		&:hover,
+		&:focus {
+			border-color: #9e9e9e;
+		}
+
+		select& {
+			padding-right: 25px;
+			appearance: none;
+			background-image: svg('arrow_10x5.svg', '[color]: $colorText');
+			background-position: right 8px center;
+			background-repeat: no-repeat;
+			color: $colorText !important;
+			cursor: pointer;
+
+			@mixin selectRemoveOutline;
+		}
+	}
+
+	input[type="checkbox"] {
+		vertical-align: middle;
+		margin-top: -.1em;
+		margin-right: .5em;
+	}
+
+	&__error {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		display: none;
+		font-size: 12px;
+		line-height: 1.3;
+		color: $colorError;
+	}
+
+	.Form__field--checkbox {
+		padding-left: 1.3em;
+		position: relative;
+		line-height: 180%;
+
+		input[type="checkbox"] {
+			position: absolute;
+			top: 8px;
+			left: 0;
+		}
+
+		.Form__error {
+			position: static;
+			margin-top: 2px;
+		}
+	}
+}

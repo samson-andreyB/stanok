@@ -1,0 +1,131 @@
+.Plaques {
+	width: 100%;
+	box-sizing: border-box;
+	border: 1px solid #8a8a8a;
+	padding: 4px 0 0 4px;
+	background-color: #fff;
+	cursor: default;
+	position: relative;
+	user-select: none;
+
+	&:hover {
+		border-color: #ababab;
+	}
+}
+
+.Plaques--hasDropdown {
+	position: relative;
+
+	.Plaques__dropdown {
+		display: none;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		margin-left: -1px;
+		margin-top: 1px;
+		width: calc(100% + 2px);
+		z-index: 100;
+		box-shadow: 0 8px 12px rgba(0,0,0,.18);
+	}
+}
+
+.Plaques--showDropdown {
+	.Plaques__dropdown {
+		display: block;
+	}
+}
+
+.Plaques--simple {
+	.Plaque__label {
+		padding-right: 20px;
+		line-height: 1.25;
+		background-image: resolve('icons/cross_7x7_bcb.png');
+		background-repeat: no-repeat;
+		background-position: center right 5px;
+
+		&:hover {
+			background-image: resolve('icons/cross_7x7_e55.png');
+		}
+	}
+}
+
+.Plaques--error,
+.Plaques--error:hover {
+	border-color: $C_ERROR;
+}
+
+.Plaque {
+	display: inline-block;
+	position: relative;
+	margin: 0 4px 4px 0;
+}
+
+.Plaque__label {
+	display: block;
+	padding: 4px 20px 3px 5px;
+	border-radius: 2px;
+	font-size: 14px;
+}
+
+.Plaque__icon {
+	position: absolute;
+}
+
+.Plaque--item {
+	.Plaque__label {
+		background-color: #e2f3ed;
+	}
+	.Plaque__icon {
+		width: 11px;
+		height: 11px;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		right: 5px;
+		margin-top: auto;
+		margin-bottom: auto;
+		background-image: resolve('icons/cross_7x7_bcb.png');
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+		cursor: pointer;
+
+		&:hover {
+			background-image: resolve('icons/cross_7x7_e55.png');
+
+			& + .Plaque__label {
+				background-color: #d4e9e2;
+			}
+		}
+	}
+}
+
+.Plaque--add {
+	cursor: pointer;
+
+	.Plaque__icon {
+		position: absolute;
+		width: 8px;
+		height: 8px;
+		top: 0;
+		bottom: 0;
+		left: 6px;
+		margin-top: auto;
+		margin-bottom: auto;
+		background-image: resolve('icons/plus_8x8_18a.png');
+	}
+	.Plaque__label {
+		padding-left: 20px;
+		padding-right: 5px;
+		background: none;
+		color: #1782aa;
+	}
+}
+
+.Plaque--add:hover {
+	.Plaque__icon {
+		background-image: resolve('icons/plus_8x8_2b8.png');
+	}
+	.Plaque__label {
+		color: #28bd8b;
+	}
+}

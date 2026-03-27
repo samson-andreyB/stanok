@@ -1,0 +1,43 @@
+/* Stack
+---------------------------------------------------------------------- */
+
+/*
+<div class="Stack">
+	<div class="Stack__list">
+		<div class="Stack__item">
+			<input type="text" class="Specs__input">
+		</div>
+	</div>
+	<div class="Stack__tmpl">
+		<div class="Stack__item">
+			<input type="text" class="Specs__input">
+		</div>
+	</div>
+	<div class="Stack__add">
+		<span class="Stack__trigger">Добавить еще</span>
+	</div>
+</div>
+*/
+
+.Stack {
+	&__list,
+	&__item {
+		display: block;
+		margin: 0;
+		padding: 0;
+	}
+	&__tmpl {
+		display: none;
+	}
+	&__add {
+		margin-top: 1em;
+	}
+	&__trigger {
+		@mixin pseudoLink;
+	}
+
+	&__item + &__item {
+		margin-top: .75em;
+	}
+}
+

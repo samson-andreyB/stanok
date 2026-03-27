@@ -1,0 +1,92 @@
+.ProductRecomendation {
+	border: 1px solid #c3c3c3;
+	border-top: 0;
+	box-shadow: 0 2px 4px rgba(0,0,0,.15);
+	opacity: 0;
+	left: -1px;
+	position: absolute;
+	top: 100%;
+	transition: all .25s ease .25s;
+	visibility: hidden;
+	width: 100%;
+	z-index: 100;
+
+	& .Product__box {
+		padding: 0 10px;
+
+		&.photo {
+			width: 70px;
+		}
+
+		&.amount {
+			vertical-align: middle;
+		}
+		& .Price {
+			margin-top: -3px;
+			font-size: 16px;
+
+			&--initial {
+				font-size: 14px;
+			}
+		}
+		& .Product__name {
+			display: block;
+			font-family: verdana;
+			font-size: 11px;
+			height: 31px;
+			margin-top: -3px;
+			overflow: hidden;
+			padding: 0;
+		}
+	}
+}
+
+.ProductRecomendation__productContainer {
+	margin-left: 150px;
+	padding: 10px;
+}
+
+.ProductRecomendation__box {
+	@mixin PseudoTable__cell;
+
+	&.title {
+		background: #00aff0;
+		color: #fff;
+		font-size: 17px;
+		float: left;
+		padding: 10px;
+		position: relative;
+		width: 150px;
+
+		&:after {
+			content: "";
+			background-image: resolve('interface/arrow_blue_small_r.png');
+			background-repeat: no-repeat;
+			background-position: 0 50%;
+			height: 100%;
+			left: 100%;
+			position: absolute;
+			top: 0;
+			width: 4px;
+		}
+	}
+
+	&.product {
+		border-left: 1px dotted #898989;
+
+		&:first-child {
+			border-left: 0;
+		}
+	}
+}
+
+.ProductRecomendation__group {
+	@mixin PseudoTable;
+	@mixin infoBg--img;
+	width: 100%;
+}
+
+.ProductRecomendation__box {
+	@mixin PseudoTable__cell;
+	width: 50%;
+}

@@ -1,0 +1,754 @@
+/* USEFUL - BADGE
+---------------------------------------------------------------------- */
+
+/*doc
+
+## Badge
+
+Блок для реализации индикаторов.
+
+```html
+<span class="Badge"></span>
+```
+*/
+
+.Badge,
+.BadgeTag,
+.BadgeTail,
+.BadgeText,
+.BadgeEdge {
+	box-sizing: border-box;
+	display: inline-block;
+}
+
+
+/*doc
+
+<div class="BadgeContainer">
+	<span class="Badge BadgeTag sizeS action">
+		<span class="BadgeTail"></span><span class="BadgeText">Акция</span>
+	</span>
+	<span class="Badge BadgeTag sizeS special">
+		<span class="BadgeTail"></span><span class="BadgeText">Спец<span class="cork">предложение</span></span>
+	</span>
+	<span class="Badge BadgeOutline BadgeStatus wait">
+		<span class="BadgeStatus__indicator"></span>
+		Опубликована / Черновик
+	</span>
+</div>
+*/
+
+.BadgeContainer .Badge {
+	margin-right: 4px;
+}
+.BadgeContainer .Badge:last-child {
+	margin-right: 0;
+}
+
+.BadgeTag {
+	cursor: default;
+	white-space: nowrap;
+}
+
+.BadgeTail {
+	/*background: url(/img/zakaz/interface/badge-tag_tails.png) no-repeat;*/
+	background: url(data:image/png;base64,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) no-repeat;
+	vertical-align: bottom;
+	white-space: normal;
+}
+
+.BadgeText {
+	border: 1px solid transparent;
+	border-radius: .3em;
+	line-height: 1;
+}
+.BadgeTail + .BadgeText {
+	border-radius: 0;
+	border-top-right-radius: .3em;
+	border-bottom-right-radius: .3em;
+}
+.BadgeEdge {
+	border: 1px solid transparent;
+	border-radius: 0 $B_RAD $B_RAD 0;
+}
+
+.BadgeTag.outline .BadgeTail + .BadgeText {
+	border-left: none;
+}
+
+.BadgeTag.action {
+	font-size: 12px;
+
+	.BadgeText {
+		border-color: #d23d3d;
+		background-color: #d23d3d;
+		color: #fff;
+	}
+
+	.BadgeEdge {
+		color: #fff;
+	}
+}
+.BadgeTag.outline.action .BadgeText {
+	background-color: transparent;
+	color: #d23d3d;
+}
+.BadgeTag.sale .BadgeText {
+	border-color: #4f98d6;
+	background-color: #4f98d6;
+	color: #fff;
+}
+.BadgeTag.jackpot {
+	.BadgeText {
+		border-color: #4fb861;
+		background-color: #4fb861;
+		color: #fff;
+	}
+
+	.BadgeEdge {
+		color: #fff;
+	}
+}
+.BadgeTag.novelty .BadgeText {
+	border-color: #4fb861;
+	background-color: #4fb861;
+	color: #fff;
+}
+.BadgeTag.bestseller .BadgeText {
+	border-color: #f48840;
+	background-color: #f48840;
+	color: #fff;
+}
+
+.BadgeTag.tradeFormat .BadgeText {
+	border-color: #e4e0b9;
+	background-color: #e4e0b9;
+}
+
+.BadgeTag.action--slaughter .BadgeText {
+	border-color: #ffb012;
+	background-color: #ffb012;
+	background-image: resolve('slaughter_xs.png');
+	min-width: width('slaughter_xs.png');
+	min-height: height('slaughter_xs.png');
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	color: transparent;
+}
+
+.BadgeTag.action--approve {
+	.BadgeText {
+		border-color: #34b2ab;
+		background-color: #34b2ab;
+	}
+}
+
+.BadgeTag.action--brandSamson {
+	&.action .BadgeText,
+	&.action.action--type .BadgeEdge {
+		border-color: $C_BRAND;
+	}
+
+	&.sizeS .BadgeText {
+		background-color: #fff;
+		color: $C_BRAND;
+	}
+
+	&.sizeXS .BadgeText,
+	&.action.action--type .BadgeEdge {
+		background-color: $C_BRAND;
+	}
+}
+
+
+.BadgeTag.sizeXS .BadgeText {
+	border-radius: 0;
+	font-size: 10px;
+	font-weight: bold;
+	line-height: 9px;
+	padding: 2px 3px;
+}
+.BadgeTag.sizeXS.outline .BadgeText {
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+
+
+.BadgeTag.sizeS .BadgeTail {
+	height: 18px;
+	width: 9px;
+}
+.BadgeTag.sizeS.outline .BadgeTail {
+	height: 17px;
+	width: 11px;
+}
+.BadgeTag.sizeS {
+	.BadgeText {
+		padding: .33em .75em;
+		font-weight: bold;
+		font-size: 12px;
+		line-height: 1;
+	}
+
+	.BadgeEdge {
+		font-weight: bold;
+		line-height: 1;
+	}
+
+	.ActionBadgeType {
+		display: inline-block;
+		padding: .33em .5em;
+	}
+}
+
+.BadgeTag.sizeS.outline .BadgeText {
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+.BadgeTag.sizeS .BadgeText .cork {
+	display: none;
+}
+
+.BadgeTag.sizeS.outline.action .BadgeTail {
+	background-position: 0 -52px;
+}
+
+
+.BadgeTag.sizeL .BadgeTail {
+	height: 24px;
+	width: 12px;
+}
+.BadgeTag.sizeL .BadgeText {
+	font-size: 18px;
+	font-weight: normal;
+	padding: 2px 8px 4px 5px;
+}
+.BadgeTag.sizeL.outline .BadgeText {
+	padding-top: 1px;
+	padding-bottom: 3px;
+}
+
+.BadgeTag.sizeL.action .BadgeTail {
+	background-position: 0 -23px;
+}
+.BadgeTag.sizeL.outline.action .BadgeTail {
+	background-position: 0 -74px;
+}
+.BadgeTag.sizeL.jackpot .BadgeTail {
+	background-position: -85px -23px;
+}
+
+.BadgeTag.action.action--type {
+	display: inline-flex;
+
+	.BadgeText {
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
+	.BadgeEdge {
+		border-color: #9b2c23;
+		background-color: #9b2c23;
+
+		.icon {
+			&.gift {
+				background-image: resolve('gift_white.png');
+				width: 16px;
+				height: 15px;
+				background-position: 0 -2px;
+				display: inline-block;
+				margin-right: 0;
+				vertical-align: middle;
+				margin-y: -.2em;
+			}
+
+			&.promoSet {
+				background-image: resolve('promoSet_white.png');
+				width: width('promoSet_white.png');
+				height: height('promoSet_white.png');
+				display: inline-block;
+				margin-right: 0;
+				vertical-align: middle;
+				margin-top: -.3em;
+				margin-bottom: -.1em;
+			}
+
+			&.icon--approve {
+				background-image: svg('approve_12x12', '[color]: #fff');
+				width: width('approve_12x12.svg');
+				height: height('approve_12x12.svg');
+				margin-right: 0;
+				margin-top: -3px;
+				margin-bottom: -1px;
+			}
+
+			&.icon--lightning {
+				background-image: svg('lightning_7x14', '[color]: #fff');
+				width: width('lightning_7x14.svg');
+				height: height('lightning_7x14.svg');
+				margin-right: 0;
+				margin-bottom: -2px;
+				margin-top: -4px;
+			}
+		}
+
+		.Icon2--brandSamson {
+			margin-top: -4px;
+			margin-bottom: -2px;
+			margin-x: -3px;
+		}
+	}
+
+	&.sale {
+		.BadgeEdge {
+			border-color: #3479b3;
+			background-color: #3479b3;
+		}
+	}
+
+	&.jackpot {
+		.BadgeEdge {
+			border-color: #45a354;
+			background-color: #45a354;
+		}
+	}
+
+	&.action--approve {
+		.BadgeEdge {
+			border-color: #159790;
+			background-color: #159790;
+		}
+	}
+
+	&.bestseller {
+		.BadgeEdge {
+			border-color: #ed7508;
+			background-color: #ed7508;
+		}
+	}
+}
+
+.BadgeTag.sizeS.action.action--type .ActionBadgeType + .ActionBadgeType {
+	border-left: 1px solid #c3807b;
+}
+
+.BadgeTag.sizeS.action.action--type.sale .ActionBadgeType + .ActionBadgeType {
+	border-left-color: #4f98d6;
+}
+
+.BadgeTag.sizeS.action.action--type.jackpot .ActionBadgeType + .ActionBadgeType {
+	border-left-color: #4fb861;
+}
+
+.BadgeTag--bonusProgram {
+	.BadgeText {
+		border-color: $C_VIOLET;
+		color: $C_VIOLET;
+	}
+}
+
+/*
+<a href="#" class="Badge BadgeOutline op">ОП</a>
+*/
+
+.BadgeOutline {
+	border: 1px solid #444;
+	border-radius: .3em;
+	color: #444;
+	cursor: default;
+	display: inline-block;
+	font-size: 10px;
+	font-weight: bold;
+	line-height: 1;
+	padding: .44em .55em .22em;
+	text-decoration: none;
+}
+a.BadgeOutline {
+	cursor: pointer;
+	
+	&:hover {
+		opacity: .7;
+		text-decoration: none;
+	}
+}
+
+.BadgeOutline.siteSelector {
+	border-color: #155996;
+	color: #155996;
+	font-size: 10px;
+	vertical-align: middle;
+	
+	&:hover {
+		opacity: .7;
+	}
+	
+	&:after {
+		content: "";
+		display: inline-block;
+		border: 3px solid transparent;
+		border-top-color: #155997;
+		border-bottom-width: 0;
+		width: 0;
+		height: 0;
+		vertical-align: middle;
+		margin-top: -.15em;
+		margin-left: .3em;
+	}
+}
+.SiteSelectorLinks {
+	line-height: 21px;
+}
+
+.BadgeOutline.op {
+	border-color: #d23d3d;
+	color: #d23d3d;
+}
+.BadgeOutline.oz {
+	border-color: #2095ca;
+	color: #2095ca;
+}
+.BadgeOutline.ob {
+	border-color: #0066b2;
+	color: #0066b2;
+}
+.BadgeOutline.bm {
+	border-color: #21b04c;
+	color: #21b04c;
+}
+.BadgeOutline.gv {
+	border-color: #11ba98;
+	color: #11ba98;
+}
+.BadgeOutline.gs {
+	border-color: #005383;
+	color: #005383;
+}
+.BadgeOutline--jackpot {
+	padding: 7px 6px;
+	line-height: 0;
+	font-size: 12px;
+	font-weight: normal;
+	border-color: currentColor;
+	color: $C_JACKPOT;
+}
+
+.BadgeOutline--jackpotError {
+	color: #c91c10;
+}
+
+.BadgeOutline.giftCount {
+	border-color: #429600;
+	color: #429600;
+	font-size: 12px;
+	line-height: 12px;
+	padding: 3px 5px;
+}
+
+
+
+/* Если бирка с выпадающим при наведении блоком — она должна становиться прозрачней и иметь вопрошающий курсор */
+
+.BadgeTag.Bubble.onHover .BadgeTail,
+.BadgeTag.Bubble.onHover .BadgeText,
+.BadgeTag.Bubble.onHover .BadgeEdge,
+.BadgeTag.TipTip__active {
+	transition: opacity .1s ease-in-out;
+}
+.BadgeTag.Bubble.onHover:hover .BadgeTail,
+.BadgeTag.Bubble.onHover:hover .BadgeText,
+.BadgeTag.Bubble.onHover:hover .BadgeEdge,
+.BadgeTag.TipTip__active:hover {
+	cursor: help;
+	opacity: .75;
+}
+
+.BadgeContainer a.BadgeTag.TipTip__active:hover {
+	cursor: pointer;
+}
+
+.BadgeTag .BubbleContent {
+	white-space: normal;
+}
+
+
+/*doc
+```html
+<span class="Badge BadgeOutline BadgeStatus wait">
+	<span class="BadgeStatus__indicator"></span>
+	Опубликована / Черновик
+</span>
+```
+*/
+
+.BadgeStatus {
+	border-radius: 1.5em;
+	color: #666;
+	font-size: 10px;
+	font-weight: normal;
+	line-height: 1.5;
+	margin-top: -.2em;
+	padding: 1px 6px;
+	vertical-align: middle;
+}
+.BadgeStatus__indicator {
+	background-color: #aaa;
+	-webkit-border-radius: 50%;
+		 -moz-border-radius: 50%;
+					border-radius: 50%;
+	display: inline-block;
+	height: .95em;
+	vertical-align: middle;
+	margin-top: -.18em;
+	width: .95em;
+}
+
+.BadgeStatus.wait {
+	border-color: #ffb400;
+}
+.BadgeStatus.wait .BadgeStatus__indicator,
+.BadgeStatus__indicator.wait {
+	background-color: #ffb400;
+}
+
+.BadgeStatus.work {
+	border-color: #99c62f;
+}
+.BadgeStatus.work .BadgeStatus__indicator,
+.BadgeStatus__indicator.work {
+	background-color: #99c62f;
+}
+
+.BadgeStatus.disable {
+	border-color: #d1d1d1;
+	color: #666;
+}
+.BadgeStatus.disable .BadgeStatus__indicator,
+.BadgeStatus__indicator.disable {
+	background-color: #d1d1d1;
+}
+
+
+/*doc
+```html
+<span class="Badge Badge--counter">23</span>
+```
+*/
+
+.Badge--counter {
+	@mixin counter;
+	min-width: .7em;
+}
+
+
+
+/*doc
+```html
+<span class="BadgedInput BadgedInput--pzk"><input class="ProductItem__count ProductItemBuyGroup__field BadgedInput__field" type="text" value="1"><span class="BadgedInput__title">ПЗК</span></span>
+```
+*/
+
+.BadgedInput {
+	position: relative;
+	display: inline-block;
+
+	&__title {
+		position: absolute;
+		left: 0;
+		top: 99%;
+		border-radius: 0 0 $B_RAD $B_RAD;
+		color: #fff;
+		font-weight: bold;
+		font-size: 10px;
+		line-height: 1.4;
+		width: 100%;
+		text-align: center;
+	}
+
+	&--pzk &__field {
+		border-color: $C_PZK;
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+	&--pzk &__title {
+		background-color: $C_PZK;
+	}
+
+	&--notMultiple &__field {
+		border-color: #e87d2d;
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+	&--notMultiple &__title {
+		background: #e87d2d;
+		font-size: 9px;
+		line-height: 1em;
+		white-space: nowrap;
+	}
+}
+
+
+.BadgeAction--slaughter {
+
+	&.BadgeAction--sizeL,
+	&.BadgeAction--sizeM {
+		background-color: $C_BRAND;
+		border-radius: 50%;
+		border: 2px solid #fff;
+		box-sizing: border-box;
+		cursor: default;
+		display: inline-block;
+		text-align: center;
+		
+		.BadgeAction__label {
+			display: block;
+			color: #fff;
+		}
+		.BadgeAction__value {
+			font-weight: bold;
+		}
+		.BadgeAction__count {
+			color: #ffe3e3;
+		}
+
+		.Page--unauthorized & {
+			cursor: default;
+			pointer-events: none;
+			
+			.BadgeAction__count {
+				display: none;
+			}
+		}
+	}
+	&.BadgeAction--sizeL {
+		width: 76px;
+		height: 76px;
+		padding-top: 17px;
+		
+		.BadgeAction__label {
+			font-size: 22px;
+			
+			.BadgeAction__value {
+				font-size: 24px;
+			}
+		}
+		
+		.BadgeAction__count {
+			font-size: 12px;
+		}
+
+		.Page--unauthorized & {
+			padding-top: 24px;
+		}
+	}
+	&.BadgeAction--sizeM {
+		width: 56px;
+		height: 56px;
+		padding-top: 11px;
+		
+		.BadgeAction__label {
+			font-size: 16px;
+			line-height: 1;
+			
+			.BadgeAction__value {
+				font-size: 18px;
+			}
+		}
+		
+		.BadgeAction__count {
+			font-size: 9px;
+			display: inline-block;
+			vertical-align: top;
+			margin-top: 2px;
+		}
+
+		.Page--unauthorized & {
+			padding-top: 16px;
+		}
+	}
+
+	&.BadgeAction--sizeS {
+		background-color: #ffd200;
+		border-radius: 50%;
+		font-size: 16px;
+		width: 1em;
+		height: 1em;
+		display: inline-block;
+		
+		background-image: resolve('slaughter_badge_s.png');
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+		vertical-align: middle;
+
+		.BadgeTag.sizeS & {
+			background-image: resolve('slaughter_badge_xxs.png');
+			margin-right: .4em;
+			font-size: 12px;
+			position: relative;
+			margin-y: -1em;
+		}
+	}
+}
+
+@define-mixin Badge--fill $color {
+	border-color: $color;
+	background-color: $color;
+	color: #fff;
+}
+
+@define-mixin BadgeOutline {
+	display: inline-block;
+	vertical-align: middle;
+	margin-top: -.4em;
+	padding: 2px 4px;
+	border: 1px solid;
+	border-radius: .3em;
+	line-height: 1;
+	font-size: 12px;
+	font-weight: bold;
+	text-decoration: none;
+	color: #444;
+	cursor: default;
+}
+
+.Badge--code {
+	border-radius: $B_RAD;
+	padding: .35em .5em;
+	font-weight: 700;
+	line-height: 1;
+	background-color: $C_YELLOW;
+}
+
+.Badge--actionParticipants {
+	.BadgeText.ActionParticipantsPseudolink {
+		position: relative;
+		padding-left: 24px;
+		border-color: #e4e0b9;
+		background-color: #e4e0b9;
+
+		&:before,
+		&:after {
+			position: absolute;
+			top: 50%;
+			left: 10px;
+			content: '';
+			width: 9px;
+			border: solid $C_LINK;
+		}
+
+		&:before {
+			margin-top: -4px;
+			height: 5px;
+			border-width: 1px 0;
+		}
+
+		&:after {
+			margin-top: -1px;
+			border-width: 1px 0 0;
+		}
+
+		&:hover:before,
+		&:hover:after {
+			border-color: $C_LINK_H;
+		}
+	}
+}

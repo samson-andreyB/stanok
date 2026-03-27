@@ -1,0 +1,109 @@
+.Filters {
+	input[type="checkbox"] {
+		vertical-align: middle;
+		margin-top: -.18em;
+	}
+
+	&.ToolBar {
+		padding-top: 0;
+
+		& + & {
+			margin-top: 2px;
+		}
+	}
+}
+
+.Filter {
+	display: inline-block;
+	vertical-align: middle;
+	margin: 12px 25px 0 0;
+
+	&--error {
+		.Filter__header {
+			color: #c22119;
+			font-size: 14px;
+			font-weight: bold;
+		}
+	}
+
+	&--alignBottom {
+		vertical-align: bottom;
+	}
+
+	&--singleLine {
+		vertical-align: bottom;
+		margin-bottom: 8px;
+	}
+
+	&--long {
+		width: 270px;
+	}
+
+	&--medium {
+		width: 200px;
+	}
+
+	&__header {
+		display: block;
+		margin-bottom: .5em;
+	}
+
+	&__field {
+		select.Form__input {
+			vertical-align: bottom;
+		}
+	}
+
+	&__button {
+		&:not(:last-child) {
+			margin-right: 18px;
+		}
+	}
+
+	.Select,
+	.RichSelect2 {
+		width: 100%;
+	}
+
+	.btn  + .btn {
+		margin-left: 18px;
+	}
+}
+
+.Filters--returnQualityGoodsList {
+	& + .listItemsPageControl--top {
+		margin-top: 14px;
+	}
+
+	.Filter {
+		&--number,
+		&--document,
+		&--counterparty {
+			width: 150px;
+		}
+
+		&--code {
+			width: 100px;
+		}
+
+		&--status {
+			width: 170px;
+		}
+
+		&--buttons {
+			margin-right: 0;
+		}
+	}
+}
+
+.Filters--orders {
+	.Filter {
+		&--employee {
+			width: 240px;
+		}
+
+		&--status {
+			width: 125px;
+		}
+	}
+}

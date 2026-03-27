@@ -1,0 +1,65 @@
+@define-mixin actionsBadgeFixPrice {
+	width: 73px;
+	height: 73px;
+	border: 1px solid #fff;
+	border-radius: 50%;
+	background-clip: content-box;
+	pointer-events: none;
+}
+
+.actionsBadge--fixPrice {
+	@mixin actionsBadgeFixPrice;
+	user-select: none;
+
+	.actionsBadgeText {
+		color: #fff;
+		font-size: 11px;
+		line-height: 23px;
+		text-transform: uppercase;
+
+		&--price {
+			font-weight: bold;
+			font-size: 30px;
+			margin-top: -2px;
+			&:after {
+				content: '';
+				display: inline-block;
+				background-image: resolve('interface/badge_ruble.png');
+				width: width('interface/badge_ruble.png');
+				height: height('interface/badge_ruble.png');
+			}
+		}
+
+		&--top {
+			margin-top: 4px;
+		}
+
+		&--bottom {
+			margin-left: -2px;
+		}
+	}
+
+	&.actionsBadge--red {
+		background-color: #c41c1c;
+	}
+
+	&.actionsBadge--violet {
+		background-color: #7b3fb8;
+	}
+
+	&.actionsBadge--orange {
+		background-color: #f37021;
+	}
+
+	&.actionsBadge--green {
+		background-color: #379014;
+	}
+}
+
+.actionsBadge--bestPrice {
+	@mixin actionsBadgeFixPrice;
+	background-color: #c41c1c;
+	background-image: resolve('interface/best_price.png');
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+}

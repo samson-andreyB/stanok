@@ -1,0 +1,130 @@
+.Overages--default {
+	.filter {
+		.RichSelect,
+		.RichSelect__options {
+			width: 100%;
+		}
+
+		&--shop,
+		&--status {
+			width: 160px;
+		}
+
+		&--accountable {
+			width: 280px;
+		}
+
+		&--search {
+			width: 220px;
+		}
+	}
+
+	.controlPanel {
+		& + .contentWrapper.accent {
+			margin-top: 3px;
+		}
+
+		&--overageProductsEdit {
+			.filter {
+				vertical-align: middle;
+
+				&__indent {
+					margin-right: 8px;
+				}
+			}
+		}
+	}
+
+	.contentWrapper {
+		&--addNewProduct {
+			margin-top: 5px;
+
+			.Form__input {
+				width: 120px;
+			}
+
+			.btn + .Form__error {
+				margin-top: 15px;
+			}
+
+			& + .controlPanel {
+				margin-top: 5px;
+			}
+		}
+
+		&.accent {
+			padding-top: 20px;
+			padding-bottom: 15px;
+		}
+
+		&--commentBuc {
+			& + .controlPanel {
+				margin-top: 5px;
+			}
+		}
+	}
+
+	.Form {
+		&__header {
+			border-bottom: none;
+			margin-bottom: 0;
+			padding-bottom: 0;
+
+			& + .Form__set {
+				margin-top: 10px;
+			}
+		}
+
+		&__set {
+			width: 100%;
+
+			& + .Form__set {
+				margin-top: 10px;
+			}
+		}
+
+		&__title {
+			color: #000;
+			font-weight: bold;
+			margin-top: 0;
+		}
+
+		&__field {
+			&--code {
+				.Form__input {
+					vertical-align: middle;
+				}
+
+				.Form__description {
+					display: inline-block;
+					vertical-align: middle;
+					max-width: 760px;
+					margin-left: 5px;
+
+					&.Spinner {
+						width: .48em;
+						height: .48em;
+						border-width: .2em;
+						border-top-color: #28bd8b;
+						border-right-color: #28bd8b;
+					}
+				}
+			}
+
+			&--commentBuc {
+				width: 600px;
+			}
+		}
+	}
+
+	.Specs {
+		&__content {
+			display: block;
+			margin-top: 6px;
+		}
+	}
+}
+
+.FancyModal--overageCreated {
+	width: 310px;
+}

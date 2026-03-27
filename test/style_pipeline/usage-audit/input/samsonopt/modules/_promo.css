@@ -1,0 +1,97 @@
+/* PROMO
+---------------------------------------------------------------------*/
+
+@define-mixin promo-responsive $paddingTop: 19% {
+	a,
+	.Promo__link {
+		padding-top: $paddingTop;
+		position: relative;
+	}
+	img,
+	.Promo__img {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: auto;
+	}
+
+	@mixin-content;
+}
+
+.Promo__group {
+	display: table;
+	width: 100%;
+	table-layout: fixed;
+}
+.Promo__row {
+	display: table-row;
+}
+.Promo__box {
+	padding-x: 10px;
+	display: table-cell;
+	vertical-align: top;
+
+	a,
+	.Promo__link {
+		display: block;
+		transition: .2s;
+
+		&:hover {
+			opacity: .85;
+		}
+
+		& + & {
+			margin-top: 20px;
+		}
+	}
+}
+
+.Promo__box img,
+.Promo__img {
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	background-size: cover;
+	width: 100%;
+	height: auto;
+	display: inline-block;
+	vertical-align: middle;
+	image-rendering: -webkit-optimize-contrast;
+}
+
+
+.Promo--header {
+	@mixin promo-responsive;
+	background-color: #ededed;
+
+	& > .Page__wrapper {
+		background-color: #ededed;
+		padding-bottom: 20px;
+		padding-x: 10px;
+	}
+
+	&-3 {
+		.Promo__img,
+		img {
+			max-width: 332px;
+		}
+	}
+}
+
+
+.Promo--headerWide {
+	background-color: #fff;
+	overflow: hidden;
+	min-width: 980px;
+
+	.Promo__link {
+		width: 200%;
+		margin-left: -50%;
+		text-align: center;
+	}
+
+	.Promo__img,
+	img {
+		vertical-align: top;
+	}
+}

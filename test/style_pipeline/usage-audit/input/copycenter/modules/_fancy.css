@@ -1,0 +1,349 @@
+/* fancy
+---------------------------------------------------------------------*/
+
+.fancyBox  {
+	width: 840px;
+}
+.fancyBox.zakaz  {
+	width: 500px;
+}
+
+.fancyBox.askQuestion {
+	width: 550px;
+}
+
+.fancyBox .headFancyBlock {
+	padding: 25px 30px 15px 30px;
+}
+
+.fancyBox .headFancyBlock h2 {
+	margin: 5px 0 8px;
+	padding: 0;
+	line-height: 1.2em;
+	font-size: 34px;
+}
+
+.fancyBox .headFancyBlock .Select {
+	margin: 0 0 0 10px;
+}
+.fancyBox.small .headFancyBlock .Select {
+	margin: 5px 0 0 10px;
+}
+
+.btn--close,
+.notification__close,
+#fancybox-close {
+	display: block;
+	width: 12px;
+	height: 12px;
+	position: absolute;
+	right: 10px;
+	top:10px;
+	content: "";
+	cursor: pointer;
+	background-image: resolve('ui.png');
+	background-repeat: no-repeat;
+	background-position: 0px -131px;
+}
+.btn--close:hover,
+.notification__close:hover,
+#fancybox-close:hover {
+	background-position: -33px -131px;
+}
+
+#fancy {
+	visibility: hidden;
+}
+
+.fancybox-bg {
+	display: none;
+}
+
+.fancyBox__message {
+	color: #898989;
+	margin: 0 0 10px;
+	padding: 0;
+}
+
+.fancyBox .contentFancyBlock  {
+	box-sizing: border-box;
+	display: table;
+	width: 100%;
+	min-height: 270px;
+	background-color: #eff5ef;
+	border-top: 1px solid #c4cbca;
+	border-bottom: 1px solid #c4cbca;
+}
+
+.fancyBox.zakaz .contentFancyBlock,
+.fancyBox.junction .contentFancyBlock,
+.fancyBox.askQuestion .contentFancyBlock {
+	padding: 20px 30px;
+	min-height: 0;
+}
+
+
+.fancyBox .contentFancyBlock .mapBox {
+	display: table-cell;
+	width: 50%;
+	background-color: #c4cbca;
+}
+
+.fancyBox .contentFancyBlock .txtBox {
+	vertical-align: top;
+	padding: 0 30px;
+	display: table-cell;
+	width: 50%;
+}
+
+.fancyBox .txtBox .num  {
+	margin: 0;
+	font-style:normal;
+	box-sizing: border-box;
+	padding: 0 10px;
+	line-height: 27px;
+	width: 29px;
+	height:29px;
+	display: inline-block;
+	border: 1px solid #232323;
+	border-radius: 15px;
+}
+
+.fancyBox .txtBox .active .num {
+	border-color: #e0141d;
+	color: #e0141d
+}
+
+.fancyBox .txtBox .linkBox  {
+	margin: 0;
+	padding-left: 20px;
+	vertical-align: top;
+	display: inline-block;
+	width: 300px;
+}
+
+.fancyBox .copycenterInfo {
+	padding: 0;
+	margin: 0;
+}
+
+.fancyBox .dateBlock {
+	margin-left: 50px;
+}
+
+.fancyBox .txtBox .linkBox .redTxt {
+	color: #e0141d;
+}
+
+.fancyBox .footerFancyBlock {
+	padding: 15px 30px;
+	text-align: right;
+}
+.fancyBox.zakaz .footerFancyBlock,
+.fancyBox.junction .footerFancyBlock,
+.fancyBox.askQuestion .footerFancyBlock {
+	text-align: left;
+}
+
+.fancyBox .formComment {
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: 12px;
+	box-sizing: border-box;
+	padding-right: 20px;
+	width: 265px;
+	color: #777;
+	font-size: 12px;
+	line-height: 15px;
+}
+
+.fancyBox.zakaz .footerFancyBlock .btnDefault,
+.fancyBox.junction .footerFancyBlock .btnDefault,
+.fancyBox.askQuestion .footerFancyBlock .btnDefault {
+	vertical-align: middle;
+}
+
+
+
+.fancyBox .contentFancyBlock.white {
+	border-top: 0;
+	padding: 20px 30px;
+	text-align: left;
+	background-color: #fff;
+}
+.fancyBox .headFancyBlock + .contentFancyBlock {
+	padding-top: 0;
+}
+
+.fancyBox .cityBox {
+	padding: 30px 30px 20px 30px;
+	background-image: resolve('map.png');
+	background-repeat: no-repeat;
+	background-position: right 30px top;
+}
+.fancyBox .cityBox .listCategories {
+	padding: 0;
+	width: 55%;
+	display: block;
+	columns: 2 auto;
+	column-fill: balance;
+	background: none;
+	line-height: 0;
+}
+
+.fancyBox .cityBox .listCategories li {
+	margin-top: 0;
+	margin-bottom: 9px;
+	display: inline-block;
+	width: 100%;
+}
+
+.fancyBox .russiaMapBox { /* ^ delete */
+	display: none;
+	width: 396px;
+}
+
+.fancyBox .nameAndInputBlock  {
+	box-sizing: border-box;
+	display: table;
+	table-layout: fixed;
+	width: 100%;
+}
+.fancyBox .nameAndInputBlock + .nameAndInputBlock {
+	padding-top:10px;
+}
+
+.fancyBox .nameAndInputBlock .nameBox {
+	padding: 0 10px 0 0;
+	display: table-cell;
+	width: 105px;
+	vertical-align: top;
+}
+.fancyBox .nameAndInputBlock .nameBox .secondTxt {
+	display: inline-block;
+	padding-top: 7px;
+}
+.fancyBox .nameAndInputBlock .inputBox {
+	display: table-cell;
+	vertical-align: bottom;
+}
+
+
+.fancyBox .nameAndInputBlock .inputBox.small input {
+	width: 50%;
+}
+
+.fancyBox .nameAndInputBlock--alignMiddle .nameBox,
+.fancyBox .nameAndInputBlock--alignMiddle .inputBox {
+	vertical-align: middle;
+}
+
+.fancyBox .nameAndInputBlock--alignMiddle .nameBox .secondTxt {
+	padding-top: 0;
+}
+
+
+.notification {
+	background-color: #fff;
+	background-color: rgba(255,255,255,.85);
+	border: 1px solid #dfe5e5;
+	border-top-width: 0;
+	box-sizing: border-box;
+	padding: 20px 30px 30px;
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 50%;
+	z-index: 100;
+	margin-left: -245px;
+	width: 490px;
+}
+.notification__header {
+	font-family: "OpenSansLightRegular",Arial,sans-serif;
+	font-size: 34px;
+}
+.notification__content {
+	margin-top: 10px;
+}
+
+
+.resultBox {
+	padding: 0;
+	display: table;
+	width: 100%;
+}
+.resultBox--empty {
+	margin-bottom: 150px;
+}
+
+.resultBoxNum {
+	display: table-cell;
+}
+
+.resultBoxPaginator {
+	display: table-cell;
+	text-align: right;
+}
+
+
+
+.Viewer--fancy {
+	overflow: hidden;
+}
+
+.Viewer--fancy .Viewer__list {
+	height: 480px;
+	list-style-type: none;
+	margin: 0;
+	overflow: hidden;
+	width: 50px;
+	padding: 20px;
+}
+
+.Viewer--fancy .Viewer__subject,
+.Viewer--fancy .Viewer__list {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.Viewer--fancy .Viewer__item {
+	margin: 0 0 12px;
+}
+
+.Viewer__item.active {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+	cursor: default;
+	box-shadow: 0 0 8px #ffeb36;
+	background: #ffeb36;
+}
+
+.Viewer__item.active img {
+	opacity: 0.8;
+}
+
+.Viewer__item {
+	cursor: pointer;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	display: inline-block;
+	position: relative;
+}
+
+.Viewer__item:hover {
+	box-shadow: 0 0 8px #ffeb36;
+	transition: box-shadow 0.3s linear 0s;
+}
+
+.Viewer__preview {
+	width: 50px;
+	height: auto;
+}
+
+.Viewer--fancy .Viewer__subject {
+	background: #fff;
+	border-left: 1px dotted #bababa;
+}
+
+.personInfo .contacts+.contacts {
+	padding-top: 5px;
+}

@@ -1,0 +1,39 @@
+.ButtonSet {
+	margin-bottom: 10px;
+
+	&__header {
+		margin-bottom: 10px;
+	}
+
+	&__title {
+		font-weight: bold;
+
+		& + .pseudoLink {
+			margin-left: 10px;
+		}
+	}
+
+	&__items {
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	.btn {
+		margin-right: 10px;
+		margin-bottom: 10px;
+
+		.Rub {
+			margin-x: 2px;
+		}
+	}
+
+	&--productSelections {
+		.btn--active {
+			pointer-events: none;
+		}
+	}
+
+	&--feedback {
+		margin-bottom: 30px;
+	}
+}

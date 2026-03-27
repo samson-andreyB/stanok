@@ -1,0 +1,41 @@
+/* Переменные
+**********************************************************/
+
+$colorBackground: #fff;  /* фон страницы */
+$colorText: #494949;        /* текст */
+$colorTextLight: #a5a5a5;   /* менее акцентированный текст */
+$colorBorder: #f0f0f0; 		/* цвет бордеров */
+
+
+$colorActive: #83141f;      /* активные элементы */
+$colorActiveContrast: #fff; /* контрастирующий с активным */
+$colorActiveHover: #b53643; /* активный элементов при наведении */
+$colorLink: #83141f;        /* ссылки */
+$colorError: #e81c30;       /* ошибка */
+$colorFill: #fff;           /* заливка блоков */
+
+
+$colorHeader: #381e0d;       /* фон шапки */
+$colorHeaderDark: #2a1609;   /* фон второго ряда и активного поиска */
+$colorHeaderBorder: #4d311f; /* разделители */
+$colorHeaderText: #fff1e9;   /* текст в шапке */
+$colorHeaderTextFaded: #c5afa1;   /* текст в шапке */
+
+
+$colorFooter: #333537;       /* фон подвала */
+$colorFooterText: #c4c4c4;   /* текст в подвале */
+
+$SPINNER_COLOR: #83141F;
+
+@define-mixin badge_new {
+	content: 'Новинка';
+	background: #41a453;
+	color: #fff;
+	font-size: 13px;
+	display: inline-block;
+	position: absolute;
+	padding: 1px 9px;
+	border-radius: 2px;
+	font-family: 'Open Sans', sans-serif;
+	line-height: 19px;
+}

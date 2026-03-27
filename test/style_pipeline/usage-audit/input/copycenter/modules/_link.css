@@ -1,0 +1,21 @@
+/* BLOCKS - LINKS
+---------------------------------------------------------------------*/
+
+a,
+.pseudoLink {
+	color: #17a44f;
+}
+
+.pseudoLink {
+	border-bottom-style: dashed;
+	border-bottom-width: 1px;
+	cursor: pointer;
+	text-decoration: none;
+}
+.pseudoLink:hover {
+	text-decoration: none;
+}
+
+a.Icon {
+	border-bottom: 0;
+}

@@ -1,0 +1,252 @@
+.Field--routesDivision {
+	max-width: 140px;
+}
+.Field--routesRepresentative {
+	max-width: 300px;
+}
+
+.ControlGroup--routes,
+.btnMain--rounteLunch {
+	margin-right: 1em;
+}
+
+.ControlGroup {
+	&--routes {
+		.Dropdown--routes {
+			.Button {
+				border-top-right-radius: 0;
+				border-bottom-right-radius: 0;
+			}
+
+			& + .btnMain {
+				border-top-left-radius: 0;
+				border-bottom-left-radius: 0;
+				border-left: 0;
+			}
+		}
+	}
+}
+
+.DropdownMenu--routes {
+	.ListControl__content {
+		margin-x: auto;
+	}
+}
+
+.DropdownMenu--evenList {
+	.Menu__item {
+		&.TipTip__active {
+			color: $main;
+		}
+	}
+}
+
+.Items--routes {
+	position: relative;
+
+	.Items__list {
+		table-layout: fixed;
+	}
+
+	.Items__header .Item__box {
+		line-height: 20px;
+		vertical-align: bottom;
+		padding-y: 10px;
+
+		.Item__sort:after {
+			line-height: 0;
+		}
+	}
+
+	.Item__box {
+		box-sizing: border-box;
+		vertical-align: top;
+		word-wrap: break-word;
+		padding-x: 5px;
+		padding-y: 20px;
+
+		&--count {
+			width: 3.5%;
+			padding-left: 10px;
+			padding-right: 0;
+			white-space: nowrap;
+		}
+
+		&--indicator {
+			width: 4%;
+			padding-left: 18px;
+			padding-right: 10px;
+			text-align: center;
+
+			.BadgeStatus {
+				margin-top: 0;
+				padding: 0;
+			}
+		}
+
+		&--comment {
+			width: 3%;
+			padding-x: 0;
+		}
+
+		&--id {
+			width: 13%;
+
+			.RouteStatus,
+			.Badge {
+				margin-top: 5px;
+			}
+
+			.Badge {
+				cursor: help;
+			}
+
+			.Badge--seo {
+				cursor: default;
+			}
+		}
+
+		&--info {
+			padding-right: 10px;
+		}
+
+		&--meet {
+			padding-left: 10px;
+
+			.Badge {
+				cursor: help;
+			}
+		}
+
+		&--task {
+			width: 9%;
+		}
+
+		&--bidVisit {
+			width: 7%;
+		}
+
+		&--controls {
+			width: 14%;
+
+			.Badge + .Badge {
+				margin-top: 5px;
+			}
+
+			.btnMain,
+			.btnAdd {
+				width: 95px;
+			}
+		}
+
+		.RouteItemInfo__address,
+		.RouteItemInfo__schedule,
+		.RouteItemInfo__commercialOffer {
+			margin-top: 5px;
+		}
+
+		.RouteItemInfo__address + .RouteItemInfo__name {
+			margin-top: 5px;
+			display: inline-block;
+		}
+
+		.RouteItemInfo__schedule--error {
+			color: $error;
+		}
+
+		.RouteItemInfo__commercialOfferLink {
+			text-decoration: none;
+			color: #e45959;
+
+			&:hover {
+				color: #fc8080;
+			}
+		}
+
+		.RouteControls__box + .RouteControls__box {
+			margin-top: 1em;
+		}
+	}
+}
+
+.BadgeStatus__tipContent {
+	.BadgeStatus__tipList,
+	.BadgeStatus__tipItem {
+		margin: 0;
+	}
+}
+
+.RouteMeet {
+	width: 9%;
+
+	&--planned {
+		width: 17%;
+
+		.Item__aux {
+			font-size: 12px;
+			margin-top: 0;
+		}
+
+		.btnDropDown {
+			margin-top: 5px;
+		}
+
+		.Badge.Badge--okb {
+			cursor: default;
+		}
+	}
+
+	&__date {
+		display: block;
+	}
+
+	&__box + &__box {
+		margin-top: 5px;
+	}
+}
+
+.RouteMeetChange {
+	padding: 12px 11px;
+
+	.btnMain,
+	.btnError {
+		display: block;
+		padding-x: 15px;
+		width: 100%;
+		height: 33px;
+	}
+
+	.btnError {
+		margin-top: 12px;
+	}
+}
+
+
+.OtherEventTip {
+	position: relative;
+	padding: 12px 4px;
+
+	&__close {
+		position: absolute;
+		top: -2px;
+		right: -7px;
+		width: calc(width('icons/cross_10x10_777.png') * 2);
+		height: calc(height('icons/cross_10x10_777.png') * 2);
+		background-image: resolve('icons/cross_10x10_777.png');
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+		cursor: pointer;
+	}
+
+	.Form__set {
+		width: 100%;
+
+		&--submit {
+			padding-top: .8em;
+		}
+	}
+
+	.Form__title {
+		margin-bottom: 1em;
+	}
+}

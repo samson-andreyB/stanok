@@ -1,0 +1,8 @@
+.ProductKit--default {
+	.ProductKit {
+		&__list {
+			overflow: auto;
+			max-height: 630px;
+		}
+	}
+}

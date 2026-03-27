@@ -1,0 +1,173 @@
+.Page--dksSiteManagement {
+	.Item__box {
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+
+		&--login {
+			width: 82px;
+
+			.error:hover {
+				color: $errorHover;
+			}
+		}
+
+		&--domain,
+		&--status {
+			width: 158px;
+		}
+
+		&--subdomain {
+			width: 167px;
+		}
+
+		&--identifier {
+			width: 83px;
+		}
+
+		&--site {
+			width: 102px;
+		}
+
+		&--store {
+			width: 120px;
+		}
+
+		&--city {
+			width: 139px;
+		}
+
+		&.TipTip__active {
+			cursor: help;
+		}
+	}
+
+	.Items--dksDomains {
+		.Item__box {
+			&--identifier {
+				width: 145px;
+			}
+		}
+	}
+
+	.filter--search {
+		width: 335px;
+	}
+
+	.filter--site {
+		width: 145px;
+	}
+
+	.filter--status {
+		width: 175px;
+	}
+
+	.Items__list {
+		table-layout: fixed;
+	}
+}
+
+.Page--dksSiteManagementEdit {
+	.Form {
+		&__set {
+			margin-top: 15px;
+
+			& + .Form__set {
+				margin-top: 20px;
+			}
+		}
+
+		&__header {
+			border-bottom-width: 0;
+			margin-bottom: 0;
+			padding-bottom: 0;
+		}
+
+		&__aux {
+			color: #999;
+			margin-top: 6px;
+			margin-bottom: 15px;
+		}
+
+		.contentWrapper + .contentWrapper {
+			margin-top: 15px;
+		}
+
+		.btnInfo {
+			padding: 0;
+		}
+	}
+
+	.controlPanel {
+		.btn + .btn {
+			margin-left: 7px;
+		}
+	}
+
+	.Form__field--cities {
+		.Form__input,
+		.RichSelect {
+			width: 225px;
+		}
+	}
+}
+
+.Items--dnsRecords {
+	.Item__box {
+		&--name {
+			width: 80px;
+		}
+
+		&--type {
+			width: 67px;
+		}
+
+		&--priority {
+			width: 96px;
+		}
+
+		&--data {
+			word-break: break-all;
+			word-break: break-word;
+		}
+
+		&--actions {
+			width: 59px;
+			white-space: nowrap;
+
+			.btn + .btn {
+				margin-left: 7px;
+			}
+		}
+	}
+
+	.Items__list {
+		margin-top: 0;
+	}
+}
+
+.FancyModal {
+	&--dnsRecordManagement {
+		width: 445px;
+
+		.Form__set {
+			width: 100%;
+		}
+
+		.Form__field.inputFull .Form__input {
+			&--name {
+				width: 190px;
+			}
+
+			&--type,
+			&--priority {
+				width: 95px;
+			}
+		}
+	}
+
+	&--removeDnsRecord,
+	&--removeDomain {
+		width: 375px;
+	}
+}

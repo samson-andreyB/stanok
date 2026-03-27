@@ -1,0 +1,25 @@
+.OrdersTotal {
+	text-align: right;
+
+	&__rub {
+		font-size: 13px;
+	}
+
+	.Specs {
+		margin-y: 5px;
+		text-align: left;
+		display: inline-block;
+
+		&--inline {
+			text-align: right;
+		}
+
+		&__name {
+			font-weight: normal;
+		}
+	}
+
+	.Specs__item--total {
+		font-size: 18px;
+	}
+}

@@ -1,0 +1,63 @@
+.PreparedOrder--default {
+	.PreparedOrder__text {
+		margin-left: .1em;
+		color: #7B630D;
+		line-height: 1;
+	}
+
+	&:before {
+		@mixin PreparedOrderIconSize;
+
+		content: '';
+		display: inline-block;
+		margin-top: -.3em;
+		vertical-align: middle;
+	}
+}
+
+
+.FancyModal--preparedOrder {
+	max-width: 590px;
+	width: 590px;
+
+	.FancyModal__header {
+		&:after {
+			@mixin PreparedOrderIconSize 'size4';
+
+			content: '';
+			position: absolute;
+			margin-top: -.1em;
+			margin-left: .3em;
+			vertical-align: middle;
+		}
+	}
+
+	.Message + .Form__field,
+	.CheckoutSummary + .Message {
+		margin-top: 1.3em;
+	}
+
+	.CheckoutSummary + .Form__field {
+		margin-top: 1.8em;
+	}
+
+	.Form__field--orderId {
+		.Form__input {
+			width: 30%;
+		}
+	}
+}
+
+
+.PreparedOrderBtnWrapper {
+	display: inline-block;
+	cursor: help;
+
+	.orderControl & {
+		margin-x: .4em;
+
+		.BtnDefault {
+			margin-x: 0;
+		}
+	}
+}

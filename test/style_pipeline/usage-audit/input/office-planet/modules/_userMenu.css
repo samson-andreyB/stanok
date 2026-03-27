@@ -1,0 +1,32 @@
+.UserMenu {
+	text-align: left;
+
+	&__header {
+		padding: 10px 15px;
+		background-color: $theme_brand;
+		color: #fff;
+		font-weight: bold;
+
+		@if $theme_name == 'op' {
+			background-color: $theme_accent;
+		}
+	}
+
+	&__list {
+		@mixin List--basic;
+	}
+
+	&__item {
+		@mixin List__item--basic;
+
+		& + .UserMenu__item {
+			border-top: 1px dotted $dividerColor;
+		}
+	}
+
+	&__link {
+		display: block;
+		padding: 10px 15px;
+		color: inherit;
+	}
+}

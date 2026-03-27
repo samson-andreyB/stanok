@@ -1,0 +1,25 @@
+/* Breadcrumbs
+------------------------------------------------------------------------------*/
+
+.Breadcrumbs {
+	margin-top: 3em;
+	margin-bottom: 5em;
+}
+.Breadcrumbs__list {
+	display: block;
+	padding-left: 0;
+}
+.Breadcrumbs__item {
+	cursor: default;
+	display: inline-block;
+	margin: 0;
+	
+	& + &:before {
+		content: "";
+		background-image: resolve('arrow_right_black.png');
+		width: width('arrow_right_black.png');
+		height: height('arrow_right_black.png');
+		display: inline-block;
+		margin-x: .6em;
+	}
+}

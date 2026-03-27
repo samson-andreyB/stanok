@@ -1,0 +1,94 @@
+#fancybox-close {
+	margin-bottom: -30px;
+
+	&:before {
+		content: none;
+	}
+}
+
+.FancyModal--selectColumns {
+	display: inline-block;
+
+	.btn + .btn {
+		margin-left: .6em;
+	}
+
+	.TabContent__wrapper {
+		height: 100%;
+		max-height: 100%;
+		overflow-y: auto;
+	}
+}
+
+.FancyModal--bindingGoods {
+	width: 500px;
+
+	.Breadcrumbs2--default {
+		font-weight: bold;
+		margin-top: 5px;
+
+		.Breadcrumbs2__list {
+			font-size: 12px;
+		}
+	}
+}
+
+.FancyModal--rubricAction {
+	width: 450px;
+
+	.Form__field--rubricName,
+	.RichSelect2 {
+		width: 350px;
+	}
+
+	.Breadcrumbs2 {
+		font-weight: bold;
+	}
+
+	.Form__set {
+		width: auto;
+		margin-top: 1em;
+	}
+
+	.Loading--active {
+		.Form__field {
+			display: none;
+		}
+	}
+}
+
+.FancyModal--sortingRubric {
+	width: 450px;
+
+	.Items--draggable {
+		border: 1px solid #dadada;
+		height: 394px;
+		overflow-y: auto;
+
+		.Item {
+			border-bottom: none;
+		}
+	}
+}
+
+.FancyModal--rubricBindgGoods {
+	width: 350px;
+}
+
+.FancyModal--accessRights {
+	width: 550px;
+
+	.FancyModal__content--accent {
+		margin-y: 15px;
+	}
+}
+
+.FancyModal--downloadHistory {
+	.Form__field--marketplace {
+		width: 200px;
+	}
+
+	.Items--downloadHistory {
+		margin-top: 20px;
+	}
+}

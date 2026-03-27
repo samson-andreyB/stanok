@@ -1,0 +1,25 @@
+.TipNote--default {
+	padding-y: 3px;
+
+	.TipNote__title {
+		font-weight: bold;
+	}
+
+	.TipNote__title + .TipNote__content,
+	.TipNote__paragraph + .TipNote__paragraph {
+		margin-top: 5px;
+	}
+}
+
+.TipNote--aboutDiscounts {
+	.TipNote {
+		&__footer {
+			margin-top: 10px;
+		}
+	}
+}
+
+.TipNote--discountThresholds {
+	font-size: 12px;
+	@mixin ProductSpecialOutside 10px;
+}

@@ -1,0 +1,14 @@
+.Table--default {
+	width: 100%;
+
+	.Table__cell {
+		padding: 10px 15px;
+		font-size: 15px;
+		line-height: 1.3;
+		border: 1px solid #d3ded3;
+
+		&--accent {
+			background-color: #eff5ef;
+		}
+	}
+}

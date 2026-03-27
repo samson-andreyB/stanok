@@ -1,0 +1,26 @@
+$theme_name: 'ob';
+$theme_brand: #0e7cc2;
+$theme_bHover: #2da2eb;
+$theme_accent: #f1b100;
+$theme_aHover: #ffcc12;
+$theme_layoutAccentColor: #f1f1f1;
+
+$brandColor: #0990d9;
+$brandColorLighter: #00aff0;
+
+@import 'modules/_themeVars_op';
+
+$theme_logo: logo_ob.png;
+$theme_logo_width: 230px;
+$theme_logo_height: 56px;
+$theme_logo_s_width: 136px;
+$theme_logo_s_height: 33px;
+
+$theme_lowPrice_icon: low_price--2.png;
+$theme_lowPrice_width: 62px;
+$theme_lowPrice_height: 68px;
+
+$theme_placemarkCluster: #0d7bc1;
+$theme_placemarkClusterActive: #2597df;
+
+@import '_modules';

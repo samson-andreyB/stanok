@@ -1,0 +1,82 @@
+.Status {
+	border-radius: 2px;
+	box-sizing: border-box;
+	display: inline-block;
+	padding: 5px 14px;
+	text-align: center;
+	color: #fff;
+
+	&--dark {
+		color: #000;
+	}
+
+	&--product {
+		border-width: 0;
+
+		&.Status--new {
+			background-color: #fff9b2;
+		}
+
+		&.Status--noFacets {
+			background-color: #fcca00;
+		}
+
+		&.Status--verified1 {
+			background-color: #3d89c1;
+		}
+
+		&.Status--verified2 {
+			background-color: #9973bf;
+		}
+
+		&.Status--sale {
+			border: 1px dashed #000;
+			padding-y: 4px;
+
+			.Header2--card & {
+				border-width: 2px;
+				padding: 5px 10px 4px;
+			}
+		}
+
+		&.Status--remove {
+			border: 1px solid #000;
+			padding-y: 4px;
+
+			.Header2--card & {
+				border-width: 2px;
+				padding: 5px 10px 4px;
+			}
+		}
+
+		&.Status--noAssortment {
+			background-color: #000;
+		}
+	}
+
+	&--photo {
+		&.Status--noPhoto {
+			background-color: #fff9b2;
+		}
+
+		&.Status--isPhoto {
+			background-color: #95cc47;
+		}
+
+		&.Status--defectPhoto {
+			background-color: #f24c4c;
+		}
+
+		&.Status--checkPhoto {
+			background-color: #692896;
+		}
+	}
+
+	.Header2--card & {
+		border-radius: 3px;
+		padding: 7px 12px 6px;
+		font-weight: bold;
+		font-size: 17px;
+		min-width: 80px;
+	}
+}

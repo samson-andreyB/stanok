@@ -1,0 +1,78 @@
+.Viewer {
+	display: flex;
+	flex-direction: column;
+	padding: 30px;
+	user-select: none;
+
+	&__subject {
+		overflow: hidden;
+		width: 100%;
+		flex-grow: 1;
+		margin-bottom: 10px;
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-position: 50% 50%;
+		cursor: pointer;
+		cursor: zoom-in;
+		cursor: url('/assets_brabix/img/cursors/zoom_in.png'), auto;
+
+		.Viewer__video {
+			width: 100%;
+			height: 100%;
+		}
+
+		&--smallPhoto {
+			cursor: pointer;
+		}
+
+		&--video {
+			cursor: default;
+		}
+
+		&--zoom {
+			cursor: pointer;
+			cursor: zoom-out;
+			cursor: url('/assets_brabix/img/cursors/zoom_out.png'), auto;
+		}
+	}
+
+	&__target {
+		display: none;
+		width: 80px;
+		height: 40px;
+		position: absolute;
+		border: 2px solid #acacac;
+		z-index: 1;
+		background-color: rgba(255, 255, 255, .3);
+		pointer-events: none;
+		cursor: pointer;
+	}
+
+	&__object {
+		display: none;
+		width: calc(100% - 24px);
+		height: 516px;
+		overflow: hidden;
+		position: absolute;
+		top: 2.44em;
+		left: -5px;
+		border: 2px solid #7e848e;
+		background-color: #fff;
+		background-repeat: no-repeat;
+		box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+
+		img {
+			position: absolute;
+		}
+	}
+
+	.PhotosPreview {
+		margin-right: -10px;
+		margin-bottom: -10px;
+
+		.PhotoPreview__item {
+			margin-right: 10px;
+			margin-bottom: 10px;
+		}
+	}
+}

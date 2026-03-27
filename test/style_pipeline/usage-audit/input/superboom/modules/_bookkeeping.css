@@ -1,0 +1,54 @@
+.tabsList--bookkeeping {
+	margin-bottom: 20px;
+}
+
+.BookkeepingReconciliation {
+	&__description {
+		margin-bottom: 20px;
+		line-height: 1.5;
+	}
+
+	&__btn {
+		& + .BookkeepingReconciliation__content {
+			margin-top: 25px;
+		}
+	}
+
+	&__content {
+		width: 80%;
+	}
+}
+
+.Items--bookkeepingReconciliation {
+	.Item__box {
+		&--date {
+			width: 19%;
+		}
+
+		&--period {
+			width: 26%;
+		}
+
+		&--status {
+			width: 18%;
+
+			.btnInfo {
+				margin-left: 2px;
+			}
+		}
+	}
+}
+
+.FancyModal--bookkeepingReconciliation {
+	width: 500px;
+
+	.Items--formFieldsList {
+		margin-top: 0;
+	}
+
+	.Form {
+		&__value {
+			font-weight: bold;
+		}
+	}
+}

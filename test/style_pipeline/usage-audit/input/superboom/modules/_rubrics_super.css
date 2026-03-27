@@ -1,0 +1,134 @@
+/***********************************
+*          СУПЕРКАТЕГОРИИ          *
+***********************************/
+
+.Rubricator--superCategories {
+	@mixin overlay;
+
+	padding-top: 3px;
+
+	.Rubrics--main {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		height: 20px;
+		overflow: hidden;
+
+		.Rubric--main + .Rubric--main {
+			margin-left: 15px;
+		}
+	}
+}
+
+.Rubric--main {
+	.Rubric__link {
+		display: inline-flex;
+		align-items: center;
+		min-height: 20px;
+		cursor: pointer;
+	}
+
+	.Rubric__name {
+		margin-left: 6px;
+		white-space: nowrap;
+	}
+
+	.Rubric__img {
+		display: inline-block;
+	}
+
+	.Rubric__img--2042 {
+		width: width('rubric_2042.svg');
+		height: height('rubric_2042.svg');
+		background-image: svg('rubric_2042.svg', '[color]: $BRAND');
+	}
+	&:hover .Rubric__img--2042 {
+		background-image: svg('rubric_2042.svg', '[color]: $LINK_HOVER');
+	}
+
+	.Rubric__img--3798 {
+		width: width('rubric_3798.svg');
+		height: height('rubric_3798.svg');
+		background-image: svg('rubric_3798.svg', '[color]: $BRAND');
+	}
+	&:hover .Rubric__img--3798 {
+		background-image: svg('rubric_3798.svg', '[color]: $LINK_HOVER');
+	}
+
+	.Rubric__img--3835 {
+		width: width('rubric_3835.svg');
+		height: height('rubric_3835.svg');
+		background-image: svg('rubric_3835.svg', '[color]: $BRAND');
+	}
+	&:hover .Rubric__img--3835 {
+		background-image: svg('rubric_3835.svg', '[color]: $LINK_HOVER');
+	}
+
+	.Rubric__img--1273 {
+		width: width('rubric_1273.svg');
+		height: height('rubric_1273.svg');
+		background-image: svg('rubric_1273.svg', '[color]: $BRAND');
+	}
+	&:hover .Rubric__img--1273 {
+		background-image: svg('rubric_1273.svg', '[color]: $LINK_HOVER');
+	}
+
+	.Rubric__img--1323 {
+		width: width('rubric_1323.svg');
+		height: height('rubric_1323.svg');
+		background-image: svg('rubric_1323.svg', '[color]: $BRAND');
+	}
+	&:hover .Rubric__img--1323 {
+		background-image: svg('rubric_1323.svg', '[color]: $LINK_HOVER');
+	}
+
+	.Rubric__img--3050 {
+		width: width('rubric_3050.svg');
+		height: height('rubric_3050.svg');
+		background-image: svg('rubric_3050.svg', '[color]: $BRAND');
+	}
+	&:hover .Rubric__img--3050 {
+		background-image: svg('rubric_3050.svg', '[color]: $LINK_HOVER');
+	}
+
+	.Rubric__img--3818 {
+		width: width('rubric_3818.svg');
+		height: height('rubric_3818.svg');
+		background-image: svg('rubric_3818.svg', '[color]: $BRAND');
+	}
+	&:hover .Rubric__img--3818 {
+		background-image: svg('rubric_3818.svg', '[color]: $LINK_HOVER');
+	}
+
+	.Rubric__img--3854 {
+		width: width('rubric_3854.svg');
+		height: height('rubric_3854.svg');
+		background-image: svg('rubric_3854.svg', '[color]: $BRAND');
+	}
+	&:hover .Rubric__img--3854 {
+		background-image: svg('rubric_3854.svg', '[color]: $LINK_HOVER');
+	}
+
+	.Rubric__img--1374 {
+		width: width('rubric_1374.svg');
+		height: height('rubric_1374.svg');
+		background-image: svg('rubric_1374.svg', '[color]: $BRAND');
+	}
+	&:hover .Rubric__img--1374 {
+		background-image: svg('rubric_1374.svg', '[color]: $LINK_HOVER');
+	}
+
+	.Rubric__img--2049 {
+		width: width('rubric_2049.svg');
+		height: height('rubric_2049.svg');
+		background-image: svg('rubric_2049.svg', '[color]: $BRAND');
+	}
+	&:hover .Rubric__img--2049 {
+		background-image: svg('rubric_2049.svg', '[color]: $LINK_HOVER');
+	}
+
+	&:hover {
+		color: $LINK_HOVER;
+	}
+}

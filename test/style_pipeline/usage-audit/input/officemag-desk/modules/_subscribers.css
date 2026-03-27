@@ -1,0 +1,38 @@
+.Items--subscribers {
+	.Item__box {
+		vertical-align: top;
+		word-break: break-all;
+		word-break: break-word;
+
+		&--mail,
+		&--login,
+		&--client,
+		&--date {
+			min-width: 140px;
+		}
+	}
+
+	.Items__header .Item__box {
+		white-space: nowrap;
+	}
+}
+
+.Subscriber {
+	&.contentWrapper {
+		padding: 0 20px 20px;
+	}
+
+	.Specs__content {
+		font-size: 13px;
+		line-height: 1.5em;
+		margin-top: 0;
+	}
+
+	.Form__field {
+		min-height: auto;
+
+		& + .Form__field {
+			margin-top: 8px;
+		}
+	}
+}

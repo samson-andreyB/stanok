@@ -1,0 +1,116 @@
+.filter--clientSearch {
+	width: 270px;
+}
+
+
+.filters--statPromoChannel select {
+	width: 100%;
+}
+.filter--idp,
+.filter--channel,
+.filter--site {
+	width: 140px;
+}
+
+.Report__header,
+.mainContent .Report__header {
+	font-size: 16px;
+	margin-top: 0;
+	margin-bottom: .5em;
+}
+
+.Report__upload {
+	margin-y: .75em;
+}
+.Report__group {
+	display: table;
+}
+.Report__box {
+	display: table-cell;
+	vertical-align: middle;
+}
+.Report__box--upload {
+	width: 1px;
+	padding-right: 15px;
+}
+.Upload--report {
+	.Upload__btn {
+		@mixin btnUploadMain;
+	}
+}
+.Report__status {
+	color: #777;
+	font-size: 11px;
+	line-height: 16px;
+	
+	&--success:before {
+		content: "";
+		background-image: resolve('icons/success_grey.png');
+		width: width('icons/success_grey.png');
+		height: height('icons/success_grey.png');
+		display: inline-block;
+		margin-right: .3em;
+	}
+
+	&--loading {
+		display: none;
+	}
+}
+
+.FancyModal--reportGeneration {
+	padding-y: 40px;
+
+	.FancyModal__header {
+		margin-bottom: 10px;
+	}
+
+	.FancyModal__content {
+		margin-bottom: 5px;
+		font-size: 14px;
+	}
+
+	.Progress {
+		margin-top: 20px;
+	}
+
+	.FancyModal__controls {
+		margin-top: 25px;
+	}
+}
+
+
+.JackpotHistoryTip--default {
+	padding: 10px;
+	line-height: 1.7;
+
+	.JackpotHistoryTip__description {
+		margin-bottom: 10px;
+	}
+
+	.JackpotHistoryTip__group {
+		display: inline-table;
+	}
+
+	.JackpotHistoryTip__groupBox {
+		display: table-cell;
+		vertical-align: top;
+	}
+
+	.JackpotHistoryTip__groupBox + .JackpotHistoryTip__groupBox {
+		padding-left: 27px;
+	}
+
+	.JackpotHistoryTip__groupTitle {
+		font-weight: bold;
+	}
+
+	.JackpotHistoryTip__list {
+		margin: 0;
+		padding: 0;
+		list-style-type: none;
+	}
+
+	.JackpotHistoryTip__listItem + .JackpotHistoryTip__listItem {
+		margin-top: 3px;
+	}
+}

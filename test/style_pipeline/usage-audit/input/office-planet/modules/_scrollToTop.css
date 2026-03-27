@@ -1,0 +1,47 @@
+$scrollButtonWidth: 100px;
+
+.ScrollToTop {
+	position: relative;
+	max-width: calc($wrapperMaxWidth + 50 + $scrollButtonWidth * 2);
+	padding-x: 10px;
+	margin-x: auto;
+	transition: .2s;
+	visibility: hidden;
+	opacity: 0;
+
+	&__trigger {
+		position: fixed;
+		bottom: 30px;
+		width: $scrollButtonWidth;
+		z-index: 3;
+		padding-left: 27px;
+		opacity: .9;
+
+		&:before {
+			content: '';
+			background-image: svg('arrowUp_14x18', '[color]: #8d8d8d');
+			width: width('arrowUp_14x18.svg');
+			height: height('arrowUp_14x18.svg');
+			position: absolute;
+			top: 9px;
+			left: 8px;
+			transition: background .2s ease-in-out;
+		}
+
+		&:hover {
+			padding-left: 32px;
+			opacity: 1;
+
+			&:before {
+				background-image: svg('arrowUp_14x18', '[color]: #fff');
+				top: 14px;
+				left: 13px;
+			}
+		}
+	}
+
+	&--visible {
+		visibility: visible;
+		opacity: 1;
+	}
+}

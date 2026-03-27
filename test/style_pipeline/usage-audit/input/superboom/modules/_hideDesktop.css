@@ -1,0 +1,22 @@
+.Header__box--logo .Logo.Logo--mobile,
+.CitySelectWindow__close,
+.NavigationMenu,
+.NavigationSection,
+.Rubricator__search,
+.Rubricator__back,
+.Rubricator__close,
+.ControlPanel--default .ControlPanel__box--filter,
+.Rubricator__box--menu > .Rubricator__header,
+.Rubrics__item--subParent,
+.ControlPanel--productsList .ControlPanel__box--filter,
+.FilterPanel__header,
+.Content .SideRubrics--productGuide,
+.bannerMain--content,
+.compareItemsControl .compareButton__content--mobile,
+.Advice__spoilerLabel,
+.ProductItemMobile,
+.ToolBar--feedback,
+.ControlPanel--productNotFound,
+.ControlPanel--rubricsFilter {
+	display: none;
+}

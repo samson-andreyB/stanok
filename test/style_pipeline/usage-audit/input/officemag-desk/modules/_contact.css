@@ -1,0 +1,383 @@
+.Contact {
+	&.FancyModal {
+		width: 700px;
+
+		.Group {
+			padding-x: 20px;
+			padding-top: 0;
+			margin-top: -5px;
+			padding-bottom: 16px;
+
+			.FancyModal__header {
+				padding-x: 0;
+				margin-bottom: 0;
+			}
+		}
+	}
+	.FancyModal__content,
+	.FancyModal__control {
+		padding-right: 35px;
+	}
+
+	.FancyModal__content--narrowFields {
+		.Form__field {
+			margin-left: 130px;
+		}
+
+		.Form__title {
+			margin-left: -130px;
+			padding-left: 0;
+			width: 115px;
+			word-break: break-word;
+		}
+	}
+
+	&__name {
+		font-size: 17px;
+		font-weight: normal;
+		margin-top: 0;
+	}
+
+	.Form__set {
+		width: 100%;
+	}
+	.Form__title {
+		text-align: left;
+	}
+
+	.Form__value {
+		display: inline-block;
+		padding-top: 8px;
+	}
+
+	.Form__field--definedInline {
+		.Form__value {
+			font-weight: bold;
+		}
+	}
+
+	.Contact__commercialInfo {
+		height: auto;
+	}
+
+	.ContactDetails {
+		&__header {
+			font-size: 14px;
+			font-weight: bold;
+		}
+
+		.Form__field {
+			.btnInfo {
+				position: absolute;
+				top: 0;
+				left: 100%;
+				height: 15px;
+				margin-left: -2px;
+			}
+
+			&--bcPlaced {
+				.btnInfo {
+					left: auto;
+					top: auto;
+					height: 11px;
+				}
+			}
+		}
+
+		textarea.Form__input {
+			height: 100px;
+
+			&.Blocked {
+				background-color: rgba(0, 0, 0, .1);
+			}
+		}
+	}
+
+	.ContactTask {
+		&__title {
+			display: block;
+			font-weight: bold;
+			margin-bottom: .3em;
+		}
+	}
+
+	.ContactResultable {
+		margin-left: 1.5em;
+		
+		&__input {
+			margin-right: .3em;
+		}
+
+		&__title {
+			&:before {
+				content: "";
+				@mixin SmileSadS;
+				margin-right: .4em;
+			}
+		}
+	}
+
+	.TaskFinished {
+		margin-left: 1.5em;
+
+		input {
+			margin-top: -.3em;
+			margin-right: .15em;
+		}
+	}
+
+	.Alert {
+		margin-y: 3px;
+	}
+}
+
+.Contact--defined {
+	.Specs {
+		margin-top: 1.5em;
+
+		&__contentParagraph {
+			margin: 0;
+
+			& + .Specs__contentParagraph {
+				margin-top: 10px;
+			}
+		}
+	}
+
+	.Specs__item--calls {
+		.Specs__value + .Specs__value {
+			margin-top: 20px;
+		}
+
+		.Audio {
+			vertical-align: middle;
+		}
+
+		.Specs__hint {
+			font-size: 11px;
+			color: #777;
+
+			& + .Audio {
+				margin-left: 20px;
+			}
+		}
+
+		.Specs__valueRecords {
+			display: flex;
+			align-items: center;
+			margin-top: 7px;
+		}
+	}
+
+	.Spoiler--default {
+		display: flex;
+		flex-direction: column-reverse;
+
+		.Spoiler__header {
+			padding: 0;
+		}
+
+		.Spoiler__label {
+			font-size: 12px;
+			margin-top: 10px;
+		}
+
+		.Spoiler__content {
+			padding: 0;
+		}
+	}
+}
+
+.Contact--change {
+	&.FancyModal {
+		width: 900px;
+	}
+
+	.FancyModal__content--accent {
+		.Form__field {
+			margin-top: 0;
+		}
+	}
+
+	.Form {
+		&__title {
+			box-sizing: border-box;
+			padding-left: 20px;
+			height: auto;
+
+			input {
+				position: absolute;
+				left: 0;
+				top: .85em;
+			}
+		}
+
+		&__field {
+			margin-top: 15px;
+			min-height: auto;
+
+			&:first-child {
+				margin-top: 0;
+			}
+
+			&--bcPlaced {
+				.inputFull {
+					margin-left: 0;
+
+					.Form__title {
+						padding-left: 0;
+					}
+				}
+
+				.Form__group {
+					width: auto;
+					margin-top: 9px;
+
+					& + .Form__group {
+						display: block;
+					}
+				}
+			}
+
+			.PhoneControl {
+				display: inline-block;
+				width: 100%;
+			}
+		}
+
+		&__label {
+			pointer-events: auto;
+
+			&.Blocked {
+				pointer-events: none;
+			}
+		}
+	}
+
+	textarea.Form__input,
+	.ContactDetails	textarea.Form__input {
+		height: 60px;
+	}
+
+	.ContactDetails {
+		.Form__field {
+			.Form__label + .btnInfo {
+				margin-left: 0;
+			}
+
+			.Form__input + .btnInfo,
+			.ControlInput ~ .btnInfo {
+				margin-left: 3px;
+			}
+		}
+	}
+
+	.Contact__status2 {
+		margin-y: 20px;
+
+		.Lock {
+			cursor: help;
+			padding: 7px 0;
+
+			&--closed {
+				&:hover {
+					&:before {
+						background: resolve('icons/lock_closed.png');
+						width: width('icons/lock_closed.png');
+					}
+				}
+			}
+		}
+
+		.FancyModal__content {
+			background-color: #e9f8f3;
+			padding-y: 20px;
+
+			.Form__group {
+				padding: 0;
+
+				.Form__label {
+					padding-top: 5px;
+				}
+			}
+
+			.Form__title {
+				padding-y: 0;
+
+				input {
+					position: absolute;
+					left: 0;
+					top: .15em;
+				}
+			}
+
+			.Form__field {
+
+				& + .Form__field {
+					margin-top: 35px;
+				}
+			}
+
+			&:first-child {
+				background-color: #d8f0e8;
+				font-size: 14px;
+				padding-y: 1em;
+
+				.Form__title {
+					padding: 0;
+				}
+			}
+		}
+	}
+
+	.Contact__comment {
+		.Form__title {
+			padding-left: 0;
+		}
+
+		input + .Form__label {
+			margin-left: 8px;
+		}
+	}
+}
+
+.AudioFloating {
+	box-sizing: border-box;
+	position: fixed;
+	z-index: 100;
+	bottom: 20px;
+	right: 20px;
+	width: 340px;
+	padding: 10px;
+	padding-right: 30px;
+	background-color: #fff;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, .3);
+
+	&__header {
+		margin-bottom: 10px;
+	}
+
+	&__time {
+		margin-left: 10px;
+	}
+
+	&__close {
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 20px;
+		height: 20px;
+		background-image: resolve('icons/cross_10x10_999.png');
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+		cursor: pointer;
+
+		&:hover {
+			background-image: resolve('icons/cross_10x10_e55.png');
+		}
+	}
+
+	.Audio {
+		max-width: 100%;
+	}
+}

@@ -1,0 +1,75 @@
+/**
+<div class="Collapsible Collapsible--default Collapsible--active">
+	<span class="Collapsible__link">
+		<span class="Collapsible__text Collapsible__text--hide">Скрыть</span>
+		<span class="Collapsible__text Collapsible__text--show">Показать</span>
+	</span>
+	<div class="Collapsible__content"></div>
+</div>
+ */
+
+.Collapsible--default {
+	.Collapsible__trigger {
+		position: relative;
+		display: inline-block;
+		padding-right: .85em;
+		white-space: nowrap;
+		user-select: none;
+		cursor: pointer;
+
+		&:after {
+			content: '';
+			position: absolute;
+			top: 50%;
+			right: 0;
+			width: 0;
+			height: 0;
+			border-style: solid;
+			border-color: transparent;
+			border-top-color: currentColor;
+			border-width: .286em .25em 0 .25em;
+		}
+
+		&:hover {
+			&:after {
+				border-top-color: currentColor;
+			}
+
+			&.Collapsible--active:after {
+				border-bottom-color: currentColor;
+			}
+		}
+	}
+
+	.Collapsible__text {
+		&--hide {
+			display: none;
+		}
+
+		border-bottom: .1em dotted;
+	}
+
+	.Collapsible__content {
+		display: none;
+	}
+
+	&.Collapsible--active {
+		.Collapsible__text {
+			&--show {
+				display: none;
+			}
+
+			&--hide {
+				display: inline;
+			}
+		}
+
+		.Collapsible__trigger {
+			&:after {
+				border-bottom-color: currentColor;
+				border-top-width: 0;
+				border-bottom-width: .286em;
+			}
+		}
+	}
+}

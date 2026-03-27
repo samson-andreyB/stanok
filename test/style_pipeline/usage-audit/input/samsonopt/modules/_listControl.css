@@ -1,0 +1,119 @@
+.ListControl {	
+	&--main {
+		margin-bottom: 14px;
+	}
+	
+	&__group {
+		background-color: #e7e7e7;
+		display: table;
+		width: 100%;
+		height: 42px;
+	}
+	&__group + &__group {
+		margin-top: 1px;
+	}
+
+	&__box {
+		display: table-cell;
+		vertical-align: middle;
+		padding: 10px 13px;
+		
+		&--all,
+		&--sort {
+			width: 100%;
+		}
+		
+		&--paginator,
+		&--count,
+		&--choose {
+			width: 1px;
+			white-space: nowrap;
+			text-align: right;
+		}
+
+		&--paginator {
+			width: 100%;
+		}
+
+		&--count {
+			text-align: left;
+		}
+
+		&--choose {
+			padding-right: 18px;
+		}
+	}
+
+	&Check {
+		cursor: pointer;
+		user-select: none;
+	}
+
+	.BtnMain + & {
+		margin-top: 20px;
+	}
+}
+
+.ListControlChoose {
+	display: inline-block;
+	vertical-align: middle;
+	
+	&__count {
+		display: inline-block;
+		margin-right: 10px;
+	}
+	&__selector {
+		height: auto;
+		text-align: left;
+		vertical-align: middle;
+	}
+
+	&__label {
+		padding-right: 10px;
+		padding-left: 7px;
+	}
+}
+
+.Count {
+	&__item {
+		font-weight: bold;
+	}
+}
+
+.Paginator {
+
+	&__list,
+	&__item {
+		display: inline-block;
+	}
+
+	&__back:before {
+		content: "\02190";
+		margin-right: .4em;
+	}
+
+	&__forw:after {
+		content: "\02192";
+		margin-left: .4em;
+	}
+
+	&__back,
+	&__forw,
+	&__text {
+		padding-x: 5px;
+	}
+
+	&__text {
+		font-weight: bold;
+	}
+	a&__text {
+		font-weight: normal;
+	}
+}
+
+.ListControl--paymentDocuments {
+	.BtnExport {
+		margin-left: 12px;
+		margin-right: 12px;
+	}
+}

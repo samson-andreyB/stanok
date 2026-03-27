@@ -1,0 +1,353 @@
+.Page--promotions {
+	.Header__description {
+		.btnAdd + .btnOrganize {
+			margin-left: 10px;
+		}
+	}
+
+	.filters {
+		.filter--name {
+			width: 260px;
+		}
+
+		.filter--status {
+			width: 170px;
+		}
+
+		.btn + .btn {
+			margin-left: 15px;
+		}
+	}
+
+	.Items {
+		&--editable {
+			.Item {
+				&:hover,
+				&--active {
+					background-color: #e9f8f3;
+				}
+			}
+		}
+
+		&--products,
+		&--participants {
+			margin-top: 0;
+
+			.Items__list {
+				margin-top: 0;
+				border-top: 0;
+			}
+
+			.Item__box {
+				&--checkbox {
+					width: 30px;
+				}
+
+				&--login {
+					width: 95px;
+				}
+
+				&--productCode {
+					width: 60px;
+				}
+			}
+		}
+
+		&--participants {
+			overflow: auto;
+			max-height: 430px;
+		}
+
+		&--rewards {
+			.Items__list {
+				margin-top: 0;
+			}
+
+			.Item__box {
+				&--growth {
+					width: 80px;
+				}
+
+				&--code,
+				&--quantity {
+					width: 60px;
+				}
+			}
+
+			.Item--groupedUp {
+				.Item__box--growth {
+					border-top: none;
+				}
+			}
+		}
+	}
+
+	.Tabs2--editPromotion {
+		.contentWrapper--main,
+		.contentWrapper--products,
+		.contentWrapper--description {
+			padding-top: 20px;
+		}
+
+		& + .controlPanel {
+			margin-top: 3px;
+		}
+
+		.Form {
+			&__set {
+				width: auto;
+
+				& + .Form__set {
+					margin-top: 15px;
+				}
+
+				&--newProductList {
+					margin-x: -20px;
+					margin-bottom: -10px;
+				}
+			}
+
+			&__field {
+				&--name {
+					max-width: 520px;
+				}
+
+				&--client {
+					.Form__input {
+						width: 120px;
+					}
+
+					.Form__input {
+						vertical-align: middle;
+					}
+
+					.Form__description {
+						display: inline-block;
+						vertical-align: middle;
+						max-width: 760px;
+						margin-left: 10px;
+
+						&.Spinner {
+							width: .48em;
+							height: .48em;
+							border-width: .2em;
+							border-top-color: $main;
+							border-right-color: $main;
+						}
+					}
+				}
+			}
+
+			&__header {
+				border-bottom: none;
+				margin-bottom: 0;
+				padding-bottom: 0;
+			}
+
+			& + .pageControl {
+				margin-top: 10px;
+			}
+		}
+
+		.ControlPanel {
+			&--top {
+				margin-top: 10px;
+			}
+		}
+
+		.controlPanel {
+			.filter {
+				vertical-align: middle;
+
+				&__indent {
+					margin-right: 8px;
+				}
+			}
+		}
+
+		.Plaques--error {
+			border-color: $error;
+		}
+
+		.Items + .ControlPanel {
+			border-top: none;
+		}
+	}
+
+	.contentWrapper {
+		&--clients {
+			.contentWrapper__header {
+				margin-bottom: 0;
+			}
+		}
+	}
+
+	.Items + .contentWrapper--rewards,
+	.contentWrapper__header + .Specs {
+		margin-top: 15px;
+	}
+
+	.contentWrapper--description {
+		.Form__set {
+			width: 700px;
+		}
+	}
+
+	.Bubble + .Bubble {
+		margin-left: .5em;
+	}
+}
+
+.Items {
+	&--promotionsList {
+		.Item__box {
+			&--indicator,
+			&--drag {
+				width: 1%;
+			}
+
+			&--indicator {
+				.BadgeStatus {
+					margin-top: 0;
+					padding: 0;
+					display: block;
+
+					&__indicator {
+						width: 10px;
+						height: 10px;
+					}
+				}
+			}
+
+			&--validity {
+				width: 170px;
+			}
+
+			&--status {
+				width: 125px;
+			}
+		}
+
+		.Item__drag {
+			background-image: resolve('icons/organize_grey.png');
+			width: width('icons/organize_grey.png');
+			height: height('icons/organize_grey.png');
+			display: inline-block;
+		}
+	}
+
+	&--promotionsListSortable {
+		.Item {
+			&--sorting {
+				background: #fff;
+				box-shadow: 0 0 7px rgba(0, 0, 0, .4);
+				width: 100%;
+				position: absolute;
+				z-index: 1;
+			}
+		}
+
+		.Item__box {
+			&--drag {
+				cursor: move;
+			}
+		}
+	}
+}
+
+.EditPromotions {
+	&--automatic {
+		.Items--participants,
+		.Items--rewards {
+			border-bottom: 1px solid #dadada;
+		}
+
+		.Items--rewards {
+			margin-bottom: 10px;
+		}
+
+		.Form__title {
+			font-weight: bold;
+			color: #000;
+		}
+
+		.Item {
+			cursor: default;
+		}
+	}
+
+	.EditPromotions__img {
+		width: 180px;
+		height: 180px;
+		border: 1px solid #BBBBBB;
+
+		.ImageUploader {
+			width: 180px;
+			height: 180px;
+			border: none;
+		}
+	}
+
+	.Header {
+		&__box {
+			&--right {
+				vertical-align: top;
+			}
+		}
+	}
+}
+
+.FancyModal {
+	&--promotionsListSorting {
+		width: 940px;
+
+		.Items {
+			overflow: auto;
+			max-height: 283px;
+			margin-top: 20px;
+
+			&__list {
+				margin-top: 0;
+			}
+
+			&__header {
+				.Item__box {
+					padding-top: 0;
+				}
+			}
+		}
+	}
+
+	&--promotionsSendApproval {
+		width: 535px;
+	}
+
+	&--promotionsApproval {
+		width: 305px;
+	}
+
+	&--promotionsUnpublishing {
+		width: 550px;
+	}
+
+	&--promotionsMarkOutdated {
+		width: 355px;
+	}
+}
+
+.PromotionDescription {
+	border: 1px solid #bbb;
+
+	#lhe_btn_createpromotionlink {
+		background-image: resolve('icons/link.png');
+		width: 20px;
+		height: 20px;
+		display: inline-block;
+		vertical-align: middle;
+		background-size: 14px;
+		background-position: center;
+		background-repeat: no-repeat;
+		margin-left: 1px;
+		cursor: pointer;
+	}
+}

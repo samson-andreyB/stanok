@@ -1,0 +1,202 @@
+.Form--returnRequest {
+	.Form__header {
+		font-size: 15px;
+		font-weight: normal;
+		color: #656565;
+		margin-top: 10px;
+		border-bottom: none;
+		margin-bottom: 0;
+		padding-bottom: 0;
+
+		& + .Form__divider {
+			margin-top: 10px;
+		}
+	}
+
+	.Form__divider {
+		margin-y: 1.5em;
+	}
+
+	.Form__value {
+		line-height: 1.6;
+	}
+
+	.contentWrapper {
+		&:first-child {
+			padding-bottom: 20px;
+		}
+	}
+}
+
+.Form__content {
+	&--bcPlaced {
+		.Form__field + .Form__field {
+			margin-top: .5em;
+		}
+
+		.ContactCard--clientDescription & {
+			margin-top: 6px;
+		}
+
+		.Contact--change & {
+			display: inline-block;
+			width: 100%;
+		}
+
+		.Form--customer & {
+			margin-top: 8px;
+		}
+	}
+}
+
+.Form--commercialOfferOrder {
+	.Form__header {
+		border-bottom: 0;
+		padding-bottom: 10px;
+		margin-bottom: 0;
+	}
+
+	.Form__description {
+		margin-top: 1em;
+	}
+
+	.Form__field {
+		&--described {
+			.Form__description {
+				display: none;
+				margin-top: 2px;
+				color: #666;
+			}
+
+			input:checked ~ .Form__description {
+				display: inline-block;
+			}
+		}
+
+		.ControlInput__field,
+		.Form__input {
+			width: 400px;
+
+			&--narrow {
+				width: 130px;
+			}
+		}
+
+		.RichSelect2 {
+			width: 400px;
+		}
+	}
+
+	.Group--address {
+		width: 410px;
+		table-layout: fixed;
+
+		.Box {
+			padding-right: 10px;
+
+			.Form__input {
+				width: 100%;
+			}
+		}
+	}
+
+	.PhoneControl {
+		.PhoneControl__item {
+			width: auto;
+		}
+
+		.Form__input {
+			width: 100%;
+		}
+	}
+
+	.Form__set {
+		width: auto;
+
+		&--submit {
+			margin-top: 15px;
+		}
+
+		&--divided {
+			padding-top: 20px;
+
+			&:first-child {
+				border-top: none;
+				padding-top: 0;
+			}
+		}
+	}
+
+	.Form__value {
+		font-weight: bold;
+	}
+
+	.Items--removable {
+		.Form__input {
+			width: 325px;
+		}
+	}
+}
+
+.Form__description--accent {
+	color: $error;
+}
+
+.Form .Form__set.indent:first-child {
+	.contentWrapper--header + & {
+		padding-top: 0;
+	}
+}
+
+.Form--returnQualityGoods {
+	.Form__header {
+		padding-bottom: 0;
+		margin-bottom: 0;
+		border-bottom: 0;
+	}
+
+	.Form__title {
+		font-weight: 700;
+	}
+
+	.Form__set {
+		width: 570px;
+
+		&--details,
+		&--contact {
+			.Form__input {
+				width: 330px;
+			}
+		}
+	}
+
+	.Form__set + .Form__set {
+		margin-top: 20px;
+	}
+
+	.Form__field {
+		&--mediumLengthField,
+		&--cfo {
+			.Form__input {
+				width: 200px;
+			}
+		}
+
+		&--openingTraces,
+		&--phone {
+			.Form__input {
+				width: 135px;
+			}
+		}
+
+		&--upd {
+			.ControlInput__field {
+				width: 200px;
+			}
+
+			.Spinner2 {
+				vertical-align: middle;
+			}
+		}
+	}
+}

@@ -1,0 +1,15 @@
+.ButtonSet {
+	&__items {
+		flex-wrap: nowrap;
+		overflow: auto;
+		margin-x: -$PAGE_WRAPPER_PADDING_MOBILE;
+		padding-left: $PAGE_WRAPPER_PADDING_MOBILE;
+		padding-right: calc($PAGE_WRAPPER_PADDING_MOBILE - 10px);
+		padding-bottom: 5px;
+		width: calc(100vw - $PAGE_WRAPPER_PADDING_MOBILE - 10px);
+	}
+
+	.itemInfo & {
+		display: block;
+	}
+}

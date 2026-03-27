@@ -1,0 +1,181 @@
+.Rubricator {
+	position: absolute;
+	display: none;
+	width: 100%;
+	top: 100%;
+	left: 0;
+	line-height: 1.5;
+	z-index: 5;
+
+	& &__wrapper {
+		position: relative;
+		background-color: #f3f3f3;
+		min-height: 590px;
+		border: 1px solid #ededed;
+		box-sizing: border-box;
+
+		.Page--rubricatorIsOpen & {
+			padding: 0;
+		}
+
+		@media screen and (max-width: 1300px) {
+			width: calc(100vw - 107px);
+			left: -15px;
+		}
+	}
+
+	&__close {
+		@mixin BtnLite;
+		@mixin icon2 close_btn_fff, 28px, 28px;
+
+		position: absolute;
+		right: -53px;
+		padding: 10px;
+		top: 2px;
+
+		@media screen and (max-width: 1150px) {
+			right: -37px;
+			top: -5px;
+
+			&:before {
+				width: 20px;
+				height: 20px;
+			}
+		}
+	}
+
+	&__hero {
+		position: absolute;
+		right: 0;
+		top: 69px;
+		width: 33.33%;
+		height: 435px;
+		background-image: resolve('unlandia_hero_5.png');
+		background-repeat: no-repeat;
+		background-position: 100% 135px;
+
+		.CloudsQuote {
+			position: absolute;
+			left: 10px;
+			top: 16px;
+			padding: 1.32em 1em;
+			background-color: #fff;
+			font-size: 21px;
+			text-transform: none;
+			width: 250px;
+
+			&:before {
+				right: 149px;
+				bottom: -70px;
+				border: 18px solid transparent;
+				border-top: 78px solid #fff;
+				transform: rotate(-18deg);
+				z-index: 0;
+			};
+		}
+	}
+}
+
+.Page--withRubricator {
+	.Page__footer,
+	.Page__header {
+		position: relative;
+		display: block;
+		z-index: 5;
+	}
+
+	.Page__main {
+		&:after {
+			content: '';
+			display: block;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, .5);
+			z-index: 4;
+			visibility: hidden;
+			opacity: 0;
+			transition: all 100ms;
+		}
+	}
+}
+
+.Page--rubricatorIsOpen {
+	.Page__main {
+		position: relative;
+
+		&:after {
+			visibility: visible;
+			opacity: 1;
+			transition: all 300ms;
+		}
+	}
+}
+
+.Rubric {
+	font-size: 16px;
+
+	&__list {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 33.33%;
+		background-color: #fff;
+
+		& & {
+			display: none;
+			left: 100%;
+			width: 100%;
+			border-left: 1px solid #ededed;
+		}
+	}
+
+	&__item {
+		padding: 0;
+		margin: 0 0 0 -1px;
+
+		&--active > .Rubric__list {
+			display: block;
+		}
+
+		&--active {
+			background-color: $violet;
+
+			& > .Rubric__title {
+				color: #fff;
+				border-bottom-color: transparent;
+			}
+		}
+
+		& & {
+			margin-left: 0;
+		}
+	}
+
+	&__title {
+		position: relative;
+		border-bottom: 1px solid #ededed;
+		padding: 13px 35px 12px 20px;
+		display: block;
+		color: #5c465b;
+		white-space: normal;
+	}
+}
+
+.Rubric__list + .Rubric__title:before {
+	content: '';
+	display: block;
+	position: absolute;
+	right: 20px;
+	top: 50%;
+	background-image: svg('assets_unlandia/img/svg/arrow_super_small.svg');
+	width: 6px;
+	height: 11px;
+	margin-top: -6px;
+}
+
+.Rubric__item--active > .Rubric__list + .Rubric__title:before {
+	background-image: svg('assets_unlandia/img/svg/arrow_super_small_fff.svg');
+}

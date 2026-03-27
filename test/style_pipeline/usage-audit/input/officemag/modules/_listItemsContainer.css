@@ -1,0 +1,13 @@
+/* listItemsContainer
+------------------------------------------------------------------------------*/
+
+.listItemsContainer {
+	float: left;
+	margin: 0 0 25px;
+	width: 100%;
+
+	.BannerLoader__content img {
+		width: 100%;
+		height: auto;
+	}
+}

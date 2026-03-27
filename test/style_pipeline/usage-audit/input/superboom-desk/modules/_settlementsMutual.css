@@ -1,0 +1,27 @@
+.SettlementsMutual {
+	&--default {
+		.Form__header {
+			font-size: 12px;
+			border-bottom: none;
+			padding-bottom: 0;
+			margin-bottom: 10px;
+		}
+
+		.Form__input.Form__input--buyerType,
+		.Form__input.Form__input--order {
+			width: 130px;
+		}
+
+		.Form__set + .Form__set {
+			margin-top: 20px;
+		}
+
+		.controlPanel {
+			margin-top: 10px;
+		}
+
+		.Items--listOrders {
+			margin-left: -20px;
+		}
+	}
+}

@@ -1,0 +1,54 @@
+.ProductParamDefect--default {
+	color: $error;
+
+	&.ProductParamDefect--deferred {
+		.ProductParamDefect__title {
+			color: #999;
+		}
+	}
+
+	&.ProductParamDefect--deferredExpired {
+		.ProductParamDefect__title {
+			&:before {
+				content: '';
+				display: inline-block;
+				width: width('attention_outline_13x13.svg');
+				height: height('attention_outline_13x13.svg');
+				margin-top: -.2em;
+				margin-right: .1em;
+				vertical-align: middle;
+				background-image: svg('attention_outline_13x13', '[color]: $error');
+			}
+		}
+	}
+
+	&.ProductParamDefect--compact {
+		.ProductParamDefect__title {
+			display: inline;
+			margin-bottom: 0;
+		}
+
+		.ProductParamDefect__text {
+			display: inline;
+			line-height: 1.5;
+		}
+	}
+
+	.ProductParamDefect__title {
+		margin-bottom: .3em;
+		font-weight: bold;
+	}
+
+	.ProductParamDefect__text {
+		line-height: 1.4;
+		word-break: break-word;
+	}
+
+	.pseudoLink {
+		color: inherit;
+	}
+
+	.Icon--help {
+		margin-left: 2px;
+	}
+}

@@ -1,0 +1,19 @@
+.ChangeHistoryStatus {
+	&--verified {
+		color: $success;
+	}
+
+	&--changed {
+		color: $attention;
+	}
+
+	&--decline {
+		color: $error;
+
+		&.pseudoLink {
+			@mixin hocus {
+				color: $errorHover;
+			}
+		}
+	}
+}

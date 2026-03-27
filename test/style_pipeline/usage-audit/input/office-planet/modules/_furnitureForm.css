@@ -1,0 +1,40 @@
+.FurnitureForm {
+	&__download {
+		font-size: 16px;
+
+		.Icon {
+			@mixin OtherIcon download, $linkColor;
+		}
+
+		&:hover {
+			.Icon {
+				background-image: svg('download', '[color]: $linkHoverColor');
+				opacity: .75;
+			}
+		}
+	}
+
+	&__tip {
+		color: $infoColor;
+		font-size: 13px;
+		font-style: italic;
+	}
+}
+
+.FurnitureFormHeader {
+	@mixin H__group;
+
+	&__accent {
+		@mixin H__box;
+		@mixin H--accent;
+		width: 0;
+	}
+
+	&__text {
+		@mixin H__box;
+		@mixin H--sub;
+		border-left: 0;
+		line-height: 1.5em;
+		width: 100%;
+	}
+}

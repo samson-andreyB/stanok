@@ -1,0 +1,182 @@
+.PaidWithPoints {
+	display: inline-block;
+	vertical-align: middle;
+	font-weight: normal;
+	color: $C_JACKPOT;
+	cursor: default;
+
+	&:before {
+		content: '';
+		display: inline-block;
+		vertical-align: middle;
+		margin-top: -.2em;
+		margin-right: 5px;
+		width: width('safe_18x18_4b6.png');
+		height: height('safe_18x18_4b6.png');
+		background-image: resolve('safe_18x18_4b6.png');
+	}
+}
+
+
+.JackpotLogo {
+	display: inline-block;
+
+	&--panel {
+		width: width('jackpotLogo_183x61.png');
+		height: height('jackpotLogo_183x61.png');
+		background-image: resolve('jackpotLogo_183x61.png');
+	}
+}
+
+
+
+.JackpotPointsHint {
+	max-width: 180px;
+	padding: 5px;
+	box-sizing: border-box;
+	cursor: default;
+
+	.JackpotPointsHint__title {
+		font-weight: bold;
+	}
+
+	.JackpotPointsHint__content {
+		margin-top: 5px;
+		line-height: 1.4;
+	}
+
+	.JackpotPointsHint__count {
+		font-weight: bold;
+	}
+}
+
+
+.JackpotPointsHint--steps {
+	min-width: 145px;
+	padding: 5px;
+	box-sizing: border-box;
+	cursor: default;
+
+	.JackpotPointsHint__content {
+		margin-top: 0;
+	}
+
+	.JackpotPointsHint__item {
+		padding: 4px 4px 3px;
+
+		& + .JackpotPointsHint__item {
+			border-top: 1px solid #e4e4e4;
+		}
+	}
+
+	.JackpotPointsHint__count {
+		float: right;
+	}
+}
+
+
+.JackpotPoints--default {
+	color: $C_JACKPOT;
+	font-weight: bold;
+}
+
+
+.JackpotFaq {
+	&__item {
+		& + & {
+			margin-top: 25px;
+		}
+	}
+
+	&__question {
+		font-weight: bold;
+		font-size: 14px;
+	}
+
+	&__answer {
+		margin-top: 8px;
+		line-height: 18px;
+	}
+}
+
+
+
+.FancyModal--changeJackpotGoal {
+	cursor: default;
+
+	.FancyModal__paragraph + .FancyModal__paragraph {
+		margin-top: 15px;
+	}
+
+	.FancyModal__paragraphTitle {
+		margin-bottom: 10px;
+		font-weight: bold;
+	}
+}
+
+
+
+.FancyModal--getJackpotGift {
+	width: 330px;
+	cursor: default;
+
+	.FancyModal__paragraph + .FancyModal__paragraph {
+		margin-top: 15px;
+	}
+
+	.Form {
+		margin-top: 20px;
+	}
+
+	.Form__error {
+		display: none;
+		margin-top: 5px;
+	}
+
+	.Form__field--error {
+		.Form__input {
+			border-color: #cc0000;
+		}
+
+		.Form__error {
+			display: block;
+		}
+	}
+
+	.Message {
+		margin-top: 15px;
+	}
+
+	.FancyModal__description .CheckoutStepsField__name {
+		margin-bottom: 5px;
+	}
+
+	.DeliveryMethods__content + .DeliveryMethods__content {
+		.CheckoutStepsFields--selectionSaved {
+			margin-top: 13px;
+
+			& + .CheckoutStepsField--secondary {
+				margin-top: 13px;
+			}
+		}
+	}
+}
+
+
+
+.FancyModal--jackpotTerms {
+	max-width: 900px;
+
+	.FancyModal__description {
+		overflow-y: scroll;
+		max-height: 520px;
+		padding-right: 40px;
+		line-height: 22px;
+		font-size: 14px;
+	}
+
+	ul {
+		list-style: disc;
+		padding-left: 15px;
+	}
+}

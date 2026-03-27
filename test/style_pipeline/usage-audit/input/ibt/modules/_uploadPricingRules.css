@@ -1,0 +1,13 @@
+.Page--pricingRules {
+	.controlPanel {
+		width: 775px;
+	}
+
+	.Report--default .controlPanel__header {
+		font-size: 17px;
+	}
+
+	.controlPanel__description {
+		margin-bottom: 10px;
+	}
+}

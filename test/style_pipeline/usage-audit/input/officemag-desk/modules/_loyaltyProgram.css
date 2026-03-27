@@ -1,0 +1,83 @@
+.Page--loyaltyProgram {
+	.contentWrapper__header {
+		font-size: 17px;
+		font-weight: normal;
+		margin-top: 0;
+	}
+
+	.Form__set {
+		width: auto;
+	}
+}
+
+.FancyModal--loyaltyProgramDisconnect {
+	width: 560px;
+
+	.List {
+		list-style: none;
+		margin: 10px 0 15px 20px;
+		padding: 0;
+
+		&__item {
+			&:before {
+				content: '\2014';
+				display: inline-block;
+				width: 18px;
+				margin-left: -18px;
+			}
+		}
+	}
+
+	.List__item + .List__item {
+		margin-top: .7em;
+	}
+}
+
+.FancyModal--loyaltyProgramLoadMembersError {
+	padding-top: 20px;
+	min-width: 315px;
+
+	.FancyModal__header {
+		margin-bottom: 5px;
+	}
+
+	.Alert {
+		margin: 5px -20px 0;
+	}
+
+	.Items--listContainer {
+		max-height: 260px;
+		overflow: auto;
+		margin-top: 10px;
+		border: 1px solid #dadada;
+	}
+
+	.Items__list {
+		margin-top: 0;
+	}
+
+	.Item:first-child .Item__box {
+		border: 0;
+	}
+
+	.Item__box {
+		padding-y: 8px 7px;
+
+		&--description {
+			color: #e35959;
+		}
+	}
+}
+
+.FancyModal--loyaltyProgramAccountType {
+	max-width: 500px;
+}
+
+.Item__box--loyaltyProgram {
+	text-align: right;
+
+	.Delta--positive:after,
+	.Delta--negative:after {
+		display: none;
+	}
+}

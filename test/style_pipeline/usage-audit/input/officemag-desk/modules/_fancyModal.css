@@ -1,0 +1,191 @@
+#fancybox-close {
+	margin: 0 0 -30px;
+	background-color: #fff;
+
+	&:before {
+		content: none;
+	}
+}
+
+.FancyModal--createChange {
+	width: 460px;
+	
+	.FancyModal__content {
+		line-height: 1.5;
+	}
+
+	.StatusInfo {
+		margin-top: 6px;
+		
+		&__value {
+			color: $info;
+		}
+	}
+}
+
+.FancyModal--fileNotFound {
+	width: 400px;
+}
+
+.FancyModal--addLinkToTask,
+.FancyModal--editLinkToTask {
+	width: 510px;
+}
+
+.FancyModal--deactivateAccount,
+.FancyModal--activateAccount {
+	width: 340px;
+
+	.FancyModal__content {
+		word-break: break-all;
+		line-height: 1.6;
+	}
+}
+
+.FancyModal--approvalChangeRequest {
+	width: 400px;
+
+	.FancyModal__content {
+		line-height: 1.6;
+		font-size: 13px;
+	}
+}
+
+.FancyModal--loadingBonusesWarning {
+	width: 530px;
+}
+
+.FancyModal--oetReturnDeciding {
+	width: 490px;
+
+	.FancyModal__content {
+		line-height: 1.5;
+	}
+}
+
+.FancyModal--accessDenied {
+	width: 290px;
+}
+
+.FancyModal--invoices {
+	width: 330px;
+}
+
+.FancyModal--invoicesSent {
+	width: 490px;
+
+	p {
+		margin-bottom: .4em;
+	}
+
+	.Spoiler {
+		margin-top: 15px;
+
+		&__header {
+			padding: 0;
+		}
+
+		&__label {
+			font-size: 12px;
+		}
+
+		&__content {
+			padding: 5px 0 0;
+		}
+	}
+}
+
+.FancyModal--promoRubricConstructor {
+	width: 730px;
+
+	.FancyModal__content {
+		padding-x: 0;
+		padding-top: 10px;
+	}
+
+	.FancyModal__description {
+		font-size: 13px;
+		padding-x: 20px;
+		padding-top: 10px;
+	}
+
+	.FancyModal__control {
+		margin-top: 0;
+	}
+}
+
+.FancyModal--unavailableGoods {
+	width: 420px;
+}
+
+.FancyModal--orderCommercialOffer {
+	width: 370px;
+}
+
+.FancyModal--choiceContact {
+	width: 440px;
+
+	.FancyModal__header {
+		margin-bottom: 10px;
+	}
+
+	.FancyModal__description {
+		margin-bottom: 20px;
+		padding-x: 20px;
+	}
+
+	.Form__value {
+		font-weight: 700;
+	}
+}
+
+.FancyModal__paragraph {
+	line-height: 1.5;
+
+	& + & {
+		margin-top: 6px;
+	}
+}
+
+.FancyModal--returnQualityGoods {
+	width: 400px;
+
+	.Form__field--quantity {
+		.Form__input {
+			width: 70px;
+		}
+	}
+
+	.Form__value {
+		font-weight: bold;
+	}
+
+	.Items--executionDocument {
+		.Items__header {
+			font-weight: normal;
+			color: rgba(0, 0, 0, .75);
+		}
+	}
+
+	.List--dashed {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+
+		.List__item {
+			padding-left: 18px;
+			margin-top: 0;
+
+			&:before {
+				content: '\2014';
+				display: block;
+				position: absolute;
+				left: 0;
+			}
+		}
+	}
+}
+
+.FancyModal--commentHistory {
+	width: 600px;
+}

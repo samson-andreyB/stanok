@@ -1,0 +1,41 @@
+/* Соц. сети в footer
+-----------------------------------------------------------------*/
+.TipTip.TipTip--theme-social .TipTip__pointer {
+	display: none;
+}
+
+.TipTip.TipTip--theme-social .TipTip__arrow {
+	border: 10px solid transparent;
+	margin-left: -5px;
+}
+
+.TipTip--top.TipTip--theme-social .TipTip__arrow {
+	border-top-color: #fff;
+}
+
+.TipTip.TipTip--theme-social .TipTip__content {
+	background-color: #fff;
+	box-shadow: 0 0 10px 0 rgba(0,0,0,.1);
+	color: #000;
+	padding: 18px 20px;
+	border-radius: 8px;
+}
+
+.TipTip.TipTip--theme-social .TipTip__content a {
+	color: #81358b;
+	font-weight: bold;
+	font-size: 14px;
+	line-height: 1;
+	display: block;
+	text-transform: uppercase;
+	margin-bottom: 15px;
+	transition: color .2s;
+}
+
+.TipTip.TipTip--theme-social .TipTip__content a:last-child {
+	margin-bottom: 0;
+}
+
+.TipTip.TipTip--theme-social .TipTip__content a:hover {
+	color: #a788c0;
+}

@@ -1,0 +1,3211 @@
+@import "lib/stm/_file";
+/*!
+
+  BASE
+    BASE - ROOT
+    BASE - HTML5
+    BASE - EMBEDDED
+    BASE - FORMS
+    BASE - TABLES
+    BASE - LINKS
+    BASE - LISTS
+    BASE - TYPOGRAPHY
+
+  USEFUL
+
+  BLOCKS
+    BLOCKS - EMBEDDED
+    BLOCKS - FORMS
+    BLOCKS - LINKS
+    BLOCKS - BUTTONS
+    BLOCKS - TABLES
+    BLOCKS - LISTS
+    BLOCKS - TYPOGRAPHY
+    BLOCKS - PRODUCT
+    BLOCKS - PRODUCT CARD
+    BLOCKS - NAV
+    BLOCKS - BANNERS & SLIDERS
+    BLOCKS - PHOTOS VIEWER
+    BLOCKS - POPUPS
+      BLOCKS - POPUPS - NOTIFICATIONS
+
+  THEME
+    THEME - HELPERS
+    THEME - EMBEDDED
+    THEME - TYPOGRAPHY
+    THEME - FORMS
+    THEME - TABLES
+    THEME - POPUPS
+      THEME - POPUPS - FANCYBOX
+
+  PAGES
+    PAGES — HEADER
+    PAGES — FOOTER
+    PAGES — MAIN
+      PAGES - MAIN - SHOPS
+      PAGES - MAIN - FEEDBACK
+      PAGES - MAIN - OPERATION
+    PAGES — ERROR
+
+  HELPERS
+
+ */
+
+
+
+/* BASE
+---------------------------------------------------------------------*/
+
+/* BASE - ROOT
+---------------------------------------------------------------------*/
+
+html {
+	font-size: 62.5%;
+	font-family: sans-serif;
+	overflow-y: scroll; /* убираем скачок из-за появляющейся полосы прокрутки */
+	-webkit-font-smoothing: antialiased; /* лучшее сглаживание шрифта в макоси */
+
+	/* http://stackoverflow.com/questions/6210788/how-to-avoid-ios-automatic-font-size-adjustment — автоматическая настройка размеров текста у мобильных */
+	-webkit-text-size-adjust: 100%;
+	-ms-text-size-adjust: 100%;
+}
+
+body {
+	line-height: 1.5;
+	margin: 0; /* Убираем внутренний отступ */
+}
+
+/* Текстовые выделения: убирается тень и добавляются цвета по умолчанию */
+::-moz-selection {
+	background-color: #69c;
+	background-color: Highlight;
+	color: #fff;
+	color: HighlightText;
+	text-shadow: none;
+}
+::selection {
+	background-color: #69c;
+	background-color: Highlight;
+	color: #fff;
+	color: HighlightText;
+	text-shadow: none;
+}
+
+[hidden], /* отсутствует в ИЕ789 */
+template { /* отсутствует в ИЕ, Сафари и ФФлт22 */
+	display: none;
+}
+
+
+
+/* BASE - HTML5
+---------------------------------------------------------------------*/
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section,
+summary {
+	display: block; /* исправляется отображение в ИЕ89 */
+}
+
+audio,
+canvas,
+video {
+	display: inline-block; /* исправляется отображение в ИЕ89 */
+}
+.ielte7 audio,
+.ielte7 canvas,
+.ielte7 video {
+	display: inline;
+	zoom: 1;
+}
+
+audio:not([controls]) {
+	display: none; /* не отображать без элементов управления */
+	height: 0; /* убирается ненужная высота в аёс 5 */
+}
+
+
+
+/* BASE - EMBEDDED
+---------------------------------------------------------------------*/
+
+img {
+	border: 0; /* убирается граница, если изображение внутри ссылки в ИЕ89 */
+	vertical-align: middle; /* убирается отступ снизу */
+}
+.ielte7 img {
+	-ms-interpolation-mode: bicubic; /* улучшение отображения при изменении размера */
+}
+
+.ie9 svg:not(:root) {
+	overflow: hidden; /* отображение в ИЕ9 */
+}
+
+figure {
+	margin: 0; /* ИЕ 789, Сафари 5, Опера 11 */
+}
+
+
+
+/* BASE - FORMS
+---------------------------------------------------------------------*/
+
+.ielte7 form {
+	margin: 0;
+}
+
+fieldset {
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+legend {
+	border: 0;
+	padding: 0;
+	white-space: normal;
+}
+.ielte7 legend {
+	margin-left: -7px;
+}
+
+label,
+input[type="checkbox"],
+input[type="radio"],
+button,
+select,
+.curPointer {
+	cursor: pointer;
+}
+html input[disabled],
+button[disabled],
+select[disabled] {
+	cursor: default;
+}
+
+button,
+input,
+select,
+textarea {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	font-family: inherit;
+	font-size: inherit;
+	line-height: inherit;
+	margin: 0;
+	vertical-align: baseline;
+}
+.ielte7 button,
+.ielte7 input,
+.ielte7 select,
+.ielte7 textarea {
+	vertical-align: middle;
+}
+
+button,
+input {
+	line-height: 1;
+}
+
+button,
+select {
+	text-transform: none;
+}
+
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+	-webkit-appearance: button; /* отображение в аёс и андроид */
+	cursor: pointer;
+}
+.ielte7 button,
+.ielte7 html input[type="button"],
+.ielte7 input[type="reset"],
+.ielte7 input[type="submit"] {
+	overflow: visible; /* внутренний отступ */
+}
+
+/* исправление неверно определяемых размеров в ИЕ */
+input[type="checkbox"],
+input[type="radio"] {
+	margin-top: -.17em;
+	padding: 0;
+	vertical-align: middle;
+}
+.ielte7 input[type="checkbox"],
+.ielte7 input[type="radio"] {
+	height: 13px;
+	width: 13px;
+}
+
+/* исправление проблемы с отображением в Хроме */
+input[type="search"] {
+	-webkit-appearance: textfield;
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+}
+
+/* проблемы с отображением в Хроме и Сафари */
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+	-webkit-appearance: none;
+}
+
+/* внутренний отступ в ФФ */
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}
+
+/* выделение элементов при фокусе в Хроме */
+select:focus,
+button:focus,
+textarea:focus,
+input:focus {
+	outline: 0;
+}
+
+/* вертикальная полоса прокрутки в ИЕ */
+textarea {
+	overflow: auto;
+	resize: vertical;
+	vertical-align: top;
+}
+
+
+
+/* BASE - TABLES
+---------------------------------------------------------------------*/
+
+/* устранение отступов между ячейками */
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+
+/* BASE - LINKS
+---------------------------------------------------------------------*/
+
+a:focus {
+	outline: thin dotted; /* одинаковое выделение выбранных ссылок */
+}
+
+a:active,
+a:hover {
+	outline: 0; /* убираем выделение в других состояниях */
+}
+
+
+
+/* BASE - LISTS
+---------------------------------------------------------------------*/
+
+li ul,
+li ol {
+	margin: .5em 0 1em;
+}
+ul, ol, dl {
+	margin: 0 0 1.5em;
+}
+ul, ol {
+	padding: 0 0 0 3em;
+}
+li, dt, dd {
+	margin-top: .5em;
+	padding-left: 0;
+	position: relative;
+}
+li:first-child,
+dt:first-child,
+dd:first-child {
+	margin-top: 0;
+}
+dt {
+	font-weight: bold;
+}
+dd {
+	margin-left: 3em;
+}
+
+
+
+/* BASE - TYPOGRAPHY
+---------------------------------------------------------------------*/
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: bold;
+}
+
+h1 {
+	font-size: 2em;
+	line-height: 1em;
+	margin: .75em 0 .325em;
+}
+
+h2 {
+	font-size: 1.5em;
+	line-height: 1em;
+	margin: 1em 0 .5em;
+}
+
+h3 {
+	font-size: 1.17em;
+	line-height: 1.2821em;
+	margin: 1.2821em 0 .6411em;
+}
+
+h4 {
+	font-size: 1em;
+	line-height: 1.5em;
+	margin: 1.5em 0 .75em;
+}
+
+h5 {
+	font-size: 0.83em;
+	line-height: 1.8072em;
+	margin: 1.8072em 0 .9036em;
+}
+
+h6 {
+	font-size: .67em;
+	line-height: 2.2388em;
+	margin: 2.2388em 0 1.1194em;
+}
+
+p,
+pre,
+blockquote {
+	font-size: 1em;
+	line-height: 1.5em;
+	margin: 0 0 1.5em;
+}
+
+p + ul,
+p + ol,
+p + dl {
+	margin-top: -.75em;
+}
+
+
+abbr[title] {
+	border-bottom: 1px dotted; /* стиль отсутствует в ИЕ 89, Сафари 5 и в Хроме */
+}
+
+b, strong {
+	font-weight: 700;
+}
+
+i, em {
+	font-style: italic;
+}
+
+dfn {
+	font-style: italic; /* стиль отсутствует в Сафари 5 и Хроме */
+}
+
+/* в ФФ теперь не отличается */
+hr {
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+	height: 0;
+}
+
+/* стиль отсутствует в ИЕ 789 */
+mark {
+	background: #ff0;
+	color: #000;
+}
+
+/* стиль отсутствует в Сафари 5 и Хроме */
+code, kbd, pre, samp {
+	font-family: coursiva, monospace, serif;
+	font-size: 1em;
+}
+
+pre {
+	white-space: pre-wrap; /* улучшает читаемость во всех браузерах */
+}
+
+/* кавычки для русского и английского языков */
+q:lang(en), .q.en {
+	quotes: "\201C" "\201D" "\2018" "\2019";
+}
+q:lang(ru), .q.ru {
+	quotes: '\00AB' '\00BB' '\201E' '\201C';
+}
+
+big {
+	font-size: 120%;
+}
+small {
+	font-size: 80%;
+}
+
+/* чтобы не влияли на высоту строки */
+sub, sup {
+	font-size: 75%;
+	line-height: 0;
+	position: relative;
+	vertical-align: baseline;
+}
+sup {
+	top: -.5em;
+}
+sub {
+	bottom: -.25em;
+}
+
+
+
+/* USEFUL
+---------------------------------------------------------------------*/
+
+/* предотвращает схлопывание элемента, если в нём есть плавающие */
+.group:before,
+.group:after {
+	content: " ";
+	display: table;
+}
+.group:after {
+	clear: both;
+}
+.ielte7 .group {
+	zoom: 1;
+}
+
+/* альтернативный способ */
+.groupIB {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	display: inline-block;
+	width: 100%;
+}
+.ielte7 .groupIB {
+	display: inline;
+	zoom: 1;
+}
+
+/* для использования с отдельным элементом */
+.clearBoth {
+	clear: both;
+}
+
+
+/* способы скрытия элемента */
+.hide {
+	display: none;
+}
+.hideNow {
+	display: none !important;
+}
+
+.invisible {
+	visibility: hidden;
+}
+.invisibleNow {
+	visibility: hidden !important;
+}
+
+.hideAway {
+	left: -9999px;
+	position: absolute;
+	top: -9999px;
+	visibility: hidden;
+}
+.hideAwayNow {
+	left: -9999px !important;
+	position: absolute !important;
+	top: -9999px !important;
+	visibility: hidden !important;
+}
+
+.visible {
+	visibility: visible;
+}
+.visibleNow {
+	visibility: visible !important;
+}
+
+.showBlock { display: block; }
+.showInline { display: inline; }
+.showInlineBlock { display: inline-block; }
+
+.showBlockNow { display: block !important; }
+.showInlineNow { display: inline !important; }
+.showInlineBlockNow { display: inline-block !important; }
+
+.ielte7 .showInlineBlock {
+	display: inline;
+	zoom: 1;
+}
+.ielte7 .showInlineBlockNow {
+	display: inline !important;
+	zoom: 1;
+}
+
+
+/* изображение растягивается на всю ширину контейнера, не искажаясь */
+.imgFill {
+	height: auto;
+	width: 100%;
+}
+
+/* растяжка элемента на всю ширину контейнера */
+.widthFull {
+	width: 100%;
+}
+
+/* предзагрузка изображений */
+/*
+<button>
+  <span class="Icon order imgPreload imgPreloadLoading"></span>
+  Купить
+</button>
+*/
+
+.imgPreload:after {
+	content: '';
+	display: inline;
+}
+
+
+/*
+<label for="input">Заголовок</label>
+<input id="input" type="text" />
+*/
+
+.fieldRequired:after {
+	color: red;
+	content: '*';
+	font-weight: bold;
+	margin-left: .3em;
+}
+.ielte7 .fieldRequired {
+	background-color: #fdd;
+	display: inline;
+	min-height: 1em;
+	min-width: 1em;
+	zoom: 1;
+}
+
+
+/* скрытие элементов, нуждающихся в джс, класс для модернизра */
+.isNeedsJS {
+	opacity: 0;
+	visibility: hidden;
+}
+.has-js .isNeedsJS {
+	opacity: 1;
+	visibility: visible;
+}
+
+
+/* скрытие текста в элементе */
+.textHide {
+	overflow: hidden;
+}
+.textHide:before {
+	content: "";
+	display: block;
+	height: 150%;
+}
+.ielte7 .textHide {
+	text-indent: -9999px; /* проблема: строчно-блоковые элементы улетают */
+}
+
+.textHideAway {
+	text-indent: -9999px;
+}
+
+/* /* отключение всплытия информации о ссылке при долгом нажатии на ней, http://developer.apple.com/library/safari/#documentation/AppleApplications/Reference/SafariCSSRef/Articles/StandardCSSProperties.html#/apple_ref/css/property/-webkit-touch-callout */
+.noTouchCallout {
+	-webkit-touch-callout: none;
+}
+
+/* https://developer.apple.com/library/safari/#documentation/AppleApplications/Reference/SafariWebContent/AdjustingtheTextSize/AdjustingtheTextSize.html */
+/* аналог для ИЕ10 на ВинФон8 — http://blogs.windows.com/windows_phone/b/wpdev/archive/2012/11/15/adapting-your-webkit-optimized-site-for-internet-explorer-10.aspx */
+.noTapHighlight {
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+/* верхний регистр с разрядкой */
+.textUppercase {
+	font-size: .875em;
+	letter-spacing: .1em;
+	margin-right: -.1em;
+	text-transform: uppercase;
+}
+
+/* полупробел */
+/* аналог в хтмл — `&#8198;` [отсюда](http://stackoverflow.com/a/8515417) */
+/* неразрывный вариант — `&#8239;` [отсюда](http://en.wikipedia.org/wiki/Non-breaking_space) */
+/*
+<span class="halfSpace">&nbsp;</span>
+*/
+.textHalfSpace {
+	font-size: 50%;
+	line-height: 1;
+}
+
+/* предотвращает перенос слов на новую строку в элементе */
+.textNowrap {
+	white-space: nowrap;
+}
+
+@import "modules/_var";
+@import "lib/stm/_mixins";
+@import "lib/stm/_fancybox";
+
+
+/* BLOCKS
+---------------------------------------------------------------------*/
+
+/* BLOCKS - EMBEDDED
+---------------------------------------------------------------------*/
+
+/*
+<span class="Icon actions"></span>
+*/
+
+.Icon {
+	display: inline-block;
+	margin-top: -.17em;
+	vertical-align: middle;
+	background-image: resolve('icons/ui.png');
+	background-repeat: no-repeat;
+}
+.ielte7 .Icon {
+	display: inline;
+	zoom: 1;
+}
+a .Icon {
+	margin-right: .4em;
+}
+
+.Icon.enter {
+	background-position: -266px -81px;
+	height: 11px;
+	width: 12px;
+}
+
+.Icon.enter:hover {
+	background-position: -271px -81px;
+}
+
+.Icon.search {
+	background-position: 0 -112px;
+	height: 16px;
+	width: 16px;
+}
+
+.Icon.informationBig,
+.Page__header.main .Icon.information {
+	background-position: 0 0;
+	height: 48px;
+	width: 47px;
+}
+.Icon.catalogueBig,
+.Page__header.main .Icon.catalogue {
+	background-position: -52px 0;
+	height: 48px;
+	width: 41px;
+}
+.Icon.basketBig,
+.Page__header.main .Icon.basket {
+	background-position: -98px 0;
+	height: 48px;
+	width: 50px;
+}
+.Icon.feedbackBig,
+.Page__header.main .Icon.feedback {
+	background-position: -153px 0;
+	height: 48px;
+	width: 51px;
+}
+
+.Icon.information {
+	background-position: -209px 0;
+	height: 22px;
+	width: 23px;
+}
+.Icon.catalogue {
+	background-position: -237px 0;
+	height: 22px;
+	width: 19px;
+}
+.Icon.basket {
+	background-position: -261px 0;
+	height: 22px;
+	width: 25px;
+}
+.Icon.basketL {
+	background-position: -139px -112px;
+	height: 33px;
+	width: 39px;
+}
+.Icon.feedback {
+	background-position: -291px 0;
+	height: 22px;
+	width: 24px;
+}
+.Icon.successBig {
+	background-position: -320px 0;
+	height: 49px;
+	width: 49px;
+}
+.Icon.errorBig {
+	background-position: -320px -54px;
+	height: 49px;
+	width: 49px;
+}
+
+.Icon.close {
+	background-position: -300px -81px;
+	height: 9px;
+	width: 9px;
+}
+
+.LinkIcon.mail .Icon,
+.Icon.mail {
+	background-position: -113px -112px;
+	height: 13px;
+	width: 21px;
+}
+a.Icon.mail:hover,
+a.Icon.mail.hover,
+.Icon.mail.active {
+	background-position: -113px -130px;
+}
+
+.Icon.truck {
+	background-position: -220px -133px;
+	height: 17px;
+	width: 32px;
+}
+.active .Icon.truck,
+.Icon.truck.active,
+.active .Icon.truck:hover,
+.Icon.truck.active:hover {
+	background-position: -183px -133px;
+}
+.Icon.truck:hover,
+.thumb:hover .Icon.truck {
+	background-position: -257px -133px;
+}
+
+.Icon.hypermarket {
+	background-position: -223px -110px;
+	height: 18px;
+	width: 35px;
+}
+.active .Icon.hypermarket,
+.Icon.hypermarket.active,
+.active .Icon.hypermarket:hover,
+.Icon.hypermarket.active:hover {
+	background-position: -183px -110px;
+}
+.Icon.hypermarket:hover,
+.thumb:hover .Icon.hypermarket {
+	background-position: -263px -110px;
+}
+
+.Icon.officemagKor {
+	background-position: -237px -155px;
+	height: 12px;
+	width: 49px;
+}
+.active .Icon.officemagKor,
+.Icon.officemagKor.active,
+.active .Icon.officemagKor:hover,
+.Icon.officemagKor.active:hover {
+	background-position: -183px -155px;
+}
+.Icon.officemagKor:hover,
+.thumb:hover .Icon.officemagKor {
+	background-position: -291px -155px;
+}
+
+.Icon.stickpin {
+	background-position: -315px -110px;
+	height: 12px;
+	width: 8px;
+}
+
+/* BLOCKS - FORMS
+---------------------------------------------------------------------*/
+
+/*
+<form class="Form">
+  <div class="Form__field">
+    <label>
+      <input type="text">
+      Напишите что-нибудь
+    </label>
+  </div>
+</form>
+*/
+
+.Form__field {
+	margin-top: 1.5em;
+	position: relative;
+}
+.Form__field:first-child {
+	margin-top: 0;
+}
+.Form__field.ib {
+	display: inline-block;
+	margin-top: 0;
+}
+
+
+/*
+<form action="#" class="FormSearch headerSearch">
+  <button class="FormSearch__submit" type="submit"><span class="textHide Icon enterBtn">Найти</span></button>
+  <label class="FormSearch__wrapper"><input class="FormSearch__field" type="text"><span class="Icon search"></span></label>
+</form>
+*/
+
+.FormSearch {
+	position: relative;
+	width: 100%;
+}
+.FormSearch__wrapper {
+	display: block;
+}
+.FormSearch__field {
+	width: 100%;
+}
+.FormSearch__submit {
+	float: right;
+}
+
+
+/*
+<label class="FieldFile">
+  <span class="FieldFile__button">Загрузить</span>
+  <span class="FieldFile__wrapper">
+    <input type="file" class="FieldFile__input" />
+  </span>
+</label>
+*/
+
+.FieldFile {
+	display: inline-block;
+	position: relative;
+}
+.FieldFile__wrapper {
+	bottom: 0;
+	cursor: pointer;
+	left: 0;
+	overflow: hidden;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+.FieldFile__input {
+	font-size: 48em;
+	height: auto;
+	left: -11.416666em;
+	opacity: 0;
+	position: absolute;
+	top: -.3em;
+	width: 12.5em;
+	visibility: hidden;
+}
+
+
+
+/* BLOCKS - LINKS
+---------------------------------------------------------------------*/
+
+a,
+.pseudoLink {
+	color: #0054de;
+	display: inline-block;
+	-webkit-transition: all .2s ease;
+	-moz-transition: all .2s ease;
+	-o-transition: all .2s ease;
+	transition: all .2s ease;
+}
+.pseudoLink {
+	border-bottom-width: 1px;
+	border-bottom-style: dotted;
+	cursor: pointer;
+	line-height: 1;
+}
+a:hover,
+.pseudoLink:hover {
+	color: #e30613;
+}
+
+a.Icon {
+	border-bottom: 0;
+}
+
+.Textnode a:visited {
+	color: #741fbc;
+}
+
+
+.thinBorder {
+	text-decoration: none;
+}
+.ielte7 .thinBorder .LinkWrapper {
+	display: block;
+	zoom: 1;
+}
+.thinBorder .LinkWrapper {
+	border-bottom: 1px solid #7fa9ee;
+	display: inline-block;
+	-webkit-transition: all .2s ease;
+	-moz-transition: all .2s ease;
+	-o-transition: all .2s ease;
+	transition: all .2s ease;
+}
+
+.thinBorder:hover .LinkWrapper {
+	border-color: #f18289;
+}
+
+
+
+/* BLOCKS - BUTTONS
+---------------------------------------------------------------------*/
+
+/*
+<a class="Btn" href="#">Напомнить</a>
+<button class="Btn">Купить</button>
+<input class="Btn" type="submit" value="Применить">
+*/
+
+.Btn {
+	border: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	cursor: pointer;
+	display: inline-block;
+	font: inherit;
+	overflow: visible;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.Btn:hover {
+	text-decoration: none;
+}
+.ielte7 .Btn {
+	display: inline;
+	zoom: 1;
+}
+
+.Btn.big {
+	font-size: 1.25em;
+}
+.Btn.small {
+	font-size: .75em;
+}
+
+
+.BtnDefault {
+	line-height: 1;
+	position: relative;
+	text-align: center;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+
+.BtnDefault {
+	-webkit-border-radius: 0 .5em;
+	-moz-border-radius: 0 .5em;
+	border-radius: 0 .5em;
+	-webkit-box-shadow:
+			inset -.072em -.072em 0 rgba(0,0,0,.25),
+			.072em .072em .144em rgba(0,0,0,.35);
+	-moz-box-shadow:
+			inset -.072em -.072em 0 rgba(0,0,0,.25),
+			.072em .072em .144em rgba(0,0,0,.35);
+	box-shadow:
+			inset -.072em -.072em 0 rgba(0,0,0,.25),
+			.072em .072em .144em rgba(0,0,0,.35);
+	padding: .75em;
+}
+.BtnDefault:active,
+.BtnDefault.Btn--active {
+	-webkit-box-shadow: inset 1px 1px 0 rgba(0,0,0,.25);
+	-moz-box-shadow: inset 1px 1px 0 rgba(0,0,0,.25);
+	box-shadow: inset 1px 1px 0 rgba(0,0,0,.25);
+}
+
+
+.BtnDefault.primary,
+a.BtnDefault.primary {
+	background-color: #cb3a28;
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#d74813), to(#c12f39));
+	background: -webkit-linear-gradient(#d74813, #c12f39);
+	background:    -moz-linear-gradient(#d74813, #c12f39);
+	background:      -o-linear-gradient(#d74813, #c12f39);
+	background:         linear-gradient(#d74813, #c12f39);
+	transition: none;
+	color: #fff;
+}
+.BtnDefault.primary:focus,
+.BtnDefault.primary:hover,
+.BtnDefault.primary.Btn--hover {
+	background-color: #e84b1b;
+	background-image: none;
+}
+
+
+
+/* BLOCKS - TABLES
+---------------------------------------------------------------------*/
+
+/*
+<a class="pseudoTable">
+  <span class="col name">Имя</span>
+  <span class="col age">Возраст</span>
+  <span class="col weight">Вес</span>
+</a>
+*/
+
+.pseudoTable .col {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	display: inline-block;
+	padding: .75em;
+	vertical-align: middle;
+	word-wrap: break-word;
+}
+
+
+
+/* BLOCKS - LISTS
+---------------------------------------------------------------------*/
+
+ul.custom {
+	list-style-type: none;
+}
+ul.custom > li:before {
+	cursor: default;
+	margin-right: .35em;
+	position: absolute;
+	right: 100%;
+	top: 0;
+}
+ul.custom.inside > li:before {
+	position: static;
+}
+
+ul.custom.dashed > li:before {
+	content: '\2014';
+	margin-right: .5em;
+}
+
+
+/*
+<ul class="List">
+  <li class="List__item">Пункт меню, например</li>
+</ul>
+*/
+
+.List {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.List__item {
+	margin: 0;
+}
+.List.ib .List__item {
+	display: inline-block;
+}
+.ielte7 .List.ib .List__item {
+	display: inline;
+	zoom: 1;
+}
+
+.List.ib.separated {
+	cursor: default;
+}
+.List.ib.separated .List__item:after {
+	content: "|";
+	margin-left: .55em;
+	margin-right: .55em;
+	opacity: .75;
+}
+.List.ib.separated .List__item.last:after {
+	content: none;
+}
+
+.List.ib.justify {
+	text-align: justify;
+}
+.List.ib.justify .List__item {
+	text-align: left;
+}
+.List.ib.justify:after {
+	content: "";
+	display: inline-block;
+	height: 1px;
+	width: 100%;
+}
+
+
+
+/* BLOCKS - TYPOGRAPHY
+---------------------------------------------------------------------*/
+
+.H {
+	font: inherit;
+	margin: 0;
+}
+.subheader {
+	font-weight: normal;
+}
+
+
+
+/* BLOCKS - PRODUCT
+---------------------------------------------------------------------*/
+
+/*
+<div class="Product">
+  <a href="#" class="Product__link">
+    <img src="http://img.png" alt="" class="Product__photo">
+    <span class="Product__name">Вентилятор</span>
+    <span class="textHide Product__badge novelty">Новинка</span>
+  </a>
+</div>
+*/
+
+.Product {
+	position: relative;
+}
+
+.Product__link {
+	line-height: 1.5;
+	position: relative;
+}
+
+.Product__badge {
+	position: absolute;
+	z-index: 3;
+}
+
+.List.ib.products .Product__link {
+	display: block;
+}
+.List.ib.products .Product__photo {
+	display: block;
+	height: auto;
+	margin-bottom: .5em;
+	width: 100%;
+}
+
+.Product__code {
+	font-size: 13px;
+	color: #656565;
+}
+
+.List.ib.products {
+	margin-top: 1.5em;
+	margin-bottom: -2.5em;
+}
+.List.ib.products .List__item {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	margin-bottom: 4em;
+	vertical-align: top;
+	width: 27.5%;
+}
+.List.ib.justify.products .List__item.fake {
+	margin-bottom: 0;
+}
+
+.List.ib.products .Product__link {
+	background-color: #fff;
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(0.8, #fff), to(#f3f3f3));
+	background-image: -webkit-linear-gradient(#fff 80%, #f3f3f3 100%);
+	background-image:    -moz-linear-gradient(#fff 80%, #f3f3f3 100%);
+	background-image:      -o-linear-gradient(#fff 80%, #f3f3f3 100%);
+	background-image:         linear-gradient(#fff 80%, #f3f3f3 100%);
+	border: 1px solid #cfcfcf;
+	border-radius: .57em;
+	-webkit-box-shadow:
+			inset 0 -5px 0 #cfcfcf,
+			0 0 10px rgba(0,0,0,.1);
+	-moz-box-shadow:
+			inset 0 -5px 0 #cfcfcf,
+			0 0 10px rgba(0,0,0,.1);
+	box-shadow:
+			inset 0 -5px 0 #cfcfcf,
+			0 0 10px rgba(0,0,0,.1);
+	padding: 1.45em;
+	text-decoration: none;
+	-webkit-transition: color .1s ease-in-out;
+	-moz-transition: color .1s ease-in-out;
+	-o-transition: color .1s ease-in-out;
+	transition: color .1s ease-in-out;
+	z-index: 2;
+}
+
+
+.Product__badge {
+	-webkit-border-radius: 0 .57em;
+	-moz-border-radius: 0 .57em;
+	border-radius: 0 .57em;
+	font-weight: bold;
+	padding-right: .3em;
+	padding-bottom: .1em;
+	padding-left: .3em;
+}
+.Product__badge.novelty {
+	background-color: #49ab8b;
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#6aba8e), to(#299e88));
+	background-image: -webkit-linear-gradient(#6aba8e, #299e88);
+	background-image:    -moz-linear-gradient(#6aba8e, #299e88);
+	background-image:      -o-linear-gradient(#6aba8e, #299e88);
+	background-image:          linear-gradient(#6aba8e, #299e88);
+	color: #fff;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+.Product__link .Product__badge.novelty {
+	right: -1px;
+	top: -1px;
+}
+
+
+
+/* BLOCKS - PRODUCT CARD
+---------------------------------------------------------------------*/
+
+/*
+<div class="ProductCard">
+  <div class="ProductCard__photos">
+    <img src="http://img1.png" alt="Вентилятор" class="imgFill Product__photo main">
+    <ul class="List ib PhotosPreview">
+      <li class="ListItem PhotoPreview__item active">
+        <img src="http://img1_preview.png" alt="" class="Product__photo">
+      </li><li class="ListItem PhotoPreview__item">
+        <img src="http://img2.png" alt="" class="Product__photo">
+      </li>
+    </ul>
+  </div><div class="ProductCardInfo Textnode">
+    <span class="Product__code">Артикул 439043</span>
+    <div class="ProductDescription">Напольный вентилятор - просто.</div>
+    <h4 class="h4 ProductFeaturesHeader">Характеристики</h4>
+    <ul class="ul dashedList ProductFeatures">
+      <li>Диаметр - 40 см.</li>
+      <li>Мощность - 45 Вт.</li>
+    </ul>
+  </div>
+</div>
+*/
+
+.ProductCard {
+	position: relative;
+}
+
+.ProductCard__photos,
+.ProductCard__info {
+	display: inline-block;
+	vertical-align: top;
+}
+.ProductCard__photos {
+	margin-right: 5%;
+	width: 40%;
+}
+.ProductCard__info {
+	width: 55%;
+}
+.Textnode .ProductFeatures {
+	padding-left: 1.5em;
+}
+
+.ProductCard__linkToBuy {
+	margin-top: 26px;
+	margin-bottom: 26px;
+}
+
+
+.Product__photo {
+	display: block;
+}
+
+
+.ProductBigPhoto__link {
+	border: 0;
+	display: inline-block;
+	position: relative;
+}
+.Product__photo.main {
+	max-height: 320px;
+	margin-bottom: 1.5em;
+	max-width: 320px;
+}
+
+.PhotosPreview {
+	line-height: 1;
+	margin-left: -.5em;
+}
+.PhotoPreview__item {
+	background-color: #e5e5e5;
+	border: 1px solid #cacaca;
+	cursor: pointer;
+}
+.PhotoPreview__item:hover,
+.PhotoPreview__item.hover {
+	border-color: #818181;
+}
+.PhotoPreview__item.active {
+	border-color: #e30613;
+	cursor: default;
+}
+.List.ib .PhotoPreview__item {
+	margin-left: .5em;
+	margin-bottom: .5em;
+}
+
+.PhotoPreview__item .Product__photo {
+	height: 48px;
+	width: 48px;
+}
+
+.ProductCard__info .Product__code {
+	color: #666;
+	display: block;
+	margin-bottom: 1em;
+}
+
+
+.ProductSuggest__header {
+	margin-top: 5.1284em;
+	margin-bottom: .6411em;
+}
+
+.List.productsSuggest {
+	font-size: .85em;
+	margin-bottom: 3.53em;
+}
+.List.productsSuggest.productsIntro .List__item {
+	border-bottom: 1px solid #d3d8d8;
+	padding-top: .5em;
+	padding-bottom: .5em;
+}
+.List.productsSuggest.productsIntro .List__item:first-child {
+	border-top: 1px solid #d3d8d8;
+}
+.List.productsSuggest .Product__link {
+	color: #454545;
+	display: inline;
+}
+.List.productsSuggest .Product__link:hover {
+	color: #e30613;
+}
+.List.productsSuggest .ProductIntro__media {
+	float: left;
+}
+.List.productsSuggest .Product__name {
+	display: inline-block;
+	margin-left: 20px;
+	text-decoration: underline;
+}
+.List.productsSuggest .ProductIntro__description {
+	margin-top: .3em;
+	margin-left: 70px;
+}
+.List.productsSuggest .Product__code {
+	color: #666;
+	font-size: .9em;
+}
+
+.Files {
+	margin-top: 20px;
+
+	.File__info .File__nameWrapper{
+		color: #0054de;
+
+		&:hover {
+			color: #e30613;
+		}
+	}
+}
+
+.File {
+	&__name {
+		border-bottom: 1px solid;
+	}
+
+	&__nameWrapper {
+		padding-bottom: 1px;
+	}
+}
+
+
+
+/* BLOCKS - NAV
+---------------------------------------------------------------------*/
+
+/*
+<div class="Paginator">
+  <span class="Paginator__pager"><a href="#">&larr;</a><small> + Ctrl</small></span>
+  <ul class="Paginator__list">
+    <li class="Paginator__item">
+      <a href="#">1</a>
+    </li><li class="Paginator__item active">
+      2
+    </li><li class="Paginator__item">
+      ...
+    </li><li class="Paginator__item">
+      <a href="#">7</a>
+    </li>
+  </ul>
+  <span class="Paginator__pager"><small>Ctrl + </small><a href="#">&rarr;</a></span>
+</div>
+*/
+
+.Paginator {
+	cursor: default;
+}
+
+.Paginator__list,
+.Paginator__item {
+	display: inline-block;
+	vertical-align: top;
+}
+.ielte7 .Paginator__list,
+.ielte7 .Paginator__item {
+	display: inline;
+	zoom: 1;
+}
+
+.Paginator__pager small {
+	font-size: 70%;
+}
+
+.Paginator__list {
+	margin-right: .4em;
+	margin-bottom: 0;
+	margin-left: .4em;
+	padding-left: 0;
+}
+
+.Paginator__item {
+	margin-top: 0;
+	margin-left: .2em;
+	padding: 0 .4em;
+}
+.Paginator__item:first-child {
+	margin-left: 0;
+}
+
+
+.Paginator__pager {
+	color: #666;
+}
+.Paginator__item.active {
+	background-color: #e7e9e9;
+	-webkit-border-radius: .3em;
+	-moz-border-radius: .3em;
+	border-radius: .3em;
+}
+
+.PageNavigator .Paginator.isRight {
+	float: right;
+}
+.PageNavigator__items {
+	float: left;
+	width: 50%;
+}
+
+
+/*
+<div class="Breadcrumbs">
+  <ul class="Breadcrumbs__list">
+    <li class="Breadcrumbs__item">
+      <a href="#">Главная</a>
+    </li><li class="Breadcrumbs__item last">
+      <span>Обратная связь</span>
+    </li>
+  </ul>
+</div>
+*/
+
+.Breadcrumbs {
+	cursor: default;
+	font-size: .86em;
+	line-height: 1;
+}
+.Breadcrumbs__list {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+.Breadcrumbs__item {
+	display: inline-block;
+	margin-top: 0;
+	margin-right: .4em;
+	vertical-align: baseline;
+}
+.Breadcrumbs__item:after {
+	content: "";
+	display: inline-block;
+	left: 100%;
+	margin-top: -.17em;
+	margin-left: .5em;
+	top: 0;
+	vertical-align: middle;
+}
+.Breadcrumbs__item.active:after {
+	display: none;
+}
+
+.Breadcrumbs__item:after {
+	/*background-image: url(/img/interface/breadcrumb_arrow.png);*/
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAAGCAMAAAAxO9Q+AAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAABlJREFUeNo9xLENAAAAgjD4/2ldlDQg7XMCAGAAB8JM/K8AAAAASUVORK5CYII=) no-repeat;
+	height: 6px;
+	width: 3px;
+}
+
+
+.CategoriesNav {
+	background-color: #f9f9f9;
+	-webkit-box-shadow: 0 4px 6px rgba(0,0,0,.3);
+	-moz-box-shadow: 0 4px 6px rgba(0,0,0,.3);
+	box-shadow: 0 4px 6px rgba(0,0,0,.3);
+}
+.CategoriesNav__header {
+	cursor: default;
+	margin: 0;
+}
+.Categories__link {
+	display: block;
+	padding: .75em 30px;
+}
+.CategoriesNav__header.Categories__link {
+	color: #333;
+}
+.Categories .Categories__link {
+	border-top: 1px solid #cbcbcb;
+	color: #555;
+	text-decoration: none;
+}
+.Categories .Categories__link:hover {
+	color: #000;
+	background-image: resolve('interface/category-link_bg_hover.png');
+}
+.Categories__item.active .Categories__link {
+	background-color: #e13a29;
+	background:
+			resolve('interface/category-link_bg_hover.png'),
+			-webkit-gradient(linear, 0 0, 0 100%, from(#e44306), to(#df3345));
+	background:
+			resolve('interface/category-link_bg_hover.png'),
+			-webkit-linear-gradient(#e44306, #df3345);
+	background:
+			resolve('interface/category-link_bg_hover.png'),
+			-moz-linear-gradient(#e44306, #df3345);
+	background:
+			resolve('interface/category-link_bg_hover.png'),
+			-o-linear-gradient(#e44306, #df3345);
+	background:
+			resolve('interface/category-link_bg_hover.png'),
+			linear-gradient(#e44306, #df3345);
+	color: #fff;
+	font-weight: bold;
+}
+.Categories__item.active a.Categories__link:hover {
+	color: rgba(255,255,255,.75);
+}
+.Categories__item.active {
+	font-weight: bold;
+}
+
+
+
+/* BLOCKS - BANNERS & SLIDERS
+---------------------------------------------------------------------*/
+
+.Banner__slides {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+.Banner__slide {
+	margin-top: 0;
+}
+
+.Banner.main {
+	/*background: url(/img/interface/behind_banner_bg.png) repeat-x 0 100%;*/
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACUAAAIVCAMAAABhpca1AAABSlBMVEXt7e2cnJzv7+/AwMDs7Ozw8PDt7e2jo6OoqKjLy8tpaWkxMTEgICDi4uJxcXHw8PDc3Nzt7e3u7u7q6urx8fFaWlrw8PDh4eGRkZHCwsLt7e24uLjt7e2AgIDw8PCOjo7s7OzNzc3Gxsbt7e3p6eni4uLv7+85OTnv7++JiYkMDA3s7OywsLDu7u6Wlpbv7++tra3Nzc25ubnu7u7i4uLw8PDT09Ourq7t7e3u7u4pKSmTk5MMDAzw8PDv7+/m5uahoaHu7u66uroAAAEAAAEAAAEAAAEAAAEAAAEAAAEAAAEAAAEAAAEAAAEAAAEAAAEAAAEAAAEAAAEAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD9/f36+vr29vb+/v7////RhL1WAAAAaXRSTlPzMbdF/ZvcMjVPIhoYcySWZvbRhaYfqm0sR+Y9iiaaK/lSSOiAcq4bwSkW4zqTLr44UT7HdJlXOe67GS0Ws616Mcg/DggNAwUSCwkGDA8UEQoQExUVDRAKDwkLCAwOBxIFEQYTBBQDAgFX3i5AAAAB50lEQVR42u3S6VPTUBTG4YCAKwgorggCgrigoihCaWkrKrK0lbpD1VoqiPb//2pOtBNyk8m8kjS5se/vU+bkmcnJTYx9JCoqKo3UHhIVVVuq70hUVC1VL6SQ1C4SFVVL1Ve1l5IyQ5VnVO2sviFprdYlTHEvTdVnJCoql9pGovpf1Yqkqo9qa5IyMxUQqNYkTGFPpApZvUf6V1WSgiu7RKlSCVf2SdgXzsJVSMYnpISqV1aY0m/7+NQOUkRqQwpfafWOvmpDwlT8279FotJFPZeOriqHeyZV3IlSomp39QEpJrUpRafsbA4ofc4rLPUOKWHqtRRI2QBRNvBXSTmJqllRqvqEKiBQab1X26iiFIX6gkQFqFUJUxpu3ypVa7Yl1bxDVRMAygZBlRVVVAr/QnIbVUhGHSlqVSiEqRK6fcGqflT1Z+4IVHr+E6Z6o1aWlBmo3EMpgML2CqrKVkb+7r2bPhuVb996kH9o5KbTj5efzC96muzs5MzU/dwjo2H26+nCjbHjp51iaXR8LnPnZ0MSZXU903us49SZv2IodbV/ZELmTiXXncsnT6Su9V3KXr54/opMXEr60dWT7h4+d/bC4MBBQ1HeUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUcWofgPjbwKsNS1YIAAAAABJRU5ErkJggg==) repeat-x 0 100%;
+	clear: left;
+}
+
+.Banner.main .Banner__slides {
+	position: relative;
+}
+.Banner.main .Banner__slide {
+	bottom: 0;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 5;
+}
+.Banner.main .Banner__slide.first {
+	bottom: auto;
+	position: relative;
+	top: auto;
+}
+.Banner.main .Banner__slide.active {
+	z-index: 10;
+}
+.Banner.main .Banner__slide.activeReady {
+	z-index: 11;
+}
+
+.Banner__container {
+	position: relative;
+}
+.Banner__container:before,
+.Banner__container:after {
+	content: "";
+	position: absolute;
+	bottom: -1px;
+	height: 22px;
+	background-image: resolve('interface/banner_shadow.png');
+	background-repeat: no-repeat;
+}
+.Banner__container:before {
+	background-position: 0 0;
+	left: -2.5%;
+	width: 30%;
+}
+.Banner__container:after {
+	background-position: 100% 0;
+	right: -2.5%;
+	width: 75%;
+}
+
+.Banner__image {
+	-webkit-border-radius: 0 60px;
+	-moz-border-radius: 0 60px;
+	border-radius: 0 60px;
+	height: 100%;
+	overflow: hidden;
+	position: relative;
+	width: 100%;
+	z-index: 10;
+}
+
+.Banner__slides {
+	z-index: 2;
+}
+
+.Banner__controls {
+	margin-top: -36px;
+	position: absolute;
+	top: 50%;
+	width: 100%;
+	z-index: 20;
+}
+.Banner__control {
+	cursor: pointer;
+	opacity: .5;
+	padding: 15px;
+	position: absolute;
+	-webkit-transition: opacity .2s ease;
+	-moz-transition: opacity .2s ease;
+	-o-transition: opacity .2s ease;
+	transition: opacity .2s ease;
+}
+.Banner__control:hover {
+	opacity: 1;
+}
+.Banner__control.previous {
+	left: 0;
+}
+.Banner__control.next {
+	right: 0;
+}
+.Banner__arrow {
+	display: block;
+	width: 18px;
+	height: 42px;
+	background-image: resolve('icons/ui.png');
+	background-repeat: no-repeat;
+}
+.Banner__control.previous .Banner__arrow {
+	background-position: -67px -112px;
+}
+.Banner__control.next .Banner__arrow {
+	background-position: -90px -112px;
+}
+
+
+.Slider.main {
+	background: #fff;
+	clear: left;
+	padding: 3em 0 4.5em;
+
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.Slider.main .Wrapper {
+	position: relative;
+}
+
+.Slider__container {
+	margin: 0 3em;
+	overflow: hidden;
+	position: relative;
+	text-align: center;
+	white-space: nowrap;
+}
+
+.Slider__container:before,
+.Slider__container:after {
+	content: "";
+	display: block;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	width: 3em;
+	z-index: 10;
+}
+.Slider__container:before {
+	background: -webkit-gradient(linear, 0 0, 100% 0, from(#fff), to(rgba(255,255,255,0)));
+	background: -webkit-linear-gradient(to right, #fff, rgba(255,255,255,0));
+	background:    -moz-linear-gradient(to right, #fff, rgba(255,255,255,0));
+	background:      -o-linear-gradient(to right, #fff, rgba(255,255,255,0));
+	background:         linear-gradient(to right, #fff, rgba(255,255,255,0));
+	left: 0;
+}
+.Slider__container:after {
+	background: -webkit-gradient(linear, 100% 0, 0 0, from(#fff), to(rgba(255,255,255,0)));
+	background: -webkit-linear-gradient(to left, #fff, rgba(255,255,255,0));
+	background:    -moz-linear-gradient(to left, #fff, rgba(255,255,255,0));
+	background:      -o-linear-gradient(to left, #fff, rgba(255,255,255,0));
+	background:         linear-gradient(to left, #fff, rgba(255,255,255,0));
+	right: 0;
+}
+
+.Slider__item,
+.Slider__link {
+	display: inline-block;
+}
+.Slider__item {
+	margin: 0 1em 2.5em;
+	padding: 2px;
+	position: relative;
+	text-align: center;
+	vertical-align: middle;
+	white-space: normal;
+	height: 15em;
+	width: 14.5em;
+}
+.Slider__link {
+	border: 1px solid #dddfdf;
+	-webkit-border-radius: .3571em;
+	-moz-border-radius: .3571em;
+	border-radius: .3571em;
+	overflow: hidden;
+	height: 14em;
+	position: relative;
+	width: 14em;
+	-webkit-transition: border-color .25s ease;
+	-moz-transition: border-color .25s ease;
+	-o-transition: border-color .25s ease;
+	transition: border-color .25s ease;
+}
+
+.Slider__container .Slider__item .Slider__link:hover {
+	opacity: 1;
+}
+
+.Slider__photo {
+	-webkit-border-radius: .3571em;
+	-moz-border-radius: .3571em;
+	border-radius: .3571em;
+	height: 100%;
+	width: 100%;
+}
+
+.Slider__description {
+	height: 100%;
+	left: 0;
+	padding: 0 .8571em;
+	position: absolute;
+	text-align: left;
+	top: 0;
+	background-image: resolve('interface/bg_leaves_tile.png');
+
+	opacity: 0;
+	visibility: hidden;
+
+	-webkit-transform: translateY(50%);
+	-moz-transform: translateY(50%);
+	-o-transform: translateY(50%);
+	transform: translateY(50%);
+
+	/* анимируем с появлением */
+	-webkit-transition: all .1s ease-in-out;
+	-moz-transition: all .1s ease-in-out;
+	-o-transition: all .1s ease-in-out;
+	transition: all .1s ease-in-out;
+}
+
+.Slider__itemCode {
+	font-size: 13px;
+	color: #555;
+}
+
+.Slider__itemTitle {
+	line-height: 1.5em;
+	color: #000;
+}
+
+
+.Slider__item:hover:after {
+	/*background: url(/img/interface/slider_shadow.png) no-repeat;*/
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAAcBAMAAADihXuhAAAAKlBMVEUAAAB6ACV6ACR5ACN6ACV7ACJ5ACV2ACR5ACJqAR9SBBRZAxdOBBJfAhro/RnPAAAADnRSTlMACgYEDwITFwMdNSo8JZTffhAAAAJWSURBVFjD3ZdPTuswEIezyQES9QKxb2Bv3hbpqWtvkDhA9HqDRG/9hPRugFhwAdoTFHGBigtEqHfBMx48TmyJ4c+C8Ala0dj1x28yTlL9FC5deJvjKgH1YhJ9+CVWlUu/nhcrc/WfuC4f538q/auuPuBaRxNXzQ2Yf/Yd/Apzcv9kISeUW0zMdIxRSlur/I8YHA7zdKa8CELgViViFoEVtJrRNU3T4vubtDw8xeDXIokoKZTgw9FMWaOIpulU84Wo1v8S2qroyZZZo7maTjKoojaUU9ss+P1pmgUdZasN1J9OUQdGqV4V7Di2lou3ydbY9tvtnxIjUjzU99tc9oJPhI7DDI5VVKxRD/tAW8itLaXFRrsx8vdWwA2PH9i3lGoHWVqDHYSKLvpdeT1jTbRjOZLyjEBc9pzy/FDgcTYkTiTVgWRZMjpqq73iNRn6F4gvNGun0qJyZjGtu8Rmv78Xcjz60a/OU0yV80wLrtrQ3hBifQkB1pifxq4gPS4pFxPtYBVY8vQE+FcBYdThgKp+Pjpy4ankrIg9YzBDB1caB4Kw/XqWfrOTbcLwjkcM7gA8CTkBMGu/DzFOXGtPNNywodYWBOu5YIuCmyg4LNoBKxzK68t2z5wOOf5DHgDjcSLUeNk6u9DlkOAFGKpUUFhi5OY2ME1n4kHEmZimtK+FJRY3CWfpyfaXuwLZbgMTGVmTSLcZZvwkbCXbZuQbNdY8ZxjG3TAITGb0wo1aeKnL6DFbf56K6P1QzwcudWu5WVjB7dYablhXccu/joemVTx2ruXB/TvwAovokD99IRJGAAAAAElFTkSuQmCC) no-repeat;
+	bottom: -2.5em;
+	content: "";
+	display: block;
+	height: 28px;
+	left: 50%;
+	margin-left: -160px;
+	position: absolute;
+	width: 320px;
+}
+.Slider__item:hover .Slider__link,
+.Slider__item:hover .Slider__photo,
+.Slider__item .Slider__description {
+	-webkit-border-radius: 0 1em;
+	-moz-border-radius: 0 1em;
+	border-radius: 0 1em;
+}
+.Slider__item:hover .Slider__link {
+	border: 3px solid #df2a0e;
+	top: -2px;
+}
+
+.Slider__description {
+	-webkit-transition-duration: 0;
+	-moz-transition-duration: 0;
+	-o-transition-duration: 0;
+	transition-duration: 0;
+}
+.Slider__item:hover .Slider__description {
+	padding: 1.3142em .8571em 0;
+	-webkit-transform: translateY(0);
+	-moz-transform: translateY(0);
+	-o-transform: translateY(0);
+	transform: translateY(0);
+
+	opacity: 1;
+	visibility: visible;
+	-webkit-transition-duration: .5s;
+	-moz-transition-duration: .5s;
+	-o-transition-duration: .5s;
+	transition-duration: .5s;
+}
+
+.Slider__control {
+	cursor: pointer;
+	display: block;
+	height: 14em;
+	position: absolute;
+	top: 0;
+	visibility: hidden;
+	width: 30px;
+	z-index: 10;
+}
+.has-js .Slider__control {
+	visibility: visible;
+}
+.Slider__control:hover {
+	background: rgb(240,240,240);
+	background-color: rgba(0,0,0,.05);
+}
+.Slider__control:active {
+	background: rgb(230,230,230);
+	background-color: rgba(0,0,0,.1);
+}
+
+.Slider__arrow {
+	position: absolute;
+	top: 50%;
+	width: 9px;
+	height: 20px;
+	margin-top: -10px;
+	background-image: resolve('icons/ui.png');
+	background-repeat: no-repeat;
+}
+
+.Slider__control.previous {
+	left: 30px;
+}
+.Slider__control.previous .Slider__arrow {
+	background-position: -209px -81px;
+	left: 10px;
+}
+.Slider__control.previous:hover .Slider__arrow {
+	background-position: -237px -81px;
+}
+
+.Slider__control.next {
+	right: 30px;
+}
+.Slider__control.next .Slider__arrow {
+	background-position: -223px -81px;
+	right: 10px;
+}
+.Slider__control.next:hover .Slider__arrow {
+	background-position: -251px -81px;
+}
+
+
+
+/* BLOCKS - PHOTOS VIEWER
+---------------------------------------------------------------------*/
+
+.PhotoViewer {
+	overflow: hidden;
+}
+
+.PhotoViewer__photo,
+.PhotoViewer__list {
+	float: left;
+	padding: 24px 24px 18px;
+}
+
+.PhotoViewer__photo {
+	background: #fff;
+	border-right: 1px solid #cfcfcf;
+}
+
+.PhotoViewer__list {
+	background: #e6e6e6;
+	border-left: 0;
+	height: 450px;
+	list-style-type: none;
+	margin: 0;
+	margin-left: -6px;
+	overflow: hidden;
+	padding: 40px 24px 32px 0;
+	width: 60px;
+	line-height: 0;
+}
+.PhotoViewer__photo + .PhotoViewer__list {
+	border-left: 1px solid #ddd;
+	margin-left: 0;
+	padding-left: 24px;
+}
+.List.PhotoViewer__list .List__item {
+	margin: 0 0 5px;
+}
+.List.PhotoViewer__list .List__item.last {
+	margin-bottom: 0;
+}
+
+.PhotoViewer__list .Product__photo {
+	height: 57px;
+	width: 57px;
+}
+
+
+
+/* BLOCKS - POPUPS
+---------------------------------------------------------------------*/
+
+/* BLOCKS - POPUPS - NOTIFICATIONS
+---------------------------------------------------------------------*/
+
+.NotificationPanel {
+	background-color: #ccc;
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.35);
+	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.35);
+	box-shadow: 0 1px 2px rgba(0,0,0,.35);
+	font-size: .93em;
+	position: relative;
+	z-index: 1;
+}
+.NotificationPanel.problem {
+	background-color: #ffe7c0;
+}
+.NotificationPanel.main {
+	text-align: center;
+}
+
+.NotificationPanel .Wrapper {
+	padding-bottom: .75em;
+	padding-left: 21px;
+	padding-top: .75em;
+}
+.NotificationPanel.problem .NotificationPanel__message {
+	color: #e5151f;
+	margin-right: 1em;
+}
+.NotificationPanel__close {
+	color: #666159;
+	margin-left: 1em;
+}
+.NotificationPanel__close.pseudoLink .Icon.close {
+	margin-left: -13px;
+}
+.NotificationPanel__close.pseudoLink:hover .Icon.close {
+	background-position: -300px -95px;
+}
+
+
+
+/* BLOCKS - TABS
+---------------------------------------------------------------------*/
+
+/*
+  <ul class="List ib Tabs">
+    <li class="List__item Tabs__item active">
+      <div class="Tabs__itemInformation">
+        Оптовые поставки
+      </div>
+    </li><li class="List__item Tabs__item thumb">
+      <div class="Tabs__itemInformation">
+        Розничные магазины
+      </div>
+    </li>
+  </ul>
+*/
+
+.Tabs__item {
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	margin: 0 0 0 1.3em;
+	padding: .93em 1.2em;
+}
+
+.Tabs__item:first-child {
+	margin: 0;
+}
+
+.Tabs__item.active {
+	background: #dfe1e1;
+	border: 0 none;
+	-webkit-box-shadow: inset 0 2px 4px rgba(65, 87, 98, .5);
+	box-shadow: inset 0 2px 4px rgba(65, 87, 98, .5);
+	cursor: default;
+}
+
+.Tabs__item.thumb {
+	background: none;
+	border: 1px dashed #0557df;
+	color: #0557df;
+	cursor: pointer;
+}
+
+.Tabs__item.thumb:hover {
+	border-color: #e30613;
+	color: #e30613;
+}
+
+.Tabs__item.active .Tabs__itemInformation {
+	margin: 1px;
+}
+
+
+
+/* BLOCKS - TROUBLE REPORT
+---------------------------------------------------------------------*/
+
+/*
+	<div class="TroubleReport">
+		<a class="TroubleReport__button" href="#">Сообщить о проблеме</a>
+	</div>
+*/
+
+.TroubleReport {
+	width: 200px;
+	float: right;
+	text-align: right;
+	margin-top: -4px;
+}
+
+.TroubleReport__button {
+	display: inline-block;
+	padding: 9px 17px 9px 47px;
+	border-radius: 5px;
+	border: none;
+	font-size: 12px;
+	text-decoration: none;
+	line-height: 1;
+	color: #3d3d3d;
+	background-color: rgba(221, 221, 221, .9);
+	background-image: resolve('icons/troubleReport.png');
+	background-repeat: no-repeat;
+	background-position: 19px 50%;
+	transition: background-color .3s;
+}
+
+.TroubleReport__button:hover {
+	color: #3d3d3d;
+	background-color: rgba(221, 221, 221, 1);
+}
+
+
+
+/* THEME
+---------------------------------------------------------------------*/
+
+/* THEME - HELPERS
+---------------------------------------------------------------------*/
+
+/* врезка */
+/*p*/.textIncut {
+	background-color: #de2710;
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#e44301), to(#d80820));
+	background: -webkit-linear-gradient(#e44301, #d80820);
+	background:    -moz-linear-gradient(#e44301, #d80820);
+	background:      -o-linear-gradient(#e44301, #d80820);
+	background:         linear-gradient(#e44301, #d80820);
+	-webkit-border-radius: 0 2em;
+	-moz-border-radius: 0 2em;
+	border-radius: 0 2em;
+	color: #fff;
+	font-size: 1.3em;
+	line-height: 1.3;
+	padding: 1.7em 2em;
+}
+
+
+
+/* THEME - EMBEDDED
+---------------------------------------------------------------------*/
+
+figure img + figcaption {
+	margin-top: 1em;
+}
+
+
+
+/* THEME - TYPOGRAPHY
+---------------------------------------------------------------------*/
+
+ul, ol {
+	padding: 0 0 0 1.25em;
+}
+
+ol {
+	counter-reset: level1;
+	list-style-type: none;
+}
+.ielte7 ol {
+	list-style-type: decimal;
+}
+ol > li:before {
+	cursor: default;
+	margin-right: .75em;
+	position: absolute;
+	right: 100%;
+	top: 0;
+}
+ol.inside > li:before {
+	position: static;
+}
+ol > li:before {
+	content: counter(level1) ". ";
+	counter-increment: level1;
+	position: absolute;
+}
+ol ol {
+	counter-reset: level2;
+}
+ol ol li:before {
+	content: counter(level1) "." counter(level2) ". ";
+	counter-increment: level2;
+	position: absolute;
+}
+
+ol li:before {
+	color: #6b6b6b;
+	font-size: .85em;
+	line-height: 1.9em;
+}
+
+
+small {
+	font-size: 85%;
+}
+
+
+
+/* THEME - FORMS
+---------------------------------------------------------------------*/
+
+.Fieldset {
+	border: 1px solid;
+	padding: .35em .625em .75em;
+}
+
+
+input[type="text"],
+input[type="password"],
+input[type="search"],
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+select,
+textarea {
+	background-color: #f5f5f5;
+	border: 1px solid #cdcdcd;
+	-webkit-border-radius: .4em;
+	-moz-border-radius: .4em;
+	border-radius: .4em;
+	-webkit-box-shadow: inset 0 .1em .2em rgba(0,0,0,.09);
+	-moz-box-shadow: inset 0 .1em .2em rgba(0,0,0,.09);
+	box-shadow: inset 0 .1em .2em rgba(0,0,0,.09);
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	line-height: 1;
+	padding: .4em .6em .3em;
+}
+select {
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#fff), to(#dadfdf));
+	background: -webkit-linear-gradient(#fff, #dadfdf);
+	background:    -moz-linear-gradient(#fff, #dadfdf);
+	background:      -o-linear-gradient(#fff, #dadfdf);
+	background:         linear-gradient(#fff, #dadfdf);
+	border: 0;
+	-webkit-box-shadow:
+			0 .072em 0 rgba(0,0,0,.2),
+			0 .144em .148em rgba(0,0,0,.1);
+	-moz-box-shadow:
+			0 .072em 0 rgba(0,0,0,.2),
+			0 .144em .148em rgba(0,0,0,.1);
+	box-shadow:
+			0 .072em 0 rgba(0,0,0,.2),
+			0 .144em .148em rgba(0,0,0,.1);
+}
+.ie8 input[type="text"],
+.ie8 input[type="password"],
+.ie8 input[type="search"],
+.ie8 input[type="email"],
+.ie8 input[type="tel"],
+.ie8 input[type="url"],
+.ie8 select,
+.ie8 textarea {
+	border: 1px solid #999;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+	background-color: #fff;
+	-webkit-box-shadow: 0;
+	-moz-box-shadow: 0;
+	box-shadow: 0;
+	border-color: #9ca1a1;
+}
+
+
+/*
+<div class="formError">
+  <input type="text" />
+  <span class="errorName">Поле не должно быть пустым</span>
+</div>
+<div>
+  с <input type="text" /> по <input class="fieldError" type="text" />
+  <span class="errorName">Дата должна быть адекватной</span>
+</div>
+*/
+
+.formError input,
+.formError textarea,
+input.fieldError,
+textarea.fieldError {
+	border-color: #e70202;
+}
+.formError select,
+select.fieldError {
+	border: 1px solid #e70202;
+}
+.errorName {
+	color: #E70202;
+	font-size: 0.86em;
+	left: 0;
+	position: absolute;
+	top: 100%;
+	width: 100%;
+}
+
+
+.FormSearch.headerSearch {
+	top: 2px;
+}
+
+.FormSearch__wrapper {
+	display: inline-block;
+	position: relative;
+	-webkit-transition: all .25s cubic-bezier(.62,-0.51,.52,1.43);
+	-moz-transition: all .25s cubic-bezier(.62,-0.51,.52,1.43);
+	-o-transition: all .25s cubic-bezier(.62,-0.51,.52,1.43);
+	transition: all .25s cubic-bezier(.62,-0.51,.52,1.43);
+}
+.ielte7 .FormSearch__wrapper {
+	display: block;
+	zoom: 1;
+}
+
+.FormSearch__wrapper .Icon {
+	left: .6em;
+	opacity: .7;
+	position: absolute;
+	top: .75em;
+	-webkit-transition: opacity .2s ease;
+	-moz-transition: opacity .2s ease;
+	-o-transition: opacity .2s ease;
+	transition: opacity .2s ease;
+}
+
+input.FormSearch__field {
+	background: #f5f5f5;
+	padding-left: 2.14em;
+	-webkit-transition: all .2s ease;
+	-moz-transition: all .2s ease;
+	-o-transition: all .2s ease;
+	transition: all .2s ease;
+}
+
+input.FormSearch__field:hover {
+	background: #fafafa;
+	border-color: #b5b5b5;
+}
+
+.FormSearch__wrapper:hover .Icon {
+	opacity: 1;
+}
+
+.FormSearch.fieldIsFocused .FormSearch__field,
+.FormSearch__field.isFilled  {
+	background: #fff;
+	border-color: #9ca1a1;
+}
+
+.FormSearch__submit {
+	background: none;
+	border: 0;
+	margin: 0;
+	padding: 8px 6px;
+}
+
+
+.FormSearch.fieldIsFocused .Icon.search,
+.FormSearch__field:focus + .Icon.search,
+.FormSearch__field.isFilled + .Icon.search {
+	background-position: 0 -133px;
+	opacity: 1;
+}
+
+.FormSearch__submit:hover .Icon {
+	background-position: -283px -81px;
+}
+
+
+
+/* THEME - TABLES
+---------------------------------------------------------------------*/
+.Items,
+.Table,
+.Textnode table {
+	line-height: 1.5;
+	margin-top: -.75em;
+	margin-bottom: -.75em;
+}
+
+.Items,
+.Table,
+.Textnode table {
+	width: 100%;
+}
+.Table th,
+.Textnode th {
+	color: #949494;
+	font-weight: normal;
+	text-align: left;
+}
+
+.Items .Item,
+.Table tr,
+.Textnode tr {
+	border-bottom: 1px solid #dcdcdc;
+	vertical-align: top;
+}
+
+.Items .Item:last-child,
+.Table tbody tr:last-child,
+.Textnode tbody tr:last-child {
+	border-bottom: 0;
+}
+.Table th, .Textnode th,
+.Table td, .Textnode td {
+	padding: .75em;
+}
+.Table th:first-child, .Textnode th:first-child,
+.Table td:first-child, .Textnode td:first-child {
+	padding-left: 0;
+}
+.Table th:last-child, .Textnode th:last-child,
+.Table td:last-child, .Textnode td:last-child {
+	padding-right: 0;
+}
+
+
+
+/* PAGES
+---------------------------------------------------------------------*/
+
+/*
+<body class="Page">
+  <header class="Page__header"></header>
+  <div class="Page__content"></div>
+  <footer class="Page__footer"></footer>
+</body>
+*/
+
+.Page {
+	font-family: Arial, sans-serif;
+	font-size: 1.4em;
+}
+.Page.clean {
+	background: #fff;
+}
+.Page.main {
+	background: #242626;
+}
+.Page.inner,
+.Page.main .Page__content {
+	background-color: #e7e9e9;
+	background-image: resolve('interface/bg_things_tile.png');
+}
+
+.Wrapper.main {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	margin: auto;
+	padding-right: 30px;
+	padding-left: 30px;
+	min-width: 960px;
+	max-width: 1260px;
+}
+
+
+
+/* PAGES — HEADER
+---------------------------------------------------------------------*/
+
+.Page__header.main,
+.Page__header.sub .Wrapper.main {
+	background-color: #fff;
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(0.8, #fff), to(#f4f4f4));
+	background-image: -webkit-linear-gradient(#fff 80%, #f4f4f4);
+	background-image:    -moz-linear-gradient(#fff 80%, #f4f4f4);
+	background-image:      -o-linear-gradient(#fff 80%, #f4f4f4);
+	background-image:         linear-gradient(#fff 80%, #f4f4f4);
+	-webkit-box-shadow: 0 .8em .93em rgba(0,0,0,.5);
+	-moz-box-shadow: 0 .8em .93em rgba(0,0,0,.5);
+	box-shadow: 0 .8em .93em rgba(0,0,0,.5);
+	position: relative;
+}
+.Page__header.main:after,
+.Page__header.sub .Wrapper.main:after {
+	background-color: #cacaca;
+	content: "";
+	height: 10px;
+	left: 0;
+	position: absolute;
+	top: 100%;
+	width: 100%;
+}
+.has-csscalc .Page__header.sub .Wrapper.main:after {
+	background-color: transparent;
+	border: 10px solid;
+	border-color: #cacaca transparent transparent;
+	border-bottom: none;
+	content: "";
+	height: 0;
+	left: 0;
+	position: absolute;
+	top: 100%;
+
+	/* компенсация бордюров */
+	width: -webkit-calc(100% - 20px);
+	width:    -moz-calc(100% - 20px);
+	width:         calc(100% - 20px);
+}
+
+
+.HeaderLogo__link {
+	display: inline-block;
+	vertical-align: middle;
+}
+.ielte7 .HeaderLogo__link {
+	display: inline;
+	zoom: 1;
+}
+.HeaderLogo__img {
+	display: block;
+	width: 243px;
+	height: 54px;
+	background-image: resolve('brand/logos.png');
+	background-repeat: no-repeat;
+}
+
+.HeaderLinks {
+	text-align: center;
+}
+.HeaderNav__link {
+}
+.HeaderNav__link {
+	color: #3d3d3d;
+	display: inline-block;
+	font-size: .857em;
+	font-weight: bold;
+	padding: 9px 11px 5px 9px;
+	white-space: nowrap;
+}
+.HeaderNav__link .LinkWrapper {
+	border-color: #7f7f7f;
+}
+
+.HeaderLinks__item.active .HeaderNav__link {
+	background-color: #e23b25;
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#df324c), to(#e44401));
+	background: -webkit-linear-gradient(#df324c, #e44401);
+	background:    -moz-linear-gradient(#df324c, #e44401);
+	background:      -o-linear-gradient(#df324c, #e44401);
+	background:         linear-gradient(#df324c, #e44401);
+	-webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.28);
+	-moz-box-shadow: inset 0 1px 2px rgba(0,0,0,.28);
+	box-shadow: inset 0 1px 2px rgba(0,0,0,.28);
+	-webkit-border-radius:  0 8px 0 8px;
+	-moz-border-radius:  0 8px 0 8px;
+	border-radius:  0 8px 0 8px;
+}
+.HeaderLinks__item.active .Icon {
+	-webkit-transition: opacity .2s ease;
+	-moz-transition: opacity .2s ease;
+	-o-transition: opacity .2s ease;
+	transition: opacity .2s ease;
+}
+.HeaderLinks__item.active:hover .Icon {
+	opacity: .8;
+}
+.HeaderLinks .HeaderLinks__item.active .Icon.information,
+.HeaderLinks .HeaderLinks__item.active .HeaderNav__link:hover .Icon.information {
+	background-position: -209px -54px;
+}
+.HeaderLinks .HeaderLinks__item.active .Icon.catalogue,
+.HeaderLinks .HeaderLinks__item.active .HeaderNav__link:hover .Icon.catalogue {
+	background-position: -237px -54px;
+}
+.HeaderLinks .HeaderLinks__item.active .Icon.basket,
+.HeaderLinks .HeaderLinks__item.active .HeaderNav__link:hover .Icon.basket {
+	background-position: -261px -54px;
+}
+.HeaderLinks .HeaderLinks__item.active .Icon.feedback,
+.HeaderLinks .HeaderLinks__item.active .HeaderNav__link:hover .Icon.feedback {
+	background-position: -291px -54px;
+}
+
+.HeaderLinks__item.active .LinkWrapper {
+	border: 0;
+	color: #fff;
+}
+.HeaderLinks__item.active:hover .LinkWrapper {
+	color: #ffd4d4;
+}
+
+.HeaderSearch {
+	text-align: right;
+}
+
+.Page__header .HeaderNav,
+.Page__header .HeaderSearch {
+	line-height: 1;
+}
+
+
+.Page__header.main {}
+
+.Page__header.main .Wrapper.main {
+	position: relative;
+}
+
+.Page__header.main .HeaderLogo {
+	left: 122px;
+	position: relative;
+	text-align: right;
+	width: 50%;
+}
+.Page__header.main .HeaderLogo__link {
+	padding: 2.1428em 0 2.6428em;
+}
+
+.Page__header.main .HeaderNav {
+	float: left;
+	padding: 1.643em 0 .929em;
+	width: 100%;
+}
+.Page__header.main .HeaderLinks__item {
+	margin-left: 6em;
+}
+.Page__header.main .HeaderLinks__item:first-child {
+	margin-left: 0;
+}
+.Page__header.main .HeaderNav__link:hover .Icon.information {
+	background-position: 0 -59px;
+}
+.Page__header.main .HeaderNav__link:hover .Icon.catalogue {
+	background-position: -52px -59px;
+}
+.Page__header.main .HeaderNav__link:hover .Icon.basket {
+	background-position: -98px -59px;
+}
+.Page__header.main .HeaderNav__link:hover .Icon.feedback {
+	background-position: -153px -59px;
+}
+
+.Page__header.main .HeaderSearch {
+	position: absolute;
+	right: 0;
+	top: 48px;
+	width: 37%;
+
+	/* компенсация внутреннего отступа основной обёртки */
+	margin-right: 30px;
+}
+.Page__header.main .FormSearch__wrapper {
+	width: 50%;
+}
+.Page__header.main  .FormSearch.fieldIsFocused .FormSearch__wrapper {
+	width: 80%;
+}
+
+
+.has-display-table .Page__header.sub {
+	display: table;
+	width: 100%;
+}
+
+.Page__header.sub .HeaderLogo,
+.Page__header.sub .HeaderNav,
+.Page__header.sub .HeaderSearch {
+	display: inline-block;
+	vertical-align: top;
+}
+.Page__header.sub .HeaderNav,
+.Page__header.sub .HeaderSearch {
+	margin-top: 3.4286em;
+}
+.has-display-table .Page__header.sub .HeaderLogo,
+.has-display-table .Page__header.sub .HeaderNav,
+.has-display-table .Page__header.sub .HeaderSearch {
+	display: table-cell;
+}
+.has-display-table .Page__header.sub .HeaderNav,
+.has-display-table .Page__header.sub .HeaderSearch {
+	padding-top: 3.4286em;
+}
+
+.Page__header.sub .HeaderLogo {
+	margin-right: 2.8571em;
+	padding: 2.5714em 0 2.7143em;
+	width: 238px;
+}
+.Page__header.sub .HeaderLogo__img {
+	background-position: 0 -60px;
+	height: 46px;
+	-webkit-transition: opacity .3s ease;
+	-moz-transition: opacity .3s ease;
+	-o-transition: opacity .3s ease;
+	transition: opacity .3s ease;
+	width: 206px;
+}
+.Page__header.sub .HeaderLogo__link:hover .HeaderLogo__img {
+	opacity: .6;
+}
+
+.has-display-table .Page__header.sub .HeaderLinks {
+	white-space: nowrap;
+}
+.has-display-table .Page__header.sub .HeaderLinks__item {
+	white-space: normal;
+}
+.Page__header.sub .HeaderLinks__item {
+	margin-left: 1.5em;
+}
+.Page__header.sub .HeaderLinks__item:first-child {
+	margin-left: 0;
+}
+.has-display-table .Page__header.sub .HeaderLinks__item:first-child {
+	margin-left: 2em;
+}
+
+.Page__header.sub .HeaderNav__link:hover .Icon.information {
+	background-position: -209px -27px;
+}
+.Page__header.sub .HeaderNav__link:hover .Icon.catalogue {
+	background-position: -237px -27px;
+}
+.Page__header.sub .HeaderNav__link:hover .Icon.basket {
+	background-position: -261px -27px;
+}
+.Page__header.sub .HeaderNav__link:hover .Icon.feedback {
+	background-position: -291px -27px;
+}
+
+.Page__header.sub .HeaderSearch {
+	float: right;
+}
+.has-display-table .Page__header.sub .HeaderSearch {
+	float: none;
+	width: 50%;
+}
+.Page__header.sub .FormSearch__wrapper {
+	width: 60%;
+}
+.Page__header.sub .FormSearch.fieldIsFocused .FormSearch__wrapper {
+	width: 70%;
+}
+
+
+@media screen and (max-width: 80em) { /* 1200px */
+
+	.HeaderNav__link {
+		padding: 12px 11px 10px 9px;
+	}
+
+	.Page__header.sub .HeaderNav__link .Icon {
+		display: none;
+	}
+	.Page__header.sub .HeaderLinks__item {
+		margin-left: .5em;
+	}
+
+	.Page__header.sub .HeaderSearch {
+		width: 9em;
+	}
+
+}
+
+
+
+/* PAGES — FOOTER
+---------------------------------------------------------------------*/
+
+.Page__footer {
+	color: #fff;
+	font-size: .9286em;
+}
+
+.Page__footer.main {
+	background: #242626;
+	padding: 2.5em 0;
+	text-align: center;
+}
+
+.Page__footer.sub .Wrapper.main {
+	background-color: #242626;
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#161717), color-stop(0.3, #272929));
+	background-image: -webkit-linear-gradient(#161717, #272929 30%);
+	background-image:    -moz-linear-gradient(#161717, #272929 30%);
+	background-image:      -o-linear-gradient(#161717, #272929 30%);
+	background-image:         linear-gradient(#161717, #272929 30%);
+	-webkit-box-shadow: 0 -2px 5px rgba(0,0,0,.3);
+	-moz-box-shadow: 0 -2px 5px rgba(0,0,0,.3);
+	box-shadow: 0 -2px 5px rgba(0,0,0,.3);
+	padding-top: 2.5em;
+	padding-bottom: 2.5em;
+	position: relative;
+	text-align: left;
+	z-index: 1;
+}
+.has-csscalc .Page__footer.sub .Wrapper.main:before,
+.has-csscalc .Page__footer.sub .Wrapper.main:after {
+	bottom: 100%;
+	border: 10px solid transparent;
+	border-bottom-color: #555;
+	content: "";
+	height: 0;
+	position: absolute;
+	width: 0;
+}
+.has-csscalc .Page__footer.sub .Wrapper.main:before {
+	border-right: none;
+	left: 0;
+}
+.has-csscalc .Page__footer.sub .Wrapper.main:after {
+	border-left: none;
+	right: 0;
+}
+
+
+
+/* PAGES — MAIN
+---------------------------------------------------------------------*/
+
+.Page__header.main + .Page__content {
+	clear: both;
+}
+
+.Page__content.sub {
+	margin-top: 40px;
+}
+.Page__content.sub .Wrapper.main {
+	padding-right: 0;
+	padding-left: 0;
+}
+.has-csscalc .Page__content.sub .Wrapper.main {
+	padding-right: 10px;
+	padding-left: 10px;
+}
+.Page__content.sub .Page__contentWrapper {
+	background: #fff;
+	-webkit-border-radius:  30px 30px 0 0;
+	-moz-border-radius:  30px 30px 0 0;
+	border-radius:  30px 30px 0 0;
+	-webkit-box-shadow: 0 0 .93em rgba(0,0,0,.3);
+	-moz-box-shadow: 0 0 .93em rgba(0,0,0,.3);
+	box-shadow: 0 0 .93em rgba(0,0,0,.3);
+	padding: 30px;
+}
+.has-csscalc .Page__content.sub .Page__contentWrapper {
+	padding: 30px;
+}
+
+
+.Page__content.sidebarIsLeft .SideBar.main {
+	float: left;
+	margin-top: 2em;
+	width: 250px;
+
+	/* компенсация внутреннего отступа основной обёртки */
+	/* и небольшое выдвижение */
+	margin-left: -30px;
+}
+.has-csscalc .Page__content.sidebarIsLeft .SideBar.main {
+	margin-left: -40px;
+}
+.Page__content.sidebarIsLeft .Content.main {
+	margin-left: 260px;
+}
+
+
+.Content.main {
+	min-height: 35em;
+}
+
+.Content__header {
+	cursor: default;
+	margin-bottom: .75em;
+}
+.Content__header .accent {
+	color: #a1a0a0;
+}
+
+
+
+/* PAGES - MAIN - SHOPS
+---------------------------------------------------------------------*/
+
+@import "modules/_shops";
+
+
+
+/* PAGES - MAIN - FEEDBACK
+---------------------------------------------------------------------*/
+
+/*
+<div class="Wrapper feedbackForm">
+  <form action="#" class="Form FeedbackForm">
+    <label class="Form__field Feedback__field ib">
+      <span class="FeedbackForm__title">Что вас интересует</span><select name="" id="">
+        <option value="">Покупка для своих сотрудников</option>
+      </select>
+    </label>
+    <label class="Form__field Feedback__field">
+      <span class="FeedbackForm__title">Ф.И.О.</span><input type="text" name="" id="" class="FeedbackForm__input">
+    </label>
+    <label class="Form__field Feedback__field">
+      <span class="FeedbackForm__title">Текст сообщения</span><textarea class="FeedbackForm__input"></textarea>
+    </label>
+    <span class="Form__field Feedback__field Feedback__submit"><button class="Btn BtnDefault primary">Отправить</button></span>
+  </form>
+</div>
+*/
+
+.Wrapper.feedbackForm {
+	background-color: #e9eaeb;
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#e7e9e9), to(#e2e5e5));
+	background-image: -webkit-linear-gradient(#e7e9e9, #e2e5e5);
+	background-image:    -moz-linear-gradient(#e7e9e9, #e2e5e5);
+	background-image:      -o-linear-gradient(#e7e9e9, #e2e5e5);
+	background-image:         linear-gradient(#e7e9e9, #e2e5e5);
+	-webkit-border-radius: 0 60px;
+	-moz-border-radius: 0 60px;
+	border-radius: 0 60px;
+	margin-top: 2.5em;
+	margin-bottom: 2.5em;
+	position: relative;
+}
+
+.FeedbackForm {
+	padding: 40px;
+}
+
+.FeedbackForm .Form__field {
+	display: block;
+}
+.FeedbackForm .Form__field.ib {
+	display: inline-block;
+}
+
+.Feedback__field {
+	margin-left: 160px;
+}
+.FeedbackForm__title {
+	display: inline-block;
+	margin-left: -155px;
+	width: 150px;
+}
+.Feedback__submit {
+	margin-left: 151px;
+}
+.FeedbackForm__input {
+	width: 100%;
+}
+textarea.FeedbackForm__input {
+	min-height: 7em;
+}
+
+.FeedbackForm .Form__field--indent {
+	padding-left: 18px;
+}
+.FeedbackForm .Form__indent {
+	margin-left: -17px;
+}
+
+.Form__field.personalData .errorName {
+	display: inline-block;
+	font-size: 13px;
+	position: static;
+	margin-top: .2em;
+}
+
+
+/* PAGES - MAIN - OPERATION
+---------------------------------------------------------------------*/
+
+/*
+<div class="Operation groupIB">
+  <span class="Operation__image Icon successBig"></span>
+  <div class="Operation__content">
+    Всё очень хорошо. Всё сработало, жизнь прекрасна!<br>
+    Вернитесь на <a href="#">главную страницу</a> или воспользуйтесь навигацией.
+  </div>
+</div>
+*/
+
+.Operation {
+	padding-top: .67em;
+	padding-left: 60px;
+}
+
+.Operation__image,
+.Operation__content {
+	display: inline-block;
+	vertical-align: middle;
+}
+.Operation__image {
+	margin-right: 10px;
+	margin-left: -60px;
+}
+.Operation__content p {
+	font-size: 1.14em;
+	margin: 0;
+}
+
+
+
+/* PAGES — ERROR
+---------------------------------------------------------------------*/
+
+/*
+<div class="Wrapper error Error">
+
+  <div class="Page__content">
+    <img width="395" height="178" src="/img/error/404.png" alt="404">
+
+    <h3 class="subheader Error__explanation">
+      Такой страницы не существует или она была удалена.<br>
+      Попробуйте ввести адрес заново либо воспользуйтесь меню.
+    </h3>
+
+    <div class="ErrorNav group">
+      <a class="textHide ErrorNav__logo" href="#">Laima</a><ul class="List ib separated">
+        <li class="List__item"><a class="ErrorNav__link" href="#">О компании</a></li><li class="List__item"><a class="ErrorNav__link" href="#">Каталог</a></li><li class="List__item"><a class="ErrorNav__link" href="#">Где купить</a></li><li class="List__item last"><a class="ErrorNav__link" href="#">Обратная связь</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer class="Page__footer">
+    <span class="Footer__copyRights">
+      &copy; 2013 <a href="#">Лайма</a>. Все права защищены. Все товары сертифицированны.
+    </span>
+  </footer>
+
+</div>
+*/
+
+.Wrapper.error {
+	margin: auto;
+	padding-top: 9em;
+	text-align: center;
+}
+.Error {
+	width: 37em;
+}
+.Error .Page__content {
+	margin-bottom: 5em;
+}
+.ErrorNav {
+	margin-top: 4em;
+}
+.ErrorNav__logo {
+	position: relative;
+	top: .3em;
+	display: inline-block;
+	border: 0;
+	width: 113px;
+	height: 25px;
+	margin-right: 1em;
+	background-image: resolve('brand/logos.png');
+	background-repeat: no-repeat;
+	background-position: 0 -112px;
+}
+.ErrorNav .List {
+	display: inline-block;
+}
+.Error .Page__footer {
+	color: #000;
+	font-size: 1em;
+}
+
+.Error__explanation {
+	font-size: 18px;
+}
+
+.Error__header {
+	font-weight: normal;
+	font-size: 1.28em;
+	margin-top: 46px;
+	margin-bottom: 0;
+}
+
+.Error__message {
+	margin-top: 0.6em;
+	&:after {
+		content: '';
+		display: block;
+		background-image: resolve('brand/logos.png');
+		width: 127px;
+		height: 25px;
+		background-repeat: no-repeat;
+		background-position: 0 -112px;
+		margin: 63px auto 0
+	}
+}
+
+.Page__content--503 {
+	&:before {
+		content: "";
+		display: block;
+		height: 237px;
+		width: 223px;
+		background: url("/assets_laima/img/error/503.png") center no-repeat;
+		margin: 0 auto;
+	}
+
+	&.Page__content {
+		margin-bottom: 19px;
+	}
+
+	.ErrorNav {
+		display: none;
+	}
+}
+
+.Footer__copyRights--503 {
+	line-height: 1.8em;
+}
+
+/* PersonalData */
+.PersonalData {
+	color: #000;
+	font: 13px Arial, Helvetica, sans-serif;
+	line-height: 1.5em;
+	width: 720px;
+}
+
+h1.PersonalData__title {
+	font-size: 23px;
+	font-weight: normal;
+	line-height: 1em;
+	text-align: left;
+	margin: 0 0 .9em;
+}
+
+.PersonalData__accent {
+	font-size: 11px;
+	color: #666;
+	margin-bottom: 0;
+}
+/* ~PersonalData */
+
+
+
+/* HELPERS
+---------------------------------------------------------------------*/
+
+.disabled {
+	pointer-events: none;
+	cursor: default;
+}

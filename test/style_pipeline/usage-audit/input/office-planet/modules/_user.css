@@ -1,0 +1,48 @@
+.User--unauth {
+	display: block;
+	margin-x: 0;
+	margin-top: .7em;
+	margin-bottom: .5em;
+	padding: 0;
+
+	.User__item {
+		display: inline-block;
+		line-height: 16px;
+		margin-top: 0;
+		vertical-align: middle;
+
+		&:before {
+			display: none;
+		}
+
+		& + .User__item {
+			border-left: 1px solid $dividerColor;
+			margin-left: 10px;
+			padding-left: 10px;
+		}
+	}
+
+	.User__link {
+		color: $infoColor;
+		cursor: pointer;
+		vertical-align: middle;
+
+		&:hover {
+			@mixin a--hover;
+		}
+
+		&.enter {
+			.Icon {
+				@mixin OtherIcon enter, #6c6c6c;
+
+				margin-top: -.3em;
+			}
+
+			&:hover {
+				.Icon {
+					background-image: svg('enter', '[color]: $linkHoverColor');
+				}
+			}
+		}
+	}
+}

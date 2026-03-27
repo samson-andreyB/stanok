@@ -1,0 +1,82 @@
+/* Витрина
+**********************************************************/
+
+.Showcase {
+	overflow: hidden;
+	padding: 25px 0 0 0;
+	margin-top: -25px;
+
+	&__wrapper{
+		position: relative;
+		margin-left: -1px;
+	}
+	
+	&--noPadding .Section{
+		margin-top: 0;
+	}
+	
+	&__wrapper:before  {
+		content: '';
+		position: absolute;
+		width: 1px;
+		height: 100%;
+		background-color: $colorBackground;
+	}
+
+	&__content {
+		display: flex;
+		width: 100%;
+		transition: margin-left .6s ease-in-out;
+		background-color: $colorFill;
+		padding-left: 1px;
+	}
+	
+	
+	&__content:before {
+		left: 100%;
+		margin-left: 2px;
+	}
+
+	&__content:after {
+		right: 100%;
+	}
+	&__content:before, &__content:after {
+		background: #fff;
+		opacity: 0.8;
+		content: "";
+		display: block;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		width: 100%;
+		z-index: 2;
+	}
+
+
+	&__progress {
+		height: .9em;
+		background: #e6e6e6;
+		border-radius: 1em;
+	}
+
+	&__handler {
+		height: 100%;
+		background-color: $colorActive;
+		cursor: move;
+		cursor: grab;
+		display: block;
+		position: relative;
+		border-radius: 1em;
+		width: 9em;
+	}
+
+	&__controls{
+		margin: 1.3em 0 0;
+	}
+
+	.Product {
+		width: 25%;
+		flex-shrink: 0;
+		border-right: 1px solid $colorBackground;
+	}
+}

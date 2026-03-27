@@ -1,0 +1,296 @@
+.Page--jackpot {
+	.Plaques {
+		width: 525px;
+	}
+
+	.Alert {
+		margin-top: 5px;
+		margin-bottom: 20px;
+	}
+
+	.error {
+		margin-top: 5px;
+	}
+
+	.Field--search {
+		display: inline-block;
+		width: 330px;
+	}
+
+	.Header__box--PERSON {
+		font-size: 11px;
+		color: #777;
+	}
+
+	.controlPanel {
+		.btn + .btn {
+			margin-left: .6em;
+		}
+	}
+
+	.UploadJackpotMembers {
+		&--loading {
+			pointer-events: none;
+		}
+	}
+
+	.btnMain + .btnMain {
+		margin-left: 10px;
+	}
+
+	.ControlPanel--brand .Search2__field {
+		width: 200px;
+	}
+}
+
+
+.Items--jackpotRules {
+	.Item__columnLabel {
+		display: inline-block;
+		position: relative;
+
+		&:before {
+			content: '\00A0';
+		}
+
+		.Item__columnLabelText {
+			position: absolute;
+			top: 0;
+			left: 0;
+			white-space: nowrap;
+		}
+	}
+
+	.Item .Item__box {
+		vertical-align: top;
+	}
+
+	.Item__box--brands,
+	.Item__box--groups {
+		width: 30%;
+	}
+
+	.Item__hint {
+		cursor: help;
+	}
+
+	.Spoiler--default {
+		display: flex;
+		flex-direction: column-reverse;
+	}
+
+	.Spoiler__header,
+	.Spoiler__content {
+		padding: 0;
+	}
+
+	.Spoiler__label {
+		font-size: 12px;
+		margin-top: 4px;
+		line-height: 1.2;
+	}
+}
+
+
+.Specs--jackpotRuleParameters {
+	.Specs__value,
+	.Plaques {
+		margin-top: 5px;
+	}
+
+	.Specs__item + .Specs__item {
+		margin-top: 1.5em;
+	}
+}
+
+
+.JackpotRuleCoefficients {
+	display: table;
+	padding: 0;
+	margin: 0;
+
+	&__item {
+		display: table-row;
+	}
+
+	&__label,
+	&__value {
+		display: table-cell;
+		padding-top: 7px;
+		padding-bottom: 7px;
+		border-top: 1px solid #dadada;
+	}
+
+	&__item:first-child {
+		.JackpotRuleCoefficients__label,
+		.JackpotRuleCoefficients__value {
+			border-top: none;
+		}
+	}
+
+	&__value {
+		padding-left: 25px;
+		font-size: 13px;
+	}
+
+	&__field {
+		width: 42px;
+		text-align: center;
+	}
+
+	&__error {
+		padding-left: 10px;
+		color: $error;
+	}
+}
+
+
+.FancyModal--jackpotMembersLoaded {
+	width: 330px;
+
+	.Alert {
+		margin-top: 10px;
+		margin-x: -20px;
+	}
+
+	.List {
+		margin-top: 10px;
+	}
+}
+
+
+.JackpotHistory {
+	&__icon {
+		position: relative;
+		display: inline-block;
+		top: 3px;
+		margin-right: 4px;
+		background-image: resolve('icons/history.png');
+		width: width('icons/history.png');
+		height: height('icons/history.png');
+	}
+}
+
+
+.mainContent--jackpotException {
+	.Specs .Specs__title {
+		font-size: 14px;
+		font-weight: bold;
+		margin: 0 0 10px;
+	}
+
+	.controlPanel {
+		.filter {
+			vertical-align: middle;
+		}
+
+		.filter__indent {
+			margin-right: 8px;
+		}
+	}
+
+	.Specs {
+		.btnUpload {
+			float: right;
+		}
+
+		.Specs__input {
+			display: inline-block;
+			float: left;
+			height: 32px;
+			width: 110px;
+			margin-top: 0;
+			padding: 10px 8px;
+			border: 1px solid #bababa;
+
+			&.error {
+				border-color: $error;
+				color: inherit;
+			}
+		}
+
+		.Specs__description {
+			display: inline-block;
+			width: 600px;
+			margin-left: 10px;
+
+			&.error {
+				line-height: 32px;
+				margin-top: 0;
+			}
+
+			&.Spinner {
+				width: 14px;
+				height: 14px;
+				border-top-color: #aaa;
+				margin-top: 6px;
+			}
+		}
+	}
+
+	.Items {
+		display: table;
+		width: 100%;
+		text-align: left;
+
+		.Item__box {
+			vertical-align: top;
+
+			&--checkbox {
+				width: 1px;
+			}
+
+			&--code {
+				width: 65px;
+				text-align: center;
+				padding-left: 0;
+			}
+
+			&--date {
+				width: 80px;
+			}
+
+			&--employee {
+				width: 130px;
+			}
+
+			&--action {
+				width: 70px;
+
+				.add {
+					color: #15a373;
+				}
+				.remove {
+					color: #e35959;
+				}
+			}
+		}
+
+		.Item {
+			outline: none;
+
+			&:hover,
+			&--active {
+				background-color: #e9f8f3;
+			}
+		}
+	}
+
+	.filters .filter {
+		&--employee {
+			width: 160px;
+		}
+
+		&--action {
+			width: 160px;
+		}
+
+		&--search {
+			width: 280px;
+		}
+	}
+
+	.contentWrapper--jackpotException {
+		padding-y: 20px;
+	}
+}

@@ -1,0 +1,54 @@
+.wrapperPromo,
+.Footer__box--map {
+	display: none;
+}
+
+.Footer {
+	padding-top: 20px;
+	padding-bottom: 85px;
+
+	&__box--info {
+		width: 100%;
+	}
+
+	&__mapMobile {
+		display: block;
+	}
+}
+
+@media screen and (min-width: 641px) {
+	.Footer__mapMobile {
+		float: right;
+		width: 50%;
+		margin-bottom: 0 !important;
+	}
+}
+
+@media screen and (max-width: 640px) {
+	.Footer {
+		&__logo {
+			order: 1;
+		}
+
+		&__mapMobile {
+			order: 3;
+		}
+
+		&__reportProblem {
+			order: 4;
+		}
+
+		&__copyright {
+			order: 5;
+		}
+	}
+
+	.FooterContacts {
+		order: 2;
+	}
+
+	.Footer__box--info {
+		display: flex;
+		flex-direction: column;
+	}
+}

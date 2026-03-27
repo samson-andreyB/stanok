@@ -1,0 +1,716 @@
+/* OKT Clients
+------------------------------------------------------------------------------*/
+
+.Filters2--okt {
+	.Filter2--branch {
+		width: 140px;
+	}
+
+	.Filter2--search {
+		width: 425px;
+	}
+
+	.Filter2--min,
+	.Filter2--territoryErp,
+	.Filter2--okbErp {
+		width: 130px;
+	}
+
+	.Filter2--contractStatus {
+		width: 165px;
+	}
+
+	.Filter2--responsiblePerson {
+		width: 150px;
+	}
+}
+
+.Items--account,
+.Items--accountOkt {
+	.Item__box {
+		&--basket {
+			padding-x: 5px;
+			width: width('icons/basket-small.png');
+
+			.fullBasket {
+				background: resolve('icons/basket-small.png') 50% 50% no-repeat;
+				width: width('icons/basket-small.png');
+				height: height('icons/basket-small.png');
+				display: block;
+				cursor: help;
+
+				&:hover {
+					opacity: 0.75;
+				}
+			}
+		}
+
+		&--indicator {
+			padding-right: 5px;
+		}
+
+		&--login {
+			padding-left: 5px;
+		}
+
+		&--login,
+		&--mail {
+			overflow-wrap: break-word;
+			word-break: break-word;
+		}
+	}
+}
+
+.Items--okt {
+	.Items__header .Item__box {
+		vertical-align: bottom;
+	}
+
+	.Item__box {
+		vertical-align: top;
+
+		&--client {
+			width: 160px;
+			max-width: 160px;
+			word-wrap: break-word;
+
+			.Badge {
+				margin-top: 5px;
+			}
+
+			.Badge + .Badge {
+				margin-left: 2px;
+			}
+		}
+
+		&--status {
+			width: 100px;
+		}
+	}
+
+	.IntIndicator {
+		cursor: help;
+	}
+}
+
+.OktStatus {
+	cursor: help;
+	font-size: 11px;
+	padding: .05em 0;
+
+	&--bad {
+		color:#e45959;
+
+		&:hover {
+			color: #fc8080;
+		}
+	}
+}
+
+.OktStatusInfo__box {
+	& + & {
+		display: block;
+		margin-top: 5px;
+	}
+}
+
+.OktClientCard {
+	.ClientNote {
+		padding: 20px;
+		background: #e9f8f3;
+	}
+
+	.ClientInfo {
+		position: relative;
+		border-top: 1px solid #d9d9d9;
+		border-bottom: 1px solid #d9d9d9;
+
+		& + .ClientInfo {
+			border-top: none;
+		}
+
+		&__attention {
+			cursor: default;
+			color: #e45959;
+			font-size: 13px;
+			margin-right: 1.5em;
+		}
+
+		&__title {
+			font-size: 15px;
+
+			.pseudoLink {
+				user-select: none;
+				position: relative;
+				margin-right: 2em;
+
+				&:before {
+					content: "";
+					@mixin Caret 4px;
+					position: absolute;
+					left: -.9em;
+					top: .45em;
+				}
+
+				&:hover:before {
+					border-top-color: $linkHover;
+				}
+
+				& + .ClientInfo__quantity {
+					margin-left: -1.5em;
+				}
+			}
+		}
+
+		&__title {
+			padding: 12px 30px 15px;
+		}
+
+		&__quantity {
+			color: #777;
+		}
+
+		&__value {
+			background: #f5f5f5;
+			border-top: 1px solid #d9d9d9;
+			display: none;
+			font-size: 13px;
+			line-height: 1.5em;
+			padding: 20px 30px;
+
+			&--contacts {
+				padding-bottom: 0;
+
+				.Badge--notConfirmed {
+					margin-y: 6px 4px;
+				}
+			}
+
+			.pseudoLink {
+				font-size: 11px;
+			}
+
+			.btnMain {
+				font-size: 12px;
+			}
+
+			.Alert {
+				margin: -10px -30px 10px;
+				padding-x: 30px;
+			}
+		}
+
+		&--active {
+			.ClientInfo__title {
+				.pseudoLink:before {
+					border-bottom: 4px solid;
+					border-top-width: 0;
+				}
+			}
+		}
+
+		.Form {
+			width: 200px;
+			white-space: nowrap;
+		}
+
+		.Spoiler--contact {
+			.Spoiler__header,
+			.Spoiler__content {
+				padding-left: 0;
+				padding-right: 0;
+			}
+
+			.Spoiler__header {
+				padding-top: 0;
+			}
+
+			.Spoiler__content {
+				padding-bottom: 0;
+			}
+		}
+
+		&__error {
+			color: $error;
+			font-size: 12px;
+		}
+
+		&--schedule {
+			.ClientInfo__box .ClientInfo__error {
+				margin-left: 7px;
+			}
+		}
+	}
+
+	.controlPanel--buttonBar {
+		padding-top: 0;
+
+		.Box {
+			vertical-align: top;
+
+			&--aux {
+				width: auto;
+				white-space: normal;
+			}
+		}
+
+		.btn {
+			margin-top: 10px;
+
+			&.btnBack {
+				white-space: nowrap;
+			}
+		}
+	}
+}
+
+.ClientDetails {
+	& + & {
+		border-top: 1px solid #d9d9d9;
+	}
+
+	&.contentWrapper {
+		padding: 20px;
+	}
+
+	& > .Tabs2 {
+		padding-top: 20px;
+
+		.Upload {
+			margin-top: -10px;
+		}
+	}
+
+	.TabContent2 > {
+		.Items:first-child {
+			.Items__header .Item__box {
+				padding-top: 0;
+			}
+
+			.Items__title + .Items__list {
+				.Items__header .Item__box {
+					padding-top: 10px;
+				}
+			}
+		}
+
+		.Blank:first-child {
+			padding-top: 30px;
+		}
+	}
+
+	&__title {
+		color: #999;
+		font-size: 12px;
+		line-height: 1.3em;
+		margin-bottom: 1.5em;
+	}
+
+	&__field,
+	&__value {
+		vertical-align: top;
+		line-height: 1.5em;
+	}
+
+	&__field {
+		display: inline-block;
+		font-weight: bold;
+		margin-right: .25em;
+
+		&--sub {
+			font-weight: normal;
+		}
+	}
+
+	&__head {
+		color: #656565;
+		font-size: 15px;
+		margin-bottom: 10px;
+	}
+
+	&__list {
+		font-size: 13px;
+		padding: 0;
+		margin: 0;
+		list-style: none;
+	}
+
+	&__item {
+		& + .ClientDetails__item {
+			margin-top: .5em;
+		}
+
+		&--accent {
+			color: $accent;
+		}
+	}
+}
+
+
+.contentWrapper--clientDetails {
+	margin-top: 3px;
+
+	& + & {
+		border-top: 1px solid #d9d9d9;
+		margin-top: 0;
+	}
+
+	.mainContent & {
+		padding-y: 20px 0;
+	}
+
+	.contentWrapper__header {
+		color: #656565;
+		font-size: 15px;
+		margin-y: 0 10px;
+		font-weight: normal;
+	}
+}
+
+.ClientInfo--clientDetails,
+.contentWrapper--clientDetails {
+	.Specs {
+		display: inline-block;
+		margin-bottom: 25px;
+	}
+
+	.Specs--inline {
+		width: 100%;
+	}
+
+	.Specs__item {
+		line-height: 1.5;
+	}
+
+	.Specs__item + .Specs__item {
+		margin-top: .5em;
+
+		&--btnContainer {
+			margin-top: 10px;
+		}
+	}
+
+	.Specs__item--accent {
+		color: #e45959;
+	}
+
+	.Specs__title--clientDetails {
+		color: #656565;
+		font-size: 15px;
+		font-weight: normal;
+	}
+
+	.Specs__title--subTitle {
+		color: #767676;
+		font-size: 13px;
+		font-weight: normal;
+	}
+
+	.Specs__value--accent {
+		color: #eb7555;
+	}
+
+	.Columns--auto {
+		columns: 2;
+		widows: 1;
+		orphans: 1;
+	}
+}
+
+.controlPanel--invoices {
+	.filter {
+		&--kind,
+		&--result {
+			width: 150px;
+		}
+
+		&--type {
+			width: 110px;
+
+			.RichSelect__field {
+				min-width: 110px;
+			}
+		}
+	}
+}
+
+.controlPanel--ordersERP {
+	.Box {
+		vertical-align: bottom;
+	}
+
+	.btn.date {
+		margin-top: 0;
+	}
+
+	.RichSelect__field {
+		min-width: 140px;
+	}
+}
+
+.Items--statusHistory {
+	.Item__box {
+		width: 25%;
+		
+		&--date {
+			width: 15%;
+		}
+	}
+}
+
+.Items--statusStoryOkt {
+	.Item__box {
+		vertical-align: top;
+		width: 33.3%;
+	}
+}
+
+.Items--accountOkt {
+	.Item .Item__box {
+		vertical-align: top;
+	}
+
+	.Item__box {
+		&--name {
+			width: 185px;
+		}
+	}
+}
+
+.Items--counterparties {
+	.Item__box {
+		vertical-align: top;
+
+		&--indicator {
+			width: 12px;
+			padding-right: 0;
+		}
+	}
+
+	.Items__header .Item__box {
+		vertical-align: bottom;
+	}
+}
+
+.ClientDetails--shipReturn {
+	.ClientDetails__box {
+		margin-bottom: 0;
+		vertical-align: bottom;
+		width: 50%;
+	}
+
+	.ClientDetails__item {
+		display: inline-block;
+		margin-top: 0;
+		margin-right: 1em;
+	}
+
+	.Items--shipmentInfo {
+		.Items__list {
+			margin-top: -5px;
+		}
+	}
+}
+
+.Items--returnOkt {
+	.Item__box {
+		vertical-align: top;
+		
+		&--document {
+			width: 30%;
+
+			.pseudoLink--help {
+				color: inherit;
+				cursor: help;
+			}
+		}
+
+		&--address {
+			padding-right: 15px;
+			width: 50%;
+		}
+
+		&--code,
+		&--date,
+		&--sum,
+		&--extra,
+		&--gross {
+			white-space: nowrap;
+			width: 1px;
+		}
+
+		&--expense {
+			min-width: 105px;
+		}
+
+		&--expense .Badge--removedERP {
+			margin-top: 7px;
+			cursor: help;
+		}
+
+		&--sum,
+		&--extra,
+		&--gross {
+			text-align: right;
+		}
+	}
+}
+
+.FancyModal--schedule {
+	width: 550px;
+
+	.FancyModal__content {
+		padding-top: 20px;
+		padding-bottom: 20px;
+	}
+
+	.Form__title {
+		width: 20%;
+		margin-left: 0;
+		text-align: left;
+	}
+
+	.Form__value {
+		width: 80%;
+	}
+
+	.Form__field {
+		margin-left: 0;
+		display: flex;
+	}
+}
+
+
+.ShipReturnFilters {
+	.filter--address {
+		width: 250px;
+	}
+
+	.filter--shipment {
+		width: 200px;
+
+		.RichSelect {
+			width: 100%;
+		}
+	}
+
+	.filter--agreements {
+		width: 250px;
+		
+		.RichSelect__options {
+			width: 300px;
+		}
+	}
+
+	&__moreEntity {
+		display: inline-block;
+		background-image: resolve('icons/more_equal.png');
+		width: width('icons/more_equal.png');
+		height: height('icons/more_equal.png');
+		vertical-align: middle;
+		margin-top: -.2em;
+		margin-left: 2px;
+	}
+}
+
+
+.Items--shipmentInfo {
+	.Items__list {
+		border-width: 0;
+		width: auto;
+	}
+
+	.Items__header {
+		color: #000;
+		font-weight: bold;
+		font-size: 13px;
+	}
+
+	.Items__header + .Item,
+	.Items__header + .Items__group .Item:first-child {
+		.Item__box {
+			border-top-width: 0;
+		}
+	}
+
+	.Items__group {
+		&--active {
+			.pseudoLink {
+				&:before {
+					border-top-width: 0;
+					border-bottom: 3px solid;
+				}
+			}
+
+			.Item--detail {
+				display: table-row;
+			}
+		}
+	}
+
+	.Item--summary {
+		.Item__box--name {
+			padding-left: 0;
+			font-weight: bold;
+		}
+	}
+
+	.Item--detail {
+		display: none;
+
+		.Item__box--name {
+			padding-left: 12px;
+		}
+	}
+
+	.Items__group--active + .Items__group {
+		.Item:first-child {
+			.Item__box {
+				border-top-width: 0;
+				padding-top: 20px;
+			}
+		}
+	}
+
+	.Item__box {
+		box-sizing: border-box;
+		padding-y: 5px;
+		font-size: 13px;
+		line-height: 16px;
+
+		&--name {
+			width: 290px;
+		}
+
+		&--grossTurnover {
+			text-align: right;
+		}
+
+		&--grossIncome {
+			padding-right: 0;
+			text-align: right;
+		}
+	}
+
+	.Item__box + .Item__box {
+		padding-left: 40px;
+	}
+
+	.pseudoLink {
+		position: relative;
+		margin-left: 12px;
+		user-select: none;
+
+		&:before {
+			@mixin Caret .25em;
+			content: '';
+			position: absolute;
+			left: -.9em;
+			top: .45em;
+		}
+
+		&:hover:before {
+			border-top-color: $linkHover;
+		}
+	}
+}

@@ -1,0 +1,52 @@
+/* FORM
+------------------------------------------------------------------------------*/
+.Form {
+	&__set {
+		&--middle {
+			width: 260px;
+		}
+
+		.Form__title {
+			color: #000;
+		}
+	}
+
+	&--driverInfo {
+		.Form__set {
+			padding-bottom: 10px;
+		}
+
+		.Form__header {
+			font-size: 15px;
+			margin-top: 5px;
+			font-weight: normal;
+			color: #656565;
+		}
+
+		.Form__field .Form__input {
+			width: 260px;
+
+			&.w-100 {
+				width: 100px;
+			}
+
+			&.w-335 {
+				width: 335px;
+			}
+		}
+	}
+
+	&--personal {
+		.Form__set {
+			width: 100%;
+		}
+
+		.Form__field .Form__input {
+			width: 260px;
+
+			&--phone {
+				width: 160px;
+			}
+		}
+	}
+}

@@ -1,0 +1,64 @@
+/* BLOCKS - SPINNER
+---------------------------------------------------------------------*/
+
+/*doc
+
+### Spinner
+
+Индикатор продолжительного процесса.
+Работает, где есть анимации и трансформации.
+
+```html
+<span class="Spinner"></span> Загрузка
+```
+*/
+
+.Spinner {
+	display: inline-block;
+	height: .75em;
+	vertical-align: middle;
+	width: .75em;
+
+	animation: Spinner linear .7s infinite;
+	border-radius: 100%;
+	border: .33em solid $SpinnerBG;
+	border-top-color: $SpinnerColor;
+	font-size: 1em;
+	margin-top: -.2em;
+}
+@keyframes Spinner {
+	100% {transform: rotate(360deg);}
+}
+
+.Spinner {
+	border-top-color: $theme_bHover;
+
+	@if $theme_name == 'op' {
+		border-top-color: $theme_aHover;
+	}
+}
+
+.Spinner--large {
+	width: 8em;
+	height: 8em;
+	border-width: 0.25em;
+	display: inline-block;
+}
+
+.Spinner--centered {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: auto;
+}
+
+.Spinner--potential {
+	@mixin Spinner--potential;
+}
+
+.SpinnerMain {
+	height: 250px;
+	position: relative;
+}

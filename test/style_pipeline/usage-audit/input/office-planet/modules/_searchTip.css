@@ -1,0 +1,25 @@
+.SearchTip {
+	margin-y: $lineHeight calc($lineHeight * 2);
+	display: table;
+	width: 100%;
+
+	&.info {
+		color: $infoColor;
+	}
+
+	&.accent {
+		font-size: 14px;
+	}
+
+	&__text,
+	&__content {
+		display: table-cell;
+		vertical-align: top;
+	}
+
+	&__text {
+		font-style: italic;
+		padding-right: 1em;
+		text-align: right;
+	}
+}

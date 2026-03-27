@@ -1,0 +1,96 @@
+/* Status 2
+------------------------------------------------------------------------------*/
+
+.filters--status2 {
+	.RichSelect {
+		width: 100%;
+	}
+
+	.filter--branch {
+		width: 170px;
+	}
+
+	.filter--status2 {
+		min-width: 125px;
+	}
+
+	.filter--initiator {
+		width: 160px;
+	}
+
+	.filter--response,
+	.filter--client {
+		width: 140px;
+	}
+
+	.filter--agree,
+	.filter--decision {
+		width: 150px;
+	}
+
+	.filter--territoryErp {
+		width: 140px;
+	}
+}
+
+.Items--status2 {
+	.Items__header .Item__box {
+		vertical-align: bottom;
+	}
+
+	.Item__box {
+		vertical-align: top;
+
+		&--number {
+			width: 1px;
+		}
+
+		&--client {
+			width: 160px;
+			max-width: 160px;
+			word-wrap: break-word;
+		}
+
+		&--status {
+			width: 150px;
+		}
+	}
+
+	.Item__enough,
+	.Item__notEnough {
+		cursor: help;
+	}
+
+	.IntIndicator {
+		cursor: help;
+	}
+}
+
+.Page--status2 {
+
+	.Items--responsible {
+
+		.Items__list {
+			margin-top: 0;
+		}
+
+		.Item .Item__box {
+			vertical-align: top;
+		}
+
+		.Item__box--post {
+			width: 230px;
+		}
+	}
+
+	.btn + .btn {
+		margin-left: .6em;
+	}
+
+	.controlPanel.disabled {
+
+		&:after {
+			content: none;
+		}
+	}
+}

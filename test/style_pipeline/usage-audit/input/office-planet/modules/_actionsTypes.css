@@ -1,0 +1,112 @@
+/* DROPDOWN LIST
+---------------------------------------------------------------------*/
+
+.ActionsTypes {
+	margin: 0 0 0 -18px;
+	font-size: 14px;
+	padding: 0;
+}
+
+.ActionsTypes__item {
+	display: inline-block;
+	margin: 0 0 18px 0;
+	vertical-align: top;
+	width: 50%;
+
+	.ActionsTypes &:before {
+		content: none;
+	}
+}
+
+.ActionsTypes__link {
+	background-position: right -15px bottom -10px;
+	background-repeat: no-repeat;
+	box-sizing: border-box;
+	color: #000;
+	display: block;
+	height: 150px;
+	margin-left: 18px;
+	padding: 12px 20px;
+	position: relative;
+	transition: all .3s cubic-bezier(0.42, 0, 0.08, 1);
+	border: 1px solid #d1d1d1;
+}
+
+.ActionsTypes__link:hover {
+	background-position: right 1px bottom 1px;
+	border-color: #cebbbd;
+	color: #fff;
+	text-decoration: none;
+	transition: all .1s cubic-bezier(0.42, 0, 0.08, 1);
+	border-color: transparent;
+}
+
+.ActionsTypes__header {
+	color: $ACTION_MAIN;
+	display: block;
+	font-size: 21px;
+	font-weight: bold;
+	margin-bottom: 6px;
+}
+
+.ActionsTypes__description {
+	display: block;
+	line-height: 1.5;
+	width: 60%;
+}
+
+.ActionsTypes__item--sale .ActionsTypes__link {
+	background-image: resolve('interface/percent_l_green.png');
+
+	&:hover {
+		background-image: resolve('interface/percent_l_white.png');
+		background-color: #3ecf71;
+	}
+}
+
+.ActionsTypes__item--gift .ActionsTypes__link {
+	background-image: resolve('interface/gift_l_red.png');
+	background-position: right -12px bottom -10px;
+
+	&:hover {
+		background-image: resolve('interface/gift_l_white.png');
+		background-color: #eb3f4e;
+		background-position: right 7px bottom 1px;
+	}
+}
+
+.ActionsTypes__item--promoSet .ActionsTypes__link {
+	background-image: resolve('interface/promoSet_l_blue.png');
+
+	&:hover {
+		background-image: resolve('interface/promoSet_l_white.png');
+		background-color: #009fd9;
+	}
+}
+
+.ActionsTypes__item--others .ActionsTypes__link {
+	background-image: resolve('interface/whatsInside_l_yellow.png');
+
+	&:hover {
+		background-image: resolve('interface/whatsInside_l_white.png');
+		background-color: #ffb01c;
+	}
+}
+
+.ActionsTypes__item--quantityDiscount .ActionsTypes__link {
+	background-image: resolve('interface/quantityDiscount_l_purple.png');
+
+	&:hover {
+		background-image: resolve('interface/quantityDiscount_l_white.png');
+		background-color: #904cb0;
+	}
+}
+
+.ActionsTypes__item--dropPrice .ActionsTypes__link {
+	background-image: resolve('interface/dropPrice_l_red.svg');
+
+	&:hover {
+		background-image: resolve('interface/dropPrice_l_white.svg');
+		background-color: #ce1728;
+	}
+}

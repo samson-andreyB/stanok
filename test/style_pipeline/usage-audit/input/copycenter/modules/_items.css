@@ -1,0 +1,21 @@
+/* BLOCKS - ITEMS
+---------------------------------------------------------------------*/
+
+.Items__list {
+	box-sizing: border-box;
+	display: table;
+	width: 100%;
+}
+
+.Item {
+	display: table-row;
+}
+
+.Item__box {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.Item__box--alignRight {
+	text-align: right;
+}

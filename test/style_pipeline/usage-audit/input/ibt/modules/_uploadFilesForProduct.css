@@ -1,0 +1,63 @@
+.Page--uploadFilesForProduct {
+	.Form--selectFiles {
+		.controlPanel {
+			width: auto;
+		}
+	}
+
+	.controlPanel {
+		width: 775px;
+		box-sizing: border-box;
+	}
+
+	.controlPanel + .controlPanel {
+		margin-top: 10px;
+	}
+
+	.controlPanel__header {
+		margin-top: 10px;
+		line-height: 16px;
+		font-size: 17px;
+	}
+
+	.controlPanel__description {
+		margin-bottom: 10px;
+		line-height: 17px;
+		font-size: 12px;
+	}
+
+	.FilesActionControls {
+		padding-x: 0;
+
+		&__hint {
+			margin-left: 8px;
+			vertical-align: middle;
+			color: #777;
+		}
+	}
+
+	.Upload {
+		white-space: nowrap;
+
+		&__error {
+			display: none;
+			margin-left: 5px;
+			vertical-align: middle;
+			font-size: 12px;
+			line-height: 17px;
+			color: #db2921;
+		}
+
+		&__hint {
+			margin-left: 5px;
+			vertical-align: middle;
+			color: #777;
+		}
+
+		&--error {
+			.Upload__error {
+				display: inline-block;
+			}
+		}
+	}
+}

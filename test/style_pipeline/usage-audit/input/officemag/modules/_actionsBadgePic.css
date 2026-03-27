@@ -1,0 +1,340 @@
+/* ОБЩЕЕ ДЛЯ ВСЕХ БЕЙДЖЕЙ */
+.actionsBadgePic {
+	display: inline-block;
+	vertical-align: middle;
+	background-repeat: no-repeat;
+}
+
+
+
+/* БОЛЬШИЕ БЕЙДЖИ */
+/* Использование: список товаров, карточка товара */
+.actionsBadgePic {
+	/* TODO: «Купи и получи подарки» — нужен свой класс */
+	width: width('interface/action_badge.png');
+	height: height('interface/action_badge.png');
+	background-image: resolve('interface/action_badge.png');
+
+	&.discount {
+		width: width('interface/discount_badge.png');
+		height: height('interface/discount_badge.png');
+		background-image: resolve('interface/discount_badge.png');
+	}
+
+	&.priceWeek {
+		width: width('interface/priceWeek_badge.png');
+		height: height('interface/priceWeek_badge.png');
+		background-image: resolve('interface/priceWeek_badge.png');
+	}
+
+	&.priceWeek--omr {
+		background-image: resolve('interface/priceMonth_badge.png');
+	}
+
+	&.promoSet {
+		width: width('interface/promoSet_badge.png');
+		height: height('interface/promoSet_badge.png');
+		background-image: resolve('interface/promoSet_badge.png');
+	}
+
+	&.getAGift {
+		width: width('interface/get_a_gift_badge.png');
+		height: height('interface/get_a_gift_badge.png');
+		background-image: resolve('interface/get_a_gift_badge.png');
+	}
+
+	&.sale {
+		width: width('interface/sale_badge.png');
+		height: height('interface/sale_badge.png');
+		background-image: resolve('interface/sale_badge.png');
+	}
+
+	&.loyaltyProgramGolden {
+		width: width('interface/loyaltyProgramGolden_75x75_faa.png');
+		height: height('interface/loyaltyProgramGolden_75x75_faa.png');
+		background-image: resolve('interface/loyaltyProgramGolden_75x75_faa.png');
+	}
+}
+
+/* Наведение (в карточке не нужно) */
+.listItems,
+.compareItems {
+	.actionsBadgePic {
+		&:before {
+			content: '';
+		}
+
+		&:hover {
+			cursor: pointer;
+		}
+
+		&:before,
+		&:hover {
+			/* «Купи и получи подарок» */
+			background-image: resolve('interface/action_badge_h.png');
+		}
+
+		&.discount {
+			&:before,
+			&:hover {
+				background-image: resolve('interface/discount_badge_h.png');
+			}
+		}
+
+		&.priceWeek {
+			&:before,
+			&:hover {
+				background-image: resolve('interface/priceWeek_badge_h.png');
+			}
+
+			&:hover {
+				.actionsBadgeText {
+					color: #fe0030;
+				}
+			}
+		}
+
+		&.priceWeek--omr {
+			&:before,
+			&:hover {
+				background-image: resolve('interface/priceMonth_badge_h.png');
+			}
+		}
+
+		&.promoSet {
+			&:before,
+			&:hover {
+				background-image: resolve('interface/promoSet_badge_h.png');
+			}
+		}
+
+		&.getAGift {
+			&:before,
+			&:hover {
+				background-image: resolve('interface/get_a_gift_badge_h.png');
+			}
+		}
+
+		&.sale {
+			&:before,
+			&:hover {
+				background-image: resolve('interface/sale_badge_h.png');
+			}
+		}
+
+		&.loyaltyProgramGolden {
+			&:hover {
+				background-image: resolve('interface/loyaltyProgramGolden_75x75_fdc.png');
+			}
+		}
+	}
+}
+
+
+
+/* МАЛЫЕ БЕЙДЖИ */
+/* Использование — сервис «Заказ по коду» */
+.orderByCodeList .actionsBadgePic {
+	width: width('interface/action_badge_s.png');
+	height: height('interface/action_badge_s.png');
+	background-image: resolve('interface/action_badge_s.png');
+
+	&.discount {
+		width: width('interface/discount_badge_s.png');
+		height: height('interface/discount_badge_s.png');
+		background-image: resolve('interface/discount_badge_s.png');
+	}
+
+	&.sale {
+		width: width('interface/sale_badge_s.png');
+		height: height('interface/sale_badge_s.png');
+		background-image: resolve('interface/sale_badge_s.png');
+	}
+
+	&.priceWeek {
+		width: width('interface/priceWeek_badge_s.png');
+		height: height('interface/priceWeek_badge_s.png');
+		background-image: resolve('interface/priceWeek_badge_s.png');
+	}
+
+	&.promoSet {
+		width: width('interface/promoSet_badge_s.png');
+		height: height('interface/promoSet_badge_s.png');
+		background-image: resolve('interface/promoSet_badge_s.png');
+	}
+
+	&.getAGift {
+		width: width('interface/get_a_gift_badge_s.png');
+		height: height('interface/get_a_gift_badge_s.png');
+		background-image: resolve('interface/get_a_gift_badge_s.png');
+	}
+
+	&.loyaltyProgramGolden {
+		width: width('interface/loyaltyProgramGolden_29x29.png');
+		height: height('interface/loyaltyProgramGolden_29x29.png');
+		background-image: resolve('interface/loyaltyProgramGolden_29x29.png');
+	}
+}
+
+/* Наведение (модификация от контекста) */
+.orderByCodeList .actionsBadgePic {
+	&:before {
+		content: '';
+	}
+
+	&:hover {
+		cursor: pointer;
+	}
+
+	&:before,
+	&:hover {
+		background-image: resolve('interface/action_badge_s_h.png');
+	}
+
+	&.discount {
+		&:before,
+		&:hover {
+			background-image: resolve('interface/discount_badge_s_h.png');
+		}
+	}
+
+	&.sale {
+		&:before,
+		&:hover {
+			background-image: resolve('interface/sale_badge_s_h.png');
+		}
+	}
+
+	&.priceWeek {
+		&:before,
+		&:hover {
+			background-image: resolve('interface/priceWeek_badge_s_h.png');
+		}
+	}
+
+	&.promoSet {
+		&:before,
+		&:hover {
+			background-image: resolve('interface/promoSet_badge_s_h.png');
+		}
+	}
+
+	&.getAGift {
+		&:before,
+		&:hover {
+			width: width('interface/get_a_gift_badge_s_h.png');
+			height: height('interface/get_a_gift_badge_s_h.png');
+			background-image: resolve('interface/get_a_gift_badge_s_h.png');
+		}
+	}
+
+	&.loyaltyProgramGolden {
+		&:before,
+		&:hover {
+			background-image: resolve('interface/loyaltyProgramGolden_29x29_h.png');
+		}
+	}
+}
+
+
+
+/* МИКРО БЕЙДЖИ */
+/* Использование: корзина, любимый заказ, совершённый заказ, всплывающее окно после добавления в корзину */
+.Items--cart,
+.Items--productCompact,
+.FancyItem {
+	.actionsBadgePic {
+		display: inline-block;
+		vertical-align: middle;
+		margin-top: -.4em;
+		background-repeat: no-repeat;
+
+		&:before {
+			content: '';
+		}
+
+		&:hover {
+			cursor: pointer;
+		}
+
+		width: width('interface/gift_brand.png');
+		height: height('interface/gift_brand.png');
+		background-image: resolve('interface/gift_brand.png');
+
+		&:before,
+		&:hover {
+			background-image: resolve('interface/gift_brand_a.png');
+		}
+
+
+		&.discount {
+			width: width('interface/percent_brand.png');
+			height: height('interface/percent_brand.png');
+			background-image: resolve('interface/percent_brand.png');
+
+			&:before,
+			&:hover {
+				background-image: resolve('interface/percent_brand_a.png');
+			}
+		}
+
+		&.sale {
+			width: width('interface/sale_badge_xs.png');
+			height: height('interface/sale_badge_xs.png');
+			margin-top: -.25em;
+			background-image: resolve('interface/sale_badge_xs.png');
+
+			&:before,
+			&:hover {
+				background-image: resolve('interface/sale_badge_xs_h.png');
+			}
+		}
+
+		&.getAGift {
+			width: width('interface/get_a_gift_badge_xs.png');
+			height: height('interface/get_a_gift_badge_xs.png');
+			background-image: resolve('interface/get_a_gift_badge_xs.png');
+
+			&:before,
+			&:hover {
+				background-image: resolve('interface/get_a_gift_badge_xs_h.png');
+			}
+		}
+
+		&.priceWeek {
+			width: width('interface/priceWeek_badge_xs.png');
+			height: height('interface/priceWeek_badge_xs.png');
+			background-image: resolve('interface/priceWeek_badge_xs.png');
+
+			&:before,
+			&:hover {
+				background-image: resolve('interface/priceWeek_badge_xs_h.png');
+			}
+
+			.actionsBadgeText {
+				display: none;
+			}
+		}
+
+		&.promoSet {
+			width: width('interface/promoSet_brand.png');
+			height: height('interface/promoSet_brand.png');
+			background-image: resolve('interface/promoSet_brand.png');
+
+			&:before,
+			&:hover {
+				background-image: resolve('interface/promoSet_brand_a.png');
+			}
+		}
+
+		&.loyaltyProgramGolden {
+			background-image: resolve('interface/loyaltyProgramGolden_20x20.png');
+			width: width('interface/loyaltyProgramGolden_20x20.png');
+			height: height('interface/loyaltyProgramGolden_20x20.png');
+
+			&:hover {
+				background-image: resolve('interface/loyaltyProgramGolden_20x20_h.png');
+			}
+		}
+	}
+}

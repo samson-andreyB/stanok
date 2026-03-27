@@ -1,0 +1,116 @@
+.Page--stmAdvantages {
+	.Filter2 {
+		&--brand {
+			width: 180px;
+		}
+
+		&--bkgGroup {
+			width: 310px;
+		}
+
+		&--articleId {
+			width: 155px;
+		}
+	}
+
+	.Item__box--controls {
+		width: 1px;
+		white-space: nowrap;
+		word-spacing: 7px;
+		user-select: none;
+	}
+
+	.btnIconEdit,
+	.btnIconRemove {
+		@mixin btnDefault;
+	}
+
+	.btnIconEdit,
+	.btnIconRemove {
+		width: 24px;
+		height: 24px;
+		padding: 0;
+		font-size: 0;
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+		color: #ccc;
+		border-color: currentColor;
+		transition: none;
+
+		&,
+		&:hover,
+		&:active {
+			background-color: transparent;
+		}
+	}
+
+	.btnIconEdit {
+		background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAAlklEQVQokZXPsQ0CMQwFUCMdtxAla1Ag5kjDAMxB7yXcnr7/HogpQhNL4SA+cJNE9ottkSRUdXb3I8m6LMshqxURETObArj7uZ23FAVQ1VlEhOQl7dh1eIPufiJZhyDeJGvA+GgTrDtH1xTEveX3f4GPPfrETwBAAXCNhTdBSz6/zD4Gq3F2AEoAM5sydG+FDwBlWNjFCzOw1p4uHqSAAAAAAElFTkSuQmCC');
+	}
+
+	.btnIconRemove {
+		background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAPklEQVQYlZWQwQkAMAgDb//ZspN9tbSQiBV85TCJAEgqwhxNUu110KM5OB64hc7Fwin3DBxZj8p8v6fLDbAAKDCikXxABU0AAAAASUVORK5CYII=');
+	}
+
+	.Item {
+		cursor: default;
+
+		&__box--controls {
+			padding-y: 0;
+		}
+	}
+
+	.Item:hover {
+
+		.btnIconEdit {
+			color: #28bd8b;
+			background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAApklEQVQokZXSQQ7CIBAF0DGpPUGZi7jspoewifEArivMxl03HsKVBLib6SlwQQYbDFOdHWEenyEASDWPLdqpx0Cxs+Yg9iYwNBk4OmGgqLy5i4YBzGMLANC561lMZFBCFcwRA8V6Aq8DRYZ80CYokzlVBDnNTj08Lvv/wNccq43fgNekHN3ywFsgIbOUjSIorrNDr+nzSkNTRSqYZ/oi9EKvqdq4qjfhmX1k9eTImgAAAABJRU5ErkJggg==');
+
+			&:hover {
+				background-color: currentColor;
+				background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAAeUlEQVQokZXPwQ2AMAhA0ZpoF/LYNTwY5+jFAZzD8YxTfA+CIaYtyqUh8AqE0AggAok7xlavgt6AWd7NQwqi5EtzogFvOAFUgck1on7kgsLk6AIzLQHDL1C64yl8BRlY9VoXSPEs7F4Hdh2gk6kK+xbapfEAcrXRxAUi+QgPMblflgAAAABJRU5ErkJggg==');
+			}
+		}
+
+		.btnIconRemove {
+			color: #e45959;
+			background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAPklEQVQYlWNgYGBgeBIZ+Z8BB4DLPYmM/A/D2BShyGFTjNMAZAl8tmBVjMvdxCkkymqiPENy8OBzNwMDAwMAPv978UsiKWUAAAAASUVORK5CYII=');
+
+			&:hover {
+				background-color: currentColor;
+				background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAN0lEQVQYlY2PsQ0AMAzC/P/TdItaCVK8YgUCgCQRmEwXTnoyJ8cDCsQ9X6kWq+rqma3KyttugAMw0b9BDnQnswAAAABJRU5ErkJggg==');
+			}
+		}
+	}
+
+	.Items + .ControlPanel {
+		border-top-width: 0;
+	}
+}
+
+
+.FancyModal--article {
+	width: 520px;
+
+	.Form__set {
+		width: auto;
+	}
+
+	.Form__field--brand {
+
+		.Form__input {
+			width: 180px;
+		}
+	}
+
+	.RichSelect2Menu {
+		max-width: 480px;
+	}
+
+	.Form__field--articleId {
+
+		.Form__input {
+			width: 130px;
+		}
+	}
+}

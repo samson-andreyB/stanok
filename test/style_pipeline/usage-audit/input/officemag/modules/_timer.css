@@ -1,0 +1,62 @@
+.Timer {
+	display: inline-block;
+	color: #c22119;
+	font-size: 12px;
+	cursor: default;
+
+	.actionsPreviewItem & {
+		font-size: 14px;
+	}
+
+	&--hide {
+		display: none;	
+	}
+
+	&--noTitle &__title,
+	&--mainPage &__title {
+		display: none;
+	}
+	
+	.actionsBadgeDescription &--noTitle {
+		margin-top: .3em;
+	}
+
+	&--mainPage {
+		font-size: 16px;
+	}
+	&--mainPage &__item {
+		padding-bottom: 0;
+
+		& + .Timer__item {
+			margin-left: 2px;
+		}
+	}
+	
+	&__title {
+		margin-bottom: .3em;
+	}
+
+	&__box {
+		display: inline-block;
+	}
+
+	&__item {
+		background-color: #c22119;
+		border-radius: 2px;
+		box-sizing: border-box;
+		color: #fff;
+		display: inline-block;
+		padding: 2px 0 1px;
+		width: 1em;
+		text-align: center;
+		position: relative;
+
+		& + & {
+			margin-left: 1px;
+		}
+	}
+
+	&__digit {
+		position: relative;
+	}
+}

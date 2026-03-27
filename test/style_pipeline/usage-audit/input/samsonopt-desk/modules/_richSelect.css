@@ -1,0 +1,25 @@
+.RichSelect--selectResponsible {
+	.filter & {
+		min-width: 100%;
+		max-width: 100%;
+	}
+
+	.RichSelect__field {
+		min-width: 130px;
+		max-width: 300px;
+	}
+
+	.RichSelect__options {
+		min-width: 265px;
+		max-height: none;
+	}
+
+	.RichSelect__list {
+		max-height: 230px;
+		overflow-y: auto;
+	}
+
+	.RichSelect__option {
+		white-space: nowrap;
+	}
+}

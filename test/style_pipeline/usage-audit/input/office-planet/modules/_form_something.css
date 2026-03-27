@@ -1,0 +1,83 @@
+.SelectBubble { /* ^ Почему здесь? */
+	@mixin Dropdown;
+}
+
+
+.SelectorView {
+	position: relative;
+
+	&__item {
+		cursor: pointer;
+		display: inline-block;
+		line-height: 0;
+		margin-top: 0;
+		margin-left: 3px;
+		padding: 5px;
+		position: relative;
+		z-index: 1;
+
+		&:first-child {
+			margin-left: 4px;
+		}
+
+		.Icon {
+			margin-top: -.1em;
+		}
+
+		&:hover .Icon {
+			opacity: .75;
+		}
+
+		&.active {
+			cursor: default;
+
+			&:hover .Icon {
+				opacity: 1;
+			}
+		}
+
+		&.details {
+			.Icon {
+				@mixin OtherIcon viewDetails, $theme_color_7;
+			}
+
+			&.active {
+				.Icon {
+					background-image: svg('viewDetails', '[color]: #000');
+				}
+			}
+		}
+
+		&.table {
+			.Icon {
+				@mixin OtherIcon viewTable, $theme_color_7;
+			}
+
+			&.active {
+				.Icon {
+					background-image: svg('viewTable', '[color]: #000');
+				}
+			}
+		}
+	}
+
+	&__target {
+		position: absolute;
+		top: 50%;
+		right: 0;
+		width: 28px;
+		height: 28px;
+		border: 2px solid $dividerColor;
+		border-radius: 50%;
+		margin-top: -16px;
+		margin-right: -6px;
+		transition: transform .2s ease-in-out;
+	}
+
+	&__item.details.active ~ &__target {
+		transform: translateX(-27px);
+	}
+	&__item.table.active ~ &__target {
+		transform: translateX(0);
+	}
+}

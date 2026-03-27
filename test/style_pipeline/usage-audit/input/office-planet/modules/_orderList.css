@@ -1,0 +1,77 @@
+.OrderList {
+	@mixin List--basic;
+	font-size: 14px;
+	margin-bottom: 10px;
+}
+.OrderList__item {
+	@mixin List__item--basic;
+
+	& + & {
+		margin-top: 10px;
+	}
+
+	&--archive {
+		.OrderList__link {
+			color: #939393;
+		}
+	}
+}
+.OrderList__header,
+.OrderList__link {
+	padding-x: 0;
+	border-width: 1px;
+	border-style: solid;
+}
+.OrderList__header {
+	padding-y: 5px;
+	border-color: transparent;
+	color: $infoColor;
+
+	.OrderList__box {
+		border: 0;
+	}
+}
+.OrderList__link {
+	font-family: $fontFamilyM;
+	padding-y: 20px;
+	border-color: $dividerColor;
+	color: #000;
+	display: block;
+
+	&:hover {
+		background-color: #f7f7f7;
+	}
+}
+.OrderList__group {
+	@mixin PseudoTable;
+	width: 100%;
+}
+.OrderList__box {
+	@mixin PseudoTable__cell;
+	padding-x: 20px;
+	border-left: 1px dotted $dividerColor;
+	box-sizing: border-box;
+	vertical-align: top;
+	width: 16.66%;
+
+	&:first-child {
+		border-left: 0;
+	}
+
+	&.date {
+		width: 12.5%;
+	}
+
+	&.summ {
+		text-align: right;
+	}
+
+	&--orderCancel:empty {
+		visibility: hidden;
+	}
+
+	.OrderStatus--bonuses {
+		display: block;
+		margin-top: 2px;
+	}
+}

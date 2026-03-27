@@ -1,0 +1,96 @@
+.ShopSelection {
+	box-sizing: border-box;
+	width: 980px;
+	overflow: hidden;
+
+	@media (max-width: 1040px) {
+		width: 940px;
+	}
+
+	&--delivery {
+		border: 1px solid #e2ddd9;
+		width: auto;
+
+		.ShopSelection__box--map {
+			width: 56%;
+		}
+
+		.ShopSelection__box--contacts {
+			display: inline-flex;
+			flex-direction: column;
+			width: 44%;
+			padding-y: 18px;
+			padding-bottom: 0;
+		}
+
+		.ShopsAddressesList {
+			flex-grow: 1;
+		}
+
+		.ShopsAddressesList__item + .ShopsAddressesList__item {
+			margin-top: 23px;
+		}
+
+		.ShopsAddressesList__descriptionList {
+			margin-top: 5px;
+		}
+	}
+
+	&__box {
+		display: inline-block;
+		box-sizing: border-box;
+		height: 480px;
+		vertical-align: top;
+
+		&--map {
+			width: 55%;
+			border-right: 1px solid #e2ddd9;
+		}
+
+		&--contacts {
+			box-sizing: border-box;
+			width: 45%;
+			padding: 25px 30px;
+		}
+	}
+
+	&__info {
+		margin-bottom: 10px;
+
+		&--mobile {
+			display: none;
+		}
+	}
+
+	&__header {
+		font-size: 24px;
+	}
+
+	.ShopsAddressesList {
+		padding-right: 15px;
+		padding-bottom: 15px;
+		overflow-y: auto;
+	}
+
+	.ShopsAddresses__name {
+		font-weight: bold;
+	}
+
+	.ShopsAddresses__description {
+		font-size: 12px;
+		color: #6d6d6d;
+		margin-top: 5px;
+		@mixin wordBreak;
+	}
+
+	&--default {
+		.ShopsAddressesList {
+			height: 370px;
+		}
+	}
+}
+
+.Content .ShopSelection {
+	margin-top: 30px;
+	margin-bottom: 20px;
+}

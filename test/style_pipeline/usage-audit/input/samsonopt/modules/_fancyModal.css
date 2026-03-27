@@ -1,0 +1,402 @@
+/* FancyModal
+---------------------------------------------------------------------- */
+
+/*
+<div class="FancyModal">
+	<h3 class="FancyModal__header"></h3>
+	<div class="FancyModal__description"></div>
+	<div class="FancyModal__controls">
+		<button class="btn btnDefault btnGreen FancyModal__submit">Сохранить</button>
+	</div>
+</div>
+*/
+
+.FancyModal--simple {
+	font-size: 12px;
+	padding: 20px 60px;
+	text-align: center;
+
+	.FancyModal__header {
+		font-size: 20px;
+		font-weight: normal;
+		margin-top: 0;
+		margin-bottom: 10px;
+
+		.FancyModal__description {
+			margin-top: 0;
+			margin-bottom: 20px;
+		}
+	}
+}
+
+
+.FancyModal--progress {
+	box-sizing: border-box;
+	min-width: 400px;
+	padding: 40px 20px;
+	text-align: center;
+
+	.FancyModal__header {
+		margin-bottom: 20px;
+		text-align: center;
+		font-weight: normal;
+		font-size: 21px;
+	}
+
+	.FancyModal__controls {
+		margin-top: 20px;
+	}
+
+	.Progress {
+		width: 300px;
+		margin: 0 auto;
+	}
+
+	.ProgressDone {
+		transition: none;
+	}
+}
+
+
+.FancyModal--progressPriceList {
+	text-align: center;
+	padding-right: 19px;
+	padding-left: 19px;
+
+	.FancyModal__header {
+		font-size: 18px;
+	}
+
+	.Progress {
+		margin-bottom: 20px;
+		width: 391px;
+	}
+
+	.ProgressDone {
+		min-height: .8em;
+		line-height: .8em;
+	}
+}
+
+
+.FancyModal--table {
+	box-sizing: border-box;
+	width: 900px;
+	padding: 20px;
+
+	.FancyModal__header {
+		margin-bottom: 15px;
+	}
+
+	.FancyModal__description {
+		line-height: 18px;
+	}
+
+	.FancyModal__paragraph {
+		margin-bottom: 4px;
+	}
+
+	.FancyModal__controls {
+		display: block;
+		width: auto;
+		margin: 20px -20px -20px -20px;
+
+		.btn {
+			margin-right: 0;
+		}
+
+		.btn + .btn {
+			margin-left: 15px;
+		}
+
+		&--right {
+			text-align: right;
+		}
+	}
+}
+
+.FancyModal--orderQuantityRounding {
+	width: 1140px;
+
+	.orderList--head {
+		margin-top: 14px;
+	}
+
+	.row {
+		max-width: 1081px;
+	}
+
+	.orderListHead {
+		max-width: 1083px;
+	}
+
+	.col.check {
+		width: 3%;
+	}
+
+	.col.number {
+		width: 4%;
+	}
+
+	.col.code {
+		width: 6%;
+		text-align: right;
+	}
+
+	.col.name {
+		width: 29%;
+	}
+
+	.col.price,
+	.col.countRounded,
+	.col.transportPackaging {
+		width: 9%;
+		text-align: right;
+	}
+
+	.col.count {
+		width: 8%;
+		text-align: right;
+	}
+
+	.col.summ {
+		width: 12%;
+		text-align: right;
+	}
+
+	.col.summRounded {
+		width: 11%;
+		text-align: right;
+	}
+
+	.orderItem .countRounded,
+	.orderItem .summRounded {
+		font-weight: bold;
+	}
+
+	@media (max-width: 1200px) {
+		width: 900px;
+
+		.row {
+			max-width: 841px;
+		}
+
+		.orderListHead {
+			max-width: 843px;
+		}
+
+		.col.check {
+			width: 4%;
+		}
+
+		.col.number {
+			width: 6%;
+		}
+
+		.col.code,
+		.col.count {
+			width: 7%;
+		}
+
+		.col.name {
+			width: 24%;
+		}
+
+		.col.price,
+		.col.countRounded {
+			width: 9%;
+		}
+
+		.col.transportPackaging {
+			width: 12%;
+		}
+
+		.col.summ,
+		.col.summRounded {
+			width: 11%;
+		}
+	}
+}
+
+.FancyModal--form {
+	width: 430px;
+	padding: 20px;
+
+	.FancyModal__header {
+		margin-bottom: .7em;
+	}
+
+	textarea {
+		resize: none;
+	}
+
+	.FancyModal__controls {
+		display: block;
+		width: auto;
+		margin: 2em -20px -20px -20px;
+
+		.btn,
+		.FancyModal__submit {
+			margin-right: 15px;
+		}
+	}
+}
+
+
+.FancyModal--dialog {
+	position: relative;
+	min-width: 450px;
+	max-width: 570px;
+	box-sizing: border-box;
+	padding: 25px;
+
+	.FancyModal__header {
+		font-size: 24px;
+
+		&--success,
+		&--attention,
+		&--warning,
+		&--error {
+			&:before {
+				content: '';
+				display: inline-block;
+				vertical-align: middle;
+				width: 28px;
+				height: 28px;
+				margin-top: -5px;
+				margin-right: 10px;
+				background-position: 50% 50%;
+				background-repeat: no-repeat;
+			}
+		}
+
+		&--success {
+			color: $C_SUCCESS;
+
+			&:before {
+				background-image: resolve('notification_success_28x28_4b6.png');
+			}
+		}
+
+		&--warning,
+		&--attention {
+			color: $C_WARNING;
+
+			&:before {
+				background-image: resolve('notification_warning_28x25_f70.png');
+			}
+		}
+
+		&--error {
+			color: $C_ERROR;
+
+			&:before {
+				background-image: resolve('notification_error_28x28_c10.png');
+			}
+		}
+	}
+
+	.FancyModal__description {
+		font-size: 14px;
+		line-height: 1.5;
+
+		p {
+			margin: 0;
+		}
+
+		p + p {
+			margin-top: 10px;
+		}
+	}
+
+	.FancyModal__header + .FancyModal__description {
+		margin-top: 20px;
+	}
+
+	.FancyModal__paragraph + .FancyModal__paragraph {
+		margin-top: 10px;
+	}
+
+	.Form__value {
+		line-height: 1.3;
+	}
+
+	.FancyModal__controls {
+		margin: -25px;
+		margin-top: 25px;
+		padding: 15px 20px;
+		background-color: #eee;
+	}
+
+	.FancyModal__controls {
+		.btn {
+			font-weight: normal;
+		}
+
+		.btn + .btn,
+		.Btn + .Btn,
+		.Upload--button + .btn {
+			margin-left: .6em;
+		}
+	}
+
+	.FancyModal__close {
+		@mixin FancyboxClose;
+		position: absolute;
+		top: 0;
+		right: 0;
+		cursor: pointer;
+	}
+}
+
+.FancyModal--returnRequest {
+	width: 450px;
+
+	.Message {
+		.Message__title {
+			color: $C_DEFAULT;
+			line-height: 1.5;
+			font-weight: 400;
+		}
+
+		.List {
+			&__item + .List__item {
+				margin-top: 0;
+			}
+		}
+	}
+
+	.Form__field {
+		&.Form__field--divide {
+			.Form__input {
+				width: 70px;
+			}
+		}
+	}
+
+	.Upload--attachments {
+		margin-top: 0;
+
+		.Upload__label{
+			margin-top: 0;
+		}
+	}
+}
+
+.FancyModal--productAddByCode {
+	width: 640px;
+	max-width: none;
+
+	.Form__field.Form__field--valid .Form__input {
+		width: 210px;
+	}
+
+	.Form__field--products {
+		max-height: 400px;
+		overflow-y: auto;
+	}
+}
+
+.Modal--dialog {
+	width: 570px;
+}

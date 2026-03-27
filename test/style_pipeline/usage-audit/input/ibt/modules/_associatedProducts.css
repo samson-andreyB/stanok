@@ -1,0 +1,137 @@
+.AssociatedProducts--default {
+	.AssociatedProducts__list {
+		position: relative;
+		margin-bottom: 0;
+	}
+
+	.AssociatedProducts__listItem {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-top: 0;
+		padding-y: 12px;
+
+		&--sortable {
+			position: absolute;
+			z-index: 1;
+			background-color: #fff;
+			box-shadow: 0 0 8px rgba(0, 0, 0, .23);
+
+			.AssociatedProduct__remove {
+				visibility: hidden;
+			}
+		}
+
+		&--disabled {
+			color: $C_GRAY_DARK;
+			cursor: default;
+
+			.AssociatedProduct__name {
+				margin-left: 10px;
+			}
+		}
+	}
+
+	.AssociatedProducts__listItem + .AssociatedProducts__listItem {
+		border-top: 1px solid #dadada;
+	}
+
+	.AssociatedProducts__listItem--controls + .AssociatedProducts__listItem {
+		border-top-width: 0;
+	}
+
+	.AssociatedProduct {
+		flex: 1 1 auto;
+	}
+}
+
+
+.AssociatedProduct--default {
+	.AssociatedProduct__row {
+		display: flex;
+
+		& > .AssociatedProduct__error {
+			margin-left: 32px;
+		}
+	}
+
+	.AssociatedProduct__row + .AssociatedProduct__row {
+		margin-top: 7px;
+	}
+
+	.AssociatedProduct__drag {
+		align-self: center;
+		flex-shrink: 0;
+		width: 25px;
+		height: 20px;
+		background-image: resolve('icons/organize_grey.png');
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+		cursor: move;
+
+		&:hover {
+			background-image: resolve('icons/organize_11x10_777.png');
+		}
+	}
+
+	.AssociatedProduct__drag + .AssociatedProduct__code {
+		margin-left: 8px;
+	}
+
+	.AssociatedProduct__code {
+		position: relative;
+		align-self: center;
+		flex-shrink: 0;
+		width: 70px;
+		text-align: center;
+
+		.Status {
+			width: 100%;
+		}
+
+		&:hover {
+			.AssociatedProduct__btnEdit {
+				opacity: 1;
+			}
+		}
+	}
+
+	.AssociatedProduct__btnEdit {
+		position: absolute;
+		top: 0;
+		left: 0;
+		border: 1px solid $main;
+		width: 100%;
+		height: 100%;
+		border-radius: 2px;
+		background-color: #fff;
+		background-image: resolve('icons/pencil_13x13_1a7.png');
+		background-repeat: no-repeat;
+		background-position: center;
+		opacity: 0;
+		transition: opacity .2s;
+	}
+
+	.AssociatedProduct__codeInput {
+		width: 100%;
+		padding-y: 4px;
+		text-align: center;
+		line-height: inherit;
+	}
+
+	.AssociatedProduct__name {
+		flex-grow: 1;
+		align-self: center;
+		margin-x: 15px;
+	}
+
+	.AssociatedProduct__remove {
+		flex-shrink: 0;
+		margin-right: 3px;
+		padding-x: 0;
+	}
+
+	.AssociatedProduct__error {
+		color: $error;
+	}
+}

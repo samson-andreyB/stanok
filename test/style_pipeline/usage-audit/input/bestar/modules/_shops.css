@@ -1,0 +1,56 @@
+$SHOP_LINK_COLOR: #83141F;
+$SHOP_LINK_COLOR_HOVER: #B53643;
+
+$SHOP_TAB_BORDER_HOVER: $SHOP_LINK_COLOR_HOVER;
+
+$SHOP_BOX_BTN_BG: $SHOP_LINK_COLOR;
+$SHOP_BOX_BTN_COLOR: #fff;
+
+$SHOP_BOX_BTN_BG_HOVER: $SHOP_LINK_COLOR_HOVER;
+$SHOP_BOX_BTN_COLOR_HOVER: $SHOP_BOX_BTN_COLOR;
+
+$SHOP_CITYSELECTOR__LINK_COLOR: $SHOP_LINK_COLOR;
+$SHOP_CITYSELECTOR__LINK_COLOR_HOVER: $SHOP_LINK_COLOR_HOVER;
+
+$SHOP_REPRESENT_HOVER_COLOR: $SHOP_LINK_COLOR_HOVER;
+
+$SHOP_RADIUS_MAIN: 10px;
+$SHOP_RADIUS_BTN: 4px;
+$SHOP_RADIUS_TAB_SUB: $SHOP_RADIUS_MAIN;
+
+$SHOP_TAB_ACTIVE_COLOR: #83141F;
+
+$SHOP_PILL_COLOR: #83141F;
+$SHOP_PILL_ACTIVE_COLOR: #B53643;
+
+@import "lib/stm/_shops";
+
+.ShopAddressesWidget {
+	margin-top: -10px;
+	margin-bottom: -35px;
+
+	&__header {
+		font-size: 20px;
+		line-height: 25px;
+		text-align: center;
+		color: #3C2211;
+		margin-top: 0;
+		margin-bottom: 20px;
+	}
+
+	.BuyOnline {
+		max-width: 900px;
+		margin: auto;
+	}
+
+	.BuyOnline__link {
+		border-color: #dcdcdc;
+		height: 40px;
+		line-height: 40px;
+		padding: 25px 20px;
+	}
+
+	.BuyOnline__title {
+		margin-top: 3px;
+	}
+}

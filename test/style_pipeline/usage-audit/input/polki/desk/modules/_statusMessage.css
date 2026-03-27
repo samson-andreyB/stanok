@@ -1,0 +1,64 @@
+/*
+<div class="StatusMessagesWrapper">
+	<div class="StatusMessage StatusMessage--default StatusMessage--success">
+		<div class="StatusMessage__header">Загружены цены для 34 кодов</div>
+	</div>
+
+	<div class="StatusMessage StatusMessage--default StatusMessage--error">
+		<div class="StatusMessage__header">Не удалось загрузить цены для 4 кодов</div>
+		<div class="StatusMessage__content">
+			<div class="StatusMessage__paragraph">Не заполнены обязательные поля в строках: 4, 16, 20, 34</div>
+			<div class="StatusMessage__paragraph">Некорректно указана единица измерения комплектности в строках: 6, 8, 14, 15, 16.</div>
+		</div>
+	</div>
+</div>
+ */
+
+.StatusMessage--default {
+	line-height: 1.5;
+
+	& + & {
+		margin-top: 8px;
+	}
+
+	.StatusMessage__header {
+		&:before {
+			content: '';
+			display: inline-block;
+			margin-top: -.25em;
+			margin-right: .33em;
+			vertical-align: middle;
+			background-repeat: no-repeat;
+		}
+	}
+
+	.StatusMessage__header + .StatusMessage__content,
+	.StatusMessage__item + .StatusMessage__item,
+	.StatusMessage__paragraph + .StatusMessage__paragraph {
+		margin-top: 5px;
+	}
+
+	&.StatusMessage--success {
+		color: $C_GREEN_LIGHT;
+
+		.StatusMessage__header:before {
+			width: width('icons/check_14x11_2b8.png');
+			height: height('icons/check_14x11_2b8.png');
+			background-image: resolve('icons/check_14x11_2b8.png');
+		}
+	}
+
+	&.StatusMessage--error {
+		color: $error;
+
+		.StatusMessage__header:before {
+			width: 14px;
+			height: height('icons/check_14x11_2b8.png');
+			background-image: resolve('icons/cross_11x11_e55.png');
+		}
+	}
+}
+
+.StatusMessagesWrapper {
+	display: none;
+}

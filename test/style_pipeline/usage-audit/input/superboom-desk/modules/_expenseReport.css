@@ -1,0 +1,47 @@
+.FancyModal--expenseReport {
+	max-width: 810px;
+	
+	.FancyModal__content {
+		padding: 0;
+	}
+
+	.FancyModal__control {
+		margin-top: 3px;
+	}
+
+	.Items__group {
+		.Item__box {
+			vertical-align: top;
+		}
+	}
+
+	.Item__box {
+		&--name {
+			width: 60%;
+		}
+
+		&--document{
+			width: 24%;
+		}
+
+		&--number,
+		&--code,
+		&--quantity,
+		&--price,
+		&--sum,
+		&--orderERP,
+		&--orderSite {
+			white-space: nowrap;
+			width: 1px;
+		}
+
+		&--quantity,
+		&--orderERP,
+		&--price,
+		&--sum,
+		&--grossIncome,
+		&--documentBase {
+			text-align: right;
+		}
+	}
+}

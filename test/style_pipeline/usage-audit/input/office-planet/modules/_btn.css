@@ -1,0 +1,395 @@
+/* BLOCKS - BUTTONS
+---------------------------------------------------------------------*/
+
+/*doc
+<a class="Btn Btn--default" href="#">Напомнить</a>
+<button class="Btn Btn--default Btn--main">Купить</button>
+<input class="Btn Btn--default Btn--main" type="submit" value="Применить">
+*/
+
+@define-mixin Btn--basic {
+	border: 0;
+	box-sizing: border-box;
+	cursor: pointer;
+	display: inline-block;
+	font: inherit;
+	overflow: visible;
+	user-select: none;
+
+	&:hover {
+		text-decoration: none;
+	}
+	&.big {
+		font-size: 1.25em;
+	}
+	&.small {
+		font-size: .75em;
+	}
+}
+
+
+.Btn {
+	@mixin Btn--basic;
+}
+
+
+@define-mixin Btn--default {
+	@mixin Btn--basic;
+	line-height: 1;
+	position: relative;
+	text-align: center;
+	text-decoration: none;
+	white-space: nowrap;
+
+
+	@mixin ActElem--brand;
+	font-family: $fontFamilyL;
+	font-size: 16px;
+	padding: 8px 25px;
+	line-height: 1;
+
+	&:hover {
+		color: #fff;
+	}
+
+	&:focus {
+		box-shadow: 0 1px 3px rgba(0,0,0,.3);
+	}
+
+	&.disabled {
+		background-color: #bcbcbc;
+		cursor: default;
+		pointer-events: none;
+	}
+
+	&:active&:active,
+	&.active&.active {
+		box-shadow: inset 0 5px 1px -3px rgba(0,0,10,.25);
+	}
+
+	@mixin Spinner--potential;
+
+	& .Spinner {
+		border-top-color: #fff;
+		font-size: 80%;
+		left: 50%;
+		margin-top: -.7em;
+		margin-left: -.75em;
+		top: 50%;
+	}
+
+	&.Spinner--active {
+		color: rgba(255,255,255,.0);
+		cursor: default;
+
+		.Spinner {
+			opacity: 1;
+		}
+	}
+}
+.Btn--default {
+	@mixin Btn--default;
+}
+
+@define-mixin Btn--light {
+	color: #999;
+	padding: 8px 20px;
+	line-height: 1;
+	background: none;
+
+	&:hover {
+		color: color(#999 lightness(20%));
+	}
+}
+.Btn--light {
+	@mixin Btn--light;
+}
+
+@define-mixin Btn--main {
+	@mixin ActElem--accent;
+
+	&:focus {
+		box-shadow: 0 1px 3px rgba(0,0,0,.3);
+	}
+}
+.Btn--main {
+	@mixin Btn--main;
+}
+
+@define-mixin Btn--big {
+	font-size: 17px;
+	padding: 17px 34px;
+}
+.Btn--big {
+	@mixin Btn--big;
+}
+
+@define-mixin Btn--small {
+	font-size: 13px;
+	padding: 4px 13px;
+	box-shadow: none;
+}
+.Btn--small {
+	@mixin Btn--small;
+}
+
+.Btn--icon {
+	@mixin Btn--default;
+	border: 1px solid #ddd;
+	font-size: 13px;
+	padding: 5px 12px;
+	height: 31px;
+	vertical-align: top;
+	transition: all .2s ease-in-out;
+
+	.Page & {
+		background-color: transparent;
+		color: #818181;
+	}
+
+	&:hover {
+		color: #fff;
+		background-color: $theme_brand;
+		border-color: $theme_brand;
+	}
+
+	.Requisites__item.active & {
+		border-color: #fff;
+		color: #fff;
+	}
+
+	.Requisites__item.active &:hover {
+		background-color: #fff;
+		color: #818181;
+	}
+
+	.Icon {
+		margin-right: 6px;
+	}
+}
+
+@define-mixin Btn--sub {
+	@mixin Btn--default;
+	border: 5px solid $theme_layoutAccentColor;
+
+	/* потому что тень в настройках только у ОП */
+	/* тут её совсем не должно быть */
+	box-shadow: none; /* themerForce */
+
+	line-height: 1;
+	padding: 5px 15px;
+
+	/* .Page & { */ /* фигня какая-то, кажется пейдж добавлен для увеличения специфичности из-за обхода экстендов, которые раньше тут были */
+		background-color: #fff;
+		color: #8d8d8d;
+	/* } */
+
+	&:hover,
+	&.hover,
+	&:active,
+	&.active {
+		border: 0;
+		color: #fff;
+		padding: 10px 20px;
+	}
+
+	&.Btn--main {
+
+		&:hover,
+		&.hover,
+		&:active,
+		&.active {
+			@mixin Btn--main;
+		}
+
+		&:active&:active,
+		&.active&.active {
+			box-shadow: inset 0 5px 1px -3px rgba(0,0,10,0.25);
+		}
+	}
+}
+.Btn--sub {
+	@mixin Btn--sub;
+}
+
+
+@define-mixin Btn--subBig {
+	font-size: 17px;
+	padding: 12px 29px;
+	line-height: 1;
+
+	&:hover,
+	&.hover,
+	&:active,
+	&.active {
+		border: 0;
+		padding: 17px 34px;
+	}
+}
+.Btn--subBig {
+	@mixin Btn--subBig;
+}
+
+@define-mixin Btn--action {
+	box-sizing: border-box;
+	height: 32px;
+	padding: 0;
+	text-align: center;
+	line-height: 30px;
+	min-width: 32px;
+}
+.Btn--action {
+	@mixin Btn--action;
+}
+
+@define-mixin Btn--arrow {
+	height: 50px;
+	position: relative;
+	vertical-align: middle;
+
+	&:after {
+		color: $theme_accent;
+		content: '';
+		position: absolute;
+	}
+
+	&:hover:after {
+		color: $theme_aHover;
+	}
+
+	&:active:after {
+		color: $theme_accent;
+	}
+
+	&.disabled:after {
+		color: #bcbcbc;
+	}
+
+	&:after {
+		border-style: solid;
+		border-width: 25px 10px;
+		top: 0;
+	}
+}
+.Btn--arrow {
+	@mixin Btn--arrow;
+}
+
+@define-mixin Btn--subArrow {
+	height: 50px;
+	position: relative;
+	vertical-align: middle;
+
+	&:after {
+		color: $theme_accent;
+		content: '';
+		position: absolute;
+	}
+
+	&:hover:after {
+		color: $theme_aHover;
+	}
+
+	&:active:after {
+		color: $theme_accent;
+	}
+
+	&.disabled:after {
+		color: #bcbcbc;
+	}
+	position: relative;
+
+	&:after {
+		content: "";
+		background-image: resolve('interface/ui.png');
+		background-position: 0 -521px;
+		display: block;
+		height: 50px;
+		position: absolute;
+		top: -5px;
+		width: 16px;
+	}
+
+	&:hover:after,
+	&:active:after {
+		background: none;
+		border-style: solid;
+		border-width: 25px 10px;
+		height: 0;
+		top: 0;
+		width: 0;
+	}
+}
+.Btn--subArrow {
+	@mixin Btn--subArrow;
+}
+
+@define-mixin Btn--forward {
+	margin-right: 10px;
+
+	&:after {
+		border-top-color: transparent;
+		border-right-color: transparent;
+		border-bottom-color: transparent;
+		left: 100%;
+	}
+}
+
+@define-mixin Btn--back {
+	margin-left: 10px;
+
+	&:after {
+		border-top-color: transparent;
+		border-left-color: transparent;
+		border-bottom-color: transparent;
+		right: 100%;
+	}
+}
+
+@define-mixin Btn--arrow-forward {
+	@mixin Btn--arrow;
+	@mixin Btn--forward;
+}
+.Btn--arrow-forward {
+	@mixin Btn--arrow-forward;
+}
+
+@define-mixin Btn--subArrow-forward {
+	@mixin Btn--forward;
+	@mixin Btn--subArrow;
+}
+.Btn--subArrow-forward {
+	@mixin Btn--subArrow-forward;
+}
+
+.Btn--arrow-back {
+	@mixin Btn--back;
+}
+
+@define-mixin Btn--subArrow-back {
+	@mixin Btn--back;
+	@mixin Btn--subArrow;
+
+	&:after {
+		background-position: -21px -521px;
+	}
+}
+.Btn--subArrow-back {
+	@mixin Btn--subArrow-back;
+}
+
+.Btn--arrow-back {
+	@mixin Btn--arrow;
+}
+
+@define-mixin Btn--disabled {
+	@mixin ActElem--disabled;
+	pointer-events: none;
+
+	&:after {
+		border-left-color: #acacac;
+	}
+}
+.Btn--disabled {
+	@mixin Btn--disabled;
+}

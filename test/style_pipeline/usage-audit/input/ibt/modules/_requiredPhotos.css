@@ -1,0 +1,113 @@
+.RequiredPhotos--default {
+	border: 1px solid #d9d9d9;
+	margin-top: 20px;
+
+	.RequiredPhotos__headerGroup {
+		display: flex;
+		justify-content: space-between;
+		padding: 12px 20px;
+		background-color: #efefef;
+	}
+	.RequiredPhotos__headerTitle {
+		font-weight: bold;
+	}
+
+	.RequiredPhotos__content {
+		padding: 20px;
+	}
+
+	.RequiredPhotos__list {
+		margin-bottom: 0;
+	}
+
+	.RequiredPhotos__item {
+		display: flex;
+
+		&--longText {
+			.RequiredPhotos__text {
+				align-self: flex-start;
+			}
+		}
+
+		&:before {
+			margin-top: 15px;
+		}
+	}
+
+	.RequiredPhotos__item + .RequiredPhotos__item {
+		margin-top: 20px;
+	}
+
+	.RequiredPhotos__image {
+		flex-shrink: 0;
+		box-sizing: border-box;
+		border: 1px solid #d7d7d7;
+		width: 42px;
+		height: 42px;
+		cursor: help;
+		object-fit: contain;
+
+		&--empty {
+			cursor: default;
+		}
+	}
+
+	.RequiredPhotos__text {
+		align-self: center;
+		margin-left: 10px;
+		line-height: 1.4;
+		word-break: break-word;
+	}
+
+	.RequiredPhotos__controls {
+		padding-left: 20px;
+		padding-bottom: 20px;
+	}
+
+	.RequiredPhotos__progress {
+		width: 140px;
+		padding-left: 20px;
+		padding-bottom: 20px;
+
+		&--error {
+			.RequiredPhotos__progressTitle {
+				color: $error;
+			}
+
+			.Progress__done {
+				background-color: $error;
+			}
+		}
+
+		&--warning {
+			.RequiredPhotos__progressTitle {
+				color: #fa8565;
+			}
+
+			.Progress__done {
+				background-color: #fa8565;
+			}
+		}
+
+		&--completed {
+			color: #999;
+
+			&:before {
+				content: '';
+				display: inline-block;
+				width: width('icons/check_10x7_999.png');
+				height: height('icons/check_10x7_999.png');
+				margin-right: .3em;
+				background-image: resolve('icons/check_10x7_999.png');
+			}
+		}
+	}
+
+	.RequiredPhotos__progressTitle {
+		margin-bottom: 5px;
+	}
+
+	.RequiredPhotos__controls + .RequiredPhotos__progress {
+		margin-top: -5px;
+	}
+}

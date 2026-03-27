@@ -1,0 +1,6 @@
+.FancyModal {
+	&--personalData {
+		padding: 0;
+		font-size: inherit;
+	}
+}

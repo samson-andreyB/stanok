@@ -1,0 +1,193 @@
+.Tabs {
+	margin-top: 2em;
+}
+
+.Tabs__wrapper {
+	border-bottom: 3px solid #ca130c;
+	width: 100%;
+
+	.Page--stowage & {
+		border-bottom-color: $C_STOWAGE;
+	}
+}
+
+.Tabs__list {
+	margin-bottom: -1px;
+	margin-left: 0;
+	padding-left: 0;
+}
+
+.Tab {
+	background-color: #ebebeb;
+	border-right: 1px solid #fff;
+	color: inherit;
+	cursor: pointer;
+	display: inline-block;
+	margin-top: 0;
+	margin-bottom: 1px;
+	padding: 10px 15px;
+	vertical-align: top;
+	font-size: 14px;
+	user-select: none;
+
+	&:first-child {
+		border-top-left-radius: $B_RAD;
+	}
+
+	&:last-child {
+		border-top-right-radius: $B_RAD;
+	}
+
+	&:focus,
+	&.focus {
+		outline: none;
+	}
+
+	@mixin hocus {
+		background-color: #dedede;
+		color: inherit;
+		text-decoration: none;
+	}
+
+	&__text {
+		color: inherit;
+	}
+
+	&__info {
+		color: #777;
+		font-weight: normal;
+	}
+
+	&--active {
+		@mixin defhocusac {
+			background-color: #ca130c;
+			cursor: default;
+
+			.Page--stowage & {
+				background-color: $C_STOWAGE;
+			}
+		}
+
+		pointer-events: none;
+
+		.Tab__text {
+			border-bottom: 0;
+			color: #fff;
+			cursor: default;
+		}
+		
+		.Tab__info {
+			color: rgba(255,255,255,.75);
+		}
+	}
+
+	&--add {
+		&:before {
+			content: '';
+			display: inline-block;
+			width: 12px;
+			height: 12px;
+			vertical-align: top;
+			background-image: url('/img/icon/plus.png');
+		}
+	}
+}
+
+.TabContent {
+	display: none;
+
+	&--active {
+		display: block;
+	}
+}
+
+.Tabs--jackpot {
+
+	.Tabs__wrapper {
+		border-bottom-color: $C_JACKPOT;
+	}
+
+	.Tab--active {
+		background-color: $C_JACKPOT;
+	}
+}
+
+.Tabs--orderByCode {
+	.TabContent__title {
+		padding: 20px 0;
+		margin: 0;
+	}
+}
+
+.Tabs--discount {
+	margin-top: 10px;
+
+	.Tabs__list {
+		white-space: nowrap;
+	}
+
+	.Tabs__wrapper {
+		border-bottom: none;
+	}
+
+	.Tab {
+		font-size: 14px;
+		border-right: none;
+		padding: 8px 9px;
+
+		& + .Tab {
+			border-left: 1px solid #fff;
+		}
+
+		&:first-child {
+			border-bottom-left-radius: $B_RAD;
+		}
+
+		&:last-child {
+			border-bottom-right-radius: $B_RAD;
+		}
+	}
+
+	.TabsContent {
+		margin-top: 15px;
+	}
+
+	.Form__input {
+		font-size: 36px;
+		height: 45px;
+		border-color: #afafaf;
+		text-align: right;
+		padding-right: 40px;
+	}
+
+	.Form__inputSuffix {
+		font-size: 36px;
+	}
+
+	.Form__group--radio {
+		margin-bottom: 0;
+		display: block;
+		max-height: 187px;
+		overflow: auto;
+	}
+
+	.BtnMain {
+		width: 100%;
+	}
+}
+
+.Tabs--cartList {
+	.TabContent {
+		padding-top: 15px;
+	}
+}
+
+.Tabs2--brands {
+	.CatalogBrands--default {
+		margin-top: 12px;
+	}
+
+	.CatalogBrands--otherBrands {
+		margin-bottom: 45px;
+	}
+}

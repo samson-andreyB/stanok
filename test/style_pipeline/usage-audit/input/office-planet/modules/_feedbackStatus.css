@@ -1,0 +1,32 @@
+/*doc
+<span class="FeedbackStatus recieved"><span class="Icon"></span> Получен ответ</span>
+*/
+
+.FeedbackStatus {
+	font-size: 14px;
+	padding-right: 20px;
+	text-align: left;
+	display: inline-block;
+
+	.Icon {
+		margin-right: .4em;
+	}
+
+	&.recieved {
+		.Icon {
+			@mixin OtherIcon feedbackRecieved, $theme_accent;
+		}
+	}
+
+	&.waiting {
+		.Icon {
+			@mixin OtherIcon feedbackWaiting, #bcbcbc;
+		}
+	}
+
+	&.closed {
+		.Icon {
+			@mixin OtherIcon feedbackClosed, #bcbcbc;
+		}
+	}
+}

@@ -1,0 +1,87 @@
+.Page--customers {
+	.Field--login,
+	.Field--customer,
+	.Field--rights {
+		width: 170px;
+	}
+}
+
+
+.Items--customers {
+	.Item__box {
+		vertical-align: baseline;
+	}
+
+	.Items__header {
+		.Item__box {
+			vertical-align: bottom;
+		}
+	}
+
+	.Item__box--points {
+		text-align: right;
+	}
+
+	.Item__box--status {
+		width: 11%;
+	}
+
+	.Item__box--minPrice,
+	.Item__box--orderPriceList,
+	.Item__box--priceList,
+	.Item__box--jackpot {
+		min-width: 65px;
+	}
+
+	.Item__box--priceList {
+		.btnDownload {
+			&:before {
+				margin-right: 0;
+			}
+		}
+	}
+
+	.BadgeStatus {
+		font-size: 12px;
+	}
+	
+	.BubbleSelect {
+		.Bubble__trigger {
+			position: relative;
+		}
+
+		.BadgeStatus.Bubble__trigger {
+			position: relative;
+			min-width: 52px;
+			box-sizing: border-box;
+
+			&:after {
+				position: absolute;
+				left: auto;
+				right: 15px;
+				top: 50%;
+				margin-top: -1px;
+			}
+		}
+
+		.Spinner {
+			display: none;
+			border-left-color: $main;
+			border-top-color: $main;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			margin-top: -.6em;
+			margin-left: -.6em;
+		}
+
+		&--loading {
+			.Bubble__trigger:after {
+				content: none;
+			}
+			.Spinner {
+				display: block;
+			}
+		}
+	}
+}

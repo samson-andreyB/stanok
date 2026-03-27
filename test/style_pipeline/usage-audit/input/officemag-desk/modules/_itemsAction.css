@@ -1,0 +1,33 @@
+/* ITEMS ACTION
+------------------------------------------------------------------------------*/
+
+.Items--action {
+
+	.Item__box {
+		&--code {
+			width: 115px;
+			
+			.Field {
+				width: 100%;
+			}
+		}
+
+		&--img {
+			width: 95px;
+			
+		}
+
+		&--drag {
+			cursor: move;
+			width: 11px;
+		}
+	}
+
+	.Item__drag {
+		background-image: resolve('icons/organize_grey.png');
+		width: width('icons/organize_grey.png');
+		height: height('icons/organize_grey.png');
+		display: inline-block;
+	}
+}
+

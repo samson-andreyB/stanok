@@ -1,0 +1,23 @@
+.BadgeStatus {
+	&__indicator {
+		&--lightGray {
+			background-color: #d1d1d1;
+		}
+
+		&--lightRed {
+			background-color: #e45959;
+		}
+
+		&--yellow {
+			background-color: #f3bc13;
+		}
+
+		&--greenBlue {
+			background-color: #28bd8b;
+		}
+
+		&--blue {
+			background-color: #1782aa;
+		}
+	}
+}

@@ -1,0 +1,23 @@
+/* AGREMENT PERSONAL
+-------------------------------------------------------------*/
+
+.AgreementPersonal {
+	box-sizing: border-box;
+	padding: 37px 32px 38px;
+	width: 1000px;
+}
+.AgreementPersonal__title {
+	font-size: 2.6em;
+	margin-bottom: .54em;
+	margin-top: 0;
+}
+.AgreementPersonal__paragraph {
+	line-height: 1.7;
+	margin-bottom: .71em;
+}
+.AgreementPersonal__annotation {
+	color: #898989;
+	font-size: .9em;
+	line-height: 1.7;
+	margin-top: 2.58em;
+}

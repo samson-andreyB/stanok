@@ -1,0 +1,27 @@
+$theme_name: 'op';
+$theme_brand: #ffb400;
+$theme_bHover: #ffcc50;
+$theme_accent: #ce1728;
+$theme_aHover: #e4182b;
+$theme_layoutAccentColor: #f1ede4;
+
+$brandColor: #0990d9;
+$brandColorLighter: #00aff0;
+
+@import 'modules/_themeVars_op';
+
+$theme_logo: logo_ru.png;
+$theme_logo_width: 181px;
+$theme_logo_height: 79px;
+$theme_logo_s_width: 130px;
+$theme_logo_s_height: 43px;
+$theme_logo_s_position: 0 -83px;
+
+$theme_lowPrice_icon: low_price--op.png;
+$theme_lowPrice_width: 73px;
+$theme_lowPrice_height: 74px;
+
+$theme_placemarkCluster: #cd1727;
+$theme_placemarkClusterActive: #f11b2f;
+
+@import '_modules';

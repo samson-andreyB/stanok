@@ -1,0 +1,30 @@
+.Categories {
+	border: 1px solid #ccc;
+	font-size: 15px;
+	padding: 16px 12px 20px 12px;
+	margin-top: 20px;
+}
+
+.Category {
+	&__link {
+		color: #808080;
+
+		&:hover {
+			color: #f2453f;
+		}
+	}
+
+	& + & {
+		margin-top: 12px;
+	}
+
+	&.active .Category__link {
+		color: #000;
+		cursor: default;
+		pointer-events: none;
+	}
+
+	&--subCategory {
+		padding-left: 10px;
+	}
+}

@@ -1,0 +1,93 @@
+$SpinnerBG: transparent;
+$SpinnerColor: #dc241f;
+
+@import "lib/modules/_spinner";
+
+@define-mixin Spinner--potential {
+	position: relative;
+	transition-property: color;
+
+	&,
+	.Spinner {
+		transition-duration: .2s;
+		transition-timing-function: ease-in-out;
+	}
+	.Spinner {
+		opacity: 0;
+		position: absolute;
+		transition-property: opacity;
+		visibility: hidden;
+	}
+
+	&.Spinner--active {
+		.Spinner {
+			opacity: 1;
+			visibility: visible;
+		}
+	}
+
+	&.SpinnerWrapper {
+		.Spinner {
+			border-top-color: $SpinnerColor;
+			border-right-color: $SpinnerColor;
+			top: 50%;
+			left: 50%;
+			margin-top: -.6em;
+			margin-left: -.6em;
+			z-index: 1;
+		}
+
+		.Spinner__object {
+			transition: .2s color;
+		}
+
+		&.Spinner--active {
+			cursor: default;
+			pointer-events: none;
+			
+			.Spinner__object {
+				box-shadow: none;
+				color: transparent;
+				transition-duration: 0s;
+				user-select: none;
+			}
+		}
+	}
+}
+
+@define-mixin Spinner--default $size: 13px, $thickness: 2px, $sides: 2, $color: #dc241f, $duration: 1s {
+	box-sizing: border-box;
+	width: $size;
+	height: $size;
+	border: $thickness solid transparent;
+	border-left-color: $color;
+	border-radius: 50%;
+	animation: Spinner $duration linear infinite;
+
+	@if $sides > 1 {
+		border-top-color: $color;
+	}
+
+	@if $sides > 2 {
+		border-bottom-color: $color;
+	}
+}
+
+.Spinner--potential {
+	@mixin Spinner--potential;
+}
+
+.not-oldie .Spinner {
+	border-right-color: $SpinnerColor;
+	border-width: 2px;
+}
+
+.Spinner.Spinner--checkbox {
+	border: 2px solid #dc241f;
+	border-left-color: transparent;
+	box-sizing: border-box;
+	width: 13px;
+	height: 13px;
+	margin-bottom: -1px;
+	margin-right: 2px;
+}

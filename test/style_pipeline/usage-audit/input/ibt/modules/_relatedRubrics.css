@@ -1,0 +1,170 @@
+.Page--relatedRubrics {
+	.Filter2 {
+		&--name {
+			width: 255px;
+		}
+
+		&--rubricator {
+			width: 300px;
+		}
+
+		&--relatedRubrics {
+			width: 140px;
+		}
+	}
+
+	.Form__set--submit {
+		margin-top: 20px;
+	}
+}
+
+.Items--relatedRubrics {
+	.Item__box {
+		&--rowspan {
+			display: block;
+			height: 0;
+		}
+
+		&--code {
+			width: 45px;
+		}
+
+		&--rubric {
+			width: 280px;
+		}
+
+		&--relatedRubrics {
+			width: 300px;
+		}
+	}
+
+	.Item__link {
+		padding-y: .2em;
+	}
+
+	& + .ControlPanel {
+		border-top-width: 0;
+	}
+}
+
+.Items--relatedRubricsEdit {
+	border-top-width: 0;
+	border-bottom-width: 0;
+
+	.Items__header {
+		color: inherit;
+		font-size: inherit;
+	}
+
+	.Items__list {
+		width: auto;
+		margin-top: 0;
+	}
+
+	.Item {
+		&--sorting {
+			background-color: #fff;
+		}
+
+		&__box {
+			border-top-width: 0;
+			padding-top: 5px;
+			padding-right: 0;
+			vertical-align: top;
+
+			&:first-child {
+				padding-left: 0;
+			}
+			&:last-child {
+				padding-right: 0;
+			}
+
+			&--drag {
+				width: 10px;
+				padding-top: 15px;
+				line-height: 1;
+			}
+
+			&--relatedRubrics {
+				width: 330px;
+			}
+
+			&--count {
+				white-space: nowrap;
+				width: 90px;
+
+				.Form__input {
+					width: 40px;
+				}
+			}
+		}
+
+		&__drag {
+			display: inline-block;
+			width: width('icons/organize_grey.png');
+			height: height('icons/organize_grey.png');
+			background-image: resolve('icons/organize_grey.png');
+			cursor: move;
+
+			&:hover {
+				background-image: resolve('icons/organize_11x10_777.png');
+			}
+		}
+	}
+
+	.Items__add {
+		margin-top: 8px;
+	}
+}
+
+
+.FancyModal--relatedRubricsHistory {
+	width: 745px;
+}
+
+
+.Items--relatedRubricsHistory {
+	.Items__list > .Items__group {
+		max-height: 470px;
+	}
+
+	.Item__box {
+		&--date {
+			width: 125px;
+		}
+
+		&--changedBy {
+			width: 120px;
+		}
+
+		&--old,
+		&--new {
+			width: 185px;
+			padding-right: 0;
+		}
+
+		&--oldCount {
+			width: 40px;
+		}
+
+		&--rubricHistory {
+			padding: 0;
+		}
+	}
+}
+
+.Items--rubricHistory {
+	.Items__list {
+		border: none;
+	}
+
+	.Item__box {
+		&:first-child {
+			padding-left: 10px;
+		}
+
+		&:last-child {
+			padding-right: 0;
+		}
+	}
+}

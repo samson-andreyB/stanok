@@ -1,0 +1,778 @@
+.CommercialOfferState {
+	.filter--spaced {
+		margin-left: 2em;
+	}
+
+	.filter--alignMiddle {
+		line-height: 50px;
+	}
+}
+
+.CommercialOfferInfo {
+	margin-top: .2em;
+
+	&.contentWrapper {
+		padding: 10px 0;
+	}
+
+	.Box {
+		width: 50%;
+		padding: 0 20px;
+		vertical-align: top;
+		text-align: left;
+	}
+
+	.btnInfo {
+		margin-top: -.1em;
+	}
+
+	.Specs {
+		font-size: 13px;
+
+		&__item {
+			padding-top: 0;
+		}
+		&__item + .Specs__item {
+			padding-top: 1em;
+		}
+
+		&__header {
+			font-size: 13px;
+			margin-bottom: 0;
+		}
+
+		&__content {
+			margin-top: .2em;
+			word-break: break-all;
+			word-break: break-word;
+		}
+
+		&--default .Specs__item + .Specs__item {
+			margin-top: 0;
+		}
+	}
+
+	.Field--select {
+		width: 325px;
+	}
+}
+
+.CommercialOfferContents {
+	border-bottom: 1px solid #dadada;
+
+	&__productPhoto {
+		width: 38px;
+	}
+
+	&__productName {
+		padding-left: 1em;
+	}
+
+	&__productLink {
+		padding: 3px 0;
+	}
+
+	&__discountField {
+		width: 60px;
+		text-align: center;
+	}
+
+	&__priceField {
+		border-radius: 2px;
+		width: 80px;
+		text-align: center;
+	}
+
+	&__margin {
+		display: none;
+	}
+
+	&__tax {
+		display: none;
+
+		.Items__group & {
+			margin-top: 10px;
+		}
+
+		&Percent,
+		&Abs {
+			display: block;
+		}
+	}
+
+	.Items__header .Item__box {
+		white-space: nowrap;
+	}
+
+	.Item .Item__box,
+	.Item .Box {
+		vertical-align: top;
+	}
+
+	.Item__box {
+
+		&--code .Item__aux {
+			.Badge + .Badge {
+				margin-top: .2em;
+			}
+		}
+
+		&--profit,
+		&--price,
+		&--priceRated,
+		&--summ,
+		&--discount {
+			text-align: right;
+		}
+
+		&--priceRated {
+			white-space: nowrap;
+			padding-left: 15px;
+			padding-right: 30px;
+		}
+
+		&--error {
+			font-weight: bold;
+			color: #cf2d2d;
+
+			.btnInfo {
+				position: absolute;
+			}
+		}
+
+		&--warning {
+			font-weight: bold;
+			color: #eb7555;
+		}
+
+		&--count {
+			.Item__aux {
+				min-width: 55px;
+			}
+		}
+
+		&--column {
+			.RichSelect {
+				width: 80px;
+			}
+
+			.RichSelect__list {
+				max-height: 155px;
+			}
+		}
+
+		&--reset {
+			width: 48px;
+		}
+	}
+
+	.Item__aux {
+		&--badges {
+			margin-top: 4px;
+			margin-left: -4px;
+
+			.Badge {
+				margin-top: 2px;
+				margin-left: 4px;
+			}
+		}
+	}
+
+	.Item--notAvailable {
+		background-color: #f8e9e9;
+	}
+
+	&--showTax .CommercialOfferContents__tax {
+		display: block;
+	}
+	&--showPercent .CommercialOfferContents__margin {
+		display: block;
+	}
+}
+
+.CommercialOfferContents--crm {
+	.Item__box {
+		&--count {
+			width: 95px;
+
+			.AvailabilityList--default {
+				margin-top: 2px;
+				color: #999;
+				font-size: 11px;
+				line-height: 14px;
+			}
+
+			.TextCounter + .AvailabilityList--default {
+				margin-top: 5px;
+			}
+		}
+
+		&--name {
+			.CommercialOfferContents__productName {
+				display: block;
+				padding-left: 0;
+				margin-top: 2px;
+				line-height: 16px;
+			}
+		}
+	}
+
+	.Items__header {
+		.LoyaltyProgramContent {
+			color: #777;
+		}
+	}
+
+	.Items__group .LoyaltyProgramContent {
+		display: block;
+	}
+
+	.CommercialOfferContents__productName {
+		@mixin word-break;
+	}
+
+	.Items__title {
+		font-size: 14px;
+		line-height: 20px;
+		font-weight: bold;
+		margin-top: 16px;
+		margin-bottom: 12px;
+	}
+}
+
+.CommercialOfferEdit {
+	& + .contentWrapper.accent {
+		margin-top: 2px;
+	}
+
+	.Field {
+		width: 80px;
+	}
+
+	.Field,
+	.btnMain {
+		vertical-align: middle;
+	}
+
+	.Field + .btnMain {
+		margin-left: 1em;
+	}
+
+	.RichSelect--simple {
+		width: 100px;
+		text-align: left;
+	}
+
+	.RichSelect__options {
+		.RichSelect__list {
+			max-height: 155px;
+		}
+	}
+
+	.Box--aux + .Box--aux {
+		padding-left: 20px;
+	}
+}
+
+.CommercialOfferHint {
+	text-align: left;
+
+	&__header {
+		font-weight: bold;
+	}
+}
+
+.CommercialOfferSummary {
+	& + .contentWrapper.accent,
+	& + .CommercialOfferEdit {
+		margin-top: 2px;
+	}
+
+	&__item {
+		font-size: 14px;
+	}
+
+	&__summ {
+		padding-top: 3px;
+		font-size: 18px;
+		line-height: 1;
+	}
+
+	&__tax {
+		padding-y: 4px 2px;
+		font-size: 11px;
+		line-height: 1;
+		color: #777;
+	}
+
+	&__recalc {
+		visibility: hidden;
+		opacity: 0;
+		transition: visibility, opacity;
+		transition-duration: .2s;
+
+		& + .CommercialOfferSummary__loyaltyProgram {
+			width: 1%;
+			white-space: nowrap;
+		}
+	}
+
+	&__recalcList--editAll {
+		display: none;
+	}
+
+	&__recalcItem + .CommercialOfferSummary__recalcItem {
+		margin-top: 10px;
+	}
+
+	&__margin {
+		display: none;
+		font-size: 14px;
+		padding-top: 4px;
+	}
+
+	&__benefit {
+		display: none;
+		margin-top: 1px;
+		font-size: 14px;
+	}
+	
+	&__discount {
+		font-size: 14px;
+		padding-top: 2px;
+		line-height: normal;
+	}
+
+	&__discountAbsolute {
+		padding-top: 1px;
+		font-size: 11px;
+		line-height: 14px;
+		color: #777;
+	}
+
+	&--showPercent {
+		.CommercialOfferSummary__margin {
+			display: block;
+		}
+	}
+
+	&--showBenefit {
+		.CommercialOfferSummary__benefit {
+			display: block;
+		}
+	}
+
+	&--edit {
+		.CommercialOfferSummary__recalc {
+			visibility: visible;
+			display: table-cell;
+			opacity: 1;
+		}
+
+		.Box--aux {
+			color: #777;
+		}
+	}
+
+	&--editAll {
+		@extend .CommercialOfferSummary--edit;
+
+		.CommercialOfferSummary__recalcList {
+			&--edit {
+				display: none;
+			}
+
+			&--editAll {
+				display: block;
+			}
+		}
+	}
+
+	&--fixed {
+		position: fixed;
+		bottom: 0;
+		z-index: 1;
+		box-shadow: 0 0 10px rgba(0,0,0,.3);
+	}
+
+	.Box {
+		vertical-align: baseline;
+
+		& + .Box {
+			padding-left: 40px;
+		}
+	}
+}
+
+.CommercialOfferAddItem {
+	&.contentWrapper {
+		padding: 20px;
+	}
+
+	.Form {
+		&__header {
+			border-bottom: none;
+			margin-bottom: 0;
+			padding-bottom: 0;
+		}
+
+		&__field {
+			&--code {
+				.Form__input {
+					width: 70px;
+				}
+
+				.Form__description {
+					display: inline-block;
+					vertical-align: middle;
+					max-width: 390px;
+					margin-left: 5px;
+					line-height: 14px;
+
+					&.Spinner {
+						width: .48em;
+						height: .48em;
+						border-width: .2em;
+						border-top-color: #28bd8b;
+						border-right-color: #28bd8b;
+					}
+				}
+			}
+
+			&--count {
+				.NumberInput__field {
+					width: 70px;
+				}
+			}
+		}
+	}
+}
+
+.FancyModal--individualPricesConfirm {
+	width: 540px;
+	padding-y: 40px;
+	text-align: center;
+
+	.FancyModal__control {
+		margin: 0;
+		padding: 0;
+		background: none;
+	}
+}
+
+.FancyModal--sendCommercialOffer {
+	width: 520px;
+
+	.Form__set {
+		box-sizing: border-box;
+		width: 100%;
+
+		& + .Form__set {
+			margin-top: 1.2em;
+		}
+
+		&.accent {
+			padding: 10px;
+		}
+	}
+	.Form__title {
+		font-size: 12px;
+	}
+
+	.FancyModal__cancel {
+		margin-left: 0;
+	}
+
+	.personalManager {
+		label {
+			display: block;
+			line-height: 21px;
+		}
+	}
+
+	.AttachFiles {
+		&__content {
+			display: none;
+			margin-top: 7px;
+		}
+
+		label {
+			display: block;
+			line-height: 21px;
+
+			& + .Message {
+				margin-top: 10px;
+				font-size: 12px;
+				line-height: 16px;
+			}
+		}
+
+		&__selectKP {
+			margin-bottom: 10px;
+		}
+
+		&__title {
+			font-weight: bold;
+			margin-bottom: 7px;
+		}
+	}
+}
+
+.FancyModal--saveCommercialOfferForNMCK {
+	width: 400px;
+
+	.Form__set {
+		width: 100%;
+
+		label {
+			display: block;
+			line-height: 23px;
+		}
+	}
+
+	.FancyModal__cancel {
+		margin-left: 10px;
+	}
+
+	.FancyModal__save {
+		background-color: #28bd8b;
+		color: #FFF;
+
+		&::before {
+			background-image: resolve('icons/download_white.png');
+		}
+
+		&:hover {
+			background-color: #3cd19f;
+			border-color: #3cd19f;
+		}
+	}
+}
+
+.FancyModal--removeCommercialOffer,
+.FancyModal--saveCommercialOffer {
+	width: 540px;
+}
+
+.CommercialOffers {
+
+	&__exportExcel {
+		margin-left: .8em;
+	}
+
+	.filter {
+
+		&--department {
+			width: 170px;
+		}
+		&--createdByGroup,
+		&--createdBy {
+			width: 200px;
+		}
+		&--responsible {
+			width: 190px;
+			background: none;
+			padding-left: 0;
+		}
+		&--organization {
+			width: 280px;
+		}
+
+		&--shop {
+			width: 190px;
+		}
+
+		&--individualPrices {
+			width: 190px;
+
+			.RichSelect {
+				width: 100%;
+			}
+		}
+
+		&--clientStatus {
+			width: 158px;
+		}
+
+		&--clientStatus2 {
+			width: 158px;
+
+			.RichSelect {
+				width: 100%;
+			}
+		}
+
+	}
+
+	.Item__box {
+		&--comment {
+			width: 16px;
+			padding-left: 15px;
+		}
+	}
+}
+
+.pseudoLink--pzk {
+	&,
+	&:hover {
+		color: #a7126a;
+	}
+}
+
+
+
+.CompaniesAndDiscount {
+	margin-bottom: 0.5em;
+	margin-left: 0;
+	padding-left: 0;
+
+	&__itemList {
+		list-style: none;
+
+		.Field {
+			padding-top: 0.2em;
+			padding-bottom: 0.1em;
+			text-align: center;
+			width: 2.5em;
+		}
+
+		label.CompaniesAndDiscount__checkbox {
+			display: inline;
+		}
+	}
+}
+
+
+
+/* настройка левого маргина у кнопки "Сформировать КП из Excel
+----------------------------------------------------*/
+
+.btnMain + .Upload--commercialOffersHeader {
+	margin-left: 10px;
+}
+
+
+
+/* настройка вертикального положения значка вопроса на страничке Коммерческого предложения
+-----------------------------------------------------*/
+
+.btnInfo--commercialOffersHeader {
+	margin-top: .05em;
+}
+
+
+
+.CommercialOffersControls {
+	&--edit {
+		.Box {
+			vertical-align: top;
+		}
+	}
+
+	&--top {
+		margin-top: 2em;
+	}
+
+	&__sort {
+		& + .CommercialOffersControls__specialOffer {
+			display: inline-block;
+			margin-top: 10px;
+		}
+
+		.Field {
+			display: block;
+			margin-top: 5px;
+		}
+	}
+
+	&__specialOfferHint {
+		color: #111;
+
+		&:before {
+			content: '';
+			display: inline-block;
+			vertical-align: middle;
+			margin-top: -.17em;
+			margin-right: .1em;
+			width: width('icons/exclamation_rounded_13x13_aaa.png');
+			height: height('icons/exclamation_rounded_13x13_aaa.png');
+			background-image: resolve('icons/exclamation_rounded_13x13_aaa.png');
+		}
+	}
+
+	.btn + .btn,
+	.Dropdown + .btn {
+		margin-left: .6em;
+	}
+
+	.Dropdown--downloadFile {
+		margin-left: .5em;
+
+	}
+}
+
+
+.IndividualPricesTip {
+	width: 248px;
+
+	.Form {
+		padding: 12px 23px;
+	}
+
+	.Form__set {
+		width: auto;
+	}
+
+	.Form__field + .Form__field {
+		margin-top: .35em;
+	}
+
+	.controlPanel {
+		padding: 10px 22px;
+		margin-top: 4px;
+
+		.btn + .btn {
+			margin-left: .6em;
+		}
+	}
+}
+
+
+.Dropdown--ndsCalculation {
+	margin-left: 5px;
+}
+
+.Items--quantityDiscount {
+	.Items__list {
+		margin-top: 0;
+	}
+
+	.Item__box {
+		padding: 4px 0;
+		vertical-align: top;
+
+		& + .Item__box {
+			padding-left: 20px;
+		}
+	}
+
+	.Item--active {
+		font-weight: bold;
+	}
+}
+
+
+.LoyaltyProgramContent {
+	color: #48b28b;
+}
+
+.TipTipWrapper {
+	display: inline-block;
+	cursor: help;
+
+	& + .btn,
+	.btn + &,
+	.Dropdown + & {
+		margin-left: .6em;
+	}
+}

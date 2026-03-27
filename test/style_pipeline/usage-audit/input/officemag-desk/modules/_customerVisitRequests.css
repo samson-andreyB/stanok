@@ -1,0 +1,315 @@
+.Page--customerVisitRequests {
+	.btn + .btn {
+		margin-left: .6em;
+	}
+
+	.filters--defined .filter {
+		max-width: 450px;
+	}
+
+	.filter {
+		&--customer {
+			width: 150px;
+		}
+
+		&--department {
+			width: 140px;
+		}
+
+		&--goal {
+			width: 150px;
+		}
+
+		&--requestStatus {
+			width: 150px;
+		}
+
+		&--status2 {
+			width: 120px;
+		}
+
+		&--responsibleGroup {
+			width: 170px;
+		}
+
+		&--responsible {
+			width: 180px;
+			padding-left: 0;
+			background-image: none;
+		}
+
+		&--createdByGroup {
+			width: 170px;
+		}
+
+		&--createdBy {
+			width: 178px;
+		}
+	}
+
+	.filter .RichSelect {
+		width: 100%;
+	}
+
+	.StatusChangeDatetime {
+		font-weight: normal;
+
+		&--expired {
+			color: $error;
+		}
+	}
+
+	.RequestInfo {
+		padding-y: 15px;
+
+		&__correctedBy {
+			font-size: 11px;
+			color: #777;
+		}
+
+		.filters {
+			margin-y: -10px;
+		}
+
+		.filter {
+			margin-right: 50px;
+		}
+
+		.btnInfo {
+			margin-top: -.35em;
+			padding: 0;
+		}
+
+		.Group {
+			margin-top: 1em;
+		}
+
+		.Box {
+			width: 50%;
+			vertical-align: top;
+		}
+
+		&--comment {
+			border-top: 1px solid #dadada;
+			margin-top: 15px;
+			padding-bottom: 0;
+		}
+	}
+
+	.RouteList {
+		font-size: 12px;
+		color: #555;
+		padding-y: 20px;
+
+		.File {
+			margin-left: 1.5em;
+		}
+	}
+
+	.Items {
+		font-size: 12px;
+
+		.StatusChangeDatetime {
+			display: block;
+		}
+	}
+
+	.Item__box--comment {
+		padding-left: 15px;
+		padding-right: 0;
+	}
+
+	.Item__box--comment + .Item__box--number {
+		padding-left: 8px;
+	}
+
+	.Item__box {
+		&--customer {
+			width: 20%;
+		}
+
+		&--bc {
+			width: 12%;
+		}
+
+		&--status {
+			width: 12%;
+		}
+
+		&--responsible {
+			width: 15%;
+		}
+	}
+
+	.Item .Item__box {
+		vertical-align: top;
+	}
+
+	.Item__box a {
+		padding-y: .1em;
+	}
+
+	.Form__set .Form__field--disabled {
+		opacity: .5;
+		pointer-events: none;
+	}
+
+	.SwitchTip {
+		padding: 15px 20px;
+		width: 245px;
+		box-sizing: border-box;
+
+		&__hint {
+			margin-top: 1em;
+			line-height: 14px;
+			font-size: 11px;
+			color: #777;
+		}
+
+		.Form__set {
+			margin: 0;
+		}
+
+		.controlPanel {
+			margin: 15px -20px -15px;
+			text-align: justify;
+			font-size: 0;
+
+			&:after {
+				content: '';
+				display: inline-block;
+				width: 100%;
+				height: 0;
+			}
+
+			.btn {
+				margin: 0;
+				font-size: 13px;
+			}
+		}
+	}
+
+	.SwitchTip--responsible {
+		
+		.Form__set .Form__title {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.Form__field {
+			margin-top: 0;
+		}
+	}
+
+	.RequestsList {
+
+		.btnInfo {
+			margin-top: -.25em;
+			padding: 0;
+		}
+	}
+
+	.Header2 {
+		.Box--shrink + .Box--shrink {
+			padding-left: 20px;
+		}
+	}
+}
+
+.FancyModal--customerVisitRequestForm {
+	width: 690px;
+	
+	.btn + .btn {
+		margin-left: .6em;
+	}
+
+	.Form > .Form__hint {
+		margin-bottom: 25px;
+	}
+
+	.Form__error {
+		display: none;
+		font-size: 11px;
+	}
+
+	.Form__set {
+		width: 500px;
+	}
+
+	.Form__field {
+		margin-left: 150px;
+	}
+
+	.Form__field + .Form__field {
+		margin-top: 15px;
+	}
+
+	.Form__title {
+		width: 140px;
+		margin-left: -150px;
+		text-align: left;
+	}
+
+	.Form__field {
+
+		.Form__hint {
+			margin-top: .2em;
+			line-height: 14px;
+			font-size: 11px;
+			color: #777;
+		}
+	}
+
+	.Form__field--address {
+
+		.Form__label {
+			display: inline-block;
+		}
+
+		.Form__label + .Form__label {
+			margin-left: 13px;
+		}
+
+		.Form__input {
+			width: 60px;
+			margin-left: 5px;
+		}
+	}
+
+	.PhoneControl {
+		display: inline-block;
+	}
+}
+
+.CustomerVisitInfo {
+
+	&__title {
+	margin-top: 0;
+	margin-bottom: 0;
+	}
+
+	&__title + &__content {
+		margin-top: 4px;
+	}
+}
+
+.CustomerVisitHint {
+	&:before {
+		content: '';
+		display: inline-block;
+		vertical-align: middle;
+		margin-top: -.17em;
+		margin-right: .1em;
+		width: width('icons/exclamation_rounded_13x13_aaa.png');
+		height: height('icons/exclamation_rounded_13x13_aaa.png');
+		background-image: resolve('icons/exclamation_rounded_13x13_aaa.png');
+	}
+
+	&--tipTip {
+		padding: 6px 2px;
+		width: 250px;
+		display: block;
+		font-size: 13px;
+		line-height: 18px;
+	}
+}

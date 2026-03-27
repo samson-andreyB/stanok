@@ -1,0 +1,124 @@
+.ac_results {
+	background: #fff;
+	position: absolute;
+	top: 0;
+	left: 0;
+	border-width: 0 !important;
+	box-shadow: 0 10px 10px rgba(0,0,0,.3);
+	font-family: inherit;
+	white-space: nowrap;
+	z-index: 100;
+	overflow: visible;
+	max-height: 300px;
+
+	&--modal {
+		z-index: 1101;
+	}
+
+	&:before {
+		content: '';
+		width: 100%;
+		height: 2px;
+		position: absolute;
+		top: -2px;
+		left: 0;
+		background-color: $C_BRAND;
+
+		.Page--stowage & {
+			background-color: $C_STOWAGE;
+		}
+	}
+
+	li {
+		background-color: #fff;
+		color: inherit;
+		display: block;
+		padding: 7px 12px !important;
+		font-size: 14px !important;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		cursor: pointer;
+
+		&:hover,
+		&:focus,
+		&.hover,
+		&.focus,
+		&.ac_over {
+			background-color: #ca130c;
+			color: #fff;
+			text-decoration: none;
+			
+			.Page--stowage & {
+				background-color: $C_STOWAGE;
+			}
+		}
+	}
+
+	strong {
+		font-weight: bold;
+	}
+}
+
+.Autocomplete--textCounter {
+	.Autocomplete__item {
+		text-align: center;
+	}
+
+	&:before {
+		display: none;
+	}
+}
+
+.Autocomplete--searchHistory {
+	.Autocomplete {
+		&__title {
+			padding: 7px 12px;
+			font-weight: bold;
+			font-size: 14px;
+			line-height: 16px;
+		}
+
+		&__item {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding-right: 8px !important;
+
+			&:hover {
+				.Autocomplete__remove {
+					color: #fff;
+				}
+			}
+
+			.Autocomplete__remove {
+				&:hover {
+					color: $C_BRAND;
+					background-color: #fff;
+				}
+			}
+		}
+
+		&__content {
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		&__remove {
+			margin-left: 10px;
+			padding: 0;
+			flex-shrink: 0;
+			color: #bebebe;
+			background-color: transparent;
+			border-width: 0;
+			border-radius: 3px;
+			line-height: 0;
+			cursor: pointer;
+		}
+	}
+}
+
+.Autocomplete--orderByCode {
+	&:before {
+		display: none;
+	}
+}

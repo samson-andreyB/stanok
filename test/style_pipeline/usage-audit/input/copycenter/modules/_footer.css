@@ -1,0 +1,58 @@
+/* footer
+---------------------------------------------------------------------*/
+
+.Page__footer {
+	position: relative;
+	background-color: #e4ece4;
+	padding-top: 25px;
+}
+
+
+.Footer__group {
+	box-sizing: border-box;
+	display: table;
+	width: 100%;
+}
+
+.Footer__box.brandBox {
+	text-align: justify;
+	margin-top: 2.4em;
+	line-height: 1.4;
+}
+
+.Footer__box.brandBox:after {
+	content: '';
+	display: inline-block;
+	width: 100%;
+}
+
+.Footer__boxItem {
+	display: inline-block;
+}
+
+.Footer__links {
+	text-align: justify;
+	line-height: 1.2;
+}
+
+.Footer__links:after {
+	content: '';
+	display: inline-block;
+	width: 100%;
+}
+
+.Footer__box p {
+	font-size: 11px;
+	color: #898989;
+	margin: 0;
+}
+.Footer__box.brandBox p a {
+	font-size: 11px;
+}
+
+.Footer__box.infoBox .linkAccent {
+	display: inline-block;
+}
+.Footer__box.infoBox .linkAccent + p {
+	margin-top: 5px;
+}

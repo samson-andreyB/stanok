@@ -1,0 +1,77 @@
+@define-mixin Message--notice {
+	padding: 12px 17px;
+	background-color: #f5f5f5;
+	line-height: 1.4;
+
+	.Message__title {
+		font-weight: bold;
+		color: #c7130d;
+
+		& + .Message__text {
+			margin-top: 5px;
+		}
+	}
+
+	.Message__text + .Message__text {
+		margin-top: 5px;
+	}
+}
+
+@define-mixin Message--warning {
+	@mixin Message--notice;
+	background-color: #fbf6ca;
+}
+
+.Message--notice,
+.Message--productSetsInOrder {
+	@mixin Message--notice;
+}
+
+.Message--warning,
+.Message--cantPayWithPoints {
+	@mixin Message--warning;
+}
+
+.Message--cantPayWithPoints,
+.Message--productSetsInOrder,
+.Message--traceableGoods,
+.Message--markingGoods {
+	.Message__text {
+		max-width: 810px;
+	}
+}
+
+.Message--traceableGoods,
+.Message--markingGoods {
+	.Message__title {
+		color: $C_DEFAULT;
+	}
+}
+
+.Message--accumulatedActionsDisabled {
+	padding: 35px;
+	font-size: 16px;
+	text-align: center;
+	background-color: #f5f5f5;
+	color: #656565;
+}
+
+.Message--jackpotGreeting {
+	padding: 15px 20px;
+	background-color: #fbf6cc;
+
+	.Message__title {
+		font-size: 18px;
+	}
+
+	.Message__text {
+		margin-top: 15px;
+	}
+}
+
+.Message--warning {
+	.OrderComments + & {
+		margin-top: -10px;
+		margin-bottom: 15px;
+	}
+}

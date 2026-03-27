@@ -1,0 +1,211 @@
+/* VIEWER
+---------------------------------------------------------------------*/
+@define-mixin play-button $backgroundImage {
+	content: '';
+	display: block;
+	background-image: url($imgPath/dest/interface/$backgroundImage);
+	background-repeat: no-repeat;
+	background-position: center center;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.Viewer__subject {
+	&--video {
+		cursor: pointer;
+		position: relative;
+
+		&:after {
+			@mixin play-button $theme_playIcon;
+		}
+	}
+}
+.Viewer__list {
+	@mixin List--basic;
+}
+
+.Viewer__item {
+	@mixin List__item--ib;
+	border: 2px solid #eee;
+	cursor: pointer;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	position: relative;
+
+	&:hover {
+		border-color: $dividerColor;
+	}
+
+	&.active {
+		border-color: $theme_color_11;
+		cursor: default;
+		pointer-events: none;
+	}
+
+	&--video:after {
+		@mixin play-button $theme_playIcon_s;
+	}
+}
+.Viewer__preview {
+	width: 46px;
+	height: 46px;
+	user-select: none;
+}
+.Viewer__target {
+	display: none;
+	width: 80px;
+	height: 40px;
+	position: absolute;
+	border: 1px solid #acacac;
+	background-color: rgba(255, 255, 255, .3);
+	pointer-events: none;
+	cursor: pointer;
+	z-index: 1;
+}
+.Viewer__object {
+	display: none;
+	width: 100%;
+	height: 355px;
+	min-height: 270px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 10;
+	border: 1px solid #666;
+	background-color: #fff;
+	background-repeat: no-repeat;
+	box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+	overflow: hidden;
+
+	.ProductSetCard__info & {
+		left: 35px;
+	}
+}
+
+.Viewer__img {
+	top: 50%;
+	left: 50%;
+	position: absolute;
+}
+
+.Viewer__bigImg {
+	position: relative;
+	background-repeat: no-repeat;
+	height: 100%;
+	width: 100%;
+	background-position: 50% 50%;
+	cursor: pointer;
+}
+
+.Viewer__bigImg img {
+	position: absolute;
+	left: 0;
+	top: 0;
+	max-width: 100%;
+	max-height: 100%;
+	cursor: progress;
+}
+
+.Viewer__bigImg--bg {
+	cursor: zoom-in;
+	background-size: contain;
+}
+
+
+
+/* VIEWER - FANCY
+---------------------------------------------------------------------*/
+
+.Viewer--fancy {
+	overflow: hidden;
+}
+
+.Viewer--fancy .Viewer__subject,
+.Viewer--fancy .Viewer__list {
+	float: left;
+	padding: 26px;
+}
+
+.Viewer--fancy {
+	.Viewer__subject {
+		background: #fff;
+		display: inline-block;
+		min-width: 475px;
+		height: 480px;
+		white-space: normal;
+		position: relative;
+
+		.Viewer__item {
+			border: none;
+			cursor: pointer;
+			width: 100%;
+			height: 100%;
+			vertical-align: middle;
+			position: relative;
+			z-index: 1;
+		}
+	}
+}
+
+.Viewer--fancy .Viewer__list {
+	height: 480px;
+	list-style-type: none;
+	margin: 0;
+	overflow: hidden;
+	width: 50px;
+	padding-right: 0;
+}
+.Viewer--fancy .Viewer__list + .Viewer__list {
+	padding-left: 20px;
+}
+.Viewer--fancy .Viewer__item {
+	margin: 0;
+}
+.Viewer--fancy .Viewer__item + .Viewer__item {
+	margin-top: 12px;
+}
+
+
+.Viewer--furnitureSet {
+	.Viewer__bigImg {
+		background-size: contain;
+	}
+}
+
+
+.Viewer--contacts {
+	display: table;
+	width: 935px;
+
+	.Viewer__list,
+	.Viewer__subject {
+		display: table-cell;
+		height: 525px;
+		float: none;
+	}
+
+	.Viewer__list {
+		vertical-align: top;
+	}
+
+	.Viewer__preview {
+		object-fit: cover;
+	}
+
+	.Viewer__subject {
+		width: 100%;
+		text-align: center;
+		vertical-align: middle;
+	}
+
+	.Viewer__bigImg {
+		max-width: 100%;
+		max-height: 525px;
+		width: auto;
+		height: auto;
+		user-select: none;
+	}
+}

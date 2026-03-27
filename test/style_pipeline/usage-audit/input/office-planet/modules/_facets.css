@@ -1,0 +1,119 @@
+/* FACETS
+---------------------------------------------------------------------*/
+
+.Facets {
+	position: relative;
+
+	&__hidden {
+		display: none;
+		margin: .75em .75em 0 0;
+	}
+
+	&__controls {
+		white-space: nowrap;
+	}
+}
+
+.Facets__list {
+	@mixin List--basic;
+	border: 1px solid $dividerColor;
+}
+.Facet {
+	@mixin List__item--basic;
+	border-top: 1px dotted $dividerColor;
+	padding: 15px 20px;
+
+	&:first-child {
+		border-top: 0;
+	}
+
+	&__header {
+		font-size: 15px;
+		margin-y: 0;
+		cursor: default;
+	}
+	&.header &__header {
+		font-size: 17px;
+	}
+
+	&__content {
+		margin-top: 1em;
+	}
+
+	&__count {
+		color: #888;
+	}
+
+	.Facet__col {
+		box-sizing: border-box;
+		display: inline-block;
+		vertical-align: top;
+		word-wrap: break-word;
+		width: 50%;
+	}
+
+	.Checkbox,
+	.Radio {
+		display: block;
+		margin-top: .75em;
+		margin-right: .75em;
+
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+
+	&--paletteColors {
+		.PaletteColor {
+			vertical-align: middle;
+			margin-top: -1px;
+		}
+
+		.Checkbox__label {
+			padding-left: 35px;
+		}
+
+		.Checkbox__button {
+			margin-right: 3px;
+			margin-left: -35px;
+		}
+	}
+}
+
+.Facets__list {
+	margin-bottom: 10px;
+}
+
+.Facets__reset {
+	@mixin Btn--basic;
+	@mixin Btn--sub;
+}
+
+.Facets__present { /* todo: */
+	@mixin Btn--default;
+	@mixin Btn--main;
+	padding: 10px 25px;
+	margin-right: 5px;
+
+	&--disabled {
+		pointer-events: none;
+		@mixin ActElem--disabled;
+	}
+}
+
+
+.Facets--collection {
+
+	.Facet.header .Facet__header {
+		font-weight: normal;
+	}
+
+	.Facet__header {
+		font-size: 16px;
+		font-weight: bold;
+	}
+
+	.Select {
+		/* @extend .Select.brand; */
+	}
+}

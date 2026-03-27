@@ -1,0 +1,31 @@
+.SocialNetworks {
+	text-align: right;
+}
+
+.SocialNetworks__title {
+	margin-right: 10px;
+}
+
+.SocialNetwork {
+	width: 28px;
+	height: 28px;
+	display: inline-block;
+	vertical-align: middle;
+
+	&:hover {
+		opacity: .75;
+		transition: opacity .15s ease-out;
+	}
+
+	& + .SocialNetwork {
+		margin-left: 5px;
+	}
+
+	&--inst {
+		background-image: resolve('inst.png');
+	}
+
+	&--vk {
+		background-image: resolve('vk.png');
+	}
+}

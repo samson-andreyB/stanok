@@ -1,0 +1,180 @@
+/* Mail Dev
+------------------------------------------------------------------------------*/
+
+.filter--mailSubject {
+	width: 140px;
+}
+.filter--mailStatus,
+.filter--mailIndustry {
+	width: 75px;
+}
+.filter--mailDivision {
+	width: 92px;
+}
+
+.Items--mail {
+	.Items__list {
+		table-layout: fixed;
+	}
+
+	.Item .Item__box {
+		vertical-align: top;
+	}
+	.Item__box--indicator {
+		padding-right: 0;
+		white-space: nowrap;
+		width: 10px;
+	}
+	.Item__box--status {
+		width: 15%;
+	}
+	.Item__box--subject {
+		width: 45%;
+	}
+	.Item__box--client {
+		width: 15%;
+	}
+
+	.Item__box--discount {
+		width: 10%;
+	}
+
+	.Item__box--spam {
+		width: 15%;
+	}
+
+	.Mail__indicator {
+		cursor: help;
+	}
+
+	.Item--wait {
+		.Mail__indicator {
+			@mixin BadgeIndicator $attention;
+		}
+	}
+	.Item--work {
+		.Mail__indicator {
+			@mixin BadgeIndicator $main;
+		}
+	}
+	.Item--disable {
+		.Mail__indicator {
+			@mixin BadgeIndicator $disable;
+		}
+	}
+
+	.Mail__division,
+	.Mail__date,
+	.Mail__views,
+	.Mail__discount {
+		color: #555;
+		display: block;
+		font-size: 11px;
+		margin-top: .3em;
+	}
+
+	.Mail__discount {
+		margin-top: 0;
+	}
+
+	.Mail__views:before {
+		content: '';
+		background-image: resolve('icons/eye_gray.png');
+		width: width('icons/eye_gray.png');
+		height: height('icons/eye_gray.png');
+		display: inline-block;
+		opacity: .6;
+		vertical-align: middle;
+		margin-top: -.2em;
+		margin-right: .4em;
+	}
+}
+
+
+.MailingList--default {
+	.MailingList__controls {
+		margin-top: 15px;
+	}
+
+	.MailingList__controls + .controlPanel--filters {
+		margin-top: 5px;
+	}
+}
+
+
+/* карточка рассылки */
+
+.mainContent .contentWrapper.MailStatus {
+	padding-y: 0 5px;
+	
+	.Mail__date {
+		font-size: 14px;
+		margin-right: 1.5em;
+		vertical-align: sub;
+	}
+}
+
+.Mail--default {
+	.Mail__recipients {
+		margin-top: -8px;
+
+		.btnInfo {
+			margin-top: 0;
+		}
+
+		.btnInfo + .File {
+			margin-left: 15px;
+		}
+	}
+}
+
+.Specs--mail {
+	.Group--mailOptions {
+		width: 500px;
+	}
+
+	.Specs__header {
+		font-size: 13px;
+	}
+
+	.Mail__subject {
+		width: 500px;
+	}
+	.Mail__option {
+		display: block;
+		
+		& + .Mail__option {
+			margin-top: .5em;
+		}
+
+		& + .Specs__info {
+			margin-top: .5em;
+		}
+	}
+
+	.Mail__db {
+		margin-right: 1em;
+	}
+
+	.Mail__editor {
+		width: 500px;
+	}
+	.Mail__preview {
+		padding: 8px 8px 10px;
+		box-sizing: border-box;
+		background-color: #efefef;
+		border: 1px solid #bbb;
+	} 
+}
+
+
+/* Вкладка "Подписчики" */
+.Subscribers--default {
+	padding-top: 15px;
+
+	.Report {
+		& > .contentWrapper {
+			padding-y: 15px;
+		}
+	}
+}

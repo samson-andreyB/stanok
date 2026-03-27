@@ -1,0 +1,25 @@
+.TroubleReport {
+	position: absolute;
+	bottom: 100%;
+	left: 20px;
+
+	a&__button {
+		display: inline-block;
+		padding: 9px 23px 9px 47px;
+		border-radius: 5px 5px 0 0;
+		font-size: 12px;
+		text-decoration: none;
+		line-height: 1;
+		color: #fff;
+		background-color: rgba(127, 127, 127, .9);
+		background-image: resolve('troubleReport.png');
+		background-repeat: no-repeat;
+		background-position: 19px 50%;
+		transition: background-color .3s;
+
+		&:hover {
+			color: #fff;
+			background-color: rgba(127, 127, 127, 1);
+		}
+	}
+}

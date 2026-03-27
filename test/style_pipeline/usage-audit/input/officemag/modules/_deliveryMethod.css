@@ -1,0 +1,175 @@
+.DeliveryMethod--default {
+	display: table;
+	border: 1px solid #e2ddd9;
+	background-color: #f2eeea;
+	padding: 6px 0;
+
+	.DeliveryMethod__item {
+		display: table-cell;
+		box-sizing: border-box;
+		padding: 10px 20px;
+		vertical-align: top;
+		user-select: none;
+
+		&--clientType {
+			border-right: 1px solid #e2ddd9;
+		}
+
+		&--privatePerson {
+			.DeliveryMethod__value--notice {
+				margin-top: 3px;
+			}
+		}
+
+		&--entity {
+			.DeliveryMethod__group + .DeliveryMethod__value--accent {
+				padding-left: 21px;
+			}
+		}
+	}
+
+	.DeliveryMethod__group {
+		display: table;
+		line-height: 1.4;
+		margin-top: 4px
+	}
+
+	.DeliveryMethod__box {
+		display: table-cell;
+		box-sizing: border-box;
+		vertical-align: top;
+
+		&--label {
+			max-width: 595px;
+			padding-left: 21px;
+
+			input[type=radio] {
+				position: absolute;
+				margin-top: 2px;
+				margin-left: -20px;
+			}
+
+			& + .DeliveryMethod__value--accent {
+				margin-left: 5px;
+				line-height: 1.3;
+			}
+		}
+
+		&--controls {
+			padding-left: 20px;
+			vertical-align: middle;
+
+			.btn {
+				margin-top: -1px;
+				white-space: nowrap;
+			}
+		}
+	}
+
+	.DeliveryMethod__name {
+		display: block;
+		font-weight: bold;
+		margin-top: 12px;
+
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+
+	.DeliveryMethod__value {
+		display: inline-block;
+
+		&--accent {
+			color: #c22119;
+		}
+
+		& + .DeliveryMethod__address {
+			margin-top: 3px;
+		}
+	}
+
+	.DeliveryMethod__description {
+		display: block;
+		color: #656565;
+		@mixin wordBreak;
+	}
+
+	.DeliveryMethod__address {
+		display: block;
+	}
+
+	.pseudoLink {
+		white-space: nowrap;
+		margin-left: 3px;
+	}
+}
+
+.DeliveryMethod--mobileMode {
+	margin-x: -20px;
+	background: $BG;
+	padding-bottom: 20px;
+
+	.DeliveryMethod {
+		&__item {
+			font-size: 16px;
+			color: $BRAND_BLACK;
+			border-top: 1px solid $B_LIGHT;
+			background: #fff;
+			position: relative;
+			cursor: pointer;
+			padding: 13px 30px 13px 20px;
+
+			&:after {
+				content: '';
+				background-image: svg('arrow_right_7x12', '[color]: $B_ACTION');
+				width: width('arrow_right_7x12.svg');
+				height: height('arrow_right_7x12.svg');
+				position: absolute;
+				top: 50%;
+				right: 21px;
+				transform: translateY(-50%);
+			}
+
+			&--disabled {
+				pointer-events: none;
+
+				&:after {
+					display: none;
+				}
+
+				.info {
+					pointer-events: auto;
+				}
+			}
+
+			&--error {
+				.DeliveryMethod__value {
+					color: $ERROR;
+				}
+			}
+		}
+
+		&__aux {
+			@mixin wordBreak;
+			color: #777;
+		}
+
+		&__error {
+			color: $ERROR;
+		}
+
+		&__name {
+			font-weight: bold;
+		}
+
+		&__value {
+			margin-top: 5px;
+		}
+	}
+}
+
+.DeliveryMethod__name {
+	.info {
+		margin-left: 5px;
+	}
+}

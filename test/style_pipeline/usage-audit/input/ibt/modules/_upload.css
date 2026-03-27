@@ -1,0 +1,75 @@
+.Upload {
+	.Upload__btn {
+		vertical-align: baseline;
+	}
+}
+
+.Upload--singleAttachment {
+	display: inline-flex;
+	align-items: center;
+
+	.Upload__list {
+		order: 1;
+		margin-left: 1.667em;
+	}
+
+	.File {
+		cursor: default;
+
+		&__name {
+			display: inline-block;
+			vertical-align: middle;
+			color: #000;
+			font-size: 12px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		&__hint {
+			display: inline-block;
+			border-bottom: 1px dotted;
+			cursor: pointer;
+			color: $C_GRAY_DARK;
+			line-height: 1;
+			position: relative;
+			vertical-align: middle;
+			margin-left: 2.6em;
+
+			&:before {
+				content: "";
+				background-image: resolve('icons/cross_9x9_777.png');
+				width: 15px;
+				height: 15px;
+				background-position: 50% 50%;
+				background-repeat: no-repeat;
+				position: absolute;
+				top: 0;
+				right: 100%;
+				margin-top: -.3em;
+			}
+
+			&:hover {
+				color: $error;
+
+				&:before {
+					background-image: resolve('icons/cross_9x9_e55.png');
+				}
+			}
+		}
+
+		&:hover {
+			.File__name {
+				color: #000;
+			}
+		}
+	}
+}
+
+.Upload--singleRemoving {
+	.Upload__additional {
+		align-self: flex-start;
+		order: 5;
+		margin-left: 15px;
+	}
+}

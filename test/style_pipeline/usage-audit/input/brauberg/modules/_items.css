@@ -1,0 +1,109 @@
+.Items {
+	display: table;
+	width: 100%;
+	font-size: 14px;
+	margin-top: 35px;
+
+	&__title {
+		font-size: 22px;
+
+		&--line {
+			overflow: hidden;
+		}
+		&--line:after {
+			content: '';
+			background-color: #d9d9d9;
+			border: 1px solid #fff;
+			border-width: 0 30px;
+			box-sizing: border-box;
+			display: inline-block;
+			vertical-align: middle;
+			width: 100%;
+			height: 1px;
+			margin-right: -100%;
+		}
+	}
+}
+
+.Item {
+	display: table-row;
+
+	&--header &__box {
+		color: #808080;
+		padding: 0 10px 10px;
+	}
+
+	&:first-child &__box {
+		border-top: none;
+	}
+
+	&__box {
+		border-top: 1px solid #b3b3b3;
+		cursor: default;
+		display: table-cell;
+		vertical-align: top;
+		padding: 15px 10px;
+
+		&:first-child {
+			padding-left: 0;
+		}
+
+		&:last-child {
+			padding-right: 0;
+		}
+
+		&--hideBorder {
+			border-top: none;
+		}
+
+		&--right {
+			text-align: right;
+		}
+
+		&--bold {
+			font-weight: bold;
+		}
+
+		.btnSendMail {
+			margin-top: 7px;
+			opacity: .45;
+		}
+	}
+
+	&__additional {
+		color: #808080;
+		display: block;
+		font-size: 12px;
+		margin-bottom: .3em;
+	}
+
+	&__link {
+		color: #000;
+		border-bottom: 1px dashed currentColor;
+
+		&:hover {
+			color: #f2453f;
+		}
+	}
+
+	&:hover .btnSendMail {
+		opacity: 1;
+	}
+
+	&__address {
+		word-break: break-all; /* edge, palemoon */
+		word-break: break-word; /* ff, chrome */
+	}
+
+	&__city,
+	&__phone,
+	&__time {
+		white-space: nowrap;
+	}
+}
+
+.Items--shopAddressesList {
+	.Item__box {
+		border-top: 0;
+	}
+}

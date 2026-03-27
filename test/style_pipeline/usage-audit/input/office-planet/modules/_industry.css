@@ -1,0 +1,46 @@
+.Industry{
+	padding: 0;
+	margin: 0 -1%;
+	display: block;
+}
+
+.Industry__text{
+	font-size: 15px;
+	line-height: 21px;
+}
+
+.Industry__content{
+	display: block;
+	height: 100%;
+	transition: background .13s ease-in;
+}
+
+.Industry__content:hover{
+	background: $theme_bHover;
+	transition: background .01s ease-in;
+}
+
+.Industry__item{
+	padding: 0;
+	display: inline-block;
+	margin: 0 1% 25px;
+	vertical-align: top;
+	height: 300px;
+	width: 31.33%;
+}
+
+.Industry__item:before{
+	display: none;
+}
+
+.Industry__name{
+	text-align: center;
+	font-size: 13px;
+	color: #111;
+}
+
+.Industry__image{
+	background: 50% 50% no-repeat;
+	width: 100%;
+	height: 255px;
+}

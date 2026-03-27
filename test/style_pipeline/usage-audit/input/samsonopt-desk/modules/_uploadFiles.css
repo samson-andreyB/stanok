@@ -1,0 +1,53 @@
+/* UPLOAD FILES
+------------------------------------------------------------------------------*/
+
+.Files--updateClientDatabase {
+	.Files__item + .Files__item {
+		margin-top: 12px;
+	}
+
+	.File {
+		&__name {
+			display: inline;
+			font-size: 14px;
+			vertical-align: -1px;
+		}
+
+		&__hint {
+			margin-top: 5px;
+			font-size: 12px;
+		}
+
+		&--small:before {
+			margin-right: 4px;
+		}
+	}
+}
+
+.Upload--uploadFiles {
+	.Upload__fileError {
+		display: block;
+		margin-top: 3px;
+		color: $error;
+	}
+
+	.Upload__uploadFiles {
+		display: inline-block;
+		margin-left: 17px;
+		vertical-align: top;
+	}
+
+	.File--uploadFiles {
+		margin-top: 0;
+	}
+}
+
+.Section--uploadedFiles {
+	.Box {
+		vertical-align: top;
+
+		&--clientBase {
+			padding-right: 55px;
+		}
+	}
+}

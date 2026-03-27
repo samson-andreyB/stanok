@@ -1,0 +1,25 @@
+.InfoMeta--default {
+	.InfoMeta__date {
+		color: #666;
+		font-size: 14px;
+	}
+
+	.Box {
+		vertical-align: middle;
+
+		&--socialLinks {
+			text-align: right;
+		}
+	}
+}
+
+.Article--default + .InfoMeta--default,
+.textNode + .InfoMeta--default {
+	margin-top: 20px;
+}
+
+.InfoMeta--default + .RelatedProducts {
+	border-top: 1px solid #e9e4e0;
+	padding-top: 30px;
+	margin-top: 10px;
+}

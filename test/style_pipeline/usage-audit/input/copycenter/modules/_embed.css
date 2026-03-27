@@ -1,0 +1,35 @@
+/* BLOCKS - EMBEDDED
+---------------------------------------------------------------------*/
+
+/*
+<span class="Icon actions"></span>
+*/
+
+.Icon {
+	background-image: resolve('ui.png');
+	background-repeat: no-repeat;
+	display: inline-block;
+	margin-top: -.17em;
+	vertical-align: middle;
+}
+.ielte7 .Icon {
+	display: inline;
+	zoom: 1;
+}
+a .Icon {
+	margin-right: .4em;
+}
+
+.Icon.cross--small {
+	background-position: 0 -477px;
+	height: 10px;
+	width: 10px;
+}
+
+.RemoveItem {
+	cursor: pointer;
+}
+
+.RemoveItem:hover .Icon.cross--small {
+	background-position: -15px -477px;
+}

@@ -1,0 +1,300 @@
+.User {
+	display: inline-block;
+	position: relative;
+	vertical-align: top;
+	margin-bottom: -4px;
+
+	@media screen and (max-width: 1170px) {
+		margin-bottom: 0;
+	}
+
+	&__trigger {
+		cursor: pointer;
+		display: block;
+		color: $BRAND_BLACK;
+		line-height: 16px;
+
+		@media screen and (max-width: 1170px) {
+			font-size: 0;
+		}
+
+		&:before {
+			content: "";
+			display: block;
+			width: width('logIn_icon_20x20.svg');
+			height: 20px;
+			margin: 0 auto 5px;
+			background-image: svg('logIn_icon_20x20', '[color]: $GREY_1');
+			background-position-y: 50%;
+			background-repeat: no-repeat;
+
+			@media screen and (max-width: 1170px) {
+				display: inline-block;
+				vertical-align: middle;
+				margin-bottom: 0;
+			}
+		}
+
+		&:hover {
+			color: $BRAND__A;
+
+			&:before {
+				background-image: svg('logIn_icon_20x20', '[color]: $RED_LIGHT');
+			}
+		}
+
+		.Badge--counter {
+			position: absolute;
+			left: 50%;
+			top: -2px;
+			margin-left: 7px;
+			background-color: $RED;
+
+			@media screen and (max-width: 1170px) {
+				position: static;
+				margin-left: 2px;
+			}
+		}
+	}
+
+	&__group {
+		display: none;
+		width: 567px;
+		position: absolute;
+		top: 100%;
+		right: 50%;
+		margin-right: -197px;
+		margin-top: 13px;
+		box-sizing: border-box;
+		border-radius: 8px;
+		text-align: left;
+		background-color: #fff;
+		box-shadow: 0 0 20px rgba(0, 0, 0, .2);
+
+		&:before,
+		&:after {
+			content: "";
+			display: block;
+			position: absolute;
+			left: 50%;
+		}
+
+		&:before {
+			top: -20px;
+			margin-left: 77px;
+			border: 10px solid transparent;
+			border-bottom: 10px solid #e5e0dd;
+		}
+
+		&:after {
+			top: -16px;
+			margin-left: 79px;
+			border: 8px solid transparent;
+			border-bottom: 8px solid #fff;
+		}
+
+		&--active {
+			display: flex;
+		}
+
+		@media screen and (max-width: 1615px) {
+			margin-right: -125px;
+
+			&:before {
+				margin-left: 149px;
+			}
+
+			&:after {
+				margin-left: 151px;
+			}
+		}
+	}
+
+	&__box {
+		padding: 20px 19px;
+		box-sizing: border-box;
+		vertical-align: top;
+
+		&.Contract {
+			background-color: $GREY_5;
+			border-top-left-radius: 8px;
+			border-bottom-left-radius: 8px;
+		}
+	}
+
+	&__group--basic {
+		width: 265px;
+		margin-right: -133px;
+
+		&:before {
+			margin-left: -11px;
+		}
+
+		&:after {
+			margin-left: -9px;
+		}
+
+		@media screen and (max-width: 1490px) {
+			margin-right: -123px;
+
+			&:before {
+				margin-left: 0;
+			}
+
+			&:after {
+				margin-left: 2px;
+			}
+		}
+	}
+
+	&__group--basic &__box {
+		display: block;
+		white-space: normal;
+		border-radius: 8px;
+	}
+}
+
+.User__box {
+	&.CheckOrganization {
+		width: 300px;
+		color: $BRAND_BLACK;
+	}
+
+	&--scroll {
+		@mixin customScrollbar;
+		overflow-y: scroll;
+	}
+
+	.Contract {
+		&__box {
+			border: none;
+			padding: 15px 19px;
+			margin: 0 -19px;
+
+			& + .Contract__box {
+				border-top: 1px solid $GREY_3;
+			}
+
+			&:first-child {
+				padding-top: 0;
+			}
+
+			&:last-child {
+				padding-bottom: 0;
+			}
+		}
+
+		&__link {
+			color: $BRAND_BLACK;
+			font-size: 12px;
+			display: inline-block;
+			margin-top: 5px;
+
+			&:hover {
+				color: $RED_LIGHT;
+			}
+		}
+
+		&__aux {
+			color: $GREY_1;
+		}
+
+		&__info {
+			padding-bottom: 5px;
+
+			& + .Contract__link {
+				margin-top: 0;
+			}
+		}
+
+		&__controls {
+			margin-top: 9px;
+		}
+
+		&__unbind {
+			color: $BRAND_BLACK;
+
+			&:hover {
+				color: $RED_LIGHT;
+			}
+		}
+	}
+
+	.ContractManager + .ContractManager {
+		border-top: 0;
+		padding-top: 0;
+	}
+
+	.ContractManager__info {
+		margin-bottom: .9em;
+		font-weight: bold;
+	}
+
+	.ContractManager__name {
+		font-weight: normal;
+	}
+}
+
+
+
+.UserInfo {
+	position: relative;
+	background-color: #fff;
+	border-top-right-radius: 8px;
+	border-bottom-right-radius: 8px;
+	line-height: 1.4;
+
+	&__list {
+
+		.UserInfo__name + & {
+			padding-top: 12px;
+		}
+
+		& + & {
+			padding-top: 13px;
+			margin-top: 12px;
+			border-top: 1px solid $GREY_3;
+		}
+	}
+
+	&__item {
+		& + & {
+			padding-top: 11px;
+		}
+
+		.pseudoLink--loyaltyProgram {
+			margin-left: 5px;
+		}
+	}
+
+	&__link {
+		color: $BRAND_BLACK;
+		padding-y: .2em;
+	}
+
+	&__name {
+		display: inline-block;
+		width: 229px;
+		white-space: normal;
+		word-wrap: break-word;
+		font-weight: bold;
+		font-size: 14px;
+		color: $BRAND_BLACK;
+	}
+
+	&__badges {
+		margin-top: 5px;
+	}
+
+	.Badge--counter {
+		margin-left: 3px;
+		background-color: $RED;
+	}
+
+	.Icon--bestConditions,
+	.Icon--feedback,
+	.Icon--favoriteOrder {
+		margin-left: 3px;
+		margin-top: -2px;
+	}
+}

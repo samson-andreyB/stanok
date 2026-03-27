@@ -1,0 +1,123 @@
+.Specs {
+	&--default {
+		.Specs__item {
+			& + .Specs__item {
+				margin-top: 20px;
+			}
+
+			&--inline {
+				display: inline-block;
+				vertical-align: top;
+			}
+		}
+
+		.Specs__name {
+			font-weight: bold;
+		}
+
+		.Specs__value {
+			margin-top: 5px;
+		}
+
+		.Specs__description {
+			color: #666;
+		}
+	}
+
+	&--order {
+		.Specs__group {
+			padding-top: 25px;
+			padding-bottom: 25px;
+			background-color: $BG;
+
+			& + .Specs__group {
+				margin-top: 10px;
+			}
+
+			@media (min-width: 640px) {
+				border-radius: $BD_RAD;
+			}
+		}
+
+		.Specs__set {
+			& + .Specs__set {
+				margin-top: 20px;
+			}
+		}
+
+		.Specs__value {
+			margin-top: 3px;
+			word-break: break-word;
+			word-wrap: break-word;
+		}
+
+		.Specs__valueItem {
+			& + .Specs__valueItem {
+				margin-top: 4px;
+			}
+		}
+
+		.Specs__item {
+			padding-x: 20px;
+
+			& + .Specs__item {
+				margin-top: 13px;
+			}
+
+			& + .Specs__item--indent {
+				margin-top: 25px;
+			}
+
+			&--invoicesList {
+				.Specs__value {
+					margin-top: 16px;
+				}
+			}
+
+			&--inline {
+				padding-x: 0;
+
+				& + .Specs__item--inline {
+					margin-top: 0;
+					margin-left: 30px;
+				}
+			}
+		}
+
+		.Specs__header {
+			font-size: 14px;
+			font-weight: bold;
+			color: $BRAND_BLACK;
+			padding-x: 20px;
+			margin-bottom: 20px;
+		}
+
+		&.DescriptionBlock__box {
+			padding: 0;
+			background-color: transparent;
+		}
+
+		.Notify--attention {
+			margin-top: 10px;
+		}
+
+		.Specs__name {
+			.Help {
+				margin-left: 5px;
+			}
+		}
+	}
+
+	&--inline {
+		.Specs__name,
+		.Specs__value {
+			display: inline;
+		}
+
+		.Specs__item {
+			& + .Specs__item {
+				margin-top: 5px;
+			}
+		}
+	}
+}

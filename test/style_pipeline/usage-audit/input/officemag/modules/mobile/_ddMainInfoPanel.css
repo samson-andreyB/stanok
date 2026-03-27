@@ -1,0 +1,25 @@
+.ddMainInfoPanel {
+	padding-y: 14px;
+
+	&.collapsed {
+		padding-y: 14px;
+	}
+
+	.content__box {
+		& + .content__box:not(.content__box--btnHide) {
+			padding-left: 0;
+		}
+
+		&--icon {
+			display: none;
+		}
+
+		&--btnCollapse {
+			vertical-align: top;
+
+			.content__btnCollapse {
+				margin-right: -10px;
+			}
+		}
+	}
+}

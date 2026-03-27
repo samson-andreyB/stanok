@@ -1,0 +1,165 @@
+/* Просмотрщик
+**********************************************************/
+
+.Viewer {
+	display: flex;
+	align-items: start;
+	position: relative;
+
+	&__target {
+		background-color: rgba(255,255,255,0.3);
+		border: 1px solid #aaa;
+		box-sizing: border-box;
+		cursor: pointer;
+		display: none;
+		position: absolute;
+		z-index: 1;
+	}
+	
+	&__object {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: #fff;
+		background-repeat: no-repeat;
+		display: none;
+		min-height: 270px;
+		border: 1px solid #acacac;
+	}
+	
+	&__thumbs {
+		display: flex;
+		flex-direction: column;
+		user-select: none;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		box-sizing: border-box;
+		align-items: center;
+	}
+
+	&__thumbsWrapper {
+		overflow: hidden;
+	}
+
+	&__thumbsContainer {
+		display: flex;
+		flex-direction: column;
+		transition: margin-top .3s;
+	}
+
+	&__thumbsScroll {
+		display: block;
+		width: width('angle_down.png');
+		height: height('angle_down.png');
+		flex-shrink: 0;
+		cursor: pointer;
+		padding: 5px 10px;
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+
+		&--disabled {
+			opacity: .3;
+			pointer-events: none;
+		}
+
+		&--up {
+			background-image: resolve('angle_up.png');
+			margin-bottom: 5px;
+
+			&:hover {
+				background-image: resolve('angle_up_lighter.png');
+			}
+		}
+
+		&--down {
+			background-image: resolve('angle_down.png');
+			margin-top: 5px;
+
+			&:hover {
+				background-image: resolve('angle_down_lighter.png');
+			}
+		}
+	}
+
+	&__thumb {
+		width: 64px;
+		height: 64px;
+		box-sizing: border-box;
+		border: 1px solid #e5e5e5;
+		cursor: pointer;
+
+		&:hover {
+			border-color: $colorActive;
+
+		}
+
+		& + & {
+			margin-top: 10px;
+		}
+
+		&--selected {
+			pointer-events: none;
+			border-color: $colorActive;
+		}
+	}
+
+	&__photoContainer {
+		margin-left: 90px;
+		width: 100%;
+		box-sizing: border-box;
+		position: relative;
+		cursor: pointer; /* IE */
+		cursor: zoom-in; /* Edge */
+
+		&:before {
+			content: '';
+			display: inline-block;
+			padding-top: 100%;
+			vertical-align: top;
+		}
+	}
+
+	&__photo {
+		width: 100%;
+		box-sizing: border-box;
+		vertical-align: top;
+		position: absolute;
+		display: block;
+		top: 0;
+		left: 0;
+	}
+}
+
+.Viewer--fancy {
+	width: 900px;
+	width: 80vw;
+	max-width: 130vh;
+
+	.Viewer__thumbs {
+		height: 100%;
+		box-sizing: border-box;
+	}
+
+	.Viewer__photoContainer {
+		margin-left: 84px;
+		overflow: hidden;
+
+		&:before {
+			padding-top: 74%;
+		}
+	}
+	
+	.Viewer__photoContainer--zoom {
+		cursor: zoom-out;
+	}
+
+	.Viewer__photo {
+		width: 74%;
+		left: 50%;
+		margin-left: -37%;
+	}
+}

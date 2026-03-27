@@ -1,0 +1,13 @@
+a#fancybox-close {
+	@mixin FancyboxClose;
+}
+
+#fancybox-outer#fancybox-outer {
+	box-shadow: 0 7px 9px rgba(0,0,0,.2);
+}
+
+/* Для отображения элементов за пределами контейнера */
+.Fancybox--overflow #fancybox-content,
+.Fancybox--overflow #fancybox-content > div {
+	overflow: visible !important;
+}

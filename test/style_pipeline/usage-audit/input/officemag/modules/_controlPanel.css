@@ -1,0 +1,234 @@
+.ControlPanel--default {
+	display: table;
+	width: 100%;
+	min-height: 40px;
+	background-color: $BG;
+
+	.ControlPanel__box {
+		display: table-cell;
+		vertical-align: middle;
+
+		&--paginator {
+			position: relative;
+			height: 100%;
+
+			.paginator {
+				@mixin paginatorSquare;
+				height: 100%;
+			}
+		}
+	}
+}
+
+.ControlPanel--productsList {
+	height: 1px;
+
+	.ControlPanel__box {
+		&--viewSelector,
+		&--paginator {
+			width: 1px;
+			white-space: nowrap;
+		}
+
+		&--viewSelector {
+			.tabsList {
+				position: static;
+			}
+		}
+
+		&--listSettings {
+			padding-x: 15px;
+
+			.sort,
+			.count {
+				display: inline-block;
+				padding-y: 5px;
+			}
+
+			.count {
+				margin-left: 15px;
+			}
+
+			.SelectName,
+			.Select {
+				vertical-align: middle;
+			}
+
+			@media screen and (max-width: 1155px) {
+				.SelectName {
+					display: none;
+				}
+			}
+
+			@media screen and (max-width: 1000px) {
+				.Form__input {
+					padding-left: 10px;
+				}
+			}
+		}
+	}
+
+	.ControlPanel__box--viewSelector + .ControlPanel__box--listSettings {
+		border-left: 1px solid #e9e4e0;
+	}
+
+	.tabsList {
+		li {
+			box-sizing: border-box;
+			width: 48px;
+			height: 48px;
+			border: none;
+			background-position: 50%;
+			background-repeat: no-repeat;
+			background-color: #f2eeea;
+
+			&:first-child {
+				border: none;
+			}
+
+			& + li {
+				margin-left: 0;
+			}
+
+			&.active,
+			&.active:hover {
+				background-color: #e2ddd9;
+			}
+		}
+
+		.grid,
+		.details {
+			opacity: .6;
+
+			&.active {
+				opacity: 1;
+			}
+		}
+
+		.grid {
+			background-image: resolve('interface/item_view_grid--active.png');
+		}
+
+		.details {
+			background-image: resolve('interface/item_view_details--active.png');
+		}
+	}
+}
+
+
+.ControlPanel--search {
+	margin-bottom: 22px;
+	background-color: #fff;
+
+	.ControlPanel__box--searchDesktop {
+		.Form__set {
+			padding-bottom: 10px;
+			padding-top: 10px;
+		}
+
+		.Form__input {
+			display: inline-block;
+			width: 190px;
+		}
+
+		.btn {
+			display: inline-block;
+			margin-left: 10px;
+		}
+	}
+}
+
+.ControlPanel--sticky {
+	.ControlPanel__wrapper {
+		display: table;
+		position: relative;
+		background-color: $BG;
+	}
+
+	.ControlPanel__box {
+		display: table-cell;
+		padding: 15px;
+		vertical-align: middle;
+
+		&--aux {
+			width: 1%;
+		}
+
+		&.LoyaltyProgram {
+			padding: 8px 10px;
+			text-align: right;
+
+				.LoyaltyProgram__bonus {
+					padding: 0;
+					font-size: 12px;
+				}
+
+			.pseudoLink--loyaltyProgram:before {
+				margin-top: -5px;
+			}
+
+				.btnViolet {
+					width: auto;
+					margin-top: 6px;
+				}
+			}
+
+		&.Cart--layout {
+			white-space: nowrap;
+			padding: 10px 15px;
+			text-align: right;
+
+			.Cart__totalParam + .Cart__totalParam {
+				margin-top: 3px;
+			}
+		}
+
+		.btn {
+			white-space: nowrap;
+		}
+	}
+
+	&.ControlPanel--stickyActive .ControlPanel__wrapper {
+		position: fixed;
+		bottom: 0;
+		box-shadow: 0 -3px 12px rgba(0,0,0,0.2);
+		z-index: 600;
+	}
+
+	.ControlPanel__label {
+		display: inline-block;
+		margin-right: 20px;
+		line-height: 12px;
+		vertical-align: baseline;
+
+		input[type=checkbox] {
+			vertical-align: bottom;
+		}
+	}
+}
+
+.ControlPanel--orders {
+	margin-top: 15px;
+
+	.ControlPanel__wrapper {
+		display: table;
+		width: 100%;
+		background-color: $BG;
+	}
+
+	.ControlPanel__box {
+		display: table-cell;
+		padding: 15px;
+		vertical-align: middle;
+
+		&--aux {
+			width: 100%;
+			padding: 10px 15px;
+			text-align: right;
+
+			.Cart__totalParam + .Cart__totalParam {
+				margin-top: 3px;
+			}
+		}
+	}
+}

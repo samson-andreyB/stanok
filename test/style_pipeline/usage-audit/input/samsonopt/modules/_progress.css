@@ -1,0 +1,75 @@
+.Progress,
+.Progress__bar,
+.Progress__done {
+	border-radius: 1em;
+	min-width: 2.5em;
+}
+
+.Progress {
+	cursor: default;
+	
+	&__bar {
+		border: 1px solid #ca130c;
+	}
+
+	&__done {
+		background-color: #ca130c;
+		border: 1px solid #ca130c;
+		line-height: 1em;
+		margin: -1px 0 -1px -1px;
+		min-height: 1em;
+		text-align: center;
+		transition: width .75s ease-in-out;
+		width: 0%;
+		max-width: 100%;
+	}
+
+	&__title {
+		color: #fff;
+		display: inline-block;
+		line-height: 1em;
+		padding: .2em;
+		vertical-align: middle;
+	}
+
+	&--big {
+		font-size: 2em;
+	}
+
+	&--perform {
+		.Progress__bar {
+			border-color: #e87d2d;
+		}
+
+		.Progress__done {
+			background-color: #e87d2d;
+			border-color: #e87d2d;
+		}
+	}
+
+	&--done {
+		.Progress__bar {
+			border-color: #429600;
+		}
+
+		.Progress__done {
+			background-color: #429600;
+			border-color: #429600;
+		}
+	}
+}
+
+.Progress--jackpot {
+	display: inline-block;
+	vertical-align: middle;
+
+	.Progress__bar {
+		border-color: $C_JACKPOT;
+	}
+
+	.Progress__done {
+		min-height: 12px;
+		background-color: $C_JACKPOT;
+		border-color: $C_JACKPOT;
+	}
+}

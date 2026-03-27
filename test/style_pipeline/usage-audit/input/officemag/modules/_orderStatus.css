@@ -1,0 +1,16 @@
+.OrderStatus--default {
+	.OrderStatus__item {
+		&--name {
+			font-weight: bold;
+		}
+
+		&--date {
+			color: #777;
+			white-space: nowrap;
+		}
+	}
+
+	.OrderStatus__item + .OrderStatus__item {
+		margin-top: 3px;
+	}
+}

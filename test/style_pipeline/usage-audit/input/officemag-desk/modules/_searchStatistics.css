@@ -1,0 +1,197 @@
+/* SEARCH STATISTICS
+------------------------------------------------------------------------------*/
+@define-mixin itemBoxLook {
+	padding-right: 5px;
+	width: 1px;
+
+	.Item__look {
+		width: 14px;
+		height: 8px;
+		margin-top: 0;
+		padding: 4px 0;
+		cursor: pointer;
+	}
+}
+
+.filters--searchStatistics {
+	.filter--quantity {
+		width: 150px;
+	}
+}
+
+.filter__searchEffectiveness {
+	text-align: center;
+	width: 45px;
+}
+.filter__searchQuery {
+	width: 150px;
+}
+
+.Items--search-queries {
+	.Items {
+		&__title {
+			padding-left: 20px;
+			margin: 0;
+			font-size: 14px;
+		}
+	}
+
+	.Item__box {
+		vertical-align: top;
+
+		&--count,
+		&--cart,
+		&--effectiveness,
+		&--zeroResidue {
+			text-align: right;
+			white-space: nowrap;
+			width: 1px;
+			min-width: 130px;
+		}
+
+		&--look {
+			@mixin itemBoxLook;
+		}
+
+		&--query {
+			padding-left: 0;
+		}
+	}
+}
+
+.Items--search-queries-compare {
+	.Items {
+		&__title {
+			padding-left: 20px;
+			margin: 0;
+			font-size: 14px;
+		}
+	}
+
+	.Items__header {
+		.Item__box {
+			&--count,
+			&--cart,
+			&--effectiveness,
+			&--zeroResidue {
+				text-align: center;
+			}
+		}
+	}
+
+	.Item__box {
+		vertical-align: top;
+
+		&--count {
+			width: 150px;
+		}
+		&--cart,
+		&--effectiveness,
+		&--zeroResidue {
+			white-space: nowrap;
+			width: 1px;
+		}
+
+		&--look {
+			@mixin itemBoxLook;
+		}
+
+		&--query {
+			padding-left: 0;
+		}
+	}
+
+	.Item__subcolumn {
+
+		&--value {
+			text-align: right;
+		}
+		&--delta {
+			text-align: left;
+		}
+	}
+}
+
+.Items--search-products {
+	.Item__box {
+		&--code,
+		&--add {
+			text-align: center;
+			width: 160px;
+		}
+	}
+
+	.Item__img {
+		max-width: 49px;
+		height: auto;
+	}
+}
+
+.Items--stat-search {
+	margin: 0 -20px;
+
+	.Items__list {
+		margin-top: -10px;
+	}
+
+	.Items__header .Item__box {
+		white-space: nowrap;
+	}
+	
+	.Item:last-child .Item__box {
+		border-bottom: 1px solid #dadada;
+	}
+
+	.Item__box {
+		vertical-align: top;
+
+		&--period {
+			width: 190px;
+		}
+
+		&--name {
+			width: 210px;
+		}
+	}
+}
+
+.Search__effectivenessTrigger {
+	border-bottom: 1px dashed;
+	cursor: help;
+}
+.SearchStat {
+	display: table;
+	font-size: 11px;
+	
+	&__item {
+		display: table-row;
+	}
+
+	&__box {
+		display: table-cell;
+		vertical-align: middle;
+		padding: 7px;
+		
+		&--type {
+			width: 100%;
+		}
+		&--result {
+			text-align: right;
+			width: 1px;
+		}
+	}
+
+	&__item + &__item {
+		.SearchStat__box {
+			padding-top: 2px;
+		}
+	}
+}
+
+.Tabs2--searchQuery {
+	margin-top: 1.5em;
+}
+
+.Spoiler + .Tabs2--searchQuery {
+	margin-top: 0;
+}

@@ -1,0 +1,28 @@
+
+.Amount__update {
+	@mixin Btn--default;
+	@mixin arrowLeft 6px, $brandColor;
+	position: absolute;
+	top: -1px;
+	left: 93px;
+	box-shadow: 0 1px 3px rgba(0,0,0,.3);
+	display: none;
+	padding: 6px 17px 8px;
+	z-index: 10;
+
+	&:after {
+		 border-right-color: $theme_brand;
+	}
+
+	&:hover:after {
+		 border-right-color: $theme_bHover;
+	}
+
+	&:active {
+		box-shadow: none;
+
+		&:after {
+			 border-right-color: $theme_brand;
+		}
+	}
+}

@@ -1,0 +1,41 @@
+/* PERSONAL DATA POLICY
+-------------------------------------------------------------*/
+
+.PolicyPersonal__firstLevelTitle {
+	line-height: 1.35;
+}
+h1.PolicyPersonal__firstLevelTitle {
+	margin-bottom: .79em;
+}
+h2.PolicyPersonal__secondLevelTitle {
+	font-size: 1.15em;
+	font-weight: 700;
+	margin-bottom: .56em;
+}
+.PolicyPersonal__paragraph {
+	line-height: 1.7;
+	margin-bottom: .68em;
+}
+.PolicyPersonal__listWithoutNumbers {
+	list-style-type: disc;
+	margin-left: 0;
+	padding-left: 3.5em;
+	padding-top: .85em;
+}
+.PolicyPersonal__itemListWithoutNumbers {
+	line-height: 1.6;
+	margin-top: .9em;
+}
+.PolicyPersonal__listWithNumbers {
+	list-style-position: inside;
+	margin-left: 0;
+	padding-left: 0;
+}
+.PolicyPersonal__itemListWithNumbers > .PolicyPersonal__listWithoutNumbers {
+	padding-left: 2.3em;
+	margin-top: 0;
+}
+.PolicyPersonal__itemListWithNumbers {
+	line-height: 1.7;
+	margin-bottom: 1.4em;
+}

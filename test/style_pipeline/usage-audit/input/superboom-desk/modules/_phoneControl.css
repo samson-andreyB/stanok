@@ -1,0 +1,80 @@
+.PhoneControl--default {
+	.PhoneControl__item {
+		display: table;
+		width: 100%;
+	}
+
+	.PhoneControl__box {
+		display: table-cell;
+		box-sizing: border-box;
+		padding-left: 10px;
+		vertical-align: top;
+
+		&:first-child {
+			padding-left: 0;
+		}
+
+		&--number {
+			width: 130px;
+		}
+
+		&--additional {
+			width: 60px;
+		}
+	}
+
+	.PhoneControl__remove {
+		display: inline-block;
+		width: width('icons/cross_7x7_999.png');
+		height: height('icons/cross_7x7_999.png');
+		background-image: resolve('icons/cross_7x7_999.png');
+		cursor: pointer;
+
+		&:hover {
+			background-image: resolve('icons/cross_7x7_e55.png');
+		}
+	}
+
+	.Form__input,
+	.Field {
+		width: 100%;
+	}
+
+	textarea {
+		min-height: 0;
+		resize: none;
+		overflow-x: hidden;
+	}
+}
+
+
+.PhoneControl {
+	& + & {
+		margin-top: 10px;
+	}
+
+	&__remove {
+		visibility: hidden;
+	}
+
+	&__add {
+		margin-top: 10px;
+	}
+
+	&--removable {
+		.PhoneControl__box {
+			&--remove {
+				width: 12px;
+				padding-top: 6px;
+				padding-left: 0;
+				text-align: right;
+			}
+		}
+	}
+
+	&--showRemovalButton {
+		.PhoneControl__remove {
+			visibility: visible;
+		}
+	}
+}

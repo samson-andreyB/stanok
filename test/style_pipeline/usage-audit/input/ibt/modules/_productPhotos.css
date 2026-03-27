@@ -1,0 +1,187 @@
+.ProductPhotos--default {
+	.ProductPhotos__main {
+		border: 1px solid #d9d9d9;
+	}
+
+	.ProductPhotos__toolbar {
+		padding: 10px;
+		color: #777;
+		background-color: #efefef;
+
+		.Box {
+			line-height: 1;
+		}
+
+		.pseudoLink + .pseudoLink {
+			margin-left: 10px;
+		}
+
+		.ProductParamDefect + .Group {
+			margin-top: 15px;
+		}
+
+		.ProductPhotos__date {
+			&.pseudoLink {
+				@mixin PseudoLinkIcon 'last';
+
+				&:after {
+					width: width('icons/history.png');
+					height: height('icons/history.png');
+					margin-top: -.3em;
+					margin-bottom: -.2em;
+					background-image: resolve('icons/history.png');
+					cursor: pointer;
+				}
+
+				&:hover {
+					&:after {
+						opacity: .75;
+					}
+				}
+			}
+		}
+	}
+
+	.ProductPhotos__preview {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 388px;
+	}
+
+	.ProductPhotos__image {
+		max-width: 100%;
+		max-height: 100%;
+		width: auto;
+		height: auto;
+		cursor: pointer;
+
+		&--empty {
+			cursor: default;
+		}
+	}
+
+	.ProductPhotos__video {
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+
+	.ProductPhotos__name {
+		@mixin text-ellipsis;
+		color: #000;
+
+		&--image {
+			max-width: 100%;
+			margin-bottom: 8px;
+		}
+
+		&--video {
+			display: inline-block;
+			max-width: 265px;
+			vertical-align: middle;
+		}
+	}
+
+	.ProductPhotos__name + .btnEdit {
+		margin-y: -5px;
+		margin-left: .1em;
+	}
+
+	.ProductPhotos__addBox {
+		margin-top: 13px;
+	}
+
+	.ProductPhotos__notice {
+		margin-top: 15px;
+		color: #666;
+	}
+
+	.ProductPhotos__addLink {
+		&:first-child {
+			margin-right: 15px;
+		}
+	}
+
+	.ProductPhotos__confirm {
+		margin-top: 15px;
+		padding: 10px 15px;
+		background-color: #e9f8f3;
+	}
+
+	.ProductPhotos__confirmTitle {
+		margin-bottom: .5em;
+		font-weight: bold;
+	}
+
+	.ProductPhotos__confirmControls {
+		.pseudoLink + .pseudoLink {
+			margin-left: 1em;
+		}
+	}
+
+	.ProductPhotosList {
+		margin-top: 5px;
+	}
+}
+
+
+.ProductPhoto {
+	position: relative;
+
+	&--checkedSnb {
+		&:before {
+			content: '';
+			right: 4px;
+			bottom: 4px;
+			width: width('icons/check_12x12_29e.png');
+			height: height('icons/check_12x12_29e.png');
+			background-image: resolve('icons/check_12x12_29e.png');
+		}
+	}
+
+	&--rejected {
+		&:before {
+			content: '';
+			right: 4px;
+			bottom: 4px;
+			width: width('icons/stop_12x12_e55.png');
+			height: height('icons/stop_12x12_e55.png');
+			background-image: resolve('icons/stop_12x12_e55.png');
+		}
+	}
+
+	&--notice {
+		&:before {
+			content: '';
+			right: 4px;
+			bottom: 4px;
+			width: width('icons/attention_12x12_f86.png');
+			height: height('icons/attention_12x12_f86.png');
+			background-image: resolve('icons/attention_12x12_f86.png');
+		}
+	}
+
+	&--deferred {
+		&:before {
+			content: '';
+			right: 4px;
+			bottom: 4px;
+			width: width('icons/clock_12x12_e55.png');
+			height: height('icons/clock_12x12_e55.png');
+			background-image: resolve('icons/clock_12x12_e55.png');
+		}
+	}
+
+	.ProductPhoto__image {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+
+	&:before {
+		position: absolute;
+		pointer-events: none;
+	}
+}

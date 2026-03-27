@@ -1,0 +1,96 @@
+/* Пункты, разделённые палками */
+@define-mixin dividedItems $el {
+
+	$(el) {
+		display: inline-block;
+		vertical-align: middle;
+
+		& + $(el) {
+			margin-left: 10px;
+			padding-left: 9px;
+			border-left: 1px solid #dadada;
+		}
+	}
+}
+
+
+/* Полосатый фон */
+@define-mixin zebra $1: #666, $2: #999, $angle: -45deg {
+	background-image: linear-gradient($angle, $1 25%, $2 0, $2 50%, $1 0, $1 75%, $2 0);
+}
+
+
+/* Вешает иконки на кнопку (btnMain и btnOutline) */
+@define-mixin setButtonIcons $dark, $light {
+
+	&:before {
+		content: '';
+		display: inline-block;
+		vertical-align: middle;
+		width: width($dark);
+		height: height($dark);
+		margin-right: .4em;
+		margin-top: -.1em;
+	}
+
+	&.btnMain {
+
+		&:before {
+			background-image: resolve($light);
+		}
+	}
+
+	&.btnOutline {
+
+		&:before {
+			background-image: resolve($dark);
+		}
+
+		@mixin hocusac {
+
+			&:before {
+				background-image: resolve($light);
+			}
+		}
+	}
+}
+
+
+/* Стандартная иконка */
+@define-mixin Icon--default $icon {
+	display: inline-block;
+	vertical-align: middle;
+	width: width($icon);
+	height: height($icon);
+	background-image: resolve($icon);
+	background-repeat: no-repeat;
+}
+
+
+@define-mixin Items--transpose {
+	display: flex;
+	white-space: nowrap;
+
+	.Item {
+		flex-grow: 1;
+
+		&__box {
+			display: block;
+		}
+	}
+}
+
+
+@define-mixin blackLink {
+	color: #000;
+
+	&:hover {
+		color: $linkHover;
+	}
+}
+
+@define-mixin text-ellipsis {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}

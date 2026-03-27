@@ -1,0 +1,40 @@
+.ErrorPageStatus {
+	text-align: center;
+	padding-top: 20px;
+	padding-bottom: 60px;
+	position: relative;
+	z-index: 1;
+
+	.ErrorPageStatus__title {
+		line-height: 26px;
+		margin-bottom: 5px;
+	}
+
+	&__description {
+		font-size: 14px;
+		line-height: 20px;
+	}
+
+	&--404 {
+		.ErrorPageStatus {
+			&__image {
+				background-image: resolve('errors/404.png');
+				width: width('errors/404.png');
+				height: height('errors/404.png');
+				position: relative;
+				margin: 40px auto 0;
+
+				&:after {
+					content: '';
+					background-color: $navSub;
+					position: absolute;
+					z-index: -1;
+					top: 23px;
+					left: 71px;
+					width: 158px;
+					height: 91px;
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,18 @@
+.AddProductCode--default {
+	display: flex;
+	align-items: center;
+
+	.AddProductCode__code {
+		flex-shrink: 0;
+		width: 60px;
+		text-align: center;
+	}
+
+	.AddProductCode__name {
+		margin-left: 10px;
+	}
+
+	.AddProductCode__error {
+		color: $error;
+	}
+}

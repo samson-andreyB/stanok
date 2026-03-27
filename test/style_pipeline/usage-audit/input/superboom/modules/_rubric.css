@@ -1,0 +1,31 @@
+.Rubric--default {
+	position: relative;
+	display: inline-block;
+	box-sizing: border-box;
+	width: 100%;
+	padding-left: 75px;
+
+	.Rubric__link {
+		@mixin blackLink;
+	}
+
+	.Rubric__name {
+		display: block;
+		margin-bottom: 15px;
+		font-weight: bold;
+		font-size: 16px;
+	}
+
+	.Rubric__image {
+		position: absolute;
+		left: 0;
+		width: 60px;
+		height: 60px;
+		padding-right: 15px;
+		overflow: hidden;
+		font-size: 10px;
+		word-break: break-word;
+		user-select: none;
+		image-rendering: -webkit-optimize-contrast;
+	}
+}

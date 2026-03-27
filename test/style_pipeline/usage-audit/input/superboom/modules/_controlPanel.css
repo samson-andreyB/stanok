@@ -1,0 +1,117 @@
+.ControlPanel--default {
+	display: table;
+	width: 100%;
+	min-height: 40px;
+	background-color: $BG;
+
+	.ControlPanel__box {
+		display: table-cell;
+		vertical-align: middle;
+
+		&--paginator {
+			position: relative;
+			height: 100%;
+
+			.paginator {
+				@mixin paginatorSquare;
+				height: 100%;
+			}
+		}
+	}
+}
+
+.ControlPanel--productsList {
+	height: 1px;
+
+	.ControlPanel__box {
+		&--viewSelector,
+		&--paginator {
+			width: 1px;
+			white-space: nowrap;
+		}
+
+		&--viewSelector {
+			.tabsList {
+				position: static;
+			}
+		}
+
+		&--listSettings {
+			padding-x: 15px;
+
+			.sort,
+			.count {
+				display: inline-block;
+				padding-y: 5px;
+			}
+
+			.count {
+				margin-left: 15px;
+			}
+
+			.SelectName,
+			.Select {
+				vertical-align: middle;
+			}
+
+			@media screen and (max-width: 1155px) {
+				.SelectName {
+					display: none;
+				}
+			}
+
+			@media screen and (max-width: 1000px) {
+				.Form__input {
+					padding-left: 10px;
+				}
+			}
+		}
+	}
+
+	.ControlPanel__box--viewSelector + .ControlPanel__box--listSettings {
+		border-left: 1px solid #e9e4e0;
+	}
+
+	.tabsList {
+		li {
+			box-sizing: border-box;
+			width: 48px;
+			height: 48px;
+			border: none;
+			border-radius: 0;
+			background-position: 50%;
+			background-repeat: no-repeat;
+			background-color: #f2eeea;
+
+			&:first-child {
+				border: none;
+			}
+
+			& + li {
+				margin-left: 0;
+			}
+
+			&.active,
+			&.active:hover {
+				background-color: #e2ddd9;
+			}
+		}
+
+		.grid,
+		.details {
+			opacity: .6;
+
+			&.active {
+				opacity: 1;
+			}
+		}
+
+		.grid {
+			background-image: resolve('interface/item_view_grid--active.png');
+		}
+
+		.details {
+			background-image: resolve('interface/item_view_details--active.png');
+		}
+	}
+}

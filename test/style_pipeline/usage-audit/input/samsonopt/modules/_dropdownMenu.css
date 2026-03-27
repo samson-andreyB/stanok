@@ -1,0 +1,11 @@
+.DropdownMenu {
+
+	&__item {
+		padding: 3px 5px;
+		white-space: nowrap;
+
+		.pseudoLink {
+			border: none;
+		}
+	}
+}

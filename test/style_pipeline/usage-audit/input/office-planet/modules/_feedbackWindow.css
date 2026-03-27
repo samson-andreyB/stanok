@@ -1,0 +1,110 @@
+.FeedbackContainer {
+	display: table;
+	position: relative;
+	width: 825px;
+
+	.Form__header {
+		border: none;
+		padding-bottom: 0;
+		margin-bottom: 0;
+	}
+
+	.Form__title {
+		color: #6c6c6c;
+	}
+
+	.Select {
+		display: inline-block;
+		width: 100%;
+		max-width: 350px;
+	}
+}
+
+.FeedbackBox {
+	box-sizing: border-box;
+	display: table-cell;
+	padding: 20px 0;
+	vertical-align: top;
+	table-layout: fixed;
+
+	&--feedback {
+		width: 550px;
+	}
+
+	&--order {
+		background-color: #f9f9f9;
+		border-left: 1px solid #d0d0d0;
+	}
+}
+
+.FeedbackForm {
+	.Form__text {
+		color: #1e1e1e;
+		font-size: 13px;
+	}
+
+	.Form__header {
+		font-size: 27px;
+		margin-top: 0;
+		margin-bottom: 15px;
+	}
+
+	.Form__field {
+		margin-left: 150px;
+	}
+
+	.Form__title {
+		margin-left: -150px;
+		width: 140px;
+	}
+}
+
+.OrderInfo {
+	font-size: 13px;
+	padding: 0 25px;
+
+	&__head {
+		border-bottom: 1px solid #d0d0d0;
+		font-size: 18px;
+		padding-bottom: 12px;
+	}
+
+	&__field {
+		margin-top: 15px;
+	}
+
+	&__title {
+		color: #6c6c6c;
+		display: block;
+	}
+}
+
+.OrderInfoForm {
+	.Form__header {
+		font-size: 22px;
+	}
+
+	.Form__field {
+		margin-left: 0;
+	}
+
+	.Form__input {
+		width: 80px;
+		height: 32px;
+		display: inline-block;
+	}
+
+	.Form__title {
+		display: block;
+		font-size: 13px;
+		margin: 0 0 3px 0;
+		text-align: left;
+		width: inherit;
+	}
+
+	.Form__btn {
+		margin-left: 20px;
+		padding-x: 30px;
+		display: inline-block;
+	}
+}

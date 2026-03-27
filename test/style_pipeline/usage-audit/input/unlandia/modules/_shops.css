@@ -1,0 +1,89 @@
+$SHOP_LINK_COLOR: #82368B;
+$SHOP_LINK_COLOR_HOVER: #A788C0;
+
+$SHOP_TAB_BORDER_HOVER: $SHOP_LINK_COLOR_HOVER;
+
+$SHOP_BOX_BTN_BG: #82368B;
+$SHOP_BOX_BTN_COLOR: #fff;
+
+$SHOP_BOX_BTN_BG_HOVER: #A788C0;
+$SHOP_BOX_BTN_COLOR_HOVER: $SHOP_BOX_BTN_COLOR;
+
+$SHOP_CITYSELECTOR__LINK_COLOR: $SHOP_LINK_COLOR;
+$SHOP_CITYSELECTOR__LINK_COLOR_HOVER: $SHOP_LINK_COLOR_HOVER;
+
+$SHOP_REPRESENT_HOVER_COLOR: $SHOP_LINK_COLOR_HOVER;
+
+$SHOP_RADIUS_MAIN: 20px;
+$SHOP_RADIUS_BTN: 50px;
+$SHOP_RADIUS_TAB_SUB: 10px;
+
+$SHOP_TAB_ACTIVE_COLOR: #82368B;
+
+$SHOP_PILL_COLOR: #82368B;
+$SHOP_PILL_ACTIVE_COLOR: #82368B;
+
+@import "lib/stm/_shops";
+
+.Tabs--shopAddresses .Tab .Tab__title {
+	font-family: 'CirceRoundedWebBold','Comic Sans MS','Comic Sans',cursive;
+	font-weight: normal;
+	font-size: 16px;
+}
+
+.ShopAddresses .BuyOnline__title,
+.ShopAddressesWidget .BuyOnline__title {
+	font-size: 15px;
+}
+
+.CitySelectorTip__btn {
+	border-radius: 4px;
+	font-size: 12px;
+}
+
+.ShopAddresses .ShopAddresses__represent,
+.ShopAddresses .CitySelector__current,
+.CitySelectorTip {
+	font-size: inherit;
+}
+
+.CitySelectorTip {
+	font-size: 16px;
+}
+
+.ShopAddresses .ShopAddressesView__city {
+	font-family: $fontFamilyB;
+	font-weight: normal;
+}
+
+.ShopAddressesWidget {
+	margin-top: 0;
+	padding-top: 22px;
+	margin-bottom: -40px;
+
+	&__header {
+		font-style: normal;
+		font-weight: bold;
+		font-size: 34px;
+		line-height: 43px;
+		text-align: center;
+		color: #fff;
+		margin-bottom: 23px;
+	}
+
+	.BuyOnline {
+		max-width: 900px;
+		margin: auto;
+	}
+
+	.BuyOnline__link {
+		border-color: #dcdcdc;
+		height: 40px;
+		line-height: 40px;
+		padding: 25px 20px;
+	}
+
+	.BuyOnline__title {
+		margin-top: 3px;
+	}
+}

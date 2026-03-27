@@ -1,0 +1,50 @@
+/* BLOCKS — COMPANY
+---------------------------------------------------------------------*/
+.CompaniesList {
+	@mixin List--basic;
+}
+
+.Company {
+	@mixin List__item--basic;
+
+	& + & {
+		margin-top: 15px;
+	}
+
+	&__link {
+		border: 1px solid #eee;
+		color: #000;
+		display: block;
+		padding: 12px 15px;
+	}
+
+	&__name,
+	&__phone,
+	&__address {
+		display: inline-block;
+	}
+
+	&:hover {
+
+		.Company__link {
+			color: #000;
+		}
+		.Company__name {
+			color: #2dc6ff;
+		}
+	}
+
+	&--selected {
+
+		.Company__link {
+			border-color: #ce1728;
+			cursor: default;
+			pointer-events: none;
+			box-shadow: none;
+
+			.Company__name {
+				color: #cd1727;
+			}
+		}
+	}
+}

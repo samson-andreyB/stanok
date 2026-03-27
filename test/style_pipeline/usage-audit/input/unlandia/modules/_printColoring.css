@@ -1,0 +1,35 @@
+html.PrintColoring {
+	body {
+		display: block;
+	}
+
+	body > * {
+		display: none !important;
+	}
+
+	body > .FancyboxSlider__img {
+		display: inline-block !important;
+		opacity: 1;
+		border: 0;
+	}
+}
+
+@media print {
+	@page {
+		margin: 0;
+	}
+
+	html.PrintColoring {
+		height: 100%;
+		text-align: center;
+
+		img {
+			display: inline-block;
+			width: auto;
+			height: auto;
+			max-height: 96%;
+			max-width: 95%;
+			margin: 2% 2.5%;
+		}
+	}
+}

@@ -1,0 +1,22 @@
+/* BLOCKS - BUTTONS
+---------------------------------------------------------------------*/
+
+/*doc
+<a class="Btn Btn--default" href="#">Напомнить</a>
+<button class="Btn Btn--default Btn--main">Купить</button>
+<input class="Btn Btn--default Btn--main" type="submit" value="Применить">
+*/
+
+.Btn {
+	border: 0;
+	box-sizing: border-box;
+	cursor: pointer;
+	display: inline-block;
+	font: inherit;
+	position: relative;
+	overflow: visible;
+	text-align: center;
+	text-decoration: none;
+	user-select: none;
+	white-space: nowrap;
+}

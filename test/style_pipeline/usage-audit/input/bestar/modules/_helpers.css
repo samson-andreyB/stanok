@@ -1,0 +1,14 @@
+/* Хелперы
+**********************************************************/
+
+.w-half {
+	width: 50%;
+}
+
+.hiddenBox {
+	display: none;
+}
+
+.disabled {
+	@mixin Disabled;
+}

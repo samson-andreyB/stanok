@@ -1,0 +1,64 @@
+.ReturnRequest {
+	.OrderHeader--cabinet {
+		margin-bottom: 10px;
+		align-items: center;
+
+		.OrderHeader__title {
+			margin-bottom: 0;
+		}
+	}
+
+	.Group--controls {
+		margin-bottom: 20px;
+	}
+
+	.OrderTotal {
+		font-size: 20px;
+		text-align: right;
+		line-height: normal;
+
+		&__value {
+			color: #dc241f;
+		}
+
+		&--returnRequest {
+			font-weight: bold;
+		}
+
+		&--returnRequestClaim {
+			.OrderTotal__name,
+			.OrderTotal__value {
+				font-size: 14px;
+			}
+
+			.OrderTotal__value {
+				font-weight: bold;
+			}
+		}
+	}
+
+	.OrderComment {
+		word-break: break-all;
+		word-break: break-word;
+	}
+
+	.BtnCheck {
+		display: inline-block !important;
+		margin-right: 12px;
+	}
+
+	&__description {
+		line-height: 1.5em;
+		margin-bottom: 1.5em;
+	}
+
+	&__documentCategory {
+		.Box {
+			margin: 10px 0 0 0;
+		}
+
+		.Form__group {
+			margin-bottom: 0;
+		}
+	}
+}

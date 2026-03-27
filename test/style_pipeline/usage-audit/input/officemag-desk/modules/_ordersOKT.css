@@ -1,0 +1,544 @@
+.Page--ordersOKT {
+
+	.filter {
+
+		&--department {
+			width: 145px;
+		}
+
+		&--channel {
+			width: 130px;
+		}
+
+		&--status2 {
+			width: 115px;
+		}
+
+		&--status {
+			width: 105px;
+		}
+
+		&--channel {
+
+			.filter__field {
+				width: 110px;
+			}
+
+			.btnInfo {
+				padding: 0;
+				margin-left: 6px;
+			}
+		}
+
+		&--buyer {
+			width: 140px;
+		}
+
+		&--responsible {
+			width: 180px;
+			background: none;
+			padding: 0;
+		}
+
+		&--responsibleType {
+			width: 120px;
+		}
+
+		&--responsibleExtended {
+			max-width: 250px;
+		}
+	}
+
+
+	.controlPanel {
+
+		.btn + .btn {
+			margin-left: .6em;
+		}
+	}
+
+	.Items {
+
+		a {
+			padding-y: 2px;
+		}
+	}
+
+	.Items__header .Item__sort {
+		padding-y: 0;
+	}
+
+	.Box {
+
+		&--contact {
+			width: 40%;
+			vertical-align: top;
+		}
+
+		&--info {
+			width: 60%;
+			padding-left: 60px;
+			vertical-align: top;
+		}
+	}
+
+
+	.Specs--orderAdditionalInfo {
+		margin-y: 8px;
+	}
+
+
+	.Specs--contactInfo {
+		margin-y: 8px;
+		font-size: 13px;
+
+		.Specs__header {
+			font-size: 15px;
+			font-weight: normal;
+			color: #656565;
+			margin-bottom: 12px;
+		}
+
+		.Specs__item + .Specs__item {
+			padding: 0;
+			margin-top: 10px;
+		}
+
+		.Specs__name {
+			font-weight: bold;
+		}
+
+		.Specs__value {
+			word-break: break-all;
+			word-break: break-word;
+		}
+	}
+
+
+	.Badge {
+		&--mail,
+		&--cpm,
+		&--seo,
+		&--cpc {
+			cursor: help;
+		}
+	}
+
+
+	.BadgeOutline--gifts {
+		padding-top: 2px;
+		font-size: 10px;
+		background-color: $accent;
+		border-color: $accent;
+		color: #fff;
+	}
+
+
+	.OrderInfo {
+		padding: 10px 0 7px;
+		font-size: 13px;
+
+		&__time {
+			font-weight: normal;
+			color: #555;
+		}
+
+		.filter {
+			margin-right: 45px;
+		}
+
+		.btnInfo {
+			margin-top: -0.2em;
+		}
+	}
+
+
+	.OrderPromoActions {
+
+		.Items__list {
+			table-layout: fixed;
+		}
+
+		.Item__box {
+			width: 33.33%;
+			vertical-align: top;
+
+			&--gift {
+
+				.Box {
+					vertical-align: top;
+
+					+ .Box {
+						padding-left: 12px;
+					}
+				}
+			}
+		}
+	}
+
+
+	.OrderContents {
+
+		.Items__list {
+			margin: 0;
+		}
+
+		.Item__box {
+			vertical-align: top;
+
+			&--basicPrice,
+			&--salePrice,
+			&--count,
+			&--discount,
+			&--availability,
+			&--summ {
+				text-align: right;
+				width: 1px;
+			}
+
+			&--basicPrice,
+			&--salePrice,
+			&--discount,
+			&--summ {
+				white-space: nowrap;
+			}
+
+			&--attention {
+				color: #e35959;
+			}
+
+			&--availability {
+				line-height: 14px;
+			}
+
+			.Item__aux {
+				margin-top: 0;
+			}
+		}
+
+		.Items__header .Item__box {
+			vertical-align: bottom;
+			white-space: normal;
+		}
+
+		.Item--merged {
+
+			.Item__box {
+				padding-bottom: 7px;
+			}
+		}
+
+		.Item--part {
+
+			.Item__box {
+
+				&--product {
+					padding-left: 30px;
+				}
+			}
+		}
+
+		.Item--lastPart {
+
+			.Item__box {
+				padding-bottom: 10px;
+			}
+		}
+
+		&__partCode {
+			color: #656565;
+		}
+
+		&__saleType {
+
+			&--action {
+				color: #e35959;
+			}
+		}
+
+		&__notAvailable {
+			line-height: 14px;
+			font-size: 11px;
+		}
+	}
+
+	.Spoiler {
+
+		.Specs {
+			display: inline-block;
+			vertical-align: top;
+			max-width: 50%;
+			padding-right: 80px;
+			box-sizing: border-box;
+		}
+	}
+
+
+	.OrderStatus--default {
+
+		.btnInfo {
+			margin-right: 3px;
+		}
+	}
+
+	.Spoiler--accent {
+		margin-bottom: 3px;
+		
+		.Spoiler__header {
+			padding: 15px 15px 15px 20px;
+		}
+
+		.Spoiler__content {
+			padding: 0;
+		}
+	}
+
+	.Spoiler--invoices,
+	.Spoiler--erp {
+		margin-top: 3px;
+		background-color: #efefef;
+
+		.Spoiler__header {
+			padding-y: 15px;
+		}
+
+		.Spoiler__content {
+			padding: 0 0 15px;
+		}
+	}
+
+	.Icon--notCall {
+		cursor: help;
+		padding-y: 5px;
+		background-position: center;
+
+		&:hover {
+			background-image: svg('phone_15x13', '[color]: $errorHover');
+		}
+	}
+
+	.Header2 {
+		.Icon--notCall {
+			margin-top: -3px;
+		}
+	}
+}
+
+.Items--ordersErp {
+	.Items__list {
+		margin-top: 0;
+	}
+
+	.Items__header {
+		.Item__box {
+			padding-top: 0;
+		}
+	}
+
+	.Item__box {
+		&--number {
+			width: 130px;
+		}
+
+		&--date {
+			width: 100px;
+		}
+
+		&--sum {
+			width: 95px;
+			text-align: right;
+		}
+
+		&--result {
+			width: 140px;
+			padding-left: 60px;
+		}
+	}
+}
+
+.Items--ordersOKT {
+
+	.Item__box {
+		vertical-align: top;
+		padding-x: 8px;
+
+		&--indicator,
+		&--number,
+		&--summ,
+		&--print {
+			width: 1px;
+		}
+
+		&--indicator {
+			padding-left: 10px;
+			white-space: nowrap;
+		}
+
+		&--number {
+			padding-left: 0;
+		}
+
+		&--summ {
+			white-space: nowrap;
+			text-align: right;
+
+			.Item__sort {
+				white-space: nowrap;
+			}
+		}
+
+		&--status {
+			width: 110px;
+			padding-left: 30px;
+			position: relative;
+
+			.Item__aux {
+				white-space: nowrap;
+			}
+
+			.Item__aux--wrap {
+				white-space: normal;
+			}
+		}
+
+		&--responsible {
+			width: 180px;
+			line-height: 1.3;
+
+			.pseudoLink {
+				padding-top: 2px;
+			}
+
+			.Item__aux {
+				margin-top: 6px;
+			}
+		}
+
+		&--print {
+			padding-right: 15px;
+		}
+
+		&--consignee {
+			width: 20%;
+
+			.Item__limiter {
+				font-weight: bold;
+			}
+
+			.Item__aux {
+				word-break: break-all;
+				word-break: break-word;
+			}
+		}
+
+		&--customer {
+			width: 20%;
+
+			.Item__aux--error {
+				margin-top: 6px;
+			}
+		}
+
+		&--idp {
+			width: 10%;
+		}
+	}
+
+	.Items__header .Item__box {
+		vertical-align: bottom;
+		white-space: normal;
+	}
+
+	.Item__limiter {
+		word-break: break-all;
+		word-break: break-word;
+	}
+
+	.Badge {
+		margin-top: 4px;
+		margin-right: 2px;
+		white-space: nowrap;
+	}
+
+	.btnDownload,
+	.btnPrint {
+		padding-x: 10px;
+	}
+
+	.Spoiler {
+		display: flex;
+		flex-direction: column-reverse;
+
+		&__header {
+			padding: 0;
+		}
+
+		&__label {
+			font-size: 11px;
+		}
+
+		&__content {
+			padding: 3px 0 2px;
+		}
+	}
+
+	.Item__invoices {
+		position: absolute;
+		left: 5px;
+		top: 9px;
+		padding: 3px;
+		background-position: 3px 3px;
+		cursor: pointer;
+
+		&.Icon--envelopeSheet {
+			left: 4px;
+		}
+	}
+}
+
+.Files--invoicesSent {
+	.Files {
+		&__item + .Files__item {
+			margin-top: 5px;
+		}
+
+		&__hint {
+			margin-top: 5px;
+		}
+	}
+}
+
+.Items--orderInvoices {
+	.Items__list {
+		margin-top: 0;
+	}
+
+	.Items__header {
+		.Item__box {
+			padding-top: 0;
+		}
+	}
+
+	.Item__box {
+		&--number {
+			width: 160px;
+		}
+
+		&--sum {
+			text-align: right;
+		}
+
+		&--result {
+			width: 210px;
+			padding-left: 40px;
+		}
+
+		&--author {
+			width: 280px;
+		}
+	}
+
+	.Badge {
+		margin-top: 4px;
+	}
+}

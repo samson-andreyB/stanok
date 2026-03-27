@@ -1,0 +1,16 @@
+.PaletteColor {
+	display: inline-block;
+	border-radius: 50%;
+	box-shadow: 0 0 0 1px rgba(34, 34, 34, .08);
+	background-size: contain;
+
+	&--default {
+		width: 10px;
+		height: 10px;
+	}
+
+	&--big {
+		width: 18px;
+		height: 18px;
+	}
+}

@@ -1,0 +1,192 @@
+/* Custom Inputs
+------------------------------------------------------------------------------*/
+
+.Checkbox {
+	display: inline-block;
+	margin-right: 1.5em;
+}
+.Checkbox__label {
+	display: inline-block;
+	padding-left: 20px;
+}
+.Checkbox__text {
+	line-height: 1.5em;
+}
+
+.ie9,
+.not-oldie {
+	.Checkbox__input {
+		@mixin hideSr;
+	}
+	.Checkbox__button {
+		vertical-align: middle;
+		margin-top: -.17em;
+		
+		margin-x: 5px -20px;
+		width: 13px;
+		height: 13px;
+		border: 1px solid $divider;
+		border-radius: $bdrad;
+		cursor: pointer;
+		display: inline-block;
+		position: relative;
+		
+		box-shadow: inset 0 0 0 2px #fff;
+		
+		&:after {
+			content: "";
+			background-image: resolve('check.png');
+			width: width('check.png');
+			height: height('check.png');
+			position: absolute;
+			bottom: 2px;
+			left: 2px;
+			display: none;
+		}
+	}
+		
+	.Checkbox__input:checked + .Checkbox__button,
+	.Checkbox__button--checked {
+		&:after {
+			display: block;
+		}
+	}
+
+	.Checkbox__input:hover + .Checkbox__button,
+	.Checkbox__input:focus + .Checkbox__button,
+	.Checkbox__button--focused {
+		border-color: #000;
+	}
+}
+
+.ielte8 {
+	.Checkbox__input {
+		margin-x: 7px -20px;
+	}
+}
+
+
+
+.Radio {
+	display: inline-block;
+	margin-right: 1.5em;
+}
+.Radio__label {
+	display: inline-block;
+	padding-left: 20px;
+}
+
+.ie9,
+.not-oldie {
+	.Radio__input {
+		@mixin hideSr;
+	}
+	.Radio__button {
+		vertical-align: middle;
+		margin-top: -.17em;
+		
+		margin-x: 7px -20px;
+		width: 13px;
+		height: 13px;
+		border: 1px solid $divider;
+		cursor: pointer;
+		display: inline-block;
+		
+		border-radius: 50%;
+		
+		box-shadow: inset 0 0 0 2px #fff;
+	}
+		
+	.Radio__input:checked + .Radio__button,
+	.Radio__button--checked {
+		background-color: $accent;
+	}
+
+	.Radio__input:hover + .Radio__button,
+	.Radio__input:focus + .Radio__button,
+	.Radio__button--focused {
+		border-color: #000;
+	}
+}
+
+.ielte8 {
+	.Radio__input {
+		margin-x: 7px -20px;
+	}
+}
+
+
+
+.Select {
+	display: inline-block;
+	max-width: 100%;
+	vertical-align: bottom;
+	
+	&__label {
+		display: block;
+		position: relative;
+	}
+
+	&__select {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		
+		box-sizing: border-box;
+		right: 0;
+		height: 100%;
+		opacity: 0;
+		width: 100%;
+		z-index: 2;
+		
+		&[disabled] {
+			cursor: default;
+		}
+	
+		.ielte8 & {
+			-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+		}
+	}
+
+	&__text {
+		display: block;
+		min-height: 1.75em;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		
+		&.Form__input {
+			padding-right: 25px;
+		}
+		.ielte8 &.Form__input {
+			padding-bottom: 0;
+		}
+		&:after {
+			position: absolute;
+			top: 50%;
+			right: 0;
+			margin-top: -calc(height('select_arrow_active.png')/2);
+			
+			background-image: resolve('select_arrow_active.png');
+			width: width('select_arrow_active.png');
+			height: height('select_arrow_active.png');
+			content: "";
+			opacity: .5;
+		}
+		&.placeholder {
+			color: #aaa;
+		}
+	}
+
+	&__select:focus + &__text:after,
+	&__select:hover + &__text:after {
+		opacity: 1;
+	}
+	&__select:focus + &__text {
+		border-color: #000;
+	}
+
+	&__select[disabled]:hover + &__text:after {
+		opacity: .5;
+	}
+}

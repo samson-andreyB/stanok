@@ -1,0 +1,33 @@
+.AddCustomerContact--default {
+	.AddCustomerContact__header {
+		margin-bottom: 20px;
+		color: #656565;
+		font-size: 15px;
+	}
+
+	.AddCustomerContact__basicInfo {
+		margin-y: -.5em;
+
+		.Info__prop,
+		.Info__value {
+			padding-y: .5em;
+		}
+
+		.Info__value {
+			padding-left: 10px;
+		}
+
+		.Form__input {
+			width: auto;
+		}
+
+		.ContactCardType__label {
+			margin-left: 1em;
+
+			input[type="radio"] {
+				margin-top: -.2em;
+				margin-right: .3em;
+			}
+		}
+	}
+}

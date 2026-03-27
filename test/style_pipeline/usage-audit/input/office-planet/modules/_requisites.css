@@ -1,0 +1,121 @@
+/* REQUISITES
+---------------------------------------------------------------------*/
+
+.Requisites__list {
+	@mixin List--basic;
+}
+
+.Requisites__item {
+	@mixin List__item--basic;
+	margin-y: 10px;
+}
+
+.Requisites__header {
+	@mixin PseudoTable;
+	border: 1px solid $dividerColor;
+	cursor: pointer;
+	padding: 12px 20px;
+	width: 100%;
+
+	&:hover {
+		background-color: #f7f7f7;
+		color: $theme_color_1;
+	}
+
+	.Requisites__item.active & {
+		background: $theme_color_2;
+		border: 0 none;
+		padding: 14px 20px;
+
+		& .Radio__label,
+		& .Radio__button {
+			cursor: default;
+		}
+
+		& .Requisites__name {
+			color: #fff;
+		}
+	}
+}
+
+.Requisites__name {
+	@mixin PseudoTable__cell;
+	font-size: 16px;
+	text-transform: uppercase;
+}
+
+.Requisites__actions {
+	@mixin PseudoTable__cell;
+	padding-left: 10px;
+	text-align: right;
+	white-space: nowrap;
+
+	.Btn {
+		& + .Btn {
+			margin-left: .5em;
+		}
+	}
+}
+
+.Requisites .Form__set {
+	border: 1px solid $dividerColor;
+	padding: 30px 20px;
+	max-width: 100%;
+
+	&.first {
+		border-top: 0;
+	}
+
+	& + .Form__set {
+		margin-top: 0;
+		border-top: none;
+	}
+}
+
+
+.RequisitesWindow {
+	width: 654px;
+	padding: 30px 35px;
+	box-sizing: border-box;
+
+	&__header {
+		font-size: 24px;
+		margin: 0;
+		margin-bottom: 20px;
+	}
+
+	&__description {
+		font-size: 16px;
+		line-height: 24px;
+		margin-bottom: 8px;
+	}
+
+	&__replaceBox {
+		padding: 12px 20px;
+		background-image: resolve('interface/chess.png');
+		border: 1px solid #d5d5d5;
+		margin-bottom: 20px;
+	}
+
+	&__replaceItem {
+		font-size: 14px;
+		line-height: 20px;
+
+		& + & {
+			margin-top: 4px;
+		}
+	}
+
+	&__controls .Btn + .Btn {
+		margin-left: 15px;
+	}
+
+	.Btn--sub {
+		padding: 4px 15px;
+
+		&:active,
+		&:hover {
+			padding: 9px 20px;
+		}
+	}
+}

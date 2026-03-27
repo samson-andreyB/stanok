@@ -1,0 +1,20 @@
+/* ICON
+------------------------------------------------------------------------------*/
+.Icon {
+	display: inline-block;
+	position: relative;
+
+	&--bubble {
+		background-image: resolve('icons/bubble_main_outline.png');
+		width: width('icons/bubble_main_outline.png');
+		height: height('icons/bubble_main_outline.png');
+	}
+
+	&--notCall {
+		cursor: help;
+
+		&:hover {
+			opacity: .75;
+		}
+	}
+}

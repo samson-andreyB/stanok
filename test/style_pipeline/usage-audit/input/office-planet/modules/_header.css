@@ -1,0 +1,553 @@
+/* HEADER
+---------------------------------------------------------------------*/
+
+.Header {
+	border-bottom: 1px solid $dividerColor;
+
+	&--main {
+		position: relative;
+
+		.Header__wrapper {
+			padding-y: 20px;
+		}
+	}
+
+	&--fixed {
+		border-bottom: none;
+
+		.Header__wrapper {
+			position: fixed;
+			top: 0;
+			width: 100%;
+			padding-y: 10px;
+			border-bottom: 1px solid $dividerColor;
+			z-index: 101;
+			background-color: #fff;
+		}
+
+		.Header__box--offer {
+			display: none;
+		}
+
+		.Logo {
+			&--l .Logo__main {
+				@extend .Logo--s;
+			}
+
+			&__img {
+				max-height: 48px;
+			}
+		}
+	}
+
+	&--controlPanel {
+		box-sizing: border-box;
+
+		.Header__box {
+			height: 44px;
+		}
+	}
+
+	&__group {
+		@mixin PseudoTable;
+		width: 100%;
+	}
+
+	&__row {
+		@mixin PseudoTable__row;
+	}
+
+	&__box {
+		@mixin PseudoTable__cell;
+		box-sizing: border-box;
+		white-space: nowrap;
+
+		&--dealerSelect {
+			position: relative;
+		}
+
+		&--citySelect,
+		&--cart {
+			width: 1px;
+		}
+
+		&--user,
+		&--cart,
+		&--addCode {
+			text-align: right;
+		}
+
+		&--user {
+			width: 1px;
+			padding-left: 40px;
+		}
+
+		&--favorites,
+		&--cart {
+			width: 1px;
+			padding-left: 20px;
+		}
+
+		&--citySelect {
+			padding-right: 14px;
+		}
+
+		&--rubricator {
+			width: 1px;
+			padding-right: 20px;
+		}
+
+		&--logo {
+			padding-right: 30px;
+			width: 1px;
+		}
+
+		&--offer {
+			padding-top: 15px;
+			overflow: hidden;
+		}
+
+		&--addCode {
+			vertical-align: bottom;
+		}
+	}
+}
+
+.HeaderInfo {
+	display: table;
+	width: 100%;
+
+	&__item {
+		box-sizing: border-box;
+		display: table-cell;
+		font-size: 14px;
+		line-height: 1.1em;
+		border-left: 1px solid #dedede;
+		padding-left: 14px;
+		vertical-align: middle;
+		white-space: nowrap;
+
+		&--contact {
+			width: 100%;
+		}
+
+		&--desc {
+			width: 1px;
+			max-width:250px;
+			padding-right: 14px;
+
+			@media screen and (max-width: 1255px) {
+				max-width: 170px;
+			}
+
+			@media screen and (max-width: 1175px) {
+				max-width: 85px;
+			}
+		}
+
+		.Page--oz & {
+			&--contact {
+				max-width: 100%;
+			}
+
+			&--desc {
+				max-width: 360px;
+				border-left: none;
+				padding-left: 0;
+
+				@media screen and (max-width: 1255px) {
+					max-width: none;
+				}
+
+				@media screen and (max-width: 1175px) {
+					max-width: none;
+				}
+
+				@media screen and (max-width: 1150px) {
+					max-width: 260px;
+				}
+			}
+		}
+	}
+
+	&__desc {
+		color: #585858;
+	}
+
+	&__links {
+		font-size: 13px;
+		margin-left: 1em;
+
+		.Page--oz & {
+			margin-left: 1.3em;
+		}
+	}
+
+	&__link {
+		& + & {
+			margin-left: 1.2em;
+		}
+	}
+
+	&__phone {
+		& + & {
+			margin-left: 1em;
+		}
+
+		@mixin pseudoLink;
+		color: #000;
+	}
+}
+
+.HeaderEllipsis {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	pointer-events: none;
+
+	&--active {
+		cursor: help;
+		pointer-events: auto;
+	}
+}
+
+.HeaderSearch {
+	box-sizing: border-box;
+	border: 2px solid $theme_brand;
+
+	@if $theme_name == 'op' {
+		border: 2px solid $theme_accent;
+	}
+
+	width: 100%;
+	height: 40px;
+
+	&__group {
+		box-sizing: border-box;
+		display: table;
+		width: 100%;
+	}
+
+	&__box {
+		display: table-cell;
+		vertical-align: middle;
+
+		&--submit {
+			width: 1px;
+			text-align: right;
+		}
+
+		&--field {
+			position: relative;
+
+			.ui-autocomplete {
+				box-sizing: border-box;
+				width: 100% !important;
+			}
+		}
+	}
+
+	&__field {
+		border-width: 0;
+		padding: 0 1.1em;
+		width: 100%;
+		height: 36px;
+	}
+
+	&__submit {
+		@mixin Btn--default;
+		@mixin Btn--action;
+
+		@if $theme_name == 'op' {
+			@mixin Btn--main;
+		}
+
+		box-shadow: none;
+		padding: 4px 10px 5px 14px;
+		height: 36px;
+	}
+}
+
+/* ^ нужно узнать что это */
+.Header--hidden .Page__wrapper {
+	display: none;
+}
+
+.HeaderLinks {
+	@mixin List--ib;
+	cursor: default;
+}
+.HeaderLinks__item {
+	@mixin List__item--ib;
+
+	& + & {
+		margin-left: 1.4em;
+	}
+}
+.HeaderLinks__link {
+	color: $infoColor;
+}
+
+.DealerSelect__submit {
+	@mixin Btn--default;
+	@mixin Btn--main;
+	height: 36px;
+	padding-y: 9px;
+	margin-left: 10px;
+}
+/* ^ нужно узнать что это */
+
+
+
+/* Баннер в шапке сайта
+------------------------------------------------------------------------------*/
+
+.HeaderBanner {
+	overflow: hidden;
+	min-width: calc($wrapperMinWidth + 60px);
+	position: relative;
+
+	&:before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		box-shadow: inset 0 0 0 1px #00aff0;
+		z-index: 1;
+		pointer-events: none;
+		transition: opacity .2s ease;
+		visibility: hidden;
+		opacity: 0;
+	}
+
+	&:hover {
+		&:before {
+			visibility: visible;
+			opacity: 1;
+		}
+	}
+
+	&__wrapper {
+		@mixin Page__wrapper;
+		position: relative;
+	}
+
+	&__remove {
+		background-image: svg('cross_9x9', '[color]: #000');
+		background-color: rgba(255, 255, 255, 0.8);
+		background-position: center;
+		background-repeat: no-repeat;
+		width: 25px;
+		height: 25px;
+		cursor: pointer;
+		position: absolute;
+		right: 30px;
+		top: 38px;
+		z-index: 1;
+
+		&:hover {
+			background-image: svg('cross_9x9', '[color]: $errorColor');
+			background-color: rgba(255, 255, 255, 1);
+		}
+	}
+
+	&__link {
+		display: block;
+		height: 100px;
+		background-position: center;
+		background-repeat: repeat-x;
+		min-width: 1920px;
+		position: relative;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+}
+
+
+
+/* HEADER Offers
+---------------------------------------------------------------------*/
+
+.OfferLinks {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	height: 32px;
+	white-space: normal;
+}
+
+.OfferLinkWrapper {
+	display: flex;
+	height: 100%;
+	align-items: center;
+	justify-content: center;
+	flex-grow: 1;
+	padding-x: 8px;
+	border-right: 1px solid $dividerColor;
+	transition: all .2s ease-in-out;
+
+	&:first-child {
+		border-left: 1px solid $dividerColor;
+	}
+
+	&--hidden {
+		transform: translateY(-1em);
+		opacity: 0;
+	}
+}
+
+.OfferLink {
+	position: relative;
+	display: flex;
+	align-items: center;
+	line-height: 16px;
+	color: #000;
+
+	&:focus {
+		outline: none;
+	}
+
+	&__name {
+		display: -ms-grid;
+		-ms-grid-columns: min-content;
+		max-height: 32px;
+		overflow: hidden;
+
+		@media (max-width: 1200px) {
+			text-align: center;
+		}
+	}
+
+	&__icon {
+		margin-right: 5px;
+		flex-shrink: 0;
+
+		@media (max-width: 1200px) {
+			display: none;
+		}
+	}
+}
+
+.ActionsMenu {
+	@mixin Dropdown static;
+}
+
+.ActionsMenuWrapper {
+	z-index: 20001;
+
+	.TipTip__content {
+		border-radius: 0;
+		font: inherit;
+	}
+
+	.ActionsMenu__list {
+		border: none;
+		box-shadow: none;
+	}
+}
+
+
+
+/* HEADER Information Panel
+---------------------------------------------------------------------*/
+
+.ddMainInfoPanel {
+	background: #fedda0;
+	display: none;
+	font-size: 15px;
+	line-height: 1.5;
+	padding: 15px 0;
+	overflow: hidden;
+	position: relative;
+	z-index: 4;
+
+	& + &,
+	.HeaderBanner + & {
+		border-top: 1px solid rgba(0, 0, 0, .25);
+	}
+
+	&.collapsed {
+		background: #f1f1f1;
+		font-size: 13px;
+		padding: 7px 0;
+		transition: background 0.3s ease-in-out;
+
+		.collapse {
+			display: none !important;
+		}
+
+		.img {
+			height: 32px;
+			width: 32px;
+			background-size: 32px;
+		}
+
+		&--accent {
+			background: #fedda0;
+		}
+	}
+
+	.Page__wrapper {
+		position: relative;
+	}
+
+	.content {
+		display: table;
+		width: 100%;
+	}
+
+	.content__box {
+		display: table-cell;
+		vertical-align: middle;
+
+		&--text {
+			width: 100%;
+		}
+	}
+
+	.content__box + .content__box {
+		padding-left: 1em;
+	}
+
+	.img {
+		background-image: svg('info_50x50', '[color]: #000');
+		background-repeat: no-repeat;
+		display: inline-block;
+		height: 50px;
+		vertical-align: middle;
+		width: 50px;
+		opacity: .25;
+	}
+}
+
+.CookiesConsent {
+	box-sizing: border-box;
+	position: fixed;
+	bottom: 10px;
+	left: 50%;
+	transform: translateX(-50%);
+
+	/* Историческое значение, протестированное годами и сторонними виджетами */
+	z-index: 2147483659;
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	width: calc($wrapperMaxWidth * 0.8);
+	max-width: 95vw;
+	margin-left: calc(var(--fancybox-scrollbar-width, 0) * -0.5);
+	padding: 7px 14px;
+	background-color: #fff;
+	border: 1px solid #c1c1c1;
+	box-shadow: 0 1px 12px rgba(0, 0, 0, 0.25);
+	border-radius: 5px;
+
+	@media (max-width: 1200px) {
+		width: calc($wrapperMinWidth * 0.8);
+	}
+}
+
+/* Корректируем z-index стороннего виджета */
+.online-chat-root-TalkMe .top-z-index {
+	z-index: 7483641 !important;
+}

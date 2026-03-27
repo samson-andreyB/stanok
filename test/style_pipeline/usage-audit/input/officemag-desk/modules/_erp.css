@@ -1,0 +1,35 @@
+.Spoiler--changesList {
+	.Spoiler__content {
+		padding-top: 0;
+	}
+
+	.Items--changesList {
+		margin-x: -20px;
+
+		.Items__list {
+			margin-top: 0;
+		}
+
+		.Item__box {
+			vertical-align: top;
+			
+			&--field {
+				width: 30%;
+			}
+			
+			&--oldValue,
+			&--newValue {
+				width: 35%;
+			}
+		}
+	}
+
+	.AddedContactsList {
+		margin-top: 15px;
+
+		&__title {
+			margin-bottom: 3px;
+			font-weight: bold;
+		}
+	}
+}

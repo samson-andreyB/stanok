@@ -1,0 +1,361 @@
+/* THIN SCREENS
+---------------------------------------------------------------------*/
+@media screen and (max-width: 1260px) {
+	.Table--default .Table__cell {
+		font-size: 14px;
+		padding-x: 12px;
+	}
+}
+
+
+@media screen and (max-width: 1200px) {
+	.Table--default .Table__cell {
+		font-size: 12px;
+		padding-x: 10px;
+	}
+}
+
+
+@media screen and (max-width: 1120px) {
+	.HeaderMenu .topElements .menuElement,
+	.HeaderMenu .HeaderMenu__sub {
+		white-space: normal;
+	}
+
+	/* Layout */
+
+	.Page__wrapper {
+		padding: 0 20px;
+	}
+
+	.Page__main .Content { /* ^ check */
+		padding-left: 20px;
+	}
+
+
+	/* Item card */
+
+	.cardBlock,
+	.itemInfoPhotos,
+	.itemInfoTxt {
+		display: block;
+	}
+
+	.itemInfoPhotos {
+		width: 100%;
+	}
+
+	.itemInfoPhotos .main,
+	.itemInfoPhotos .photosList {
+		display: table-cell;
+		vertical-align: top;
+	}
+
+	.itemInfoPhotos .main {
+		padding-right: 10px;
+	}
+	.itemInfoPhotos .photosList {
+		padding-left: 10px;
+	}
+
+	.itemInfoTxt {
+		padding: 0;
+	}
+
+	.itemInfoTxt .buttonBox {
+		margin-top: calc(2em - 14px);
+		margin-bottom: 2em;
+	}
+
+	.itemInfoPhotos .thumbs {
+		margin-top: -10px;
+	}
+
+	.tabsList li:first-child {
+		margin-left: 15px;
+	}
+
+	.tabsList--badge {
+		padding-bottom: 5px;
+	}
+
+	.tabsList--badge .tabsLink,
+	.tabsList--badge .active .tabsTxt {
+		font-size: 11px;
+		padding: 6px 10px;
+	}
+
+	.tabsList--badge li:first-child {
+		margin-left: -10px;
+		margin-right: 10px;
+	}
+
+	.actionTimeEnd {
+		margin-top: 15px;
+	}
+
+
+	/* Items list */
+
+	.item .info {
+		padding: 0 5px 0 20px;
+	}
+
+	.item.action .info h2 {
+		margin-right: 65px;
+	}
+
+
+	/* Photo viewer */
+
+	.Viewer--fancy {
+		display: table;
+		table-layout: fixed;
+		width: 100%;
+	}
+
+	.Viewer--fancy .Viewer__list,
+	.Viewer--fancy .Viewer__subject {
+		display: table-cell;
+	}
+
+	.Viewer--fancy .Viewer__list {
+		padding: 10px;
+		width: 44px;
+	}
+
+	.Viewer--fancy .Viewer__item {
+		margin: 0;
+	}
+
+	.Viewer--fancy .Viewer__preview {
+		width: 44px;
+	}
+
+	.Viewer--fancy .Viewer__item + .Viewer__item {
+		margin-top: 10px;
+	}
+
+	.Viewer--fancy .Viewer__subject {
+		border: none;
+		vertical-align: middle;
+	}
+
+	.Viewer--fancy .Viewer__subject .bigPhoto {
+		width: 100%;
+		height: auto;
+	}
+
+	.Viewer--fancy .Viewer__list {
+		height: auto;
+	}
+
+	.Table--default .Table__cell {
+		font-size: 15px;
+		padding-x: 15px;
+	}
+}
+
+
+@media screen and (max-width: 1030px) {
+
+	.HeaderMenu .HeaderMenu__sub {
+		columns: 2;
+		column-gap: 24px;
+		height: 80px;
+	}
+	.HeaderMenu .HeaderMenu__sub a {
+		height: 25px;
+		margin-right: 0;
+	}
+	.HeaderMenu .HeaderMenu__sub a:after {
+		content: "";
+		display: block;
+		margin-bottom: 7px;
+		width: 100%;
+	}
+	.Menu__content .menu .menuList {
+		width: 33.33%;
+	}
+}
+
+
+@media screen and (max-width: 980px) {
+
+	.slidesBlock .controls {
+		left: 8px;
+		bottom: 8px;
+	}
+}
+
+
+@media screen and (max-width: 950px) {
+
+	.fancyBox,
+	.FancyModal--vacancy {
+		width: 650px;
+	}
+
+	.fancyBox .contentFancyBlock {
+		table-layout: fixed;
+	}
+
+	.fancyBox .contentFancyBlock .txtBox {
+		padding: 0 15px;
+		box-sizing: border-box;
+	}
+
+	.fancyBox .footerFancyBlock {
+		padding: 15px;
+	}
+
+	.fancyBox .txtBox .linkBox {
+		min-width: 220px;
+		width: 220px;
+		padding-left: 5px;
+	}
+
+	.fancyBox .dateBlock,
+	.copycenterConfirm {
+		margin-left: 37px;
+		padding-left: 0;
+	}
+
+	.fancyBox .personInfo {
+		width: 100%;
+		min-width: auto;
+		box-sizing: border-box;
+	}
+
+	.copycenterInfoBlock .copycenterInfoBlockLi {
+		margin-bottom: 20px;
+	}
+	.copycenterInfoBlock .copycenterInfoBlockLi:first-child {
+		margin-top: 20px;
+	}
+
+	.fancyBox .cityBox {
+		background-size: 42%;
+		background-position: right 20px top;
+	}
+}
+
+
+@media screen and (max-width: 920px) {
+
+	.Header__group .brandBox {
+		display: block;
+		float: left;
+		margin-right: 20px;
+		margin-top: 2px;
+	}
+	.Header__group .placeAndSearchBox {
+		display: block;
+		padding-left: 0;
+	}
+
+	.Header__group .placeAndSearchBox .city {
+		margin-top: 6px;
+		padding: 8px 15px;
+	}
+
+	.HeaderContacts {
+		margin-top: -20px;
+		display: table-cell;
+		height: 64px;
+		vertical-align: middle;
+	}
+
+	.HeaderContacts__box {
+		display: inline-block;
+		width: auto;
+		margin-right: .5em;
+	}
+
+	.HeaderContacts__box + .HeaderContacts__box {
+		padding-left: 0;
+		margin-right: 0;
+	}
+
+	.HeaderContacts__box--address + .HeaderContacts__box {
+		display: block;
+		margin-top: .4em;
+	}
+
+	.Page__main .aboutCopycenter li span {
+		padding-left: 0;
+	}
+
+	.Page__main .aboutCopycenter li span:before {
+		position: static;
+		margin-bottom: 1em;
+	}
+}
+
+
+@media screen and (max-width: 900px) {
+
+	.itemBlock .photo {
+		width: 200px;
+	}
+
+	.Vacancy__name {
+		font-size: 16px;
+	}
+
+	.Advantages {
+		margin-top: -10px;
+		text-align: left;
+
+	}
+
+	.Advantage {
+		display: block;
+		width: auto;
+	}
+
+	.Advantage + .Advantage {
+		margin-top: .4em;
+	}
+
+	.Advantage br {
+		display: none;
+	}
+
+	.itemInfoTxt {
+		.Table--default {
+			tbody {
+				display: flex;
+			}
+
+			.Table__row {
+				flex-basis: 50%;
+
+				&:first-child {
+					.Table__cell {
+						border-right: none;
+					}
+				}
+			}
+
+			.Table__cell {
+				display: flex;
+
+				& + .Table__cell {
+					border-top: none;
+				}
+			}
+		}
+
+		.buttonBox {
+			margin-top: calc(1.6em - 14px);
+		}
+	}
+}
+
+
+@media screen and (max-width: 820px) {
+	.Menu__content .menu .menuList {
+		width: 50%;
+	}
+}

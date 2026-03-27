@@ -1,0 +1,77 @@
+.CartActionLink {
+	@mixin LinkWithIcon true;
+	display: inline-block;
+	white-space: nowrap;
+
+	&:before {
+		margin-right: 5px;
+		width: 20px;
+		background-position: center;
+	}
+
+	&--orderCompleted {
+		&:before {
+			margin-top: -1px;
+			background-image: svg('basket_icon_20x14', '[color]: #006cb5');
+			height: height('basket_icon_20x14.svg');
+		}
+
+		&:hover:before {
+			background-image: svg('basket_icon_20x14', '[color]: $LINK_HOVER');
+		}
+	}
+
+	&--orderCodes {
+		&:before {
+			margin-top: -1px;
+			background-image: svg('document_10x14', '[color]: #006cb5');
+			height: height('document_10x14.svg');
+		}
+
+		&:hover:before {
+			background-image: svg('document_10x14', '[color]: $LINK_HOVER');
+		}
+	}
+
+	&--share {
+		&:before {
+			background-image: svg('share_11x14', '[color]: #006cb5');
+			height: height('share_11x14.svg');
+		}
+
+		&:hover:before {
+			background-image: svg('share_11x14', '[color]: $LINK_HOVER');
+		}
+	}
+
+	&--checkout {
+		&:before {
+			background-image: svg('network_15x17', '[color]: $ACTION_MAIN');
+			height: height('network_15x17.svg');
+		}
+
+		&:hover:before {
+			background-image: svg('network_15x17', '[color]: $LINK_HOVER');
+		}
+	}
+
+	&--download {
+		&:before {
+			background-image: svg('share_11x14', '[color]: $ACTION_MAIN');
+			height: height('share_11x14.svg');
+			transform: scaleY(-1);
+		}
+
+		&:hover:before {
+			background-image: svg('share_11x14', '[color]: $LINK_HOVER');
+		}
+	}
+
+	&.pseudoLink {
+		margin-left: 25px;
+
+		&:before {
+			left: -25px;
+		}
+	}
+}

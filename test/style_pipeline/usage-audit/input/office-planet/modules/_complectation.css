@@ -1,0 +1,53 @@
+/* COMPLECTATION TABLE
+---------------------------------------------------------------------*/
+
+.Complectation {
+	display: table;
+	width: 100%;
+	margin-bottom: 1em;
+	border-collapse: collapse;
+
+	&__code {
+		color: #444;
+	}
+
+	&__item {
+		display: table-row;
+		width: 100%;
+		border-bottom: 1px solid #d6d6d6;
+
+		.Price__penny {
+			font-size: 70%;
+			top: -.4em;
+		}
+
+		&--total {
+			font-size: 18px;
+			line-height: .8;
+			border-bottom-color: #808080;
+
+			.Price__penny {
+				font-size: 60%;
+				top: -.5em;
+			}
+		}
+	}
+
+	&__box {
+		display: table-cell;
+		padding-y: .7em;
+		vertical-align: top;
+
+		.Complectation__item--total & {
+			padding-top: 0;
+		}
+
+		&--name {
+			width: 70%;
+		}
+
+		&--price {
+			text-align: right;
+		}
+	}
+}

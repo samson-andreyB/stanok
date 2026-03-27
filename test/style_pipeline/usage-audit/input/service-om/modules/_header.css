@@ -1,0 +1,18 @@
+.Header {
+	background-color: $colorHeader;
+	color: $colorHeaderText;
+
+	.Page__wrapper {
+		display: flex;
+	}
+
+	a {
+		color: $colorHeaderText;
+	}
+
+	&__box {
+		&--menu {
+			margin-left: 25px;
+		}
+	}
+}

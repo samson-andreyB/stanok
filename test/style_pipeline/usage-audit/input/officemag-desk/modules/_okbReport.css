@@ -1,0 +1,67 @@
+.filters--okbReport {
+	.filter--responsible,
+	.filter--event {
+		width: 250px;
+	}
+
+	.filter--responsible {
+		background: none;
+		padding-left: 0;
+	}
+
+	.filter--status1,
+	.filter--status2 {
+		width: 160px;
+	}
+
+	.RichSelect {
+		width: 100%;
+	}
+
+	.filter--territoryERP {
+		min-width: 200px;
+
+		.RichSelect__list {
+			max-height: 140px;
+		}
+	}
+
+	.filter--okbForERP {
+		min-width: 250px;
+
+		.RichSelect__list {
+			max-height: 220px;
+		}
+	}
+}
+
+.Items--okbReport {
+	.Item .Item__box {
+		vertical-align: top;
+	}
+
+	.Item__box--client a {
+		padding-y: .3em;
+	}
+
+	.Item__box--indicator {
+		padding-left: 0;
+	}
+
+	.IntIndicator {
+		cursor: help;
+	}
+
+	.Item__breaker--client {
+		max-width: 230px;
+	}
+
+	.Icon--notCall {
+		cursor: help;
+		margin-top: -6px;
+
+		&:hover {
+			background-image: svg('phone_15x13', '[color]: $errorHover');
+		}
+	}
+}

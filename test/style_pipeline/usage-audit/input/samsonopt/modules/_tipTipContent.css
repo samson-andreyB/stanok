@@ -1,0 +1,21 @@
+.TipNote--default {
+	display: inline-block;
+	padding-bottom: 2px;
+	line-height: 18px;
+
+	.TipNote__paragraph {
+		display: block;
+
+		& + .TipNote__paragraph {
+			margin-top: 4px;
+		}
+	}
+
+	.TipNote__title + .TipNote__content {
+		margin-top: 4px;
+	}
+}
+
+.TipNote--transportPackAlert {
+	width: 226px;
+}

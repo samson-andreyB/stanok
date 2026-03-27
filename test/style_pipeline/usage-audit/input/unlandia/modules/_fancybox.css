@@ -1,0 +1,225 @@
+/* FANCYBOX
+---------------------------------------------------------------------*/
+
+.Fancybox {
+	&__wrapper {
+		width: 890px;
+		height: 690px;
+		padding: 25px;
+		box-sizing: border-box;
+
+		&--heightAuto {
+			height: auto;
+		}
+
+		&--imageViewer {
+			width: 90vw;
+			height: 90vh;
+		}
+
+		&--workMembers {
+			.FancyboxSlider__imgCont {
+				padding-bottom: 90px;
+			}
+
+			.FancyboxSlider__title {
+				position: relative;
+				line-height: 32px;
+			}
+
+			.FancyboxSlider__prev,
+			.FancyboxSlider__next {
+				height: calc(100% - 90px);
+			}
+		}
+
+		&--cards {
+			width: 850px;
+			height: auto;
+
+			.Cards__content {
+				margin-top: 28px;
+			}
+
+			.Cards__control {
+				margin-top: 20px;
+			}
+
+			.Cards__trigger {
+				margin-bottom: 0;
+			}
+		}
+
+		h2 {
+			margin-top: 0;
+		}
+	}
+
+	&__btnCont {
+		background-color: #f3f3f3;
+		padding: 27px 40px;
+		border-radius: 0 0 10px 10px;
+		margin: 0 -25px -25px;
+
+		&--noBG {
+			background-color: transparent;
+		}
+	}
+
+	&__fullImgCont {
+		height: 640px;
+		line-height: 640px;
+		text-align: center;
+	}
+}
+
+.FancyboxSlider {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+
+	&__list {
+		position: relative;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		white-space: nowrap;
+		width: 100%;
+		height: 100%;
+	}
+
+	&__item {
+		position: absolute;
+		left: 0;
+		top: 0;
+		display: block;
+		margin: 0;
+		font-size: 0;
+		text-align: center;
+		width: 100%;
+		height: 100%;
+		vertical-align: top;
+	}
+
+	&__imgCont {
+		display: inline-block;
+		padding-bottom: 70px;
+		width: auto;
+		height: 100%;
+		box-sizing: border-box;
+	}
+
+	&__img {
+		display: inline-block;
+		height: 100%;
+		border: 1px solid #ededed;
+		max-width: 100%;
+		box-sizing: border-box;
+		user-select: none;
+
+		opacity: 0;
+		transition: opacity 350ms;
+	}
+
+	.Btn--print {
+		display: none;
+	}
+
+	&__titleCont {
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		text-align: right;
+	}
+
+	&__title {
+		@mixin headerUnlandia;
+		display: inline-block;
+		position: absolute;
+		left: 0;
+		margin: 0;
+		padding-right: 90px;
+		width: 100%;
+		font-size: 26px;
+		font-family: $fontFamilyB;
+		line-height: 60px;
+		text-align: left;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		box-sizing: border-box;
+
+		opacity: 0;
+		transition: opacity 350ms;
+	}
+
+	&__description {
+		font-size: 20px;
+		line-height: 22px;
+		text-align: left;
+
+		opacity: 0;
+		transition: opacity 350ms;
+	}
+
+	&__item--active {
+		z-index: 1;
+
+		.Btn--print {
+			display: inline-block;
+		}
+	}
+
+	&__item--active .FancyboxSlider__img,
+	&__item--active .FancyboxSlider__description,
+	&__item--active .FancyboxSlider__title {
+		opacity: 1;
+	}
+
+	&__prev,
+	&__next {
+		width: 40%;
+		height: calc(100% - 68px);
+		cursor: pointer;
+		position: absolute;
+		top: 0;
+		z-index: 2;
+
+		&:before {
+			content: '';
+			position: absolute;
+			display: block;
+			background-repeat: no-repeat;
+			background-position: 50% 50%;
+			top: 50%;
+			margin: -24px 0 0;
+		}
+	}
+
+	&__prev {
+		left: 0;
+
+		&:before {
+			left: 22px;
+			@extend .Btn--backwardBig:before;
+		}
+
+		&:hover:before {
+			@extend .Btn--backwardBig:hover:before;
+		}
+	}
+
+	&__next {
+		right: 0;
+
+		&:before {
+			right: 22px;
+			@extend .Btn--forwardBig:before;
+		}
+
+		&:hover:before {
+			@extend .Btn--forwardBig:hover:before;
+		}
+	}
+}

@@ -1,0 +1,10 @@
+.Autocomplete {
+	&--loading {
+		.Spinner {
+			right: -20px;
+			display: block;
+			visibility: visible;
+			opacity: 1;
+		}
+	}
+}

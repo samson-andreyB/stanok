@@ -1,0 +1,5 @@
+.StatusChangeDateTip {
+	&__value {
+		color: $info;
+	}
+}

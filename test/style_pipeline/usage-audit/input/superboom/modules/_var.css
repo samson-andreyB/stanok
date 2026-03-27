@@ -1,0 +1,100 @@
+/* основные цвета */
+$BLOCK_BG: #f7f4f1;
+
+$MAIN: #379014;
+$MAIN__A: #47bc19;
+
+$BRAND: #7518db;
+$BRAND__A: #ff0030;
+$BRAND_BLACK: #242322;
+
+$GREY_1: #736f6c;
+$GREY_2: #c4beb9;
+$GREY_3: #e2ddd9;
+$GREY_4: #ebe5e0;
+$GREY_5: #f2eeea;
+
+$RED: #e82111;
+$RED_DARK: #bf2d21;
+$RED_LIGHT: #ff2413;
+
+$GREEN: #0cac29;
+$GREEN_DARK: #188b2d;
+$GREEN_LIGHT: #00cc25;
+
+$VIOLET: $BRAND;
+$VIOLET_DARK: #7518db;
+$VIOLET_LIGHT: #953df5;
+
+$ATTENTION: #ffeab1;
+
+$BG: #f2eeea;
+$BG__A: #c7c2be;
+$BG_H: #e9e4e1;
+
+$ERROR: #c22119;
+
+$INPUT_CONTROL: #e2ddd9;
+$INPUT_CONTROL_H: #eae5e2;
+$INPUT_CONTROL_A: #f0ede9;
+
+
+/* цвета текста */
+$C_ERROR: #e10000;
+$C_PZK: #a7126a;
+$C_DISABLED: #999;
+$C_ADD: #666;
+$C_INFO: #666;
+
+$C_ACTION: #404040;
+
+
+/* цвета границ */
+$B_LIGHT: #f2eeea;
+$B_DISABLED: $GREY_3;
+$B_ACTION: #e2ddd9;
+$B_ACTION__A: #ccc6c2;
+$B_ACTION__DOTTED: #b4aca7;
+$B_HR: #e2ddd9;
+
+/* цвета стандартных кнопок */
+$BTN_BG: #e2ddd9;
+$BTN_BG_H: #e9e4e1;
+$BTN_BG_A: #f0ece8;
+
+/* цвета ссылок*/
+$LINK: #0b59df;
+$LINK_HOVER: $VIOLET_LIGHT;
+
+$maxContentWidth: 1400px;
+$PAGE_WRAPPER_PADDING: 25px;
+$PAGE_WRAPPER_PADDING_MOBILE: 20px;
+$MOBILE_NAVY_MENU_WIDTH: 480px;
+
+$SIDE_WIDTH: 220px;
+$SIDE_MARGIN: 20px;
+
+$BD_RAD: 4px;
+$BD_RAD_BANNER: 8px;
+
+$FORM_WIDTH: 530px;
+
+$BX_SH: 0 2px 15px rgba(0,0,0,.4);
+
+/* Фунцкия для анимации */
+$ANIM_FUN: cubic-bezier(0.42, 0, 0.08, 1);
+
+/* над фенсибоксом */
+$OVER_FB: 10010;
+
+/* Рубрикатор */
+$C_NOSE: #d1ccc9;
+$ACTIONS_BOX_WIDTH: 220px;
+
+/* Кнопка «Наверх» */
+$scrollButtonWidth: 109px;
+
+/* Карточка товара */
+$PRODUCT_CARD_PHOTO_SIZE: calc((410 / 1400) * 100%);
+$PRODUCT_CARD_PHOTO_SIZE_MEDIUM: calc((269 / 974) * 100%);
+$PRODUCT_CARD_PHOTO_SIZE_SMALL: calc((225 / 930) * 100%);

@@ -1,0 +1,12 @@
+.Items__list--commonIndicators {
+	.Item__box {
+		&--name {
+			width: 50%;
+		}
+
+		&--value {
+			text-align: right;
+			padding-right: 5px;
+		}
+	}
+}

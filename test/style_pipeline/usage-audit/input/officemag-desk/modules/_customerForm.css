@@ -1,0 +1,507 @@
+.CustomerForm {
+	cursor: default;
+
+	&__templates {
+		display: none;
+	}
+
+	&__status2 {
+		font-size: 14px;
+		font-weight: bold;
+	}
+
+	&__add,
+	&__remove {
+		margin-left: 13px;
+
+		&:before {
+			content: '';
+			display: inline-block;
+			margin-left: -13px;
+			width: 13px;
+			height: 8px;
+			background-repeat: no-repeat;
+			background-position: 0 50%;
+		}
+	}
+
+	&__add {
+		&:before {
+			background-image: resolve('icons/plus_8x8_18a.png');
+		}
+
+		&:hover {
+			&:before {
+				background-image: resolve('icons/plus_8x8_2b8.png');
+			}
+		}
+	}
+
+	&__remove {
+		color: #999;
+
+		&:before {
+			background-image: resolve('icons/cross_8x8_999.png');
+		}
+
+		&:hover {
+			color: #e45959;
+
+			&:before {
+				background-image: resolve('icons/cross_8x8_e55.png');
+			}
+		}
+	}
+
+	.RichSelect--partners {
+		min-width: 40%;
+		max-width: 100%;
+
+		.RichSelect__options {
+			max-height: none;
+		}
+
+		.RichSelect__list {
+			max-height: 200px;
+			overflow-y: auto;
+		}
+	}
+
+	.Spoiler--changesList {
+		.Spoiler__header {
+			padding-top: 10px;
+		}
+	}
+
+	.Upload__list:empty + .Upload__label {
+		margin-top: 0;
+	}
+
+	.controlPanel {
+		.btn + .btn {
+			margin-left: .6em;
+		}
+	}
+
+	&.CustomerForm--customerCrmNewClientCreate,
+	&.CustomerForm--status2ChangeClientCard {
+		border-top: 1px solid #d9d9d9;
+
+		.Form {
+			&__section--contacts {
+				padding: 0;
+
+				.Form__header {
+					margin-bottom: 0;
+					padding: 20px 20px 0;
+					font-size: 12px;
+					color: #000;
+				}
+			}
+
+			&__set--contact {
+				border: 0;
+
+				&:not(:first-child) {
+					border-top: 1px solid #d9d9d9;
+				}
+			}
+
+			&__title {
+				padding-right: 10px;
+
+				& + .Form__valueArea {
+					margin-left: 0;
+				}
+			}
+		}
+	}
+
+	&.CustomerForm--customerCrmNewClientCreate {
+		.Form {
+			&__controls--addContact {
+				padding: 0 20px 20px;
+			}
+
+			&__title {
+				width: 165px;
+			}
+
+			&__valueArea {
+				margin-left: 165px;
+			}
+		}
+	}
+
+	&.CustomerForm--status2ChangeClientCard {
+		margin-top: 20px;
+		padding-bottom: 5px;
+
+		.Form {
+			&__title {
+				width: 230px;
+
+				input {
+					position: absolute;
+					left: 0;
+					top: .85em;
+				}
+			}
+
+			&__valueArea {
+				margin-left: 230px;
+			}
+		}
+
+		.Spoiler__header,
+		.Form__title,
+		.Form__controls {
+			padding-left: 20px;
+		}
+
+		textarea.Form__input {
+			height: auto;
+		}
+	}
+}
+
+
+.Form--customer {
+	.Form__section,
+	.Form__set {
+		padding: 20px;
+	}
+
+	.Form__set {
+		width: auto;
+	}
+
+	.Form__header {
+		margin-bottom: 0;
+		padding-bottom: 0;
+		border-bottom: none;
+	}
+
+	.Form__error {
+		display: none;
+	}
+
+	.Form__field {
+		margin-left: 0;
+	}
+
+	.Form__field + .Form__field {
+		margin-top: 15px;
+	}
+
+	.Form__title {
+		display: inline-block;
+		width: 31%;
+		height: auto;
+		padding-right: 25px;
+		margin-x: 0;
+		box-sizing: border-box;
+		text-align: left;
+		color: #000;
+	}
+
+	.Form__aux {
+		color: #666;
+	}
+
+	.Form__label + .Form__aux {
+		margin-top: 2px;
+	}
+
+	.Form__valueArea {
+		display: inline-block;
+		width: 69%;
+		margin-left: 31%;
+
+		& > .Form__input {
+			width: auto;
+		}
+
+		.pseudoLink--faded {
+			margin-left: 8px;
+			font-size: 11px;
+			color: #999;
+
+			&:hover {
+				color: $linkHover;
+			}
+		}
+
+		&--info {
+			position: relative;
+			width: 66%;
+
+			.btnInfo {
+				position: absolute;
+				margin-top: 3px;
+				margin-left: 5px;
+				top: 0;
+				left: 100%;
+			}
+		}
+	}
+
+	.Form__title + .Form__valueArea {
+		margin-left: 0;
+	}
+
+	.Form__field {
+		&--w20 {
+			.Form__input {
+				width: 20%;
+			}
+		}
+
+		&--w40 {
+			.Form__input {
+				width: 40%;
+			}
+		}
+
+		&--w60 {
+			.Form__input {
+				width: 60%;
+			}
+		}
+
+		&--w100 {
+			.Form__input {
+				width: 100%;
+			}
+		}
+
+		&--error {
+			.Form__input:not(.Form__input--noHighlight),
+			.RichSelect__field {
+				border-color: $error;
+			}
+
+			.Form__error {
+				display: block;
+			}
+		}
+
+		&--inn {
+			.ControlInput--autoSuggest .ControlInput__field {
+				width: 132px;
+			}
+		}
+
+		&--kpp {
+			.Form__input {
+				width: 132px;
+			}
+		}
+
+		&--confirmed,
+		&--confirmedReason {
+			display: none;
+		}
+
+		& + .Form__field--confirmedReason {
+			margin-top: 7px;
+		}
+
+		&--show {
+			display: block;
+		}
+
+		&--bcPlaced {
+			.Form__field + .Form__field {
+				margin-top: .5em;
+			}
+
+			.btnInfo {
+				position: absolute;
+			}
+		}
+	}
+
+	.Form__set {
+		&--hidden {
+			display: none;
+		}
+
+		&--potential,
+		&--area {
+			background-color: #efefef;
+
+			.Form__field--defined {
+				.Form__valueArea {
+					font-weight: bold;
+				}
+			}
+		}
+
+		&--status2 {
+			background-color: #e3e3e3;
+
+			.Form__title {
+				padding-top: 5px;
+				padding-bottom: 0;
+				font-size: 14px;
+			}
+		}
+
+		&--contact {
+			border: 1px solid #d9d9d9;
+
+			.Form__controls {
+				margin-top: 1.4em;
+			}
+
+			& + .Form__set--contact {
+				border-top: none;
+			}
+		}
+
+		&--bcPlaced {
+			& + .AddCustomerContact {
+				padding-top: 0;
+			}
+		}
+	}
+
+	.Form__field--defined {
+		.Form__title {
+			padding-y: 0;
+		}
+	}
+
+	.Form__section {
+		&--counterparty {
+			padding-top: 0;
+
+			.Form__controls {
+				font-weight: bold;
+			}
+
+			.Form__set {
+				padding: 0;
+				margin-top: 20px;
+			}
+		}
+
+		&--contacts {
+			& > .Form__header {
+				margin-bottom: 15px;
+				font-size: 15px;
+				font-weight: normal;
+				color: #656565;
+			}
+
+			.Form__controls {
+				margin-top: 12px;
+			}
+		}
+	}
+
+	.Form__section--contactPartner {
+		margin-bottom: -20px;
+	}
+
+	.ContactCard {
+		.Info--form {
+			.Info__prop {
+				width: 30%;
+			}
+		}
+	}
+}
+
+
+.CustomerForm__contact {
+	.Form__title {
+		width: 32%;
+		padding-right: 20px;
+
+		&--aux {
+			padding-top: 0;
+		}
+	}
+
+	.Form__valueArea {
+		width: 68%;
+		margin-left: 32%;
+	}
+
+	.Spoiler__label {
+		font-size: 12px;
+	}
+
+	.Spoiler__header {
+		padding-left: 0;
+		padding-bottom: 0;
+		padding-top: 15px;
+	}
+
+	.Spoiler__content {
+		padding: 0;
+
+		.Form__field:first-child {
+			margin-top: 15px;
+		}
+	}
+}
+
+
+.FancyModal--requestSaveError {
+	width: 520px;
+}
+
+
+.FancyModal--partnerInfo {
+	min-width: 630px;
+}
+
+.ScheduleField {
+	.btnInfo {
+		position: absolute;
+	}
+}
+
+
+.TipTip--assortment {
+	.RichSelect__options {
+		max-height: 210px;
+		min-width: 185px;
+		margin-bottom: 0;
+	}
+
+	.RichSelect__option {
+		padding-x: 30px;
+		padding-bottom: 1px;
+		font-weight: normal;
+
+		&:first-child {
+			padding-top: 5px;
+		}
+
+		&:last-child {
+			padding-bottom: 5px;
+		}
+
+		&--accent {
+			font-weight: bold;
+		}
+	}
+}
+
+.Autocomplete--changeRequest {
+	.Autocomplete__box--formInput {
+		width: 250px;
+	}
+
+	.Autocomplete__additionalValue {
+		display: inline;
+	}
+
+	.Form__error {
+		display: block;
+	}
+}

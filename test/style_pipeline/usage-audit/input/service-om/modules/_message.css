@@ -1,0 +1,39 @@
+.Message {
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	max-width: 850px;
+	padding: 35px 25px;
+	background-color: #f9f9f9;
+
+	&__icon {
+		background-repeat: no-repeat;
+	}
+
+	&__icon + &__body {
+		margin-left: 15px;
+	}
+
+	&__header {
+		margin: 0;
+		margin-bottom: .3em;
+		font-size: 16px;
+		line-height: 1;
+	}
+
+	&--success {
+		.Message__icon {
+			width: width('success.png');
+			height: height('success.png');
+			background-image: resolve('success.png');
+		}
+	}
+
+	&--fail {
+		.Message__icon {
+			width: width('fail.png');
+			height: height('fail.png');
+			background-image: resolve('fail.png');
+		}
+	}
+}

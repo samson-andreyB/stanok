@@ -1,0 +1,14 @@
+.Page--rubricList {
+	.Filter2--status {
+		width: 230px;
+	}
+
+	.PreviewImageHover {
+		padding: 4px;
+		width: 160px;
+	}
+
+	.Items + .ControlPanel {
+		border-top-width: 0;
+	}
+}

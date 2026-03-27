@@ -1,0 +1,518 @@
+@import 'modules/_form';
+
+.Header__group {
+	display: table;
+	width: 100%;
+
+	.Btn {
+		height: 36px;
+		font-size: 13px;
+	}
+
+	input::placeholder {
+		color: #999;
+	}
+}
+
+.Header__box {
+	display: table-cell;
+	vertical-align: middle;
+	padding-right: $S_SIDEBAR;
+
+	&--logo,
+	&--account,
+	&--login,
+	&--orderByCode {
+		width: 1px;
+		white-space: nowrap;
+	}
+
+	&--account,
+	&--login,
+	&--promo {
+		padding-right: 0;
+	}
+
+	&--search {
+		padding-right: 10px;
+	}
+}
+
+.Header__row--main {
+	position: relative;
+
+	/* Нужен явный transition для прослушивания transitionend в скрипте, так как
+	   поведение Edge отилчается от остальных браузеров, где, судя по всему,
+	   при transitionend у псевдоэлементов e.target — сам элемент. */
+	transition: background-color $headerTransitionDuration;
+
+	&:after {
+		content: '';
+		position: absolute;
+		top: 100%;
+		left: 0;
+		width: 100%;
+		min-width: $W_CONTENT_MIN;
+		height: 10px;
+		background-image: linear-gradient(
+			to bottom,
+			rgba(0, 0, 0, .1) 0%,
+			rgba(0, 0, 0, .03) 50%,
+			rgba(0, 0, 0, 0) 100%
+		);
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity $headerTransitionDuration;
+	}
+
+	.Page__wrapper {
+		padding-top: 25px;
+		padding-bottom: 10px;
+		background-color: #fff;
+	}
+}
+
+.Header__row--offer {
+	padding-top: 15px;
+
+	.Header__box--catalog {
+		width: 1px;
+	}
+}
+
+.Header__row--fixed {
+	@mixin minimizeHeader;
+
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 100;
+	background-color: #fff;
+
+	@supports (width: var(--fancybox-scrollbar-width)) {
+		width: calc(100% - var(--fancybox-scrollbar-width, 0px));
+	}
+
+	&:after {
+		opacity: 1;
+	}
+}
+
+
+.SearchControl {
+	display: table;
+	width: 100%;
+
+	&__box {
+		display: table-cell;
+		vertical-align: middle;
+
+		&--field {
+			position: relative;
+			width: 100%;
+		}
+
+		&--submit {
+			width: 1px;
+		}
+	}
+
+	&__field {
+		@mixin Field;
+		width: 100%;
+		height: 36px;
+		padding-x: 8px;
+		border: 2px solid $C_BRAND;
+		border-right-width: 0;
+		border-radius: 3px 0 0 3px;
+		font-size: 14px;
+
+		&:focus {
+			border-color: $C_BRAND;
+			box-shadow: 0 0 7px rgba(203,23,16,.3);
+		}
+
+		&::-ms-clear {
+			display: none;
+		}
+
+		.Page--stowage & {
+			border-color: $C_STOWAGE;
+
+			&:focus {
+				box-shadow: 0 0 7px rgba(107, 135, 68, .3);
+			}
+		}
+	}
+
+	&__submit {
+		@mixin BtnMain {
+			border-radius: 0 3px 3px 0;
+			height: 36px;
+			width: 46px;
+		}
+
+		vertical-align: middle;
+		background-image: svg('magnifier_18x18.svg', '[color]: #fff');
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+	}
+
+	&__label {
+		display: block;
+		position: relative;
+	}
+
+	&__stowageBadge {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		width: 80px;
+		border: 5px solid transparent;
+		border-radius: 7px;
+		line-height: 15px;
+		font-size: 13px;
+		text-align: center;
+		color: #fff;
+		background-color: $C_STOWAGE;
+		background-clip: content-box;
+		user-select: none;
+
+		&:before {
+			content: '';
+			display: inline-block;
+			vertical-align: middle;
+			height: 100%;
+			margin-top: 2px;
+		}
+
+		& + .SearchControl__field {
+			padding-left: 90px;
+		}
+	}
+
+	&__resetButton {
+		position: absolute;
+		top: 2px;
+		bottom: 2px;
+		right: 6px;
+		display: none;
+		width: 20px;
+		padding: 0;
+		border-width: 0;
+		text-align: center;
+		color: #bebebe;
+		background-color: transparent;
+		cursor: pointer;
+
+		&:hover {
+			color: #cd1919;
+		}
+	}
+
+	&--filled {
+		.SearchControl {
+			&__field {
+				padding-right: 34px;
+			}
+
+			&__resetButton {
+				display: block;
+			}
+		}
+	}
+}
+
+.SearchControl--faded {
+	.SearchControl__field,
+	.SearchControl__submit {
+		border-color: #bbb;
+	}
+
+	.SearchControl__submit {
+		background-color: #bbb;
+	}
+}
+
+
+.CartControl {
+	display: inline-block;
+	line-height: 1;
+	color: #000;
+
+	&__info {
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	&__header {
+		display: inline-flex;
+		margin-bottom: 4px;
+	}
+
+	&__label {
+
+		max-width: 19ch;
+		overflow: hidden;
+		font-size: 14px;
+		font-weight: bold;
+		color: $C_BRAND;
+
+		&--curtain {
+			position: relative;
+
+			&:after {
+				content: '';
+				position: absolute;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				width: 3ch;
+				background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+			}
+		}
+	}
+
+	&__controls {
+		margin-left: 10px;
+	}
+
+	&__control {
+		display: inline-block;
+		box-sizing: border-box;
+		border: none;
+		border-radius: $B_RAD;
+		margin: 0;
+		padding: 0;
+		line-height: 1;
+		cursor: pointer;
+
+		&--list {
+			position: relative;
+			width: 14px;
+			height: 14px;
+			color: #fff;
+			text-align: center;
+			background-color: $C_BRAND;
+			transition: .25s;
+
+			@mixin hocus {
+				background-color: $C_BRAND_ACTIVE;
+			}
+
+			&:before {
+				@mixin caret;
+
+				content: '';
+				margin: 0;
+			}
+
+			&:after {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 180%;
+				height: 180%;
+				margin-top: -40%;
+				margin-left: -40%;
+			}
+		}
+	}
+
+	&__stat {
+		color: #666;
+	}
+
+	&__count,
+	&__sum {
+		font-weight: bold;
+		word-spacing: -1px;
+	}
+
+	&__icon {
+		display: inline-block;
+		vertical-align: middle;
+		width: 32px;
+		height: 32px;
+		margin-right: 5px;
+		margin-top: -1px;
+		background-image: svg('cart_32x32.svg', '[color]: $C_BRAND');
+		background-repeat: no-repeat;
+		background-size: contain;
+		transition: $headerTransitionDuration;
+
+		&:before { /* preloader */
+			content: '';
+			background-image: svg('cart_32x32.svg', '[color]: $C_BRAND_ACTIVE');
+		}
+	}
+
+	.Rub {
+		font-weight: normal;
+		font-size: 13px;
+		line-height: 90%;
+	}
+
+	.Page--stowage & {
+		&__icon {
+			background-image: svg('cart_32x32.svg', '[color]: $C_STOWAGE');
+
+			&:before { /* preloader */
+				content: '';
+				background-image: svg('cart_32x32.svg', '[color]: $C_STOWAGE_ACTIVE');
+			}
+		}
+
+		&__label {
+			color: $C_STOWAGE;
+		}
+	}
+
+	&[href] {
+		@mixin hocus {
+			.CartControl__icon {
+				background-image: svg('cart_32x32.svg', '[color]: $C_BRAND_ACTIVE');
+			}
+
+			.CartControl__label {
+				color: $C_BRAND_ACTIVE;
+			}
+		}
+
+		.Page--stowage & {
+			@mixin hocus {
+				.CartControl__icon {
+					background-image: svg('cart_32x32.svg', '[color]: $C_STOWAGE_ACTIVE');
+				}
+
+				.CartControl__label {
+					color: $C_STOWAGE_ACTIVE;
+				}
+			}
+		}
+	}
+
+	&--empty {
+		.CartControl__icon {
+			background-image: svg('cart_32x32.svg', '[color]: $C_GRAY');
+		}
+
+		.CartControl__label {
+			color: #333;
+		}
+	}
+}
+
+
+.LoginControl {
+	margin-y: -5px;
+	font-size: 14px;
+
+	&__header,
+	&__restore {
+		height: 20px;
+	}
+
+	&__header {
+		font-weight: bold;
+	}
+
+	&__group {
+		display: table;
+		width: 100%;
+	}
+
+	&__box {
+		display: table-cell;
+		vertical-align: middle;
+
+		&--password {
+			padding-left: 5px;
+		}
+
+		&--submit {
+			padding-left: 10px;
+		}
+	}
+
+	&__field {
+		@mixin Field;
+		width: 125px;
+		border-radius: 3px;
+	}
+
+	.LoginControl__field { /* Increase selector weight */
+		height: 36px;
+		border-color: #bbb;
+		font-size: inherit;
+	}
+
+	.LoginControl__submit {
+		@mixin Btn--hasSpinner;
+		padding-x: 20px;
+		font-size: 14px;
+
+		&--wait {
+			@mixin Btn--spinnerActive;
+		}
+	}
+
+	&__restore {
+		font-size: 13px;
+
+		&:before {
+			content: '';
+			display: block;
+			height: 7px;
+		}
+	}
+
+	&__restoreLink {
+		color: #666;
+	}
+}
+
+
+.Panel--account {
+	.Panel__item {
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	.Panel__item + .Panel__item {
+		margin-left: 20px;
+	}
+}
+
+
+.Header {
+	.StowagePanel {
+		padding-top: 15px;
+	}
+}
+
+
+.ProductShortInfo--tip {
+	display: flex;
+	padding: 13px;
+	line-height: 1.4;
+	cursor: default;
+
+	.ProductShortInfo__picture {
+		width: 40px;
+		height: 40px;
+	}
+
+	.ProductShortInfo__name {
+		margin-left: 10px;
+		max-width: 240px;
+	}
+}
+
+
+@media (max-width: 1100px) {
+	@mixin minimizeHeader;
+}

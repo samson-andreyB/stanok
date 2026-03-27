@@ -1,0 +1,43 @@
+.JackpotBadge--default {
+	display: inline-block;
+	box-sizing: border-box;
+	padding: 8px 5px;
+	border-radius: 3px;
+	line-height: 0;
+	font-size: 12px;
+	font-weight: bold;
+	white-space: nowrap;
+	background-color: #4FB861;
+
+	&,
+	&:hover {
+		color: #fff;
+		text-decoration: none;
+	}
+
+	.JackpotBadge__score {
+		word-spacing: -1px;
+	}
+}
+
+.JackpotBadge--invite {
+	padding-y: 12px 12px;
+
+	.JackpotBadge__icon {
+		display: inline-block;
+		vertical-align: middle;
+		margin-y: -11px -10px;
+		margin-right: 2px;
+		width: width('safe_16x17_f90.svg');
+		height: height('safe_16x17_f90.svg');
+		background-image: resolve('safe_16x17_f90.svg');
+	}
+
+	&:hover {
+		background-color: #5BD570;
+
+		.JackpotBadge__icon {
+			background-image: resolve('safe_16x17_fa1.svg');
+		}
+	}
+}

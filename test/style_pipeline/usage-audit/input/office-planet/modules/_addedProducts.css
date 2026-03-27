@@ -1,0 +1,147 @@
+.AddedProducts__list {
+	@mixin List--basic;
+}
+
+.AddedProducts__item {
+	@mixin List__item--basic;
+	margin-top: 10px;
+
+	&:first-child {
+		margin-top: 0;
+	}
+}
+
+.AddedProducts__header {
+	color: $infoColor;
+	width: 100%;
+}
+
+.AddedProducts {
+	margin-top: 30px;
+
+	&__title {
+		&--notAvailable {
+			color: $errorColor;
+		}
+	}
+
+	.Message--traceableGoods + &,
+	.Message--markingGoods + & {
+		margin-top: 18px;
+	}
+
+	& .Product,
+	& .AddedProducts__header {
+		padding-right: 30px;
+	}
+	& .OrderPrice__group {
+		padding-x: 60px 30px;
+	}
+
+	& .OrderPrice__bonuses {
+		margin-left: 50px;
+	}
+
+	& .Product {
+		transition: all .5s ease;
+	}
+	& .Product__group {
+		@mixin PseudoTable;
+		width: 100%;
+	}
+	& .Product__box {
+		@mixin PseudoTable__cell;
+		vertical-align: top;
+		padding: 12px 10px 10px;
+
+		&.photo {
+			width: 11%;
+		}
+		&.price,
+		&.totalPrice {
+			padding-right: 30px;
+			width: 13%;
+		}
+		&.totalPrice {
+			text-align: right;
+		}
+		&.price .Price.Price--discount {
+			font-size: 14px;
+		}
+		&.price .Price,
+		&.totalPrice .Price {
+			font-size: 16px;
+		}
+
+		&.price .Price.Price--initial {
+			font-size: 14px;
+		}
+
+		&.totalPrice .Price {
+			font-weight: bold;
+		}
+		&.added {
+			width: 21%;
+		}
+
+		& .Price--specialOffer {
+			padding-bottom: 20px;
+		}
+	}
+	& .Product__quantity {
+		font-size: 11px;
+		margin-top: 9px;
+	}
+	& .Amount {
+		&__wrapper {
+			&:before,
+			&:after {
+				display: none;
+			}
+		}
+	}
+
+	& .Product__remove {
+		@mixin Btn--default;
+		@mixin Btn--action;
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
+}
+
+
+
+.AddedProducts__Amount {
+	width: 84px;
+}
+
+
+
+.AddedProducts__item {
+	position: relative;
+	transition: all .25s ease;
+
+	&:hover {
+		& .Product {
+			border: 1px solid #c3c3c3;
+			box-shadow: 0 0 4px rgba(0,0,0,.25);
+		}
+	}
+
+	&:hover .ProductRecomendation,
+	& .ProductRecomendation.active {
+		visibility: visible;
+		opacity: 1;
+	}
+}
+
+
+.AddedProducts {
+	@mixin tunePrice;
+
+	.Price--initial .Price__penny {
+		font-size: 7px;
+		top: -.75em;
+	}
+}

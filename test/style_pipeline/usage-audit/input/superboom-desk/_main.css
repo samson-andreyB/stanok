@@ -1,0 +1,80 @@
+/* COMMON */
+@import "lib/desk/_common";
+@import "lib/modules/_rub";
+
+
+/* MIXINS
+---------------------------------------------------*/
+@import "modules/_mixins";
+
+
+/* BLOCKS
+---------------------------------------------------*/
+@import "modules/_badge";
+@import "modules/_editor";
+@import "modules/_photoPreview";
+@import "modules/_orderStatus";
+@import "modules/_statusHistory";
+@import "modules/_richSelect";
+@import "modules/_items";
+@import "modules/_fancyModal";
+@import "modules/_availabilityList";
+@import "modules/_productCard";
+@import "modules/_form";
+
+
+/* CONTEXTS
+---------------------------------------------------*/
+@import "modules/_feedback";
+@import "modules/_accounts";
+@import "modules/_promo";
+@import "modules/_itemsAction";
+@import "modules/_searchStatistics";
+@import "modules/_searchChanges";
+@import "modules/_commercialOffer";
+@import "modules/_marketing";
+@import "modules/_clients";
+@import "modules/_expenseReport";
+@import "modules/_status2";
+@import "modules/_banners";
+@import "modules/_attractionChannels";
+@import "modules/_scheme";
+@import "modules/_statistics";
+@import "modules/_commonIndicators";
+@import "modules/_changeRequests";
+@import "modules/_phoneControl";
+@import "modules/_ordersErp";
+@import "modules/_promoButtonConstructor";
+@import "modules/_promoRubricConstructor";
+@import "modules/_showcases";
+@import "modules/_holidayDecorations";
+@import "modules/_schedule";
+@import "modules/_timeField";
+@import "modules/_ordersTotal";
+@import "modules/_photoList";
+@import "modules/_customerOrders";
+@import "modules/_returnRequests";
+@import "modules/_overages";
+@import "modules/_refunds";
+@import "modules/_returnShortage";
+@import "modules/_settlementsMutual";
+@import "modules/_invoices";
+@import "modules/_email";
+
+
+/* HELPERS
+---------------------------------------------------*/
+@import "lib/_helpers";
+
+/* MISC
+---------------------------------------------------*/
+@import "modules/_misc";
+@import "modules/_legacy";
+
+
+
+/* Удалить после внедрения UI autocomplete */
+.js-hiddenUI {
+	width: 0;
+	height: 0;
+}

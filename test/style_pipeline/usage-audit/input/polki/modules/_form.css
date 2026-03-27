@@ -1,0 +1,340 @@
+/*doc
+
+## Формы
+
+Универсальная разметка для форм. Группы полей `Form__set` могут выделяться модификаторами `accent` (серый фон), `accent main` (жёлтый).
+
+Чтобы поле ввода заполняло всё доcтупное пространство, не влияя на подпись, нужен модификатор `w-full` у `Form__field`.
+
+Чтобы поле ввода заполняло всё пространство, подплывая под подпись, нужен модификатор `inputFull` у `Form__field`.
+
+У контейнера для 
+
+<form action="" class="Form">
+	<fieldset class="Form__set accent main">
+		<h4 class="Form__header">Общие сведения</h4>
+		<div class="Form__field">
+			<span class="Form__title"><label class="Form__label" for="id2">Имя:</label></span><div class="Form__group">
+				<div class="Form__field">
+					<input type="text" class="Form__input" id="id2" size="40" /><span class="icon remove"></span>
+				</div>
+				<div class="Form__field">
+					<input type="text" class="Form__input" id="id5" size="40" /><span class="icon remove"></span>
+				</div>
+				<div class="Form__field">
+					<span class="pseudoLink add">Добавить</span>
+				</div>
+			</div>
+		</div>
+		<div class="Form__field">
+			<span class="Form__title"><label class="Form__label" for="id4">Фамилия:</label></span><input type="text" class="Form__input" id="id4" size="40" />
+		</div>
+		<hr class="Form__divider" />
+		<div class="Form__field w-full">
+			<span class="Form__title"><label class="Form__label" for="id1">Длинная подпись для поля, чтобы аж скрылась:</label></span><input type="text" class="Form__input" id="id1" size="40" />
+		</div>
+	</fieldset>
+
+	<fieldset class="Form__set accent">
+		<h4 class="Form__header">Общие сведения</h4>
+		<div class="Form__field inputFull">
+			<span class="Form__title"><label class="Form__label" for="id3">Комментарий:</label></span><textarea class="Form__input" name="" id="id3" cols="30" rows="10"></textarea>
+		</div>
+	</fieldset>
+
+	<fieldset class="Form__set">
+		<button>Сохранить документ</button>
+	</fieldset>
+</form>
+
+
+<script>
+$(document).ready(function () {
+
+// псевдонаведение для связанных полей ввода
+$('.Form__label').hover(
+	function () {
+		if ($(this).attr('for')) {
+			$('#'+ $(this).attr('for')).addClass('hover');
+		}
+	},
+	function () {
+		if ($(this).attr('for')) {
+			$('#'+ $(this).attr('for')).removeClass('hover');
+		}
+	}
+)
+
+// добавление новой строки
+$('.Form .pseudoLink.add').click(function () {
+	$(this).parent('.Form__field').before('<div class="Form__field"><input type="text" class="Form__input" size="40" /><span class="icon remove"></span></div>')
+})
+
+// удаление строки
+$('.Form__group .icon.remove').live('click', function () {
+	$(this).parent('.Form__field').remove();
+})
+
+})
+</script>
+*/
+
+$error: #c00 !default;
+
+$bgAccent: #f0f0f0 !default;
+$bgAccentMain: #f4f0d2 !default;
+
+
+.Form__set {
+	border: 0;
+	margin-top: 1em;
+	padding: 0;
+	
+	&.buttonSet {
+		border-top: 1px dotted #bababa;
+		padding-top: 10px;
+	}
+}
+.Form__set:first-child {
+	margin-top: 0;
+}
+
+.Form__header {
+	border-bottom: 1px solid rgba(0,0,0,.15);
+	font-size: inherit;
+	margin-top: 0;
+	margin-bottom: 1.5em;
+	padding-bottom: .75em;
+}
+
+.Form__field {
+	min-height: 1.4em;
+	margin-top: 1em;
+	margin-left: 230px;
+	position: relative;
+}
+.Form__field:first-child {
+	margin-top: 0;
+}
+.Form__field .Form__field {
+	margin-left: 0;
+}
+
+.Form__divider {
+	box-sizing: content-box;
+	border: 0;
+	border-top: 1px solid rgba(0,0,0,.15);
+	margin-top: 1em;
+}
+
+.Form__label {
+	cursor: pointer;
+	padding-top: .05em;
+	padding-bottom: .05em;
+}
+
+.Form__title {
+	color: rgba(0,0,0,.75);
+	display: inline-block;
+	line-height: 1.2em;
+	margin-right: 10px;
+	padding-top: 8px;
+	padding-bottom: 5px;
+	position: relative;
+	text-align: right;
+	vertical-align: top;
+	width: 220px;
+	height: 1em;
+
+	margin-left: calc(-220px - 10px);
+
+	&.hiddenTitle {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	&:hover {
+		overflow: visible;
+		white-space: normal;
+	}
+}
+
+.Form__value {
+	&--truncated {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+}
+
+.Form__input {
+	border: 1px solid #d9d9d9;
+	box-sizing: border-box;
+	font: inherit;
+	margin: 0;
+	padding: 5px;
+	width: 100%;
+	
+	&:hover,
+	&.hover,
+	&:focus {
+		border-color: #ababab;
+	}
+}
+
+textarea.Form__input {
+	resize: vertical;
+}
+.Form__input + .Form__input {
+	vertical-align: top;
+}
+.Form__input.w-150 {
+	max-width: 150px;
+}
+.Form__input.w-300 {
+	max-width: 300px;
+}
+
+.Form__group {
+	display: inline-block;
+	width: 100%;
+
+	& + & {
+		margin-top: .75em;
+	}
+}
+.Form__field .Form__field + .Form__field {
+	margin-top: .5em;
+}
+.Form__field.inputFull .Form__group .Form__field {
+	margin-left: 0;
+}
+
+
+.Form .pseudoLink.add {
+	border-bottom: 1px dashed;
+	cursor: pointer;
+	color: #7c7c7c;
+}
+.Form__field:first-child .pseudoLink.add {
+	position: relative;
+	top: 5px;
+}
+.Form .pseudoLink.add:hover {
+	color: #4c4c4c;
+}
+
+.Form__field .icon.remove {
+	cursor: pointer;
+	margin-left: .4em;
+}
+.Form__field .icon.remove:hover {
+	background-position: 0 -71px;
+}
+
+
+.Form__set.accent,
+.Form__set.indent {
+	padding: 15px 20px;
+}
+.Form__set.accent,
+.Form__set.accent .Form__label {
+	background-color: $bgAccent;
+}
+.Form__set.accent.main,
+.Form__set.accent.main .Form__label {
+	background-color: $bgAccentMain;
+}
+
+
+.Form__field.w-full .Form__input {
+	width: 100%;
+}
+
+.Form__field.inputFull {
+	display: block;
+	margin-left: 0;
+}
+.Form__field.inputFull .Form__title {
+	display: block;
+	margin-bottom: .5em;
+	margin-left: 0;
+	padding-top: 0;
+	position: static;
+	text-align: left;
+	width: auto;
+	margin-right: 0;
+}
+.Form__field.inputFull .Form__input {
+	width: 100%;
+}
+
+
+
+.Form__field.error .Form__title,
+.Form__title.error {
+	color: $error;
+}
+.Form__field.error .Form__input,
+.Form__input.error {
+	border-color: $error;
+}
+
+.Form__error {
+	color: $error;
+	display: block;
+	font-size: 1em;
+	left: 0;
+	margin-top: 5px;
+	width: 100%;
+
+	ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	li {
+		padding-left: 15px;
+		margin-top: 5px;
+
+		&:before {
+			content: '\2014';
+			display: inline-block;
+			width: 15px;
+			margin-left: -15px;
+		}
+	}
+}
+
+.Form.Form--fresh {
+	font-size: 13px;
+
+	.Form__title {
+		color: #000;
+		font-weight: bold;
+		user-select: none;
+		cursor: default;
+	}
+
+	.Form__input {
+		border-radius: 2px;
+	}
+
+	.Form__field + .Form__field,
+	.Form__field .Form__field + .Form__field  {
+		margin-top: 1.2em;
+	}
+
+	label {
+		user-select: none;
+	}
+
+	.Form__field .Form__field {
+		margin-top: .2em;
+	}
+
+	input[type='checkbox'] {
+		margin-right: .15em;
+	}
+}

@@ -1,0 +1,183 @@
+.Staff {
+	&__desc {
+		margin-bottom: 25px;
+		line-height: 1.5em;
+	}
+
+	&__add {
+		margin-bottom: 15px;
+	}
+
+	&__number {
+		display: block;
+	}
+
+	&__pseudoLink {
+		display: inline-block;
+		cursor: help;
+
+		&:hover .pseudoLink {
+			cursor: inherit;
+			color: $C_LINK_H;
+		}
+	}
+}
+
+.Items--staff {
+	.Items {
+		&__header {
+			color: $C_GRAY;
+			font-size: 12px;
+
+			.Item__box {
+				border-top: 0;
+				line-height: 1.5;
+				vertical-align: bottom;
+			} 
+		}
+	}
+
+	.Item {
+		&__box {
+			border-top: 1px solid #dfdfdf;
+			cursor: default;
+			padding: 12px 10px;
+			line-height: 1.5;
+
+			@media (max-width: 1200px) {
+				font-size: 12px;
+			}
+
+			&--login {
+				min-width: 80px;
+			}
+
+			&--btn {
+				text-align: right;
+				white-space: nowrap;
+			}
+
+			&--agreements {
+				white-space: nowrap;
+			}
+		}
+
+		&:hover {
+			.Item__box {
+				background-color: #f0f0f0;
+			}
+
+			.BtnDefault {
+				visibility: visible;
+				opacity: 1;
+			}
+		}
+	}
+
+	.BtnDefault {
+		visibility: hidden;
+		opacity: 0;
+		transition: opacity .3s ease;
+		vertical-align: top;
+
+		&:before {
+			margin-x: 0;
+		}
+
+		& + .BtnDefault {
+			margin-left: .6em;
+		}
+	}
+
+	.BtnEdit {
+		padding-x: 10px;
+	}
+
+	.BtnRemove {
+		padding: 10px 12px;
+	}
+}
+
+.CounterpartiesAndAgreementsTip {
+	box-sizing: border-box;
+	padding: 10px 12px;
+	line-height: 1.4;
+
+	.List {
+		margin-top: 4px;
+		margin-left: 15px;
+	}
+
+	.List li + li {
+		margin-top: 2px;
+	}
+
+	&__name {
+		font-weight: bold;
+	}
+
+	.List + &__name,
+	&__name + &__name {
+		margin-top: 8px;
+	}
+}
+
+.FancyModal--editDataStaff {
+	width: 360px;
+
+	.help {
+		cursor: help;
+	}
+
+	.Spinner {
+		margin-top: 0;
+		position: relative;
+	}
+
+	.newPassword {
+		pointer-events: none;
+	}
+
+	.Form__fieldHeader {
+		font-weight: bold;
+		font-size: 14px;
+		margin-bottom: 14px;
+	}
+
+	.FancyModal__header {
+		font-size: 21px;
+		margin-bottom: 24px;
+	}
+
+	.Form__field--hint {
+		color: #656565;
+	}
+}
+
+.FancyModal--createdStaff {
+	width: 360px;
+}
+
+.CreatedStaff {
+	&__box {
+		font-size: 14px;
+
+		&--name {
+			font-weight: bold;
+		}
+
+		& + & {
+			border-top: 1px solid #dfdfdf;
+			margin-top: 13px;
+			padding-top: 13px;
+		}
+	}
+
+	&__item + &__item {
+		margin-top: 9px;
+	}
+
+	&__value {
+		font-weight: bold;
+	}
+}

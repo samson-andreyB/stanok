@@ -1,0 +1,56 @@
+.filter--relinkAnchor {
+	width: 260px;
+}
+
+.RelinkAdditionalInfo {
+	padding: 4px 2px;
+}
+
+.RelinkCreatedDate {
+	color: #555;
+	font-size: 11px;
+}
+
+.RelinkStatus {
+	cursor: help;
+
+	&--bad {
+		color: #e45959;
+
+		&:hover {
+			color: #fc8080;
+		}
+	}
+}
+
+.Items--relinking {
+	.Item {
+		&--defective .Item__box {
+			background: #faefef;
+		}
+
+		&__box {
+			vertical-align: top;
+			
+			&--number {
+				color: #888;
+				font-size: 11px;
+			}
+		}
+	}
+}
+
+.Form--relink {
+
+	.contentWrapper {
+		padding-top: 0;	
+	}
+
+	.Form__error {
+		font-size: 1em;
+	}
+
+	.Field {
+		width: 80%;
+	}
+}

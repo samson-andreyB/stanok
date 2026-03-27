@@ -1,0 +1,19 @@
+.PercentageScale--default {
+	display: flex;
+	align-items: center;
+
+	.PercentageScale__percentage {
+		min-width: 35px;
+		text-align: right;
+		padding-right: 10px;
+	}
+
+	.PercentageScale__progress {
+		flex-grow: 1;
+	}
+
+	.PercentageScale__progressbar {
+		background-color: #28bd8b;
+		height: 10px;
+	}
+}

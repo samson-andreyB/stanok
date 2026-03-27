@@ -1,0 +1,102 @@
+/* ОБЩЕЕ ДЛЯ ВСЕХ БЕЙДЖЕЙ */
+.actionsBadgePic {
+	display: inline-block;
+	vertical-align: middle;
+	background-repeat: no-repeat;
+}
+
+
+
+/* БОЛЬШИЕ БЕЙДЖИ */
+/* Использование: список товаров, карточка товара */
+.actionsBadgePic {
+	&.sale {
+		width: width('interface/sale_badge.png');
+		height: height('interface/sale_badge.png');
+		background-image: resolve('interface/sale_badge.png');
+	}
+}
+
+/* Наведение (в карточке не нужно) */
+.listItems,
+.compareItems {
+	.actionsBadgePic {
+		&:before {
+			content: '';
+		}
+
+		&:hover {
+			cursor: pointer;
+		}
+
+		&.sale {
+			&:before,
+			&:hover {
+				background-image: resolve('interface/sale_badge_h.png');
+			}
+		}
+	}
+}
+
+
+
+/* МАЛЫЕ БЕЙДЖИ */
+/* Использование — сервис «Заказ по коду» */
+.orderByCodeList .actionsBadgePic {
+	&.sale {
+		width: width('interface/sale_badge_s.png');
+		height: height('interface/sale_badge_s.png');
+		background-image: resolve('interface/sale_badge_s.png');
+	}
+}
+
+/* Наведение (модификация от контекста) */
+.orderByCodeList .actionsBadgePic {
+	&:before {
+		content: '';
+	}
+
+	&:hover {
+		cursor: pointer;
+	}
+
+	&.sale {
+		&:before,
+		&:hover {
+			background-image: resolve('interface/sale_badge_s_h.png');
+		}
+	}
+}
+
+
+
+/* МИКРО БЕЙДЖИ */
+/* Использование: корзина, любимый заказ, совершённый заказ, всплывающее окно после добавления в корзину */
+.Items--cart,
+.FancyItem {
+	.actionsBadgePic {
+		display: inline-block;
+		vertical-align: middle;
+		background-repeat: no-repeat;
+
+		&:before {
+			content: '';
+		}
+
+		&:hover {
+			cursor: pointer;
+		}
+
+		&.sale {
+			width: width('interface/sale_badge_xs.png');
+			height: height('interface/sale_badge_xs.png');
+			margin-top: -.25em;
+			background-image: resolve('interface/sale_badge_xs.png');
+
+			&:before,
+			&:hover {
+				background-image: resolve('interface/sale_badge_xs_h.png');
+			}
+		}
+	}
+}

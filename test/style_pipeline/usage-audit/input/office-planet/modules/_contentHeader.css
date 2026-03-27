@@ -1,0 +1,42 @@
+/* CONTENT
+---------------------------------------------------------------------*/
+
+
+/*doc
+
+<div class="ContentHeader ContentHeader--group">
+	<h1 class="ContentHeader__main">Мой заказ</h1>
+	<div class="ContentHeader__additional">
+		<a href="#" class="PrintLink"><span class="Icon"></span>Распечатать</a>
+	</div>
+</div>
+
+*/
+
+.ContentHeader--group {
+	@mixin H__group;
+	margin-y: 35px 25px;
+}
+
+.ContentHeader__main,
+.ContentHeader__additional {
+	@mixin H__box;
+}
+
+.ContentHeader__main {
+	padding-right: 20px;
+	margin-y: 35px 25px;
+	cursor: default;
+	font-size: 27px;
+	font-weight: normal;
+}
+
+.ContentHeader__additional {
+	text-align: right;
+}
+
+.ContentHeader__inlineItem {
+	& + & {
+		margin-left: 2em;
+	}
+}

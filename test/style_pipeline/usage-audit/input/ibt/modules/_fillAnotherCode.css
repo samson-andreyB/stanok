@@ -1,0 +1,24 @@
+.FillAnotherCode--default {
+	padding-y: 20px;
+
+	.FillAnotherCode__box {
+		line-height: 1;
+
+		&--hint {
+			display: inline-block;
+			padding: 3px 5px;
+		}
+
+		&--yellow {
+			background-color: #fff7e8;
+		}
+
+		&--blue {
+			background-color: #e6f0f7;
+		}
+	}
+
+	.FillAnotherCode__box + .FillAnotherCode__box {
+		margin-top: 15px;
+	}
+}

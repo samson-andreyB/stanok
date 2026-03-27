@@ -1,0 +1,66 @@
+.Demo--priceWeek {
+	padding-y: 50px;
+
+	.Demo__section + .Demo__section {
+		margin-top: 75px;
+	}
+
+	.Demo__section--orderByCode {
+		.Demo__content {
+			padding: 15px 20px;
+			background-color: #f2eeea;
+		}
+	}
+
+	.Demo__title {
+		font-size: 19px;
+		color: #999;
+	}
+
+	.Demo__content {
+		margin-top: 25px;
+
+		& > *:first-child {
+			margin-top: 0;
+		}
+
+		& > *:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	.Demo__error {
+		line-height: 20px;
+		color: #e35959;
+	}
+
+	.tabsList .actionsListType__item {
+		display: inline-block;
+	}
+
+	.tabsContainer--priceWeekDemo {
+		margin-bottom: 20px;
+		font-size: 14px;
+	}
+
+	.itemInfoDetailsActions {
+		max-width: 735px;
+	}
+
+	.PopupMenu--actions {
+		display: inline-block;
+	}
+
+	.OfferLinks__item {
+		width: 180px;
+	}
+
+	.Page__footer .wrapperPromo {
+		display: inline-block;
+		border: none;
+	}
+
+	.Page__footer .wrapperPromo li {
+		width: 150px;
+	}
+}

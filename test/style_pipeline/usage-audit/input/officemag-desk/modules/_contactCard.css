@@ -1,0 +1,170 @@
+.ContactCard {
+	border: 1px solid #d9d9d9;
+
+	.Info--form {
+		width: 100%;
+
+		td {
+			padding: 7px 0;
+			vertical-align: top;
+		}
+
+		td + td {
+			padding-left: 10px;
+		}
+	}
+
+	.ContactSubject {
+		&__field {
+			margin-left: 8px;
+		}
+
+		& + .ContactResultable {
+			margin-left: 20px;
+		}
+	}
+
+	.ContactResultable {
+		margin-left: 1.5em;
+		
+		&__input {
+			margin-right: .3em;
+		}
+
+		&__title {
+			&:before {
+				content: "";
+				@mixin SmileSadS;
+				margin-right: .4em;
+			}
+		}
+	}
+
+	.Info__value--fieldLimited {
+		width: 525px;
+
+		& + .Info__additional {
+			.btnInfo {
+				margin-top: 3px;
+				padding-x: 0;
+			}
+		}
+	}
+}
+
+.ContactHead + .ContactCard,
+.ContactCard + .ContactCard,
+.Info--form + .ContactCard {
+	margin-top: 20px;
+}
+
+.ContactCardHead {
+	padding: 10px 20px;
+	background-color: #efefef;
+
+	.ContactCardHead__item + .ContactCardHead__item {
+		margin-top: .6em;
+	}
+}
+
+.ContactCardContent {
+	padding: 13px 20px;
+
+	.Info--formAccent .Form__input {
+		width: auto;
+	}
+
+	.Info__prop {
+		position: relative;
+
+		.btnInfo {
+			position: absolute;
+		}
+	}
+}
+
+.ContactCard--clientDescription {
+	.ContactCardContent {
+		.ControlInput__field,
+		.Form__input {
+			width: 525px;
+		}
+	}
+
+	.PhoneControl {
+		width: 525px;
+
+		.Form__input {
+			width: 100%;
+		}
+	}
+
+	.TextCounter .Form__input {
+		width: 4em;
+		margin-top: 0;
+	}
+
+	.Info--form {
+		.ScheduleField {
+			vertical-align: middle;
+		}
+	}
+
+	.Info__value {
+		& > .Form__group:first-child {
+			margin-top: 6px;
+		}
+	}
+}
+
+.ContactCard--potentialClients {
+	.Info--form {
+		td {
+			padding-y: 7px;
+		}
+	}
+
+	.Form__error {
+		display: none;
+	}
+
+	.Form__input.error + .Form__error {
+		display: block;
+	}
+
+	.Info__additional {
+		width: 1%;
+	}
+
+	.btnInfo {
+		margin-top: 3px;
+		padding-x: 0;
+	}
+}
+
+.ContactCard--view {
+	.ContactCardContent {
+		padding-y: 20px;
+
+		+ .ContactCardContent {
+			border-top: 1px solid;
+			border-color: inherit;
+		}
+	}
+
+	.Info__row + .Info__row td {
+		padding-top: 1em;
+	}
+
+	.Info__row {
+		vertical-align: top;
+	}
+
+	.Info__prop {
+		width: 225px;
+	}
+
+	.Info__value {
+		font-weight: bold;
+	}
+}

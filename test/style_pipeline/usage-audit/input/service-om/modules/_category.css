@@ -1,0 +1,14 @@
+.Category {
+	&__photo {
+		width: 100%;
+	}
+
+	&__title,
+	&__text {
+		margin-top: 12px;
+	}
+
+	&__title {
+		font-weight: 700;
+	}
+}

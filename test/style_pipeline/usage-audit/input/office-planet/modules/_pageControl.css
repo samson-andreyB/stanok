@@ -1,0 +1,55 @@
+/* PAGE CONTROL
+---------------------------------------------------------------------*/
+
+/*doc
+<div class="PageControl">
+	<div class="PageControl__box">
+		<div class="PageControl__info">Заказы 1-20 из 189</div>
+	</div>
+
+	<div class="PageControl__box right">
+		<div class="Paginator">
+			<ul class="Paginator__list">
+				<li class="Paginator__item">
+					<a href="#" class="Paginator__link">1</a>
+				</li><li class="Paginator__item active">
+					2
+				</li><li class="Paginator__item">
+					...
+				</li><li class="Paginator__item">
+					<a href="#" class="Paginator__link">7</a>
+				</li>
+			</ul><span class="Paginator__pager"><a href="#" class="Icon Icon--rarr"></a></span>
+		</div>
+	</div>
+</div>
+*/
+
+.PageControl {
+	@mixin PseudoTable;
+	cursor: default;
+	width: 100%;
+
+	&__item {
+		@mixin noUserSelect;
+		display: inline-block;
+		margin-right: 1.5em;
+	}
+
+	.PageControl__box {
+		@mixin PseudoTable__cell;
+	}
+
+	&__info {
+		color: $infoColor;
+	}
+
+	.right {
+		text-align: right;
+	}
+
+	& + .Products__list,
+	.Products__list + & {
+		margin-top: 10px;
+	}
+}

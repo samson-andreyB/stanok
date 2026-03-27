@@ -1,0 +1,462 @@
+.NewClientCardRequest {
+	.ContactCard {
+		.Info {
+			&--form {
+				.Info__prop {
+					width: 155px;
+					padding-top: 13px;
+				}
+
+				.ScheduleField {
+					padding-top: 7px;
+				}
+			}
+
+			&--formAccent {
+				background-color: #efefef;
+				padding: 15px 20px;
+				margin: 15px 0;
+
+				.Info--form td {
+					padding-y: 9px;
+					vertical-align: middle;
+				}
+
+				.Form__input {
+					max-width: 425px;
+					width: auto
+				}
+
+				.Info__prop {
+					width: 210px;
+				}
+			}
+		}
+	}
+
+	.importantFields { /* ^ Карточка, засерённая шапка с полями */
+		padding: 20px;
+		background-color: #efefef;
+
+		.FormField {
+			display: block;
+			pointer-events: none;
+			margin-top: -5px;
+			cursor: default;
+
+			.FormField__input.inn,
+			.FormField__input.kpp {
+				width: 132px;
+			}
+
+			&--subdivision {
+				.Form__input {
+					width: 140px;
+				}
+			}
+		}
+
+		.FormField + .FormField {
+			margin-top: .8em;
+		}
+
+		.FormField__title {
+			cursor: pointer;
+			margin-bottom: .3em;
+			pointer-events: auto;
+		}
+
+		.FormField__example {
+			margin-left: .3em;
+			font-size: .9em;
+			font-style: italic;
+			color: #666;
+		}
+
+		.FormField__input {
+			display: block;
+			margin-top: .4em;
+			pointer-events: auto;
+			width: 50%;
+
+			&.inn {
+				width: 33%;
+			}
+		}
+
+		.FormField__error {
+			display: none;
+		}
+	}
+
+	.importantFields + .AddCustomerContact {
+		margin-top: 20px;
+	}
+
+	.NewClientCardRequest__controls {
+		margin: 20px -20px -10px -20px;
+
+		.btn + .btn {
+			margin-left: .6em;
+		}
+	}
+
+	.defaultBox { /* ^ Карточка: засерённая область с информацией о клиенте и запросе */
+		padding: 0 20px;
+		margin-x: -20px;
+		background-color: #efefef;
+
+		li {
+			display: inline-block;
+			vertical-align: top;
+			width: 50%;
+			margin: 0;
+			font-size: 13px;
+		}
+
+		h3 {
+			color: #878787;
+			font-size: 15px;
+			margin-top: 18px;
+			margin-bottom: 12px;
+
+			em {
+				font-size: 12px;
+				font-style: normal;
+			}
+		}
+
+		dt {
+			font-weight: normal;
+		}
+
+		dd {
+			font-weight: bold;
+			margin-top: .15em;
+			margin-left: 0;
+
+			& + dt {
+				margin-top: .8em;
+			}
+
+			.pseudoLink {
+				font-weight: normal;
+			}
+		}
+	}
+
+	.filter {
+
+		&--department {
+			width: 160px;
+		}
+
+		&--requestStatus {
+			width: 145px;
+		}
+
+		&--clientStatus2 {
+			width: 145px;
+		}
+
+		&--createdBy {
+			width: 135px;
+			margin-right: 0;
+		}
+
+		&--buttons {
+
+			.btn + .btn {
+				margin-left: .6em;
+			}
+		}
+	}
+
+	.Item__box {
+
+		&--status {
+			width: 100px;
+		}
+
+		&--recieved,
+		&--clientStatus2 {
+			width: 1px;
+		}
+	}
+}
+
+
+.FancyModal--calculator {
+	width: 900px;
+	padding-bottom: 0;
+
+	h3 {
+		color: #000;
+		font-size: 14px;
+		margin-top: 0;
+	}
+
+	sup {
+		font-size: 60%;
+	}
+
+	.Alert {
+		margin-bottom: 10px;
+	}
+
+	.Field {
+		display: inline-block;
+	}
+
+	.FancyModal__submit {
+		background-color: #efefef;
+		pointer-events: none;
+		padding: 14px 20px;
+		margin-right: 0;
+	}
+
+	.btn {
+		pointer-events: auto;
+	}
+
+	.Cell {
+		display: inline-block;
+
+		& + .Cell {
+			margin-left: .6em;
+		}
+	}
+
+	.defaultBox {
+		padding: 20px;
+		margin-x: -20px;
+		background-color: #efefef;
+
+		& > li {
+			box-sizing: border-box;
+			padding-left: 20px;
+		}
+
+		li {
+			display: inline-block;
+			vertical-align: top;
+			width: 50%;
+			margin: 0;
+			font-size: 13px;
+		}
+
+		label {
+			cursor: default;
+			pointer-events: none;
+		}
+
+		.field__title {
+			display: inline-block;
+			cursor: pointer;
+		}
+
+		.field__wrapper {
+			display: block;
+		}
+
+		.field__title,
+		.field__wrapper {
+			pointer-events: auto;
+		}
+
+		.first {
+			border-right: 1px solid #d7d7d7;
+			padding: 0 20px 0 0;
+			float: left;
+		}
+
+		.submit {
+			font-size: 12px;
+			padding: 0;
+			width: 100%;
+			text-align: center;
+		}
+
+		.field__set {
+			margin: 0;
+			padding: 0 0 2em 0;
+
+			li {
+				width: 100%;
+
+				& + li {
+					margin-top: .8em;
+				}
+			}
+
+			.field__title {
+				font-size: 12px;
+				margin-bottom: .3em;
+			}
+		}
+
+		.Field {
+			width: 100%;
+		}
+	}
+
+	.result {
+		margin-bottom: 20px;
+		width: 100%;
+
+		.Field {
+			box-sizing: border-box;
+			font-size: 13px;
+			width: 100%;
+			height: 32px;
+		}
+
+		div.Field {
+			background-color: #efefef;
+			border: 2px solid #d9d9d9;
+		}
+
+		tr:last-child {
+			.Field {
+				border-color: #555;
+			}
+		}
+
+		th {
+			font-size: 11px;
+			color: #7f7f7f;
+			font-weight: normal;
+			text-align: left;
+			padding: 0 10px .3em 10px;
+			vertical-align: bottom;
+		}
+
+		.type {
+			width: 160px;
+			padding-right: 20px;
+		}
+
+		.calc,
+		.agree,
+		.client,
+		.agree {
+			box-sizing: border-box;
+			width: 120px;
+		}
+
+		td {
+			&.calc,
+			&.agree,
+			&.client,
+			&.comment {
+				padding: .5em 10px;
+			}
+		}
+
+		.comment {
+			width: 350px;
+		}
+	}
+}
+
+
+.ChangeRequestStatusTip { /* ^ Выпадалка с переключателем статуса запроса */
+	font-size: 13px;
+	padding: 4px 8px;
+
+	.Form__set {
+		width: auto;
+		margin: 1em;
+
+		.Form__title {
+			margin-bottom: .8em;
+			font-size: 15px;
+			font-weight: bold;
+			color: rgba(0,0,0,1);
+		}
+
+		.Form__group .Form__field:last-child {
+
+			.Form__dependent {
+				margin-bottom: 0;
+			}
+		}
+
+		.Form__dependent {
+			font-size: 11px;
+			display: none;
+			margin: .3em 0 .5em 0;
+
+			.Form {
+				&__input {
+					font-size: inherit;
+					padding-y: 3px;
+				}
+
+				&__error {
+					display: none;
+				}
+			}
+		}
+
+		.Form__field--checked .Form__dependent {
+			display: block;
+		}
+
+		.Form__field + .Form__field {
+			margin-top: .2em;
+		}
+
+		input[type="radio"] {
+			margin-right: .1em;
+		}
+	}
+
+	.controlPanel {
+		padding: 10px 20px;
+		margin: 0 -8px -4px -8px;
+
+		.btn + .btn {
+			margin-left: .5em;
+		}
+	}
+}
+
+
+.Items--newCustomerCardRequests {
+	.Item--draft {
+		background-color: #fee;
+	}
+
+	.Items__group {
+		.Item__box {
+			vertical-align: top;
+		}
+	}
+
+	.Item__box--status {
+		.Group {
+			width: 100%;
+		}
+
+		.Box--remove {
+			width: 1px;
+		}
+	}
+
+	.btnIconRemove {
+		@mixin btnIconRemove--red;
+		margin-left: 10px;
+		vertical-align: middle;
+		background-color: transparent;
+
+		&:hover {
+			@mixin btnIconRemove--fill;
+		}
+	}
+}
+
+
+.FancyModal--removeRequestDraft {
+	min-width: 365px;
+}

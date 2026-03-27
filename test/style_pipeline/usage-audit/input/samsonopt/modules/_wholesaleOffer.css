@@ -1,0 +1,46 @@
+.WholesaleOffer--default {
+	&.WholesaleOffer--accent {
+		background-color: $C_YELLOW;
+	}
+
+	.WholesaleOffer__header {
+		padding: 10px 15px;
+		color: $C_BRAND;
+		font-weight: bold;
+		font-size: 13px;
+	}
+
+	.Item__box {
+		width: 33.33%;
+		padding-y: 5px;
+		font-size: 12px;
+		text-align: right;
+		white-space: nowrap;
+
+		&:first-child {
+			padding-left: 15px;
+		}
+
+		&:last-child {
+			padding-right: 15px;
+		}
+	}
+
+	.Item__box + .Item__box {
+		padding-left: 10px;
+	}
+
+	.Items__header {
+		color: #777;
+	}
+
+	.Item {
+		.Item__box {
+			border-top: 1px solid #EAE6C8;
+
+			&--price {
+				font-weight: bold;
+			}
+		}
+	}
+}

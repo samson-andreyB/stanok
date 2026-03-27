@@ -1,0 +1,21 @@
+.Page--holiday {
+	@supports (background-position-x: var(--fancybox-scrollbar-width)) {
+		background-position-x: calc(50% - (var(--fancybox-scrollbar-width, 0px) / 2)) !important;
+	}
+
+	.ScrollToTop {
+		padding-right: 25px;
+	}
+
+	.Page__header,
+	.Page__main {
+		background-image: resolve('interface/page_wrapper_shadow.png');
+		background-repeat: repeat-y;
+		background-position: 50% 0;
+		background-attachment: fixed;
+
+		@supports (background-position-x: var(--fancybox-scrollbar-width)) {
+			background-position-x: calc(50% - (var(--fancybox-scrollbar-width, 0px) / 2));
+		}
+	}
+}

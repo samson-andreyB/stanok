@@ -1,0 +1,100 @@
+/* BLOCKS - PAGINATOR
+---------------------------------------------------------------------*/
+
+/*doc
+
+### Paginator
+
+Позволяет переходить по страницам. Активная страница — `active`.
+
+<div class="Paginator">
+	<span class="Paginator__pager"><a href="#">&larr;</a><small> + Ctrl</small></span>
+	<ul class="Paginator__list">
+		<li class="Paginator__item">
+			<a href="#">1</a>
+		</li><li class="Paginator__item active">
+			2
+		</li><li class="Paginator__item">
+			...
+		</li><li class="Paginator__item">
+			<a href="#">7</a>
+		</li>
+	</ul>
+	<span class="Paginator__pager"><small>Ctrl + </small><a href="#">&rarr;</a></span>
+</div>
+*/
+
+.Paginator,
+.OrderSteps {
+	@mixin noUserSelect;
+	cursor: default;
+
+	&__list,
+	&__item {
+		display: inline-block;
+	}
+
+	&__list {
+		@mixin List--basic;
+	}
+
+	&__item {
+		@mixin List__item--basic;
+		margin-top: 0;
+		margin-left: .2em;
+		padding: 0 .4em;
+
+		&:first-child {
+			margin-left: 0;
+		}
+	}
+
+	&__item {
+		box-sizing: border-box;
+		font-size: 18px;
+		line-height: 1;
+		padding: .2em .45em;
+		text-align: center;
+
+		&.active {
+			border: 2px solid $theme_accent;
+
+			@if $theme_name == 'op' {
+				border: 2px solid $theme_brand;
+			}
+
+			border-radius: 50%;
+			margin-right: -4px;
+			position: relative;
+			left: -2px;
+		}
+	}
+
+	&__pager {
+		@if $theme_name == 'op' {
+			@mixin Btn--default;
+			@mixin Btn--main;
+			@mixin Btn--action;
+		} @else {
+			@mixin Btn--default;
+			@mixin Btn--action;
+		}
+
+		position: relative;
+		top: -2px;
+
+		.Icon {
+			margin-top: 0;
+			margin-right: 0;
+		}
+
+		small {
+			font-size: 70%;
+		}
+	}
+
+	&__pager + &__list,
+	&__list + &__pager {
+		margin-left: 1.2em;
+	}
+}

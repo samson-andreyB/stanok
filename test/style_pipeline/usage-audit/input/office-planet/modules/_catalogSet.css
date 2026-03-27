@@ -1,0 +1,50 @@
+$CatalogSetLinkHeight: 28px;
+
+.CatalogSet {
+
+	&__unit + &__unit {
+		margin-top: calc($lineHeight * 2);
+	}
+	&__header {
+		@mixin H--sub;
+		font-weight: bold;
+		margin-bottom: calc($lineHeight / 2);
+	}
+	&__anchor {
+		position: relative;
+		top: -90px;
+	}
+	&__list {
+		@mixin List--ib;
+		@mixin groupIB;
+		margin-x: -10px;
+	}
+	&__item {
+		@mixin List__item--ib;
+		box-sizing: border-box;
+		float: left;
+		padding-x: 10px;
+		width: 33%;
+	}
+	&__link {
+		color: #000;
+		display: inline-block;
+		padding-y: 3px;
+	}
+
+	&__box {
+		padding-x: 10px;
+		box-sizing: border-box;
+		margin: 0;
+		display: inline-block;
+		width: 33%;
+		vertical-align: top;
+
+		.CatalogSet__item {
+			padding-x: 0;
+			display: block;
+			float: none;
+			width: auto;
+		}
+	}
+}

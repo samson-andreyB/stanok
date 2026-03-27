@@ -1,0 +1,33 @@
+.InvoicesList {
+	&__item {
+		& + .InvoicesList__item {
+			margin-top: 16px;
+			border-top: 1px solid #e2ddd9;
+			padding-top: 16px;
+		}
+	}
+
+	&__date {
+		margin-top: 7px;
+		font-size: 12px;
+		line-height: 17px;
+	}
+
+	.Spoiler2--invoicesList {
+		margin-top: 16px;
+
+		.Spoiler2__header {
+			font-size: 12px;
+			margin-bottom: 0;
+		}
+	}
+
+	&__history {
+		margin-top: 16px;
+
+		.InvoicesList__item + .InvoicesList__item {
+			padding-top: 0;
+			border-top: 0;
+		}
+	}
+}

@@ -1,0 +1,148 @@
+/* About
+------------------------------------------------------------------------------*/
+
+.AboutCompany {
+	h2 {
+		font-size: 28px;
+		line-height: 1em;
+		margin-bottom: 1.07em;
+	}
+	h3 {
+		font-size: 18px;
+	}
+
+	.CompanyHistory {
+		background-image: resolve('snake.png');
+		background-position: center 60px;
+		background-repeat: no-repeat;
+		width: 100%;
+	}
+	.CompanyHistory__box {
+		background-image: resolve('snake__circle.png');
+		background-position: center 53px;
+		background-repeat: no-repeat;
+		width: 33.3%;
+		display: inline-block;
+		text-align: center;
+		vertical-align: top;
+	}
+	.CompanyHistory__year {
+		font: 32px $fontAccent;
+		line-height: 1em;
+		margin-bottom: 2.2em;
+		position: relative;
+	}
+	.CompanyHistory__year--middle {
+		top: 8px;
+	}
+	.CompanyHistory__year--last {
+		top: 16px;	
+	}
+	.CompanyHistoryInfo {
+		text-align: left;
+	    padding-right: 5.5em;
+	}
+
+	.CompanyHistory__year--last + .CompanyHistoryInfo {
+		padding-right: 0;
+		padding-left: 3.5em;
+	}
+
+
+	.SuccessStrategy h2 {
+		margin-bottom: 10px;
+	}
+	.SuccessStrategy h3 {
+		margin: 0 0 40px;
+	}
+
+	.SuccessStrategy__box {
+		display: inline-block;
+		vertical-align: top;
+	}
+	.SuccessStrategy__box--left {
+		width: 66.3%;
+	}
+
+	.SuccessStrategy__box--right {
+		width: 33.3%;
+		color: #5c5c5c;
+		font-style: italic;
+	}
+	.SuccessStrategy__box--right ul {
+		padding-left: 40px;
+		list-style-image: resolve('strategyList_item.png');
+	}
+
+	.StrategyBrand + .StrategyBrand {
+		margin-top: 30px;
+	}
+	.StrategyBrand__title {
+		border-radius: 5px;
+		color: #fff;
+		display: inline-block;	
+		font: 43px $fontAccent;
+		line-height: 1em;
+		padding: 11px 0;
+		margin-bottom: 10px;
+	}
+	.StrategyBrand--first .StrategyBrand__title {
+		background-color: #e4b82b;
+		padding-left: 15px;
+		padding-right: 12px;
+	}
+	.StrategyBrand--second .StrategyBrand__title {
+		background-color: #00a6d9;
+		padding-left: 14px;
+		padding-right: 20px;
+	}
+	.StrategyBrand--third .StrategyBrand__title {
+		background-color: #a6cf39;
+		padding-left: 22px;
+		padding-right: 19px;
+	}
+	
+	.Collection h2 {
+		margin: 40px 0 15px;
+	}
+	.Collection h3 {
+		margin: 0 0 50px;	
+	}
+	.Collection__box {
+		display:inline-block;
+		vertical-align: top;
+	}
+	.Collection__box--left {
+		width: 54%;	
+	}
+	.Collection__box--right {
+		width: 45.6%;		
+	}
+	.Collection__images {
+		vertical-align: top;
+		display: inline-block;
+		margin-right: 4%;
+		width: 17%;
+	}
+	.Collection__img {
+		width: 100%;
+		height: auto;
+		display: block;
+	}
+	.Collection__info {
+		display: inline-block;
+		width: 75%;
+	}
+
+	.Collection__box--right .Collection__box {
+		display: block;
+	}
+	.Collection__box--right .Collection__box .Collection__images {
+		width: 18%;
+		margin-right: 3%;
+	}
+
+	.Collection__box--right .Collection__box + .Collection__box {
+		margin-top: 33px;
+	}
+}

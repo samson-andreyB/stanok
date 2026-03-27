@@ -1,0 +1,270 @@
+.Modifiers {
+	& + .Modifiers {
+		margin-top: 20px;
+	}
+
+	.Modifiers__item {
+		font-size: 12px;
+		border-radius: 4px;
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	.Modifiers__remainder {
+		font-size: 12px;
+		line-height: 1;
+		color: #736f6c;
+		padding-y: 3px;
+		margin-left: 3px;
+	}
+
+	&--default {
+		display: flex;
+		align-items: center;
+
+		.Modifiers__items {
+			overflow: hidden;
+			white-space: nowrap;
+		}
+
+		.Modifiers__item {
+			padding-x: 6px;
+			padding-y: 3px;
+			max-width: 90%;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+
+			&--active {
+				border: 1px solid $BRAND;
+			}
+
+			&--hidden {
+				display: none;
+			}
+		}
+
+		&.Modifiers--color {
+			.Modifiers__item {
+				border-radius: 50%;
+				margin-y: 2px;
+				margin-right: 4px;
+				padding: 1px;
+				line-height: 0;
+
+				&--active {
+					height: 12px;
+					padding: 0;
+					margin-left: 1px;
+					margin-right: 5px;
+					border: 2px solid #fff;
+					box-shadow: 0 0 0 1px $BRAND;
+
+					.PaletteColor {
+						box-shadow: none;
+						width: 12px;
+						height: 12px;
+					}
+				}
+
+				&:hover {
+					.PaletteColor {
+						opacity: .5;
+					}
+				}
+			}
+		}
+
+		&.Modifiers--text {
+			.Modifiers__item {
+				color: $BRAND_BLACK;
+
+				&:hover {
+					color: $LINK_HOVER;
+				}
+			}
+		}
+	}
+
+	&--grand {
+		.Modifiers__items {
+			@media (min-width: 980px) {
+				margin-right: -10px;
+			}
+		}
+
+		.Modifiers__item {
+			color: #242322;
+			border: 2px solid #e2ddd9;
+			border-radius: 4px;
+			padding: 6px 10px;
+			margin-right: 10px;
+			margin-top: 10px;
+			cursor: pointer;
+			transition: .2s;
+
+			&:hover {
+				border-color: #c4beb9;
+			}
+
+			&--active {
+				border-color: $BRAND;
+
+				&:hover {
+					border-color: $BRAND;
+				}
+			}
+
+			&--disabled {
+				background-color: #f2eeea;
+				border-color: #ebe5e0;
+				color: #8c8985;
+
+				.PaletteColor {
+					opacity: .75;
+				}
+
+				&:hover {
+					border-color: #e2ddd9;
+					color: #736f6c;
+
+					.PaletteColor {
+						opacity: .9;
+					}
+				}
+			}
+		}
+
+		&.Modifiers--color {
+			.Modifiers__item {
+				padding: 4px;
+			}
+
+			.PaletteColor--big {
+				vertical-align: middle;
+			}
+
+			.Spoiler2--curtain .Spoiler2__content {
+				max-height: 75px;
+			}
+		}
+
+		&.Modifiers--text {
+			.Modifiers__item {
+				font-size: 14px;
+				line-height: 1.2;
+			}
+
+			.Spoiler2--curtain .Spoiler2__content {
+				max-height: 80px;
+			}
+		}
+
+		&.Modifiers--design {
+			.Spoiler2--curtain .Spoiler2__content {
+				max-height: 120px;
+			}
+		}
+
+		.Modifiers__title {
+			margin-bottom: -2px;
+			color: $GREY_1;
+
+			.Modifiers__value {
+				color: $BRAND_BLACK;
+			}
+		}
+
+		.Spoiler2--modifiers {
+			&.Spoiler2 .Spoiler2__header {
+				@media (max-width: 979px) {
+					display: none;
+				}
+
+				.Spoiler2__label {
+					&:before {
+						height: 30px;
+					}
+				}
+			}
+
+			.Spoiler2__header {
+				height: 0;
+			}
+
+			.Spoiler2__content {
+				padding-bottom: 0;
+				max-height: none;
+
+				@media (max-width: 979px) {
+					overflow: visible;
+				}
+			}
+
+			&:not(.Spoiler2--ready) {
+				.Spoiler2__label {
+					color: transparent;
+				}
+			}
+
+			&.Spoiler2--ready {
+				&.Spoiler2--curtain {
+					.Spoiler2__header {
+						display: block;
+						height: auto;
+					}
+				}
+
+				&:not(.Spoiler2--curtain) {
+					.Spoiler2__header {
+						display: none;
+					}
+				}
+			}
+		}
+	}
+
+	&.Modifiers--design {
+		.Modifiers__item {
+			padding: 5px;
+			user-select: none;
+
+			&.Modifiers__item--disabled {
+				position: relative;
+				background: none;
+
+				&:before {
+					content: '';
+					position: absolute;
+					top: 0;
+					right: 0;
+					left: 0;
+					bottom: 0;
+					background-color: rgba(242, 238, 234, .5);
+				}
+
+				&:hover:before {
+					background-color: rgba(242, 238, 234, .35);
+				}
+			}
+		}
+
+		.Modifiers__img {
+			vertical-align: top;
+		}
+	}
+
+	.priceRow & {
+		margin-y: 6px;
+		line-height: 1;
+
+		.PaletteColor {
+			vertical-align: top;
+		}
+	}
+
+	.details & {
+		margin-top: 15px;
+		max-width: 300px;
+	}
+}

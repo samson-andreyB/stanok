@@ -1,0 +1,156 @@
+/* ProductViewer
+------------------------------------------------------------------------------*/
+
+$ProductViewerSize: 380px;
+
+.ProductViewer {
+	&--multi {
+		.Product__image {
+			cursor: pointer;
+		}
+	}
+
+	&__group {
+		display: table;
+		width: 100%;
+	}
+
+	&__box {
+		display: table-cell;
+		vertical-align: top;
+
+		&--image {
+			width: 1px;
+		}
+
+		&--images {
+			padding-left: 20px;
+			width: 1px;
+		}
+	}
+
+	&__trigger {
+		transition: .2s;
+
+		&:hover {
+			opacity: .85;
+		}
+	}
+
+	.Product__image {
+		width: $ProductViewerSize;
+		height: $ProductViewerSize;
+	}
+
+	&--fancy {
+		background-color: #fff;
+
+		.ProductViewer__box--images {
+			white-space: nowrap;
+		}
+
+		.Product__image {
+			width: 480px;
+			height: 480px;
+		}
+
+		.ProductImages {
+			height: 480px;
+
+			&__controls {
+				display: none;
+			}
+		}
+
+		.ProductImagesList + .ProductImagesList {
+			margin-left: 20px;
+		}
+	}
+}
+.ProductImages {
+	height: $ProductViewerSize;
+	position: relative;
+	overflow: hidden;
+	
+	&List {
+		display: inline-block;
+		vertical-align: top;
+	}
+	
+	&Item {
+		border: 1px solid transparent;
+		border-radius: $bdrad;
+		display: block;
+		opacity: .5;
+		transition: .2s;
+		
+		& + & {
+			margin-top: 1em;
+		}
+		
+		&:hover {
+			border-color: $hover;
+			opacity: 1;
+		}
+		
+		&--active {
+			cursor: default;
+			opacity: 1;
+			
+			&,
+			&:hover {
+				border-color: $accent;
+			}
+		}
+		
+		&__image {
+			border-radius: $bdrad;
+			width: 60px;
+			height: 60px;
+		}
+	}
+
+	&__control {
+		position: absolute;
+		left: 0;
+		background-color: rgba(255,255,255,.75);
+		width: 100%;
+		height: calc(height('arrow_top_main.png') * 2);
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+		opacity: 1;
+		visibility: visible;
+		transition: .2s;
+		
+		&:hover {
+			background-color: #fff;
+		}
+		
+		&--prev {
+			background-image: resolve('arrow_top_main.png');
+			top: 0;
+			
+			&:hover {
+				background-image: resolve('arrow_top_hover.png');
+			}
+
+			.ProductImages--no-prev & {
+				opacity: 0;
+				visibility: hidden;
+			}
+		}
+		&--next {
+			background-image: resolve('arrow_bottom_main.png');
+			bottom: 0;
+			
+			&:hover {
+				background-image: resolve('arrow_bottom_hover.png');
+			}
+
+			.ProductImages--no-next & {
+				opacity: 0;
+				visibility: hidden;
+			}
+		}
+	}
+}

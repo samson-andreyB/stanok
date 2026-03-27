@@ -1,0 +1,294 @@
+.ReturnRequests--default {
+	.filter {
+		.RichSelect {
+			width: 100%;
+		}
+
+		&--shop,
+		&--status {
+			width: 160px;
+		}
+		
+		&--accountable {
+			width: 240px;
+		}
+
+		&--search {
+			width: 220px;
+		}
+	}
+
+	.ProductCard__code {
+		margin-bottom: 5px;
+	}
+
+	.Form {
+		&__title {
+			color: #000;
+			font-weight: bold;
+		}
+
+		.Form__field {
+			.Form__input--reason {
+				width: 415px;
+			}
+
+			.Form__input--status {
+				width: 240px;
+			}
+
+			.Form__input--quantity {
+				width: 100px;
+			}
+
+			.Form__input--textarea {
+				width: 600px;
+			}
+		}
+	}
+
+	.contentWrapper--header + .controlPanel {
+		.btn  + .btn {
+			margin-left: 7px;
+		}
+	}
+
+	.Group--info {
+		.Specs--default .Specs__name + .Specs__value {
+			padding-left: 0;
+		}
+
+		.Specs__value {
+			&--truncated {
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+		}
+	}
+}
+
+
+.ReturnRequests--qualityGoods {
+	.controlPanel {
+		.btn + .Dropdown,
+		.Dropdown + .btn,
+		.btn + .btn {
+			margin-left: 7px;
+		}
+	}
+}
+
+.ReturnRequests--qualityGoods .Items--removable,
+.Items--executionDocument {
+	.Items__header {
+		font-size: 12px;
+		color: #000;
+		font-weight: bold;
+
+		.Item__box {
+			padding-top: 0;
+			padding-bottom: 5px;
+		}
+	}
+
+	.Item__box {
+		&--doc {
+			width: 150px;
+		}
+	}
+
+	.Items__control {
+		margin-top: 10px;
+	}
+
+	.Item:last-child {
+		.Item__box {
+			padding-bottom: 0;
+		}
+	}
+}
+
+.Group--returnRequest {
+	.Box {
+		width: 50%;
+		vertical-align: top;
+
+		&:first-child {
+			padding-right: 20px;
+		}
+
+		&:last-child {
+			padding-left: 20px;
+		}
+
+		.Specs {
+			& + .Specs {
+				margin-top: 20px;
+			}
+
+			&__header {
+				font-size: 15px;
+				font-weight: normal;
+				color: #656565;
+				margin-bottom: 12px;
+			}
+
+			&__content {
+				margin-top: 2px;
+
+				.Form__field {
+					margin-top: 4px;
+				}
+			}
+
+			&__item {
+				&--comment {
+					.pseudoLink {
+						display: inline-block;
+						margin-top: 6px;
+					}
+				}
+
+				&--reason {
+					word-break: break-all;
+					word-break: break-word;
+				}
+			}
+
+			.Form__field {
+				&--stock {
+					.Form__input {
+						width: 170px;
+					}
+				}
+			}
+
+			.Items--formFieldsList {
+				.Items__header {
+					font-size: 12px;
+					color: #000;
+					font-weight: bold;
+				}
+			}
+		}
+	}
+}
+
+.ReturnRequestSummary {
+	text-align: right;
+
+	.Specs--glued {
+		display: inline-block;
+		text-align: left;
+		vertical-align: top;
+	}
+
+	.Specs__item--total {
+		font-size: 18px;
+	}
+}
+
+.controlPanel--selectAll {
+	.Form__field {
+		display: inline-block;
+		margin-right: 17px;
+
+		.Form__input {
+			width: auto;
+			margin-right: 6px;
+		}
+	}
+}
+
+.Items--productAddByCode {
+	.Items__header {
+		color: inherit;
+		font-size: inherit;
+	}
+
+	.Items__group {
+		.Item__box {
+			&--error {
+				vertical-align: middle;
+			}
+
+			&--name {
+				background-repeat: no-repeat;
+				background-position: 5px 5px;
+				background-size: 45px;
+				height: 45px;
+				padding-left: 55px;
+			}
+
+			&.Spinner--active {
+				.Spinner {
+					border-color: $mainColor;
+					border-top-color: transparent;
+					border-right-color: transparent;
+					border-width: .15em;
+					top: 50%;
+					margin-top: -5px;
+				}
+			}
+		}
+	}
+
+	.Item__box {
+		border-top: 0;
+		vertical-align: top;
+		padding: 5px;
+
+		&:first-child {
+			padding-left: 0;
+		}
+
+		&--code,
+		&--quantity {
+			width: 80px;
+		}
+
+		&:last-child {
+			padding-right: 0;
+		}
+	}
+}
+
+.Items--reasonClaimProduct {
+	.Item {
+		&__box {
+			border-width: 0;
+			padding: 0;
+
+			&:first-child {
+				width: 1px;
+				padding-right: 12px;
+			}
+		}
+
+		&__noPhoto {
+			display: block;
+			background-image: resolve('icons/noPhoto_45x45.png');
+			width: width('icons/noPhoto_45x45.png');
+			height: height('icons/noPhoto_45x45.png');
+		}
+	}
+}
+
+.FancyModal--productAddByCode {
+	width: 600px;
+
+	.Form__field--valid .Form__input {
+		width: 200px;
+	}
+}
+
+.TipTip--photoPreview {
+	max-width: 500px;
+	max-height: 500px;
+
+	.PhotosList__img {
+		max-width: 100%;
+		height: auto;
+	}
+}

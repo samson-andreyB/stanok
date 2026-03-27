@@ -1,0 +1,106 @@
+.Filters--default {
+	display: flex;
+	flex-wrap: wrap;
+
+	.Filter {
+		vertical-align: bottom;
+		padding-right: 10px;
+		margin-right: 0;
+
+		&:last-child {
+			padding-right: 0;
+		}
+
+		&__label {
+			font-weight: normal;
+		}
+
+		&__input {
+			width: 100%;
+		}
+	}
+
+	.RichSelect__field {
+		line-height: 1.7;
+	}
+}
+
+.Filters2--returnRequestSelect,
+.Filters2--returnRequestList {
+	margin-top: 20px;
+
+	& + .ListControl {
+		margin-top: 15px;
+	}
+
+	.Filters2 {
+		&__row {
+			margin-right: -3px;
+
+			.Filters2__buttons {
+				margin-right: 20px;
+			}
+		}
+	}
+}
+
+.Filters2--returnRequestList {
+	.Filter2 {
+		&--number,
+		&--document,
+		&--status,
+		&--counterparty {
+			max-width: 140px;
+		}
+
+		&--number {
+			flex-basis: 70px;
+		}
+
+		&--document {
+			flex-basis: 100px;
+		}
+
+		&--status,
+		&--counterparty {
+			flex-grow: 1;
+			flex-basis: 120px;
+		}
+
+		&--status .RichSelect2 {
+			width: 100%;
+		}
+	}
+}
+
+.Filters2--returnRequestSelect {
+	.Filter2 {
+		&--document,
+		&--code,
+		&--counterparty {
+			max-width: 140px;
+		}
+
+		&--code,
+		&--counterparty {
+			flex-basis: 130px;
+		}
+
+		&--document {
+			flex-basis: 140px;
+		}
+	}
+}
+
+.Filters2--ordersPzk {
+	.Filter2 {
+		&--reserveStatus {
+			width: 130px;
+		}
+
+		&--code,
+		&--counterparty {
+			width: 110px;
+		}
+	}
+}

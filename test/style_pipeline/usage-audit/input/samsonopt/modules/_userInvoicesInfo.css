@@ -1,0 +1,76 @@
+.UserInvoicesInfo--default {
+	.UserInvoicesInfo__actual {
+		text-align: right;
+		margin-bottom: 21px;
+		color: #555;
+		line-height: 15px;
+	}
+
+	.Filters2--default {
+		margin-bottom: 18px;
+	}
+
+	.Filter2 {
+		&--status,
+		&--deliveryType {
+			width: 115px;
+		}
+
+		&--consignee {
+			width: 125px;
+		}
+	}
+
+	.Filters2--invoices {
+		.Filter2 {
+			&--status,
+			&--state,
+			&--deliveryType {
+				width: 110px;
+			}
+
+			&--consignee {
+				width: 115px;
+			}
+		}
+	}
+
+	.Box--control {
+		padding-y: 10px;
+		border: none;
+		margin: 0;
+
+		.Box__cell--orderSearch .Field {
+			width: 85px;
+			font-size: 12px;
+		}
+	}
+
+	.BadgeTag {
+		margin-top: 5px;
+	}
+
+	.InfoStatus {
+		margin-left: 0;
+	}
+
+	.Item__box {
+		&--quantity {
+			text-align: right;
+		}
+
+		&--status {
+			max-width: 240px;
+		}
+	}
+
+	.Items--pzkInvoices {
+		.Item__box {
+			padding-right: 10px;
+
+			&--quantity {
+				white-space: nowrap;
+			}
+		}
+	}
+}

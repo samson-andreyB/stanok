@@ -1,0 +1,28 @@
+/* КНОПКА "СООБЩИТЬ О ПРОБЛЕМЕ"
+-------------------------------------------------------------*/
+
+.TroubleReport {
+	position: absolute;
+	bottom: 100%;
+	left: 30px;
+}
+
+.TroubleReport__button {
+	display: inline-block;
+	padding: 10px 27px 8px 47px;
+	border-radius: 5px 5px 0 0;
+	border: none;
+	font-size: 12px;
+	line-height: 1;
+	color: #fff;
+	background-color: rgba(48, 6, 46, .9);
+	background-image: resolve('interface/troubleReport.png');
+	background-repeat: no-repeat;
+	background-position: 20px 50%;
+	transition: background-color .3s;
+}
+
+.TroubleReport__button:hover {
+	color: #fff;
+	background-color: rgba(48, 6, 46, 1);
+}

@@ -1,0 +1,28 @@
+.CheckoutSummary--default {
+	.CheckoutSummary__item {
+		display: flex;
+		line-height: 1;
+
+		&--jackpot {
+			.CheckoutSummary__value {
+				color: $C_JACKPOT;
+			}
+		}
+	}
+
+	.CheckoutSummary__item + .CheckoutSummary__item,
+	.CheckoutSummary__item--hint + .CheckoutSummary__item {
+		margin-top: .6em;
+	}
+
+	.CheckoutSummary__item + .CheckoutSummary__item--hint,
+	.CheckoutSummary__item--hint + .CheckoutSummary__item--hint {
+		margin-top: .5em;
+	}
+
+	.CheckoutSummary__value {
+		margin-left: .3em;
+		color: $C_BRAND;
+		font-weight: bold;
+	}
+}

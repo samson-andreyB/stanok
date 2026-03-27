@@ -1,0 +1,193 @@
+.ActionsLinks {
+	font-size: 14px;
+	line-height: 1.3;
+	margin-bottom: 50px;
+	
+	&__row {
+		display: table;
+		width: 100%;
+		table-layout: fixed;
+	}
+}
+.ActionsLink {
+	background-color: #ebebeb;
+	display: table-cell;
+	font-weight: bold;
+	height: 67px;
+	vertical-align: middle;
+	color: #000;
+	box-sizing: border-box;
+	border: 1px solid #fff;
+	border-bottom-width: 0;
+	border-right-width: 0;
+	
+	&:hover {
+		background-color: #dfdfdf;
+		color: #000;
+	}
+
+	&:first-child {
+		border-left-width: 0;
+	}
+	.ActionsLinks__row:first-child & {
+		border-top-width: 0;
+	}
+
+	&__wrapper {
+		display: table;
+		min-width: 200px;
+		padding: 0 20px;
+	}
+	&__icon,
+	&__text {
+		display: table-cell;
+		vertical-align: middle;
+		width: 100%;
+	}
+	&__icon {
+		margin-right: 12px;
+		display: inline-block;
+		vertical-align: middle;
+		width: 50px;
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+	}
+	&--slaughter &__icon {
+		background-image: resolve('action_icon_slaughter.png');
+		height: height('action_icon_slaughter.png');
+	}
+	&--count &__icon {
+		background-image: resolve('action_icon_count.png');
+		height: height('action_icon_count.png');
+	}
+	&--accumulative &__icon {
+		background-image: resolve('action_icon_accumulative.png');
+		height: height('action_icon_accumulative.png');
+	}
+	&--assortment &__icon {
+		background-image: resolve('action_icon_assortment.png');
+		height: height('action_icon_assortment.png');
+	}
+	&--gift &__icon {
+		background-image: resolve('action_icon_gift.png');
+		height: height('action_icon_gift.png');
+	}
+	&--promoSets &__icon {
+		background-image: resolve('action_icon_promoSets.png');
+		height: height('action_icon_promoSets.png');
+	}
+	&--other &__icon {
+		background-image: resolve('action_icon_other.png');
+		height: height('action_icon_other.png');
+	}
+	&--jackpot &__icon {
+		background-image: resolve('action_icon_jackpot.png');
+		height: height('action_icon_jackpot.png');
+	}
+}
+
+
+.ActionParticipants {
+	box-sizing: border-box;
+	display: table;
+	line-height: 1.5;
+	width: 100%;
+	
+	&__row {
+		display: table-row;
+	}
+	
+	&__row + &__row &__box {
+		border-top: 1px solid #dfdfdf;
+	}
+	&__box {
+		display: table-cell;
+		padding: 10px 20px;
+		padding-left: 0;
+		
+		&--code {
+			width: 1px;
+		}
+		&--name {
+			width: 100%;
+		}
+	}
+	
+	.Spoiler & {
+		max-height: 300px;
+		padding: 0 15px;
+		
+		&__box {
+			padding-left: 5px;
+			
+			&--name {
+				padding-right: 10px;
+			}
+		}
+	}
+}
+
+.ActionParticipantsPseudolink {
+	display: inline-block;
+	box-sizing: border-box;
+	border: 1px solid #CCC;
+	border-radius: $B_RAD;
+	padding: .33em .75em;
+	vertical-align: middle;
+	color: $C_LINK;
+	line-height: 1;
+	white-space: nowrap;
+	cursor: pointer;
+
+	.BadgeText + & {
+		border-left-width: 0;
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+	}
+
+	&:hover {
+		color: $C_LINK_H;
+	}
+}
+
+.StockInfo + .ActionsInfo,
+.serviceInformation + .ActionsInfo {
+	margin-top: 30px;
+}
+.ActionsInfo__header {
+	font-size: 20px;
+	margin-bottom: 20px;
+}
+
+.ActionsInfoItem + .ActionsInfoItem {
+	margin-top: 25px;
+}
+
+.ActionsInfoItem__header {
+	display: block;
+	font-size: 14px;
+	font-weight: bold;
+	margin-bottom: 7px;
+}
+
+
+.FancyModal--actionParticipants {
+	padding: 20px;
+	width: 560px;
+	
+	.FancyModal__header {
+		font-size: 20px;
+		margin-bottom: 20px;
+	}
+
+	.ActionsInfo {
+		max-height: 500px;
+		overflow-y: auto;
+	}
+}
+
+.Blank {
+	.Icon2--wallet {
+		margin-right: 1em;
+	}
+}

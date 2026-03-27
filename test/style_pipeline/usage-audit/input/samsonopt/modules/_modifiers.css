@@ -1,0 +1,284 @@
+.Modifiers {
+	& + .Modifiers {
+		margin-top: 16px;
+	}
+
+	.Modifiers__item {
+		font-size: 12px;
+		border-radius: 4px;
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	.Modifiers__remainder {
+		font-size: 12px;
+		color: $C_GRAY_LIGHT;
+		margin-left: 5px;
+		line-height: 20px;
+	}
+
+	&--default {
+		display: flex;
+		align-items: center;
+
+		.Modifiers__items {
+			overflow: hidden;
+			white-space: nowrap;
+		}
+
+		.Modifiers__item {
+			padding-x: 6px;
+			padding-y: 3px;
+			line-height: 12px;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+
+			&--hidden {
+				display: none;
+			}
+
+			&--active {
+				border: 1px solid #bbb;
+			}
+		}
+
+		&.Modifiers--color {
+			.Modifiers__item {
+				border-radius: 50%;
+				padding: 1px;
+				line-height: 0;
+
+				&:hover {
+					opacity: .5;
+				}
+
+				& + .Modifiers__item {
+					margin-left: 4px;
+				}
+
+				&--active {
+					padding: 2px;
+
+					.PaletteColor {
+						box-shadow: none;
+						width: 14px;
+						height: 14px;
+					}
+				}
+			}
+		}
+
+		&.Modifiers--text {
+			.Modifiers__item {
+				max-width: 100%;
+				box-sizing: border-box;
+				overflow: hidden;
+				color: inherit;
+
+				&:hover {
+					color: $C_LINK_H;
+				}
+			}
+		}
+	}
+
+	&--grand {
+		.Modifiers__item {
+			font-size: 12px;
+			color: $C_DEFAULT;
+			border: 2px solid #bbb;
+			border-radius: 5px;
+			padding: 7px 10px;
+			margin-right: 10px;
+			margin-top: 10px;
+			transition: .2s;
+
+			&:hover {
+				border-color: #999;
+			}
+
+			&--active {
+				border-color: $C_BRAND;
+				pointer-events: none;
+			}
+
+			&--disabled,
+			&--notAvailable {
+				background-color: #f5f5f5;
+				border-color: #ddd;
+				color: $C_GRAY_LIGHT;
+
+				.PaletteColor {
+					opacity: .5;
+				}
+
+				.Modifiers__value {
+					opacity: .9;
+				}
+
+				&:hover {
+					border-color: #ddd;
+					color: $C_GRAY;
+
+					.PaletteColor {
+						opacity: .7;
+					}
+
+					.Modifiers__value {
+						opacity: 1;
+					}
+				}
+			}
+
+			&--notAvailable {
+				position: relative;
+
+				&:before {
+					content: '';
+					display: block;
+					width: calc(100% + 2px);
+					height: calc(100% + 2px);
+					border-radius: 5px;
+					position: absolute;
+					top: -1px;
+					left: -1px;
+					z-index: 1;
+					background-image: linear-gradient(to bottom right, transparent calc(50% - 1px), $C_DEFAULT 50%, transparent calc(50% + 1px));
+					background-repeat: no-repeat;
+				}
+
+				&.Modifiers__item--active {
+					border-color: $C_BRAND;
+				}
+			}
+		}
+
+		&.Modifiers--color {
+			.Modifiers__item {
+				padding: 4px;
+			}
+
+			.PaletteColor--big {
+				vertical-align: middle;
+			}
+		}
+
+		&.Modifiers--design {
+			.Modifiers__item {
+				padding: 5px;
+				user-select: none;
+
+				&.Modifiers__item--disabled,
+				&.Modifiers__item--notAvailable {
+					position: relative;
+					background: none;
+
+					&:before {
+						content: '';
+						position: absolute;
+						top: 0;
+						right: 0;
+						left: 0;
+						bottom: 0;
+						background-color: rgba(219, 219, 219, .5);
+					}
+
+					&:hover:before {
+						background-color: rgba(219, 219, 219, .35);
+					}
+				}
+			}
+
+			.Modifiers__img {
+				vertical-align: top;
+			}
+		}
+
+		.Modifiers__title {
+			font-size: 12px;
+			margin-bottom: -1px;
+
+			.Modifiers__value {
+				color: #555;
+			}
+		}
+	}
+
+	.priceRow & {
+		margin-y: 6px;
+		line-height: 1;
+
+		.PaletteColor {
+			vertical-align: top;
+		}
+	}
+
+	.details & {
+		margin-top: 15px;
+		max-width: 300px;
+	}
+
+	& + .ProductActions,
+	& + .CatalogPriceList,
+	& + .Product__properties {
+		margin-top: 18px;
+	}
+}
+
+.ModifierInfo {
+	padding: 8px 7px;
+	min-width: 98px;
+	min-height: 126px;
+
+	&.Loading--active {
+		.ModifierInfo__items {
+			display:none;
+		}
+	}
+
+	&__item {
+		& + & {
+			margin-top: 4px;
+		}
+
+		&--photo {
+			text-align: center;
+		}
+
+		&--combinations {
+			font-weight: bold;
+			color: $C_BRAND;
+		}
+
+		&--soon,
+		&--notAvailable {
+			font-weight: bold;
+			color: $C_VIOLET;
+		}
+	}
+
+	.Price {
+		font-size: 20px;
+		font-weight: bold;
+		display: block;
+
+		&--initial {
+			font-size: 14px;
+			font-weight: normal;
+			color: #777;
+		}
+	}
+
+	&__modifier {
+		font-weight: bold;
+
+		& + .ModifierInfo__modifier {
+			margin-top: 3px;
+		}
+	}
+
+	&__label {
+		color: #555;
+		font-weight: normal;
+	}
+}

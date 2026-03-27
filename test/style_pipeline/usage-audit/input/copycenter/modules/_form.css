@@ -1,0 +1,81 @@
+/* BLOCKS - FORMS
+---------------------------------------------------------------------*/
+
+/*
+<form class="Form">
+	<div class="Form__field">
+		<label>
+			<input type="text">
+			Напишите что-нибудь
+		</label>
+	</div>
+</form>
+*/
+
+.Form__field {
+	margin-top: 1.5em;
+	position: relative;
+}
+.Form__field:first-child {
+	margin-top: 0;
+}
+.Form__field.ib {
+	display: inline-block;
+	margin-top: 0;
+}
+
+
+/*
+<form action="#" class="FormSearch headerSearch">
+	<button class="FormSearch__submit" type="submit"><span class="textHide Icon enterBtn">Найти</span></button>
+	<label class="FormSearch__wrapper"><input class="FormSearch__field" type="text"><span class="Icon search"></span></label>
+</form>
+*/
+
+.FormSearch {
+	position: relative;
+	width: 100%;
+}
+.FormSearch__wrapper {
+	display: block;
+}
+.FormSearch__field {
+	width: 100%;
+}
+.FormSearch__submit {
+	float: right;
+}
+
+
+/*
+<label class="FieldFile">
+	<span class="FieldFile__button">Загрузить</span>
+	<span class="FieldFile__wrapper">
+		<input type="file" class="FieldFile__input" />
+	</span>
+</label>
+*/
+
+.FieldFile {
+	display: inline-block;
+	position: relative;
+}
+.FieldFile__wrapper {
+	bottom: 0;
+	cursor: pointer;
+	left: 0;
+	overflow: hidden;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+.FieldFile__input {
+	font-size: 48em;
+	height: auto;
+	left: -11.416666em;
+	opacity: 0;
+	position: absolute;
+	top: -.3em;
+	width: 12.5em;
+	visibility: hidden;
+}

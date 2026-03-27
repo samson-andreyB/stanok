@@ -1,0 +1,138 @@
+.ShopsAddressesList {
+	&__name {
+		padding-y: .3em;
+		color: #006db4;
+		cursor: pointer;
+
+		&:hover {
+			color: $BRAND__A;
+		}
+	}
+
+	&__descriptionList {
+		display: none;
+		margin-top: 2px;
+	}
+
+	&__descriptionItem {
+		font-size: 12px;
+		@mixin wordBreak;
+
+		&:not(:first-child) {
+			margin-top: 4px;
+		}
+	}
+
+	&__descriptionTitle {
+		color: #666;
+	}
+
+	&__title {
+		font-weight: bold;
+		display: none;
+		line-height: 17px;
+	}
+
+	&__notice {
+		color: $ERROR;
+		display: none;
+		margin-top: 6px;
+	}
+
+	.btn {
+		margin-top: 7px;
+	}
+
+	&__item {
+		position: relative;
+		margin-left: 26px;
+		counter-increment: step-counter;
+
+		& + & {
+			margin-top: 25px;
+		}
+
+		&:before {
+			position: absolute;
+			top: 0;
+			right: calc(100% + 6px);
+			content: counter(step-counter)".";
+		}
+
+		.btn {
+			display: none;
+		}
+
+		&--disabled {
+			.ShopsAddressesList__name {
+				color: $C_DISABLED;
+
+				&:hover {
+					color: $BRAND__A;
+				}
+			}
+		}
+
+		&--active {
+			&:before {
+				font-weight: bold;
+			}
+
+			.ShopsAddressesList__name {
+				color: #000;
+				cursor: default;
+
+				&:hover {
+					color: #000;
+				}
+			}
+
+			.ShopsAddressesList__descriptionList,
+			.ShopsAddressesList__notice,
+			.ShopsAddressesList__title {
+				display: block;
+			}
+
+			.btn {
+				display: inline-block;
+			}
+		}
+
+		.ShopSelection--default & {
+			&--active {
+				.ShopsAddressesList__name {
+					font-weight: normal;
+					display: block;
+					line-height: 17px;
+					padding-bottom: 3px;
+				}
+
+				.ShopsAddressesList__description {
+					line-height: 17px;
+					margin-top: 0;
+				}
+			}
+		}
+	}
+
+	&--unnumbered {
+		.ShopsAddressesList__item {
+			margin-left: 0;
+
+			&:before {
+				content: none;
+			}
+		}
+	}
+
+	&--addressAsTitle {
+		.ShopsAddressesList__item--active {
+			.ShopsAddressesList__name {
+				font-weight: bold;
+				line-height: 1.4;
+				padding-top: 0;
+				padding-bottom: 5px;
+			}
+		}
+	}
+}

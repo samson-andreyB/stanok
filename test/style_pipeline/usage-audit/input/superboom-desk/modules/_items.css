@@ -1,0 +1,540 @@
+.Items--counterparties {
+	.Items__list {
+		margin-top: 0;
+	}
+
+	.Item__box--edit {
+		width: 1px;
+		padding-top: 7px;
+	}
+}
+
+.Items--returnRequestsList {
+	.Item__box {
+		vertical-align: top;
+
+		&--indicator {
+			padding-right: 0;
+		}
+
+		&--numberDate {
+			width: 110px;
+		}
+
+		&--status {
+			width: 135px;
+		}
+
+		&--shop {
+			width: 200px;
+
+			& + .Item__box--status {
+				width: 180px;
+			}
+		}
+
+		&--accountable,
+		&--untitled {
+			.btn {
+				white-space: nowrap;
+			}
+		}
+	}
+}
+
+.Items--overageList {
+	.Item__box {
+		vertical-align: top;
+
+		&--indicator {
+			padding-right: 0;
+		}
+
+		&--numberDate {
+			width: 110px;
+		}
+
+		&--shop {
+			width: 200px;
+		}
+
+		&--orderNumber {
+			width: 80px;
+		}
+
+		&--status {
+			width: 180px;
+		}
+	}
+}
+
+.Items--overageProducts {
+	& + .contentWrapper--commentBuc {
+		padding-top: 20px;
+		border-top: 1px solid #dadada;
+	}
+
+	.Items__caption {
+		font-size: 14px;
+		margin-top: 15px;
+	}
+
+	.Items__list {
+		margin-top: 0;
+	}
+
+	.Item__box {
+		&--count {
+			text-align: right;
+			padding-right: 60px;
+		}
+	}
+}
+
+.Items--overageProductsEdit {
+	& + .controlPanel--overageProductsEdit {
+		border-top: 1px solid #dadada;
+	}
+
+	.Items__list {
+		margin-top: 0px;
+	}
+
+	.Item {
+		&:hover,
+		&--active {
+			background-color: #e9f8f3;
+		}
+
+		&__box {
+			&--checkbox {
+				width: 30px;
+			}
+
+			&--count {
+				width: 80px;
+			}
+		}
+	}
+}
+
+.Items--showcasesSorting {
+	border: none;
+	margin-x: -20px;
+
+	.Items__header,
+	.Items__group {
+		display: block;
+	}
+
+	.Item {
+		&__box {
+			vertical-align: top;
+
+			&--drag {
+				width: 1%;
+				padding-left: 20px;
+			}
+
+			&--status {
+				width: 1%;
+				min-width: 10px;
+			}
+
+			&--name {
+				width: 21%;
+			}
+
+			&--visibility {
+				width: 41%;
+			}
+
+			&--period {
+				white-space: nowrap;
+				width: 19%;
+			}
+
+			.BadgeStatus {
+				padding-x: 0;
+				vertical-align: top;
+			}
+		}
+
+		.Spoiler--default {
+			display: flex;
+			flex-direction: column-reverse;
+
+			.Spoiler__header {
+				padding: 0;
+			}
+
+			.Spoiler__label {
+				font-size: 12px;
+				margin-left: 0;
+				margin-top: 2px;
+			}
+
+			.Spoiler__content {
+				padding: 0;
+			}
+		}
+	}
+}
+
+.Items--refundsList {
+	.Item__box {
+		vertical-align: top;
+
+		&--indicator {
+			padding-right: 0;
+		}
+
+		&--numberDate {
+			width: 110px;
+		}
+
+		&--sum {
+			text-align: right;
+			white-space: nowrap;
+			padding-right: 30px;
+		}
+
+		&--orderNumber {
+			width: 70px;
+		}
+
+		&--status {
+			width: 220px;
+		}
+	}
+}
+
+.Items--refundsProductsList {
+	.Items__caption {
+		font-size: 13px;
+		margin-top: 25px;
+	}
+
+	.Item__box {
+		vertical-align: top;
+
+		&--number {
+			width: 35px;
+		}
+
+		&--code {
+			width: 70px;
+		}
+
+		&--price {
+			text-align: right;
+			white-space: nowrap;
+			width: 100px;
+		}
+
+		&--amount {
+			text-align: right;
+			white-space: nowrap;
+			width: 65px;
+		}
+
+		&--sum {
+			text-align: right;
+			white-space: nowrap;
+			width: 95px;
+		}
+	}
+
+	.Items__summary {
+		border-top: none;
+	}
+
+	& + .controlPanel {
+		margin-top: 3px;
+	}
+}
+
+.Items--returnShortageList {
+	.Item__box {
+		vertical-align: top;
+
+		&--indicator {
+			padding-right: 0;
+		}
+
+		&--numberDate {
+			width: 110px;
+		}
+
+		&--shop {
+			width: 150px;
+		}
+
+		&--sum {
+			width: 70px;
+			text-align: right;
+			padding-right: 30px;
+		}
+	}
+}
+
+.Items--returnShortage {
+
+	& + .controlPanel {
+		margin-top: 3px;
+	}
+
+	.Items {
+		&__caption {
+			font-size: 13px;
+		}
+
+		&__list {
+			margin-top: 0;
+		}
+	}
+
+	.Item__box {
+		&--checkbox {
+			width: 1%;
+		}
+
+		&--product {
+			width: 40px;
+		}
+
+		&--price,
+		&--sum,
+		&--availableReturn {
+			white-space: nowrap;
+			text-align: right;
+		}
+
+		&--quantity,
+		&--acceptedReturn {
+			text-align: right;
+			width: 100px;
+		}
+
+		&--reason {
+			width: 160px;
+		}
+
+		&--sum {
+			width: 65px;
+		}
+	}
+
+	.Items__group {
+		.Item__box {
+			vertical-align: top;
+		}
+	}
+
+	.Items__summary {
+		border-top: none;
+	}
+
+	.Field--reason {
+		width: 160px;
+	}
+
+	& + .contentWrapper--comment {
+		padding-top: 25px;
+	}
+
+	.Item__img {
+		max-width: 40px;
+		height: auto;
+	}
+}
+
+.Items--returnShortageEdit {
+	.Items__group {
+		.Item__box {
+			padding-y: 20px;
+
+			&--checkbox {
+				padding-top: 30px;
+			}
+		}
+	}
+
+	.Item__box {
+		&--acceptedReturn {
+			text-align: left;
+		}
+	}
+
+	.Item--active {
+		background-color: #fff2d9;
+	}
+
+	.TextCounter,
+	.Field--reason {
+		margin-top: -6px;
+		vertical-align: top;
+	}
+}
+
+.Items--returnShortageService {
+	&.Items--returnShortageServiceEdit {
+		.Items__group .Item__box {
+			vertical-align: baseline;
+		}
+
+		.Item__box {
+			&--returnValue {
+				text-align: left;
+
+				.Field {
+					text-align: center;
+					width: 65px;
+				}
+			}
+		}
+	}
+
+	.Item__box {
+		&--code {
+			width: 50px;
+		}
+
+		&--returnValue {
+			width: 125px;
+			text-align: right;
+		}
+
+		&--price,
+		&--availableReturn {
+			width: 1px;
+		}
+	}
+}
+
+.Items--listOrders {
+	.Items__list {
+		border: none;
+		width: auto;
+	}
+
+	.Item__box {
+		&--remove {
+			padding-right: 0;
+		}
+	}
+}
+
+.Items--invoices {
+	.Items__group {
+		.Item__box {
+			vertical-align: top;
+		}
+	}
+
+	.Item__box {
+		&--number {
+			width: 90px;
+		}
+
+		&--siteOrderNumber {
+			width: 55px;
+		}
+
+		&--consignee {
+			.Item__aux {
+				margin-bottom: .3em;
+			}
+
+			.Item__limiter {
+				max-width: 130px;
+				word-wrap: break-word;
+			}
+		}
+
+		&--sum {
+			text-align: right;
+			width: 100px;
+		}
+
+		&--result {
+			width: 110px;
+			padding-left: 20px;
+		}
+
+		&--expenseDocument {
+			width: 150px;
+		}
+	}
+}
+
+.Items--invoicesSent {
+	.Items__group {
+		.Item__box {
+			vertical-align: top;
+		}
+	}
+
+	.Item__box {
+		&--number {
+			width: 80px;
+		}
+
+		&--siteOrderNumber {
+			width: 55px;
+		}
+
+		&--printableForm {
+			width: 65px;
+		}
+
+		&--customer {
+			.Item__limiter {
+				max-width: 175px;
+				word-wrap: break-word;
+			}
+		}
+
+		&--sum {
+			text-align: right;
+			width: 70px;
+		}
+
+		&--shippingDate {
+			width: 90px;
+		}
+
+		&--email {
+			word-break: break-all;
+			min-width: 120px;
+		}
+	}
+}
+
+.Items--bookkeepingReconciliation {
+	.Items__group {
+		.Item__box {
+			vertical-align: baseline;
+		}
+	}
+
+	.Item__box {
+		&--date {
+			width: 14%;
+		}
+
+		&--period {
+			width: 18%;
+		}
+
+		&--mail {
+			width: 19%;
+			word-break: break-all;
+			word-break: break-word;
+		}
+
+		&--status {
+			width: 14%;
+		}
+	}
+}

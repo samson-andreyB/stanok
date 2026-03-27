@@ -1,0 +1,33 @@
+.Icon--default {
+	display: inline-block;
+}
+
+.Icon--download {
+	@mixin Icon--default 'icons/download_main.png';
+}
+
+.Icon--remove {
+	@mixin Icon--default 'icons/cross_9x9_777.png';
+	margin-top: -.15em;
+}
+
+.Icon--help {
+	display: inline-block;
+	width: width('icons/info_grey.png');
+	height: height('icons/info_grey.png');
+	background-image: resolve('icons/info_grey.png');
+}
+
+.Icon--check {
+	width: width('icons/check_10x8_2b8.png');
+	height: height('icons/check_10x8_2b8.png');
+	background-image: resolve('icons/check_10x8_2b8.png');
+}
+
+.Icon--tip {
+	cursor: help;
+
+	&:hover {
+		opacity: .75;
+	}
+}

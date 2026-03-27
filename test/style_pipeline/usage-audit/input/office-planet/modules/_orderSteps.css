@@ -1,0 +1,50 @@
+.OrderSteps {
+	float: right;
+	position: relative;
+	top: 3px;
+}
+
+.OrderSteps__list {
+	display: inline-block;
+}
+.OrderSteps__item {
+	color: #acacac;
+}
+.OrderSteps__item.active {
+	color: #000;
+}
+
+.OrderSteps__title {
+	margin-right: 15px;
+}
+
+.OrderSteps__navigation {
+	@mixin group;
+	margin-top: 15px;
+}
+.OrderSteps__fwrd {
+	@mixin Btn--default;
+	@mixin Btn--main;
+	@mixin Btn--big;
+	@mixin Btn--arrow-forward;
+	float: right;
+}
+.OrderSteps__back {
+	@mixin Btn--basic;
+	@mixin Btn--sub;
+	@mixin Btn--subBig;
+	@mixin Btn--subArrow-back;
+
+	&:hover,
+	&.hover,
+	&:active,
+	&.active {
+		@mixin Btn--main;
+	}
+}
+.OrderSteps__last {
+	@mixin Btn--default;
+	@mixin Btn--main;
+	@mixin Btn--big;
+	float: right;
+}

@@ -1,0 +1,36 @@
+.TipTipStatusHistory {
+	&__title {
+		font-weight: 700;
+	}
+
+	.Items--statusHistory {
+		.Items__list {
+			margin-top: 4px;
+		}
+
+		.Item {
+			&:first-child .Item__box {
+				border-top: 0;
+			}
+		}
+
+		.Item__box {
+			padding-y: 4px;
+			border-color: #dadada;
+			vertical-align: baseline;
+
+			&:first-child {
+				padding-left: 0;
+			}
+
+			&:last-child {
+				padding-right: 0;
+			}
+
+			&--date {
+				white-space: nowrap;
+				color: #656565;
+			}
+		}
+	}
+}

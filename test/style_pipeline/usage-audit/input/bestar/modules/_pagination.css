@@ -1,0 +1,65 @@
+/* Пагигатор
+**********************************************************/
+
+.Pagination {
+	display: flex;
+	cursor: default;
+
+	&__controls {
+		padding-left: 1.2em;
+	}
+
+	&__link {
+		padding-left: .6em;
+		cursor: pointer;
+		display: inline-block;
+
+		&--previous {
+
+			&:before {
+				content: '';
+				display: inline-block;
+				margin-right: .5em;
+				margin-bottom: -1px;
+				width: width('angle_left_s.png');
+				height: height('angle_left_s.png');
+				background-image: resolve('angle_left_s.png');
+			}
+		}
+
+		&--next {
+
+			&:after {
+				content: '';
+				display: inline-block;
+				margin-left: .5em;
+				margin-bottom: -1px;
+				width: width('angle_right_s.png');
+				height: height('angle_right_s.png');
+				background-image: resolve('angle_right_s.png');
+			}
+		}
+
+		&--disabled {
+			pointer-events: none;
+			color: $colorText;
+
+			&.Pagination__link {
+
+				&--previous {
+
+					&:before {
+						background-image: resolve('angle_left_s_grey.png');
+					}
+				}
+
+				&--next {
+
+					&:after {
+						background-image: resolve('angle_right_s_grey.png');
+					}
+				}
+			}
+		}
+	}
+}

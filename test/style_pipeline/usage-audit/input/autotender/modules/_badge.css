@@ -1,0 +1,25 @@
+.BadgeStatus__indicator {
+	&.win {
+		background-color: #28bd8b;
+	}
+
+	&.lose {
+		background-color: #e45959;
+	}
+
+	&.miss {
+		background-color: #ffb630;
+	}
+
+	&.hide {
+		background-color: transparent;
+		user-select: none;
+		cursor: auto;
+	}
+}
+
+.Badge {
+	&--violet {
+		color: #b75dde;
+	}
+}

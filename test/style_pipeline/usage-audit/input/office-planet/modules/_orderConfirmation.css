@@ -1,0 +1,35 @@
+.OrderConfirmation__header {
+	@mixin H--sub;
+	padding-y: 12px;
+
+	&.attached {
+		border-bottom-style: dotted;
+		margin-bottom: 0;
+	}
+}
+
+.OrderConfirmation__group {
+	@mixin PseudoTable;
+	width: 100%;
+}
+
+.OrderConfirmation__box {
+	@mixin PseudoTable__cell;
+	vertical-align: top;
+}
+.OrderConfirmation__box.summ {
+	padding-left: 20px;
+	width: 300px;
+}
+
+.OrderConfirmation__box .OrderPrice__box--caption {
+	padding-left: 20px;
+}
+.OrderConfirmation__box .OrderPrice__box--price {
+	padding-right: 10px;
+}
+
+.OrderConfirmation__header {
+	border: 1px solid $dividerColor;
+	margin-bottom: 10px;
+}

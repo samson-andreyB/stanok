@@ -1,0 +1,86 @@
+/* PROGRESS
+---------------------------------------------------------------------*/
+
+/*doc
+
+<div class="Progress finish">
+	<div class="Progress__wrapper">
+		<span class="Progress__title">
+			100%
+		</span>
+		<span class="Progress__holder">
+			<span class="Progress__bar">
+				<span class="Progress__done"></span>
+			</span>
+		</span>
+	</div>
+	<span class="Progress__status">Условия выполнены</span>
+</div>
+
+*/
+
+.Progress,
+.ActionProgress {
+	cursor: default;
+	line-height: 1;
+
+	&__wrapper {
+		display: table;
+		font-size: 16px;
+		width: 100%;
+	}
+
+	&__title,
+	&__holder {
+		display: table-cell;
+		vertical-align: middle;
+	}
+
+	&__title {
+		width: 4em;
+	}
+
+	&__bar {
+		background: #fff;
+		border: 1px solid #a6a6a6;
+		border-radius: 1em;
+		box-sizing: border-box;
+		display: inline-block;
+		height: 9px;
+		padding: 1px;
+		width: 100%;
+	}
+	&__done {
+		 background: $theme_accent;
+
+		@if $theme_name == 'op' {
+			background: $theme_brand;
+		}
+
+		border-radius: 1em;
+		display: block;
+		height: 100%;
+		max-width: 100%;
+	}
+
+	&__title {
+		font-weight: bold;
+	}
+
+	&__status {
+		color: $infoColor;
+		display: block;
+		font-size: 12px;
+		font-style: italic;
+	}
+	&__wrapper + &__status {
+		margin-top: .75em;
+	}
+	&__status + &__wrapper {
+		margin-top: .75em;
+	}
+
+	&.finish &__done {
+		background: $successColor;
+	}
+}

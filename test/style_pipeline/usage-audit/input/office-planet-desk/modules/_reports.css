@@ -1,0 +1,82 @@
+.filters--statPromoChannel select {
+	width: 100%;
+}
+
+.filter--idp {
+	width: 140px;
+}
+.filter--channel,
+.filter--site {
+	width: 135px;
+}
+
+.Report__header,
+.mainContent .Report__header {
+	font-size: 16px;
+	margin-top: 0;
+	margin-bottom: .5em;
+}
+
+.Report__upload {
+	margin-y: .75em;
+}
+
+.Report__group {
+	display: table;
+}
+
+.Report__box {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.Report__box--upload {
+	width: 1px;
+	padding-right: 15px;
+}
+
+.Upload--report {
+	.Upload__btn {
+		@mixin btnUploadMain;
+	}
+}
+
+.Report__status {
+	color: #777;
+	font-size: 11px;
+	line-height: 16px;
+
+	&--success:before {
+		content: '';
+		background-image: resolve('icons/success_grey.png');
+		width: width('icons/success_grey.png');
+		height: height('icons/success_grey.png');
+		display: inline-block;
+		margin-right: 0.3em;
+	}
+
+	&--loading {
+		display: none;
+	}
+}
+
+.FancyModal--reportGeneration {
+	padding-y: 40px;
+
+	.FancyModal__header {
+		margin-bottom: 10px;
+	}
+
+	.FancyModal__content {
+		margin-bottom: 5px;
+		font-size: 14px;
+	}
+
+	.Progress {
+		margin-top: 20px;
+	}
+
+	.FancyModal__controls {
+		margin-top: 25px;
+	}
+}

@@ -1,0 +1,90 @@
+/* ITEMS INTERACT (COMPARE & FAVORITES)
+------------------------------------------------------------------------------*/
+
+.itemInteract {
+	color: #777;
+}
+
+.itemInteractCompare,
+.itemInteractFavorite {
+	display: inline-block;
+	vertical-align: baseline;
+	cursor: pointer;
+	background-repeat: no-repeat;
+
+	.itemInteract__label {
+		user-select: none;
+
+		&--additional {
+			display: none;
+		}
+	}
+
+	&:hover {
+		color: $BRAND__A;
+	}
+}
+
+.itemInteractCompare {
+	min-width: 4.8em;
+	padding-left: calc(width('compare_11x10.svg') + 3px);
+	background-image: svg('compare_11x10', '[color]: #999');
+	background-position: 0 29%;
+
+	&:hover {
+		background-image: svg('compare_11x10', '[color]: $BRAND__A');
+	}
+}
+
+.inCompare {
+	background-image: svg('compare_11x10', '[color]: #3C9B15');
+	color: $MAIN;
+
+	&:hover {
+
+		.itemInteract__label {
+
+			&--basic {
+				display: none;
+			}
+
+			&--additional {
+				display: inline;
+			}
+		}
+	}
+}
+
+.itemInteractFavorite {
+	padding-left: calc(width('heart_11x10.svg') + 3px);
+	background-image: svg('heart_11x10', '[color]: #999');
+	background-position: 0 44%;
+
+	&:hover {
+		background-image: svg('heart_11x10', '[color]: $BRAND__A');
+	}
+
+	.itemInteractCompare + & {
+		margin-left: 3px;
+
+		@media (min-width: 980px) and (max-width: 1050px) {
+			margin-left: 0;
+		}
+	}
+}
+
+.inFavorite {
+	color: #c12119;
+	background-image: svg('heart_11x10', '[color]: $BRAND');
+
+	.itemInteract__label {
+
+		&--basic {
+			display: none;
+		}
+
+		&--additional {
+			display: inline;
+		}
+	}
+}

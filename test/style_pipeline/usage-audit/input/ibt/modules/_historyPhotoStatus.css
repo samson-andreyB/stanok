@@ -1,0 +1,47 @@
+.HistoryPhotoStatus {
+	display: inline-flex;
+	align-items: center;
+
+	&--accept {
+		color: $success;
+
+		&:before {
+			width: width('icons/check_12x12_2b8.png');
+			height: height('icons/check_12x12_2b8.png');
+			background-image: resolve('icons/check_12x12_2b8.png');
+		}
+	}
+
+	&--added:before {
+		width: width('icons/plus_circle_12x12_aaa.png');
+		height: height('icons/plus_circle_12x12_aaa.png');
+		background-image: resolve('icons/plus_circle_12x12_aaa.png');
+	}
+
+	&--snabAccept:before {
+		width: width('icons/check_12x12_29e.png');
+		height: height('icons/check_12x12_29e.png');
+		background-image: resolve('icons/check_12x12_29e.png');
+	}
+
+	&--sorted:before {
+		width: width('icons/rotate_12x12_555.png');
+		height: height('icons/rotate_12x12_555.png');
+		background-image: resolve('icons/rotate_12x12_555.png');
+	}
+
+	&--removed:before {
+		width: width('icons/cross_circle_12x12_f48.png');
+		height: height('icons/cross_circle_12x12_f48.png');
+		background-image: resolve('icons/cross_circle_12x12_f48.png');
+	}
+
+	.HistoryPhoto__text {
+		line-height: 1;
+	}
+
+	&:before {
+		content: '';
+		margin-right: 5px;
+	}
+}

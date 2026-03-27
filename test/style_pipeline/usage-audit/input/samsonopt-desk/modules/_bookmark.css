@@ -1,0 +1,78 @@
+.Page--bookmark {
+	.Panel {
+		&--indent {
+			padding: 16px 20px;
+		}
+
+		&--accent + .Panel--indent {
+			padding-top: 0;
+		}
+
+		&--bookmarkDescription {
+			.Badge2 {
+				margin-left: 6px;
+				vertical-align: 0.5em;
+			}
+
+			.Specs2 {
+				&__item + .Specs2__item {
+					margin-top: 12px;
+				}
+
+				.File2 {
+					margin-top: 6px;
+				}
+			}
+
+			.Button {
+				margin-top: 20px;
+			}
+		}
+
+		&--bookmarkLastDownload {
+			margin-top: 4px;
+
+			.File2 {
+				margin-top: 2px;
+			}
+		}
+	}
+
+	.Form2 {
+		&--bookmarkDescription {
+			display: none;
+
+			.FormControl {
+				&--schedule {
+					.FormControl + .FormControl {
+						margin-top: 6px;
+					}
+				}
+
+				&--submit {
+					margin-top: 20px;
+				}
+			}
+
+			.ControlInput--countable:not(.ControlInput--textareaCounter) {
+				.ControlInput__field {
+					padding-right: 75px;
+				}
+			}
+
+			.Field2--percent {
+				width: 37px;
+			}
+		}
+	}
+
+	.Filters2--bookmarkReports {
+		.Filter2 {
+			width: 160px;
+		}
+	}
+
+	.Tabs2--bookmarkForms {
+		margin-top: 20px;
+	}
+}

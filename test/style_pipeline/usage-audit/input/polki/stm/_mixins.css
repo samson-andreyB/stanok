@@ -1,0 +1,23 @@
+@define-mixin StmSpinner $color: black, $size: 24px, $border: 4px {
+	display: inline-block;
+	box-sizing: border-box;
+	border: $border solid transparent;
+	border-top-color: $color;
+	border-left-color: $color;
+	border-radius: 50%;
+	width: $size;
+	height: $size;
+	animation: StmSpinner 1s linear infinite;
+}
+
+@keyframes StmSpinner {
+	0% {transform: rotate(0deg);}
+	100% {transform: rotate(360deg);}
+}
+
+@define-mixin textUnderline $color-text {
+	background-image: linear-gradient($color-text, $color-text);
+	background-size: 1px 1px;
+	background-repeat: repeat-x;
+	background-position:  0% 96%;
+}

@@ -1,0 +1,599 @@
+.Items {
+	&--table {
+		.Items {
+			&__header {
+				font-size: 12px;
+
+				.Item__box {
+					border-top: 0;
+					color: $C_GRAY;
+					vertical-align: top;
+				}
+			}
+		}
+
+		.Item {
+			&__aux {
+				color: #777;
+				font-size: 12px;
+				line-height: 14px;
+				margin-top: 0;
+			}
+
+			&__field {
+				margin-bottom: 1px;
+
+				&--bold {
+					font-weight: bold;
+				}
+			}
+
+			&__box {
+				border-top: 1px solid #dfdfdf;
+				color: #000;
+				cursor: default;
+				padding: 7px 6px;
+				line-height: 1.5em;
+
+				@media (max-width: 1200px) {
+					font-size: 12px;
+
+					.PriceMarkupField--unitLess .Field--priceMarkup {
+						width: 65px;
+					}
+				}
+			}
+
+			&--fail {
+				background-color: #f0f0f0;
+			}
+
+			&--success {
+				background-color: #e6fad6;
+			}
+
+			&--checked {
+				background-color: #f3f9ff;
+			}
+		}
+
+		a.Item:not(.Item--fail):hover {
+			background-color: #fbf6cc;
+
+			.Item__box {
+				cursor: pointer;
+			}
+		}
+
+		.icon {
+			cursor: help;
+		}
+
+		.Icon--safe {
+			width: width('safe_13x13_4b6.png');
+			height: height('safe_13x13_4b6.png');
+			background-image: resolve('safe_13x13_4b6.png');
+			cursor: help;
+		}
+
+		.icon + .icon,
+		.icon + .Icon,
+		.Icon + .icon {
+			margin-top: 10px;
+		}
+	}
+
+	&--productOrders {
+		.Item {
+			&--new {
+				background-color: #E6FAD6;
+				font-weight: bold;
+			}
+
+			&--putAside {
+				background-color: #FDF0F0;
+			}
+
+			&--canceled {
+				background-color: #F0F0F0;
+
+				.Item__box {
+					color: $C_GRAY;
+				}
+			}
+		}
+
+		.Item__box {
+			&:first-child {
+				padding-left: 15px;
+			}
+
+			&:last-child {
+				padding-right: 15px;
+			}
+
+			&--indicator,
+			&--comment,
+			&--site {
+				width: 1px;
+			}
+
+			&--comment .icon.reply {
+				margin-right: 0;
+			}
+
+			&--date {
+				white-space: nowrap;
+			}
+
+			&--num {
+				width: 70px;
+			}
+
+			&--summ {
+				text-align: right;
+				padding-right: 20px;
+			}
+
+			&--status {
+				width: 160px;
+			}
+
+			&--priceType {
+				width: 105px;
+			}
+		}
+
+		.Icon--download {
+			cursor: pointer;
+		}
+	}
+
+	&--orderByCode {
+		background-color: #f5f5f5;
+		line-height: 1.5;
+		margin-bottom: 15px;
+
+		.Item--header {
+			color: #888;
+			font-size: 12px;
+
+			.Item__box--name {
+				padding-left: 10px;
+			}
+		}
+
+		.Item__box {
+			border-top: 2px solid #fff;
+			vertical-align: baseline;
+			padding: 5px 10px;
+
+			@media (max-width: 1200px) {
+				font-size: 12px;
+			}
+
+			&:first-child {
+				padding-left: 15px;
+			}
+
+			&:last-child {
+				padding-right: 15px;
+			}
+
+			&--number,
+			&--code,
+			&--quantity {
+				width: 1%;
+			}
+
+			&--number {
+				padding-right: 5px;
+				text-align: right;
+				color: #888;
+			}
+
+			&--code {
+				padding-x: 5px;
+
+				.Form__input {
+					width: 80px;
+				}
+			}
+
+			&--quantity {
+				padding-left: 5px;
+
+				.Form__input {
+					width: 40px;
+				}
+			}
+
+			&--name {
+				padding-left: 45px;
+				background-position: 10px 5px;
+				background-size: 28px;
+				background-repeat: no-repeat;
+			}
+
+			&--price {
+				text-align: right;
+				width: 9%;
+			}
+
+			&--deliveryTime {
+				width: 10%;
+
+				.ProductItem__status {
+					font-weight: bold;
+				}
+			}
+
+			&--stock {
+				width: 16%;
+			}
+
+			&--package {
+				width: 11%;
+			}
+
+			&--pzk {
+				width: 8%;
+			}
+		}
+
+		.Item--error .Item__box--name {
+			vertical-align: top;
+			background-image: url('/img/zakaz/warning_order.png');
+			background-size: 23px;
+		}
+
+		.Form__input {
+			height: 26px;
+			padding-y: 4px;
+		}
+
+		.Item__price {
+			white-space: nowrap;
+
+			&--old {
+				color: #777;
+				text-decoration: line-through;
+
+				& + .Item__price {
+					color: $C_ERROR;
+				}
+			}
+		}
+	}
+
+	&--acts {
+		.Item__box {
+			&--date {
+				max-width: 135px;
+			}
+
+			&--counterparty {
+				max-width: 210px;
+			}
+
+			&--period {
+				max-width: 180px;
+			}
+
+			&--status {
+				width: 1%;
+				white-space: nowrap;
+			}
+
+			&--download {
+				width: 1%;
+
+				.Icon--download {
+					cursor: pointer;
+					padding: 6px;
+					margin: -6px;
+					background-position: center;
+				}
+			}
+		}
+	}
+
+	&--actsErp {
+		.Item__box {
+			&--period,
+			&--date {
+				min-width: 180px;
+				max-width: none;
+			}
+
+			&--counterparty {
+				max-width: none;
+			}
+		}
+	}
+
+	&--returnRequestList {
+		.Item {
+			&__box {
+				padding-x: 10px;
+
+				&--code {
+					width: 12%;
+				}
+
+				&--date {
+					width: 12%;
+
+					@media (max-width: 1200px) {
+						width: auto;
+					}
+				}
+
+				&--document {
+					width: 23%;
+				}
+
+				&--sum {
+					white-space: nowrap;
+					text-align: right;
+				}
+
+				&--status {
+					width: 18%;
+				}
+			}
+
+			&__aux {
+				font-size: 12px;
+				margin-top: 4px;
+			}
+		}
+	}
+
+	&--returnRequestSelect {
+		.Item {
+			&--checked {
+				background-color: #f3f9ff;
+			}
+
+			&__box {
+				padding-x: 10px;
+
+				&--checkbox {
+					width: 1px;
+				}
+
+				&--document {
+					width: 24%;
+
+					.pseudoLink {
+						padding-top: 3px;
+					}
+				}
+
+				&--date {
+					width: 18%;
+				}
+
+				&--sum {
+					white-space: nowrap;
+					text-align: right;
+				}
+
+				&--relatedLinks {
+					width: 18%;
+				}
+			}
+
+			&__aux {
+				font-size: 12px;
+			}
+		}
+
+		.RelatedLinks {
+			&__list {
+				display: none;
+			}
+		}
+	}
+
+	&--returnRequest {
+		&:not(.Items--isEdit) .Item__box--quantity {
+			text-align: center;
+		}
+
+		.Item {
+			&.Item--checked {
+				background-color: #f3f9ff;
+
+				.Item__field {
+					display: block;
+				}
+			}
+
+			&--expected {
+				background-color: #fff7f7;
+			}
+
+			.Item__field {
+				display: none;
+			}
+
+			.Item__box--price {
+				line-height: 32px;
+			}
+
+			&__box {
+				padding-x: 10px;
+				vertical-align: baseline;
+
+				&--checkbox,
+				&--number {
+					width: 1px;
+				}
+
+				&--state {
+					width: 1px;
+				}
+
+				&--product {
+					background-position: 10px 18px;
+					background-size: 45px;
+					background-repeat: no-repeat;
+					height: 82px;
+
+					.Item__aux {
+						font-size: 12px;
+						color: $C_DEFAULT;
+					}
+
+					.Badge--code {
+						cursor: pointer;
+					}
+
+					@media (max-width: 1200px) {
+						.BadgeText__hide {
+							display: none;
+						}
+					}
+				}
+
+				&--price,
+				&--shipped,
+				&--quantity,
+				&--sum {
+					white-space: nowrap;
+				}
+
+				&--price,
+				&--sum {
+					text-align: right;
+				}
+
+				&--price,
+				&--quantity,
+				&--sum {
+					width: 100px;
+				}
+
+				&--shipped {
+					width: 1px;
+					text-align: center;
+
+					.Item__aux {
+						margin-top: 4px;
+					}
+				}
+
+				&--status {
+					width: 16%;
+				}
+
+				&--reason,
+				&--statusReason {
+					width: 140px;
+
+					.Item__aux.Item__aux--error {
+						margin-top: 3px;
+
+						.error {
+							font-weight: 400;
+							color: $C_BRAND;
+						}
+					}
+				}
+
+				&--statusReason {
+					.Item__aux {
+						margin-top: 10px;
+						font-size: inherit;
+						color: $C_DEFAULT;
+					}
+				}
+			}
+
+			.ProductStatusNotice--returnRequest {
+				white-space: nowrap;
+			}
+
+			.Item__box--product {
+				padding-left: 65px;
+				background-image: resolve('missing_photo_45x45.png');
+			}
+		}
+	}
+
+	&--ordersPzk {
+		.Item__box {
+			&--quantity {
+				white-space: nowrap;
+			}
+		}
+	}
+}
+
+.Items--orderByCode.Items--productAddByCode {
+	background-color: transparent;
+
+	.Item--header  {
+		font-size: inherit;
+		color: inherit;
+	}
+
+	.Item:not(.Item--header) {
+		.Item__box {
+			&.Spinner--active {
+				.Spinner {
+					top: 50%;
+					margin-top: -5px;
+				}
+			}
+
+			&--name {
+				padding-left: 55px;
+				background-position: 5px 5px;
+				background-size: 45px;
+				height: 55px;
+				background-repeat: no-repeat;
+			}
+
+			&--error {
+				vertical-align: middle;
+
+				.error {
+					display: inline-block;
+					font-weight: 400;
+					font-size: 14px;
+					line-height: 16px;
+					color: $C_BRAND;
+				}
+			}
+		}
+	}
+
+	.Item__box {
+		border-top: 0;
+		vertical-align: top;
+		padding: 5px;
+		font-size: inherit;
+
+		&:first-child {
+			padding-left: 0;
+		}
+
+		&:last-child {
+			padding-right: 0;
+		}
+
+		&--quantity {
+			.Form__input {
+				width: 80px;
+			}
+		}
+
+		.Form__input {
+			height: 32px;
+			padding: 5px;
+		}
+	}
+}

@@ -1,0 +1,63 @@
+.Tracking--default {
+	.Tracking__wrapper {
+		display: block;
+	}
+
+	.Tracking__precision {
+		color: #777;
+		display: block;
+		font-size: 12px;
+	}
+
+	.filter {
+		&--salesRepresentative {
+			width: 145px;
+		}
+
+		&--movingEvents {
+			width: 120px;
+
+			.RichSelect {
+				width: 100%;
+			}
+		}
+	}
+}
+
+.RichSelect--representative {
+	width: 100%;
+}
+
+.Items--tracking {
+	line-height: 1.5;
+	
+	.Item__box {
+		vertical-align: top;
+		
+		&--time {
+			width: 85px;
+		}
+
+		&--representative {
+			width: 140px;
+		}
+
+		&--route {
+			text-align: center;
+			width: 55px;
+		}
+
+		&--counter {
+			text-align: center;
+		}
+
+		&--place,
+		&--address {
+			width: 190px;
+		}
+
+		&--event {
+			word-break: break-word;
+		}
+	}
+}

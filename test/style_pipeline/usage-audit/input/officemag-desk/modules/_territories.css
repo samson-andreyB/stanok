@@ -1,0 +1,35 @@
+/*
+ * Territories
+ */
+
+.Territories {
+	.Items__list .Item__box {
+		&--department {
+			width: 22%;
+		}
+
+		&--contractManager {
+			width: 25%;
+		}
+
+		&--region {
+			@mixin word-break;
+		}
+	}
+
+	.FancyModal--removeTerritories {
+		width: 500px;
+
+		button + button {
+			margin-left: 10px;
+		}
+	}
+
+	&__tipTip {
+		margin: 5px 15px;
+	}
+
+	.Form--territoriesItem .Form__set {
+		width: 350px;
+	}
+}

@@ -1,0 +1,155 @@
+.FacetManagement {
+	display: flex;
+
+	&__header {
+		display: flex;
+		align-items: baseline;
+	}
+
+	&__headerText {
+		font-weight: bold;
+		font-size: 15px;
+		line-height: 19px;
+	}
+
+	&__headerAux {
+		margin-left: auto;
+	}
+
+	&__linkTable {
+		padding-left: 20px;
+		background-image: svg('table_13x12', '[color]: $link');
+		background-repeat: no-repeat;
+		background-position: 0 50%;
+
+		&:hover {
+			background-image: svg('table_13x12', '[color]: $linkHover');
+		}
+	}
+
+	&__description {
+		a {
+			padding-y: .2em;
+		}
+	}
+
+	&__content {
+		.Loading {
+			min-height: 125px;
+		}
+
+		&--loading {
+			position: relative;
+
+			&:before {
+				@mixin Overlay rgba(255,255,255,.5) {
+					content: "";
+					transition: .2s;
+					display: block;
+				};
+
+				.FacetManagement__section--settings & {
+					margin-left: -20px;
+					padding-left: 20px;
+				}
+			}
+		}
+	}
+
+	&__section {
+		box-sizing: border-box;
+
+		& + & {
+			border-left: 1px solid #dadada;
+			margin-left: 30px;
+			padding-left: 30px;
+		}
+
+		.btn + .btn {
+			margin-left: 10px;
+		}
+
+		&--categories {
+			width: 29%;
+
+			.FacetManagement__header {
+				margin-bottom: 15px;
+			}
+
+			.RichSelect__options {
+				border: 0;
+			}
+		}
+
+		&--facets {
+			width: 32%;
+			overflow: auto;
+
+			.FacetManagement__header {
+				margin-bottom: 8px;
+			}
+
+			.FacetManagement__content {
+				margin-top: 15px;
+			}
+
+			.FacetManagement__controls {
+				margin-top: 20px;
+			}
+
+			.Items--facets {
+				overflow: visible;
+			}
+		}
+
+		&--settings {
+			width: 30.5%;
+			
+			.FacetManagement__header {
+				margin-bottom: 20px;
+			}
+
+			.Form__set {
+				width: 100%;
+
+				&--submit {
+					margin-top: 20px;
+				}
+			}
+
+			.Form__field {
+				.Facet--default {
+					position: absolute;
+					margin-left: -11px;
+				}
+			}
+
+			.Form__value {
+				font-weight: bold;
+			}
+		}
+	}
+}
+
+.Form--facetManagement {
+	.Facet--default {
+		margin-left: 15px;
+	}
+
+	.Facet__input {
+		width: 230px;
+	}
+
+	.Plaques {
+		width: 335px;
+	}
+
+	.Form__set--submit {
+		padding-left: 35px;
+		padding-y: 10px;
+	}
+}
+
+.EditFacetTableTip {
+	min-width: 260px;
+}

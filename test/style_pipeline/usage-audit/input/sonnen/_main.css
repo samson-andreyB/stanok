@@ -1,0 +1,3394 @@
+@import "lib/stm/_file";
+@import "modules/_var";
+@import "lib/stm/_mixins";
+@import "lib/stm/_fancybox";
+
+/*!
+
+BASE
+	BASE - ROOT
+	BASE - HTML5
+	BASE - EMBEDDED
+	BASE - FORMS
+	BASE - TABLES
+	BASE - LINKS
+	BASE - LISTS
+	BASE - TYPOGRAPHY
+
+USEFUL
+	USEFUL - HELPERS
+	USEFUL - LISTS
+	USEFUL - TYPOGRAPHY
+
+BLOCKS
+	BLOCKS - EMBEDDED
+	BLOCKS - LISTS
+	BLOCKS - FORMS
+	BLOCKS - LINKS
+	BLOCKS - BUTTONS
+	BLOCKS - TABLES
+	BLOCKS - PRODUCT
+	BLOCKS - NAV
+	BLOCKS - BANNERS & SLIDERS
+	BLOCKS - SWITCHERS
+	BLOCKS - TROUBLE REPORT
+
+THEME
+	THEME - HELPERS
+	THEME - EMBEDDED
+	THEME - LISTS
+	THEME - FORMS
+	THEME - LINKS
+	THEME - BUTTONS
+	THEME - TABLES
+	THEME - PRODUCT
+	THEME - NAV
+	THEME - BANNERS & SLIDERS
+	THEME - POPUPS
+	THEME - POPUPS - FANCYBOX
+	THEME - POPUPS - NOTIFICATIONS
+	THEME - POPUPS - PHOTOS VIEWER
+
+PAGES
+	PAGES - HEADER
+	PAGES - FOOTER
+	PAGES - MAIN
+	PAGES - MAIN - SHOPS
+	PAGES - MAIN - ITEMS
+		PAGES - MAIN - ITEMS - ITEM CARD
+	PAGES - MAIN - FEEDBACK
+	PAGES - MAIN - OPERATION
+	PAGES - MAIN - SERVICE
+	PAGES - ERROR
+
+HELPERS
+
+ */
+
+
+
+/* BASE
+---------------------------------------------------------------------*/
+
+/* BASE - ROOT
+---------------------------------------------------------------------*/
+
+html {
+	font-size: 62.5%;
+	font-family: sans-serif;
+	overflow-y: scroll; /* убираем скачок из-за появляющейся полосы прокрутки */
+	-webkit-font-smoothing: antialiased; /* лучшее сглаживание шрифта в макоси */
+
+	/* http://stackoverflow.com/questions/6210788/how-to-avoid-ios-automatic-font-size-adjustment — автоматическая настройка размеров текста у мобильных */
+	-webkit-text-size-adjust: 100%;
+		-ms-text-size-adjust: 100%;
+}
+
+body {
+	line-height: 1;
+	margin: 0; /* Убираем внутренний отступ */
+}
+
+/* Текстовые выделения: убирается тень и добавляются цвета по умолчанию */
+::-moz-selection {
+	background-color: #69c;
+	background-color: Highlight;
+	color: #fff;
+	color: HighlightText;
+	text-shadow: none;
+}
+::selection {
+	background-color: #69c;
+	background-color: Highlight;
+	color: #fff;
+	color: HighlightText;
+	text-shadow: none;
+}
+
+[hidden], /* отсутствует в ИЕ789 */
+template { /* отсутствует в ИЕ, Сафари и ФФлт22 */
+	display: none;
+}
+
+
+
+/* BASE - HTML5
+---------------------------------------------------------------------*/
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section,
+summary {
+	display: block; /* исправляется отображение в ИЕ89 */
+}
+
+audio,
+canvas,
+video {
+	display: inline-block; /* исправляется отображение в ИЕ89 */
+}
+.ie7 audio,
+.ie7 canvas,
+.ie7 video {
+	display: inline;
+	zoom: 1;
+}
+
+audio:not([controls]) {
+	display: none; /* не отображать без элементов управления */
+	height: 0; /* убирается ненужная высота в аёс 5 */
+}
+
+
+
+/* BASE - EMBEDDED
+---------------------------------------------------------------------*/
+
+img {
+	border: 0; /* убирается граница, если изображение внутри ссылки в ИЕ89 */
+	vertical-align: middle; /* убирается отступ снизу */
+}
+.ie7 img {
+	-ms-interpolation-mode: bicubic; /* улучшение отображения при изменении размера */
+}
+
+.ie9 svg:not(:root) {
+	overflow: hidden; /* отображение в ИЕ9 */
+}
+
+figure {
+	margin: 0; /* ИЕ 789, Сафари 5, Опера 11 */
+}
+
+
+
+/* BASE - FORMS
+---------------------------------------------------------------------*/
+
+.ie7 form {
+	margin: 0;
+}
+
+fieldset {
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+legend {
+	border: 0;
+	padding: 0;
+	white-space: normal;
+}
+.ie7 legend {
+	margin-left: -7px;
+}
+
+label,
+input[type="checkbox"],
+input[type="radio"],
+button,
+select,
+.curPointer {
+	cursor: pointer;
+}
+html input[disabled],
+button[disabled],
+select[disabled] {
+	cursor: default;
+}
+
+button,
+input,
+select,
+textarea {
+	-webkit-box-sizing: border-box;
+	 -moz-box-sizing: border-box;
+			box-sizing: border-box;
+	font-family: inherit;
+	font-size: inherit;
+	line-height: inherit;
+	margin: 0;
+	vertical-align: baseline;
+}
+.ie7 button,
+.ie7 input,
+.ie7 select,
+.ie7 textarea {
+	vertical-align: middle;
+}
+
+button,
+input {
+	line-height: 1;
+}
+
+button,
+select {
+	text-transform: none;
+}
+
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+	-webkit-appearance: button; /* отображение в аёс и андроид */
+	cursor: pointer;
+}
+.ie7 button,
+.ie7 html input[type="button"],
+.ie7 input[type="reset"],
+.ie7 input[type="submit"] {
+	overflow: visible; /* внутренний отступ */
+}
+
+/* исправление неверно определяемых размеров в ИЕ */
+input[type="checkbox"],
+input[type="radio"] {
+	margin-top: -.17em;
+	padding: 0;
+	vertical-align: middle;
+}
+.ie7 input[type="checkbox"],
+.ie7 input[type="radio"] {
+	height: 13px;
+	width: 13px;
+}
+
+/* исправление проблемы с отображением в Хроме */
+input[type="search"] {
+	-webkit-appearance: textfield;
+	-webkit-box-sizing: content-box;
+	 -moz-box-sizing: content-box;
+			box-sizing: content-box;
+}
+
+/* проблемы с отображением в Хроме и Сафари */
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+	-webkit-appearance: none;
+}
+
+/* внутренний отступ в ФФ */
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}
+
+/* выделение элементов при фокусе в Хроме */
+select:focus,
+button:focus,
+textarea:focus,
+input:focus {
+	outline: 0;
+}
+
+/* вертикальная полоса прокрутки в ИЕ */
+textarea {
+	overflow: auto;
+	resize: vertical;
+	vertical-align: top;
+}
+
+
+
+/* BASE - TABLES
+---------------------------------------------------------------------*/
+
+/* устранение отступов между ячейками */
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+
+/* BASE - LINKS
+---------------------------------------------------------------------*/
+
+a:focus {
+	outline: thin dotted; /* одинаковое выделение выбранных ссылок */
+}
+
+a:active,
+a:hover {
+	outline: 0; /* убираем выделение в других состояниях */
+}
+
+
+
+/* BASE - LISTS
+---------------------------------------------------------------------*/
+
+ul, ol, dl {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+
+
+/* BASE - TYPOGRAPHY
+---------------------------------------------------------------------*/
+
+abbr[title] {
+	border-bottom: 1px dotted; /* стиль отсутствует в ИЕ 89, Сафари 5 и в Хроме */
+}
+
+b, strong {
+	font-weight: 700;
+}
+
+i, em {
+	font-style: italic;
+}
+
+blockquote {
+	margin: 1em 3em;
+}
+
+dfn {
+	font-style: italic; /* стиль отсутствует в Сафари 5 и Хроме */
+}
+
+/* в ФФ теперь не отличается */
+hr {
+	-moz-box-sizing: content-box;
+		 box-sizing: content-box;
+	height: 0;
+}
+
+/* стиль отсутствует в ИЕ 789 */
+mark {
+	background: #ff0;
+	color: #000;
+}
+
+/* стиль отсутствует в Сафари 5 и Хроме */
+code, kbd, pre, samp {
+	font-family: coursiva, monospace, serif;
+	font-size: 1em;
+}
+
+pre {
+	white-space: pre-wrap; /* улучшает читаемость во всех браузерах */
+}
+
+/* кавычки для русского и английского языков */
+q:lang(en), .q.en {
+	quotes: "\201C" "\201D" "\2018" "\2019";
+}
+q:lang(ru), .q.ru {
+	quotes: '\00AB' '\00BB' '\201E' '\201C';
+}
+
+big {
+	font-size: 120%;
+}
+small {
+	font-size: 80%;
+}
+
+/* чтобы не влияли на высоту строки */
+sub, sup {
+	font-size: 75%;
+	line-height: 0;
+	position: relative;
+	vertical-align: baseline;
+}
+sup {
+	top: -0.5em;
+}
+sub {
+	bottom: -0.25em;
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+	font-size: 100%;
+	font: inherit;
+	margin: 0;
+}
+p {
+	margin: 0;
+}
+
+
+
+/* USEFUL - HELPERS
+---------------------------------------------------------------------*/
+
+/* предотвращает схлопывание элемента, если в нём есть плавающие */
+.group:before,
+.group:after {
+	content: " ";
+	display: table;
+}
+.group:after {
+	clear: both;
+}
+.ie7 .group {
+	zoom: 1;
+}
+
+/* альтернативный способ */
+.groupIB {
+	-webkit-box-sizing: border-box;
+	 -moz-box-sizing: border-box;
+			box-sizing: border-box;
+	display: inline-block;
+	width: 100%;
+}
+.ie7 .groupIB {
+	display: inline;
+	zoom: 1;
+}
+
+/* для использования с отдельным элементом */
+.clearBoth {
+	clear: both;
+}
+
+
+/* способы скрытия элемента */
+.hide {
+	display: none;
+}
+.hideNow {
+	display: none !important;
+}
+
+.hideAway {
+	left: -9999px;
+	position: absolute;
+	top: -9999px;
+	visibility: hidden;
+}
+.hideAwayNow {
+	left: -9999px !important;
+	position: absolute !important;
+	top: -9999px !important;
+	visibility: hidden !important;
+}
+
+	.showBlock { display: block; }
+	 .showInline { display: inline; }
+.showInlineBlock { display: inline-block; }
+
+	.showBlockNow { display: block !important; }
+	 .showInlineNow { display: inline !important; }
+.showInlineBlockNow { display: inline-block !important; }
+
+.ie7 .showInlineBlock {
+	display: inline;
+	zoom: 1;
+}
+.ie7 .showInlineBlockNow {
+	display: inline !important;
+	zoom: 1;
+}
+
+
+/* изображение растягивается на всю ширину контейнера, не искажаясь */
+.imgFill {
+	height: auto;
+	width: 100%;
+}
+
+/* растяжка элемента на всю ширину контейнера */
+.widthFull {
+	width: 100%;
+}
+
+
+/* скрытие элементов, нуждающихся в джс, класс для модернизра */
+.isNeedsJS {
+	opacity: 0;
+	visibility: hidden;
+}
+.has-js .isNeedsJS {
+	opacity: 1;
+	visibility: visible;
+}
+
+
+/* предзагрузка изображений */
+/*
+<button>
+	<span class="Icon order imgPreload imgPreloadLoading"></span>
+	Купить
+</button>
+*/
+
+.imgPreload:after {
+	content: '';
+	display: inline;
+}
+
+
+/*
+<label for="input">Заголовок</label>
+<input id="input" type="text" />
+*/
+
+.fieldRequired:after {
+	color: red;
+	content: '*';
+	font-weight: bold;
+	margin-left: .3em;
+}
+.ie7 .fieldRequired {
+	background-color: #fdd;
+	display: inline;
+	min-height: 1em;
+	min-width: 1em;
+	zoom: 1;
+}
+
+
+/* скрытие текста в элементе */
+.textHide {
+	overflow: hidden;
+}
+.textHide:before {
+	content: "";
+	display: block;
+	height: 150%;
+}
+.ie7 .textHide {
+	text-indent: -9999px; /* проблема: строчно-блоковые элементы улетают */
+}
+
+/* отключение всплытия информации о ссылке при долгом нажатии на ней, http://developer.apple.com/library/safari/#documentation/AppleApplications/Reference/SafariCSSRef/Articles/StandardCSSProperties.html#/apple_ref/css/property/-webkit-touch-callout */
+.noTouchCallout {
+	-webkit-touch-callout: none;
+}
+
+/* https://developer.apple.com/library/safari/#documentation/AppleApplications/Reference/SafariWebContent/AdjustingtheTextSize/AdjustingtheTextSize.html */
+/* аналог для ИЕ10 на ВинФон8 — http://blogs.windows.com/windows_phone/b/wpdev/archive/2012/11/15/adapting-your-webkit-optimized-site-for-internet-explorer-10.aspx */
+.noTapHighlight {
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+/* верхний регистр с разрядкой */
+.textUppercase {
+	font-size: .875em;
+	letter-spacing: .1em;
+	margin-right: -.1em;
+	text-transform: uppercase;
+}
+
+/* полупробел */
+/* аналог в хтмл — `&#8198;` [отсюда](http://stackoverflow.com/a/8515417) */
+/* неразрывный вариант — `&#8239;` [отсюда](http://en.wikipedia.org/wiki/Non-breaking_space) */
+/*
+<span class="halfSpace">&nbsp;</span>
+*/
+
+.textHalfSpace {
+	font-size: 50%;
+	line-height: 1;
+}
+
+
+
+/* USEFUL - LISTS
+---------------------------------------------------------------------*/
+
+.ul, .Textnode ul,
+.ol, .Textnode ol,
+.dl, .Textnode dl {
+	margin: 1.5em 0;
+}
+.ul, .Textnode ul,
+.ol, .Textnode ol {
+	padding: 0 0 0 3em;
+}
+.dl > dt,
+.Textnode dt {
+	font-weight: bold;
+}
+.dl > dd,
+.Textnode dd {
+	margin: 0 0 0 3em;
+}
+.ul .ul,
+.Textnode ul ul {
+	margin: .5em 0 1em;
+}
+.ul > li, .Textnode ul > li,
+.ol > li, .Textnode ol > li,
+.dl > dt, .Textnode dl > dt,
+.dl > dd, .Textnode dl > dd {
+	line-height: 1.5em;
+	margin-top: .5em;
+	padding-left: 0;
+	position: relative;
+}
+.ul > li:first-child, .Textnode ul > li:first-child,
+.ol > li:first-child, .Textnode ol > li:first-child,
+.dl > dt:first-child, .Textnode dl > dt:first-child,
+.dl > dd:first-child, .Textnode dl > dd:first-child {
+	margin-top: 0;
+}
+.ul > li:before, .Textnode ul > li:before,
+.ol > li:before, .Textnode ol > li:before {
+	cursor: default;
+	margin-right: .35em;
+	position: absolute;
+	right: 100%;
+	top: 0;
+}
+.ul.markerInside > li:before, .Textnode ul.markerInside > li:before,
+.ol.markerInside > li:before, .Textnode ol.markerInside > li:before {
+	position: static;
+}
+
+.ul > li:before,
+.Textnode ul > li:before {
+	content: '\25CF';
+}
+ul.circledList > li:before,
+ul.squaredList > li:before {
+	font-size: .7em;
+	margin-right: .5em;
+}
+ul.circledList > li:before {
+	content: '\25CB';
+}
+ul.squaredList > li:before {
+	content: '\25A0';
+}
+ul.dashedList > li:before {
+	content: '\2014';
+	margin-right: .5em;
+}
+
+.ie7 .ul > li,
+.ie7 .Textnode ul > li {
+	list-style-type: disc;
+}
+
+
+.ol,
+.Textnode ol {
+	counter-reset: level1;
+}
+.ol > li,
+.Textnode ol > li {
+	list-style-type: none;
+}
+.ie7 .ol > li,
+.ie7 .Textnode ol > li {
+	list-style-type: decimal;
+}
+.ol > li:before,
+.Textnode ol > li:before {
+	content: counter(level1) ". ";
+	counter-increment: level1;
+	position: absolute;
+}
+.ol .ol,
+.Textnode ol ol {
+	counter-reset: level2;
+}
+.ol .ol li:before,
+.Textnode ol ol li:before {
+	content: counter(level1) "." counter(level2) ". ";
+	counter-increment: level2;
+	position: absolute;
+}
+
+
+
+/* USEFUL - TYPOGRAPHY
+---------------------------------------------------------------------*/
+
+.Textnode,
+.h1, .h2, .h3, .h4, .h5, .h6,
+.p, .pre {
+	line-height: 1.5em;
+}
+
+.h1, .Textnode h1,
+.h2, .Textnode h2,
+.h3, .Textnode h3,
+.h4, .Textnode h4,
+.h5, .Textnode h5,
+.h6, .Textnode h6 {
+	font-weight: bold;
+}
+.subheader,
+.Textnode .subheader { /* борьба со специфичностью */
+	font-weight: normal;
+}
+
+.h1, .Textnode h1 {
+	font-size: 2em;
+	margin: 0.67em 0;
+}
+.h2, .Textnode h2 {
+	font-size: 1.5em;
+	margin: 0.83em 0;
+}
+.h3, .Textnode h3 {
+	font-size: 1.17em;
+	margin: 1em 0;
+}
+.h4, .Textnode h4 {
+	font-size: 1em;
+	margin: 1.33em 0;
+}
+.h5, .Textnode h5 {
+	font-size: 0.83em;
+	margin: 1.67em 0;
+}
+.h6, .Textnode h6 {
+	font-size: 0.67em;
+	margin: 2.33em 0;
+}
+
+
+.p, .Textnode p,
+.pre, .Textnode pre {
+	margin: 1.5em 0;
+}
+.p + .ul, .Textnode p + ul,
+.p + .ol, .Textnode p + ol {
+	margin-top: -.75em;
+}
+
+
+
+/* BLOCKS
+---------------------------------------------------------------------*/
+
+/* BLOCKS - EMBEDDED
+---------------------------------------------------------------------*/
+
+/*
+<span class="Icon actions"></span>
+*/
+
+.Icon {
+	background: resolve('icons/ui.png') no-repeat;
+	display: inline-block;
+	margin-top: -.17em;
+	vertical-align: middle;
+}
+.ie7 .Icon {
+	display: inline;
+	zoom: 1;
+}
+a .Icon {
+	margin-right: .4em;
+}
+
+
+/*
+<figure class="Figure">
+	<img>
+	<figcaption>Подпись картинки</figcaption>
+</figure>
+*/
+
+
+
+/* BLOCKS - LISTS
+---------------------------------------------------------------------*/
+
+/*
+<ul class="List">
+	<li class="ListItem">Пункт меню, например</li>
+</ul>
+*/
+
+.List {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.ListItem {}
+.List.ib .ListItem {
+	display: inline-block;
+}
+.ie7 .List.ib .ListItem {
+	display: inline;
+	zoom: 1;
+}
+
+.List.ib.justify {
+	text-align: justify;
+}
+.List.ib.justify .ListItem {
+	text-align: left;
+}
+.List.ib.justify:after {
+	content: "";
+	display: inline-block;
+	height: 1px;
+	width: 100%;
+}
+
+.List.ib.separated {
+	cursor: default;
+}
+.List.ib.separated .ListItem:after {
+	content: "|";
+	margin-left: .55em;
+	margin-right: .55em;
+	opacity: .75;
+}
+.List.ib.separated .ListItem.last:after {
+	content: none;
+}
+
+
+
+/* BLOCKS - FORMS
+---------------------------------------------------------------------*/
+
+/*
+<form action="#" class="FormSearch headerSearch">
+	<button class="FormSearchSubmit" type="submit"><span class="textHide Icon enterBtn">Найти</span></button>
+	<label class="FormSearchWrapper"><input class="FormSearchField" type="text"><span class="Icon search"></span></label>
+</form>
+*/
+
+.FormSearch {
+	position: relative;
+	width: 100%;
+}
+.FormSearchWrapper {
+	display: block;
+}
+.FormSearchField {
+	width: 100%;
+}
+.FormSearchSubmit {
+	float: right;
+}
+
+
+/*
+<form class="Form">
+	<div class="FormField">
+	<label>
+		<input type="text">
+		Напишите что-нибудь
+	</label>
+	</div>
+</form>
+*/
+
+.Form .FormField {
+	margin-top: 2em;
+	position: relative;
+}
+.Form .FormField:first-child {
+	margin-top: 0;
+}
+.Form .FormField.ib {
+	display: inline-block;
+	margin-top: 0;
+}
+
+
+
+/* BLOCKS - LINKS
+---------------------------------------------------------------------*/
+
+a,
+.pseudoLink {
+	border-bottom: 1px solid;
+	display: inline-block;
+	line-height: 1;
+}
+.ie7 a,
+.ie7 .pseudoLink {
+	display: inline;
+	zoom: 1;
+}
+
+a {
+	text-decoration: none;
+}
+.pseudoLink {
+	border-bottom-style: dotted;
+	cursor: pointer;
+}
+
+a.Icon {
+	border-bottom: 0;
+}
+
+
+
+/* BLOCKS - BUTTONS
+---------------------------------------------------------------------*/
+
+/*
+<a class="Btn" href="#">Напомнить</a>
+<button class="Btn">Купить</button>
+<input class="Btn" type="submit" value="Применить">
+*/
+
+.Btn {
+	border: 0;
+	-webkit-box-sizing: border-box;
+	 -moz-box-sizing: border-box;
+			box-sizing: border-box;
+	cursor: pointer;
+	display: inline-block;
+	font: inherit;
+	overflow: visible;
+	-webkit-user-select: none;
+	 -moz-user-select: none;
+		-ms-user-select: none;
+			user-select: none;
+}
+.Btn:hover {
+	text-decoration: none;
+}
+.ie7 .Btn {
+	display: inline;
+	zoom: 1;
+}
+
+.Btn.big {
+	font-size: 1.25em;
+}
+.Btn.small {
+	font-size: .75em;
+}
+
+
+.BtnDefault {
+	line-height: 1;
+	position: relative;
+	text-align: center;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+
+
+/* BLOCKS - TABLES
+---------------------------------------------------------------------*/
+
+/*
+<a class="pseudoTable">
+	<span class="col name">Имя</span>
+	<span class="col age">Возраст</span>
+	<span class="col weight">Вес</span>
+</a>
+*/
+
+.pseudoTable .col {
+	-webkit-box-sizing: border-box;
+	 -moz-box-sizing: border-box;
+			box-sizing: border-box;
+	display: inline-block;
+	padding: .75em;
+	vertical-align: middle;
+	word-wrap: break-word;
+}
+
+
+
+/* BLOCKS - PRODUCT
+---------------------------------------------------------------------*/
+
+/*
+<div class="Product">
+	<a href="#" class="ProductLink">
+	<img src="http://img.png" alt="" class="ProductPhoto">
+	<span class="ProductName">Вентилятор</span>
+	<span class="textHide ProductBadge novelty">Новинка</span>
+	</a>
+</div>
+*/
+
+.Product {
+	position: relative;
+}
+
+.ProductLink {
+	line-height: 1.5;
+	position: relative;
+}
+
+.Product .ProductCode {
+	font-size: 11px;
+	color: #999;
+	margin-bottom: 8px;
+	text-align: center;
+}
+
+.ProductName {
+	border-bottom: 1px solid;
+}
+
+.ProductBadge {
+	position: absolute;
+	z-index: 3;
+}
+
+.List.ib.products .ProductLink {
+	display: block;
+}
+.List.ib.products .ProductPhoto {
+	display: block;
+	height: auto;
+	margin-bottom: 4px;
+	width: 100%;
+}
+
+.Files {
+	margin-bottom: 20px;
+}
+
+.File {
+	&__name {
+		display: inline;
+		border-bottom: 1px solid;
+	}
+}
+
+
+
+/* BLOCKS - NAV
+---------------------------------------------------------------------*/
+
+/*
+<div class="Paginator">
+	<span class="PaginatorPager"><a href="#">&larr;</a><small> + Ctrl</small></span>
+	<ul class="PaginatorList">
+	<li class="PaginatorListItem">
+		<a href="#">1</a>
+	</li><li class="PaginatorListItem active">
+		2
+	</li><li class="PaginatorListItem">
+		...
+	</li><li class="PaginatorListItem">
+		<a href="#">7</a>
+	</li>
+	</ul>
+	<span class="PaginatorPager"><small>Ctrl + </small><a href="#">&rarr;</a></span>
+</div>
+*/
+
+.Paginator {
+	cursor: default;
+}
+
+.PaginatorList,
+.PaginatorListItem {
+	display: inline-block;
+	vertical-align: top;
+}
+.ie7 .PaginatorList,
+.ie7 .PaginatorListItem {
+	display: inline;
+	zoom: 1;
+}
+
+.PaginatorPager small {
+	font-size: 70%;
+}
+
+.PaginatorList {
+	margin-right: .4em;
+	margin-left: .4em;
+}
+
+.PaginatorListItem {
+	padding: 0 .4em;
+}
+
+
+/*
+<div class="Breadcrums">
+	<ul class="BreadcrumsList">
+	<li class="BreadcrumsItem">
+		<a href="#">Главная</a>
+	</li><li class="BreadcrumsItem last">
+		<span>Обратная связь</span>
+	</li>
+	</ul>
+</div>
+*/
+
+.Breadcrums {
+	cursor: default;
+	font-size: .86em;
+	line-height: 1;
+}
+.BreadcrumsList {}
+.BreadcrumsItem {
+	display: inline-block;
+	margin-right: .4em;
+	vertical-align: baseline;
+}
+.BreadcrumsItem:after {
+	content: "";
+	display: inline-block;
+	left: 100%;
+	margin-top: -.17em;
+	margin-left: .5em;
+	top: 0;
+	vertical-align: middle;
+}
+.BreadcrumsItem.active:after {
+	display: none;
+}
+
+
+
+/* BLOCKS - BANNERS & SLIDERS
+---------------------------------------------------------------------*/
+
+/*
+<div class="Banner main" style="background-color: #88c3ff;">
+	<div class="Wrapper main">
+	<div class="BannerContainer">
+		<ul class="BannerSlides">
+		<li class="BannerSlide">
+			<a class="BannerLink" href="#">
+			<img src="/img/banner.png" alt="" width="" height="" class="BannerImage">
+			</a>
+		</li>
+		</ul>
+		<div class="BannerControls">
+		<div class="BannerControl prev"></div>
+		<div class="BannerControl next"></div>
+		</div>
+	</div>
+	</div>
+</div>
+*/
+
+.Banner {}
+.Banner .BannerContainer {
+	position: relative;
+}
+.BannerSlides {
+	overflow: hidden;
+	white-space: nowrap;
+}
+.BannerSlide {
+	background-color: #fff;
+	background-position: 50% 0;
+	display: inline-block;
+	position: relative;
+	vertical-align: top;
+	width: 100%;
+}
+.BannerLink {
+	border-bottom: 0;
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+.BannerImage {
+	display: block;
+}
+.BannerControls {
+	margin-top: 10px;
+	position: absolute;
+	top: 50%;
+	width: 100%;
+}
+
+.BannerControl {
+	cursor: pointer;
+	display: block;
+	position: absolute;
+	top: 0;
+}
+.BannerControl.disabled {
+	cursor: default;
+}
+.BannerControl.prev {
+	left: 0;
+}
+.BannerControl.next {
+	right: 0;
+}
+
+
+/*
+<div class="Slider main">
+	<div class="Wrapper main">
+	<ul class="SliderItemList">
+		<li class="SliderItem">
+		<a class="ProductLink" href="#">
+			<img class="ProductPhoto" src="http://img1.png" alt="">
+			<span class="ProductName">Вентилятор 1</span>
+		</a>
+		</li><li class="SliderItem">
+		<a class="ProductLink" href="#">
+			<img class="ProductPhoto" src="http://img2.png" alt="">
+			<span class="ProductName">Вентилятор 2</span>
+		</a>
+		</li>
+	</ul>
+	<div class="SliderControls">
+		<div class="SliderProgress">
+		<div class="SliderHandler"></div>
+		</div>
+	</div>
+	</div>
+</div>
+*/
+
+.Slider.main {
+	-webkit-box-sizing: border-box;
+	 -moz-box-sizing: border-box;
+			box-sizing: border-box;
+	padding-top: 2em;
+}
+
+.SliderItemList {
+	overflow: hidden;
+	white-space: nowrap;
+}
+.SliderItem {
+	display: inline-block;
+	padding-left: 1em;
+	vertical-align: top;
+	white-space: normal;
+}
+.SliderItem:first-child {
+	margin-left: 0;
+}
+.SliderItem .ProductPhoto {
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.SliderItem .ProductCode {
+	margin-top: 3px;
+	margin-bottom: 4px;
+	font-size: 11px;
+	color: #999;
+}
+
+.SliderProgress {
+	position: relative;
+}
+
+.SliderHandler {
+	cursor: move;
+	cursor: -webkit-grab;
+	cursor: -moz-grab;
+	cursor: -o-grab;
+	cursor: -ms-grab;
+	cursor: grab;
+	display: block;
+	position: relative;
+}
+.SliderHandler:active,
+.SliderHandler.active {
+	cursor: -webkit-grabbing;
+	cursor: -moz-grabbing;
+	cursor: -o-grabbing;
+	cursor: -ms-grabbing;
+	cursor: grabbing;
+}
+
+
+
+/* BLOCKS - TROUBLE REPORT
+---------------------------------------------------------------------*/
+
+/*
+	<div class="TroubleReport">
+		<a class="TroubleReport__button" href="#">Сообщить о проблеме</a>
+	</div>
+*/
+
+.TroubleReport {
+	position: absolute;
+	top: 44px;
+	left: 0;
+}
+
+.TroubleReport__button {
+	display: inline-block;
+	padding: 9px 17px 9px 47px;
+	border-radius: 5px;
+	border: none;
+	font-size: 12px;
+	text-decoration: none;
+	line-height: 1;
+	color: #3d3d3d;
+	background-color: rgba(221, 221, 221, .9);
+	background-image: resolve('interface/troubleReport.png');
+	background-repeat: no-repeat;
+	background-position: 19px 50%;
+	transition: background-color .3s;
+}
+
+.TroubleReport__button:hover {
+	color: #3d3d3d;
+	background-color: rgba(221, 221, 221, 1);
+}
+
+
+
+
+/* THEME
+---------------------------------------------------------------------*/
+
+/* THEME - HELPERS
+---------------------------------------------------------------------*/
+
+/* выделения фирменным цветом */
+.colorAccent {
+	color: #ed1c24;
+}
+
+/* врезка */
+/*p*/.textIncut {
+	background-color: #f1f0ef;
+	-webkit-border-radius: .3em;
+	 -moz-border-radius: .3em;
+			border-radius: .3em;
+	font-size: 1.3em;
+	line-height: 1.3;
+	padding: 1.15em 1.35em;
+	position: relative;
+}
+.textIncut:after {
+	background:
+		resolve('interface/text_incut_bottom_left.png') no-repeat,
+		resolve('interface/text_incut_bottom_right.png') 100% 0 no-repeat,
+		resolve('interface/text_incut_bottom_bg.png') repeat-x;
+	content: '';
+	height: 30px;
+	left: 0;
+	position: absolute;
+	top: 100%;
+	width: 100%;
+}
+
+
+
+/* THEME - EMBEDDED
+---------------------------------------------------------------------*/
+
+/*
+<figure class="Figure">
+	<img>
+	<figcaption>Подпись картинки</figcaption>
+</figure>
+*/
+
+.Figure {
+	margin-top: 3em;
+	margin-bottom: 3em;
+}
+.Figure img {
+	border: 1px solid #949494;
+}
+.Figure figcaption {
+	color: #666;
+	font-size: .86em;
+	margin-top: 1em;
+}
+
+
+.Icon.search {
+	background-position: 0 0;
+	height: 16px;
+	width: 13px;
+}
+.LinkIcon.mail .Icon,
+.Icon.mail {
+	background-position: 0 -34px;
+	height: 13px;
+	width: 21px;
+}
+a.Icon.mail:hover,
+a.Icon.mail.hover,
+.Icon.mail.active {
+	background-position: -26px -34px;
+}
+
+.Icon.searchActive,
+.Icon.search.active {
+	background-position: -18px 0;
+}
+.Icon.enterBtn {
+	background-position: 0 -21px;
+	height: 8px;
+	width: 11px;
+}
+.Icon.enterBtnActive,
+.Icon.enterBtn.active {
+	background-position: -16px -21px;
+}
+.Icon.logo.small.white {
+	background-image: resolve('brand/logos.png');
+	background-position: 0 -35px;
+	width: 61px;
+	height: 9px;
+}
+.Icon.close {
+	background-position: -36px 0;
+	height: 9px;
+	width: 9px;
+}
+
+.Icon.stickpin {
+	background-position: -50px 0;
+	height: 12px;
+	width: 8px;
+}
+
+
+/* THEME - LISTS
+---------------------------------------------------------------------*/
+
+.List.ib.products {
+	margin-top: 1.5em;
+	margin-bottom: -5.5em;
+}
+.List.ib.products .ListItem {
+	-webkit-box-sizing: border-box;
+	 -moz-box-sizing: border-box;
+			box-sizing: border-box;
+	vertical-align: top;
+	margin-bottom: 6em;
+	width: 27.5%;
+}
+.List.ib.justify.products .ListItem.fake {
+	margin-bottom: 0;
+}
+
+
+
+.ul.accent > li:before,
+.Textnode ul.accent > li:before {
+	color: #ed1c24; /* подсветка фирменным цветом */
+}
+
+.ul, .Textnode ul,
+.ol, .Textnode ol {
+	padding: 0 0 0 .8em;
+}
+.ol li:before,
+.Textnode ol li:before {
+	color: #6b6b6b;
+	font-size: .8em;
+	line-height: 2em;
+}
+
+
+.List.separated.braid .ListItem {
+	position: relative;
+}
+.List.separated.braid .ListItem:after {
+	background: resolve('interface/list_item_bottom_braid.png') 50% 50% repeat-x;
+	-webkit-box-shadow: inset 0 0 3px #fff;
+	 -moz-box-shadow: inset 0 0 3px #fff;
+			box-shadow: inset 0 0 3px #fff;
+	content: "";
+	display: inline-block;
+	height: 12px;
+	width: 100%;
+}
+
+
+
+/* THEME - FORMS
+---------------------------------------------------------------------*/
+
+.Fieldset {
+	border: 1px solid;
+	padding: .35em .625em .75em;
+}
+
+
+input[type="text"],
+input[type="password"],
+input[type="search"],
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+select,
+textarea {
+	border: 0;
+	-webkit-border-radius: 1em;
+	 -moz-border-radius: 1em;
+			border-radius: 1em;
+	-webkit-box-shadow: inset 0 .072em .214em rgba(0,0,0,.3);
+	 -moz-box-shadow: inset 0 .072em .214em rgba(0,0,0,.3);
+			box-shadow: inset 0 .072em .214em rgba(0,0,0,.3);
+	-webkit-box-sizing: border-box;
+	 -moz-box-sizing: border-box;
+			box-sizing: border-box;
+	line-height: 1;
+	padding: .5em;
+}
+.ie8 input[type="text"],
+.ie8 input[type="password"],
+.ie8 input[type="search"],
+.ie8 input[type="email"],
+.ie8 input[type="tel"],
+.ie8 input[type="url"],
+.ie8 select,
+.ie8 textarea {
+	border: 1px solid #999;
+}
+
+select {
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#fff), to(#efefef));
+	background: -webkit-linear-gradient(#fff, #efefef);
+	 background: -moz-linear-gradient(#fff, #efefef);
+		 background: -o-linear-gradient(#fff, #efefef);
+			background: linear-gradient(#fff, #efefef);
+	-webkit-box-shadow: 0 .072em .214em rgba(0,0,0,.3);
+	 -moz-box-shadow: 0 .072em .214em rgba(0,0,0,.3);
+			box-shadow: 0 .072em .214em rgba(0,0,0,.3);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+	-webkit-box-shadow: 0 0 .6em #83c6f2;
+	 -moz-box-shadow: 0 0 .6em #83c6f2;
+			box-shadow: 0 0 .6em #83c6f2;
+}
+
+/* сфокусированные радиобатоны отбрасывали квадратную тень */
+input[type="radio"]:focus {
+	-webkit-box-shadow:
+			inset 0 0 .5em 0px rgba(80,190,255,.6),
+			0 0 1em rgba(80,190,255,.9);
+	 -moz-box-shadow:
+			inset 0 0 .5em 0px rgba(80,190,255,.6),
+			0 0 1em rgba(80,190,255,.9);
+			box-shadow:
+			inset 0 0 .5em 0px rgba(80,190,255,.6),
+			0 0 1em rgba(80,190,255,.9);
+}
+
+
+/*
+<div class="formError">
+	<input type="text" />
+	<span class="errorName">Поле не должно быть пустым</span>
+</div>
+<div>
+	с <input type="text" /> по <input class="fieldError" type="text" />
+	<span class="errorName">Дата должна быть адекватной</span>
+</div>
+*/
+
+.formError input,
+.formError select,
+.formError textarea,
+input.fieldError,
+select.fieldError,
+textarea.fieldError {
+	-webkit-box-shadow: 0 0 .3em #E70202;
+	 -moz-box-shadow: 0 0 .3em #E70202;
+			box-shadow: 0 0 .3em #E70202;
+}
+.errorName {
+	color: #E70202;
+	font-size: 0.86em;
+	left: 0;
+	margin-top: 5px;
+	position: absolute;
+	top: 100%;
+	width: 100%;
+}
+
+
+/*
+<form action="#" class="FormSearch headerSearch">
+	<button class="FormSearchSubmit" type="submit"><span class="textHide Icon enterBtn">Найти</span></button>
+	<label class="FormSearchWrapper"><input class="FormSearchField" type="text"><span class="Icon search"></span></label>
+</form>
+*/
+
+.FormSearch .Icon.search {
+	left: 1em;
+	position: absolute;
+	top: .7em;
+}
+.FormSearchWrapper {
+	margin-right: 25px;
+}
+input.FormSearchField {
+	background-color: #58a6d6;
+	color: #fff;
+	padding-left: 2.5em;
+	-webkit-transition: background-color .1s;
+	 -moz-transition: background-color .1s;
+		 -o-transition: background-color .1s;
+			transition: background-color .1s;
+}
+.FormSearchField:focus,
+.FormSearchField.isFilled {
+	background-color: #fff;
+	color: #000;
+}
+.FormSearchField:focus + .Icon.search,
+.FormSearchField.isFilled + .Icon.search {
+	background-position: -18px 0;
+}
+.FormSearchSubmit {
+	background: none;
+	border: 0;
+	padding: 8px 6px;
+	margin: 0;
+}
+.FormSearchSubmit:hover .Icon.enterBtn,
+.FormSearchSubmit:focus .Icon.enterBtn {
+	background-position: -16px -21px;
+}
+
+
+
+/* THEME - LINKS
+---------------------------------------------------------------------*/
+
+a,
+.pseudoLink {
+	border-bottom-color: #7fb7da;
+	color: #006fb6;
+}
+
+a:hover,
+.pseudoLink:hover {
+	border-bottom-color: #f68d91;
+	color: #ed1c24;
+}
+
+.Textnode a:visited {
+	border-bottom-color: #cda6df;
+	color: #9b4dbf;
+}
+
+
+
+/* THEME - BUTTONS
+---------------------------------------------------------------------*/
+
+.BtnDefault {
+	-webkit-border-radius: 3px;
+	 -moz-border-radius: 3px;
+			border-radius: 3px;
+	padding: .8em .7em;
+	top: -3px;
+	-webkit-transition: .025s;
+	 -moz-transition: .025s;
+		 -o-transition: .025s;
+			transition: .025s;
+}
+.BtnDefault:active,
+.BtnDefault.active {
+	top: 0;
+}
+.Btn.BtnDefault[disabled],
+.Btn.BtnDefault.disabled {
+	cursor: default;
+}
+
+
+
+.BtnDefault.primary,
+a.BtnDefault.primary {
+	background-color: #4892bc;
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#56a4d4), to(#3f87ac));
+	background-image: -webkit-linear-gradient(#56a4d4, #3f87ac);
+	 background-image: -moz-linear-gradient(#56a4d4, #3f87ac);
+		 background-image: -o-linear-gradient(#56a4d4, #3f87ac);
+			background-image: linear-gradient(#56a4d4, #3f87ac);
+	-webkit-box-shadow:
+			0 4px 0 #2a5972,
+			0 6px 7px rgba(22,78,114,.7);
+	 -moz-box-shadow:
+			0 4px 0 #2a5972,
+			0 6px 7px rgba(22,78,114,.7);
+			box-shadow:
+			0 4px 0 #2a5972,
+			0 6px 7px rgba(22,78,114,.7);
+	color: #fff;
+	text-shadow: 0 -1px 0 rgba(0,0,0,.3);
+	outline: none;
+}
+.BtnDefault.primary:focus,
+.BtnDefault.primary:hover,
+.BtnDefault.primary.hover {
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#5fb5ea), to(#4696c0));
+	background-image: -webkit-linear-gradient(#5fb5ea, #4696c0);
+	 background-image: -moz-linear-gradient(#5fb5ea, #4696c0);
+		 background-image: -o-linear-gradient(#5fb5ea, #4696c0);
+			background-image: linear-gradient(#5fb5ea, #4696c0);
+	-webkit-box-shadow:
+			0 4px 0 #346d8b,
+			0 6px 7px rgba(22,78,114,.7);
+	 -moz-box-shadow:
+			0 4px 0 #346d8b,
+			0 6px 7px rgba(22,78,114,.7);
+			box-shadow:
+			0 4px 0 #346d8b,
+			0 6px 7px rgba(22,78,114,.7);
+}
+.BtnDefault.primary:active,
+.BtnDefault.primary.active {
+	-webkit-box-shadow:
+			0 1px 0 #346d8b,
+			0 2px 3px rgba(22,78,114,.4);
+	 -moz-box-shadow:
+			0 1px 0 #346d8b,
+			0 2px 3px rgba(22,78,114,.4);
+			box-shadow:
+			0 1px 0 #346d8b,
+			0 2px 3px rgba(22,78,114,.4);
+}
+
+
+.BtnDefault.secondary {
+	background-color: #de3736;
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f03819), to(#cf3650));
+	background-image: -webkit-linear-gradient(#f03819, #cf3650);
+	 background-image: -moz-linear-gradient(#f03819, #cf3650);
+		 background-image: -o-linear-gradient(#f03819, #cf3650);
+			background-image: linear-gradient(#f03819, #cf3650);
+	-webkit-box-shadow:
+			0 4px 0 #822a41,
+			0 6px 7px rgba(114,22,53,.6);
+	 -moz-box-shadow:
+			0 4px 0 #822a41,
+			0 6px 7px rgba(114,22,53,.6);
+			box-shadow:
+			0 4px 0 #822a41,
+			0 6px 7px rgba(114,22,53,.6);
+	color: #fff;
+	text-shadow: 0 -1px 0 rgba(0,0,0,.3);
+}
+.BtnDefault.secondary:focus,
+.BtnDefault.secondary:hover,
+.BtnDefault.secondary.hover {
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ff7059), to(#e43d58));
+	background-image: -webkit-linear-gradient(#ff7059, #e43d58);
+	 background-image: -moz-linear-gradient(#ff7059, #e43d58);
+		 background-image: -o-linear-gradient(#ff7059, #e43d58);
+			background-image: linear-gradient(#ff7059, #e43d58);
+	-webkit-box-shadow:
+			0 4px 0 #97324c,
+			0 6px 7px rgba(114,22,53,.6);
+	 -moz-box-shadow:
+			0 4px 0 #97324c,
+			0 6px 7px rgba(114,22,53,.6);
+			box-shadow:
+			0 4px 0 #97324c,
+			0 6px 7px rgba(114,22,53,.6);
+}
+.BtnDefault.secondary:active,
+.BtnDefault.secondary.active {
+	-webkit-box-shadow:
+			0 1px 0 #97324c,
+			0 2px 3px rgba(114,22,53,.4);
+	 -moz-box-shadow:
+			0 1px 0 #97324c,
+			0 2px 3px rgba(114,22,53,.4);
+			box-shadow:
+			0 1px 0 #97324c,
+			0 2px 3px rgba(114,22,53,.4);
+}
+
+
+.Btn.BtnDefault[disabled],
+.Btn.BtnDefault.disabled {
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#d6d6d6), to(#aaabab));
+	background-image: -webkit-linear-gradient(#d6d6d6, #aaabab);
+	 background-image: -moz-linear-gradient(#d6d6d6, #aaabab);
+		 background-image: -o-linear-gradient(#d6d6d6, #aaabab);
+			background-image: linear-gradient(#d6d6d6, #aaabab);
+	-webkit-box-shadow:
+			0 4px 0 #818181,
+			0 6px 7px rgba(78,89,96,.6);
+	 -moz-box-shadow:
+			0 4px 0 #818181,
+			0 6px 7px rgba(78,89,96,.6);
+			box-shadow:
+			0 4px 0 #818181,
+			0 6px 7px rgba(78,89,96,.6);
+	top: -3px;
+}
+
+
+
+/* THEME - TABLES
+---------------------------------------------------------------------*/
+.Items,
+.Table,
+.Textnode table {
+	line-height: 1.5;
+}
+.Items,
+.Table,
+.Textnode table {
+	width: 100%;
+}
+.Table th,
+.Textnode th {
+	font-size: .85em;
+	font-weight: bold;
+	text-align: left;
+}
+.Items .Item,
+.Table tr,
+.Textnode tr {
+	border-bottom: 1px solid #dcdcdc;
+	vertical-align: top;
+}
+.Items .Item:last-child,
+.Table tbody tr:last-child,
+.Textnode tbody tr:last-child {
+	border-bottom: 0;
+}
+.Table th, .Textnode th {
+	padding: .88em; /* компенсация уменьшенного шрифта длязаголовков */
+}
+.Table td, .Textnode td {
+	padding: .75em;
+}
+.Table th:first-child, .Textnode th:first-child,
+.Table td:first-child, .Textnode td:first-child {
+	padding-left: 0;
+}
+.Table th:last-child, .Textnode th:last-child,
+.Table td:last-child, .Textnode td:last-child {
+	padding-right: 0;
+}
+
+
+
+/* THEME - PRODUCT
+---------------------------------------------------------------------*/
+
+.ProductCode {
+	color: #666;
+}
+
+
+.List.ib.products.itemsIsDivided .Product:after {
+	background: resolve('interface/product_shadow_bottom_divided.png') 50% 0 no-repeat;
+	-webkit-background-size: contain;
+		 -o-background-size: contain;
+			background-size: contain;
+	content: "";
+	height: 28px;
+	left: 0;
+	margin-top: -2px;
+	position: absolute;
+	top: 100%;
+	width: 100%;
+	z-index: 1;
+}
+
+.List.ib.products.itemsIsUnited {
+	margin-bottom: -1.5em;
+}
+.List.ib.products.itemsIsUnited .ListItem.isFirstInRow {
+	position: relative;
+}
+.List.ib.products.itemsIsUnited .ListItem.isFirstInRow:after {
+	background:
+		resolve('interface/product_shelf_left.png') no-repeat,
+		resolve('interface/product_shelf_right.png') 100% 0 no-repeat,
+		resolve('interface/product_shelf_bg.png') repeat-x;
+	content: "";
+	height: 93px;
+	left: 0;
+	position: absolute;
+	margin-top: -20px;
+	margin-left: -8%;
+	top: 100%;
+	width: 380%;
+	z-index: 0;
+}
+.List.ib.products.itemsIsUnited .Product:after {
+	background-image: resolve('interface/product_shadow_bottom_united.png');
+	background-repeat: no-repeat;
+	-webkit-background-size: contain;
+		 -o-background-size: contain;
+			background-size: contain;
+	content: "";
+	height: 30px;
+	left: 0;
+	margin-top: -8.5%;
+	margin-left: -10%;
+	position: absolute;
+	top: 100%;
+	width: 120%;
+	z-index: 1;
+}
+.ie8 .List.ib.products.itemsIsUnited .Product:after {
+	display: none;
+}
+
+.List.ib.products .ProductLink {
+	background-color: #fff;
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(0.8, #fff), to(#f3f3f3));
+	background-image: -webkit-linear-gradient(#fff 80%, #f3f3f3 100%);
+	 background-image: -moz-linear-gradient(#fff 80%, #f3f3f3 100%);
+		 background-image: -o-linear-gradient(#fff 80%, #f3f3f3 100%);
+			background-image: linear-gradient(#fff 80%, #f3f3f3 100%);
+	border: 3px solid #85c9f4;
+	-webkit-border-radius: .57em;
+	 -moz-border-radius: .57em;
+			border-radius: .57em;
+	-webkit-box-shadow: inset 0 1px 0 #99a5ad;
+	 -moz-box-shadow: inset 0 1px 0 #99a5ad;
+			box-shadow: inset 0 1px 0 #99a5ad;
+	color: #000;
+	padding: 1.45em;
+	-webkit-transition: color .1s ease-in-out;
+	 -moz-transition: color .1s ease-in-out;
+		 -o-transition: color .1s ease-in-out;
+			transition: color .1s ease-in-out;
+	z-index: 2;
+}
+.List.ib.products .ProductLink:hover {
+	border-color: #d1070f;
+	color: #ed1c24;
+}
+@media screen and (max-width: 1100px) {
+	.List.ib.products .ProductLink {
+	font-size: .9em;
+	}
+}
+@media screen and (max-width: 1200px) {
+	.List.ib.products .ProductLink {
+	font-size: .95em;
+	}
+}
+
+.List.ib.products .ProductName {
+	border-bottom-color: #b2b2b2;
+}
+.List.ib.products .ProductLink:hover .ProductName {
+	border-bottom-color: #fababd;
+}
+
+.ProductBadge.novelty {
+	background-repeat: no-repeat;
+}
+.ProductBadge.novelty.isRight {
+	background-image: resolve('interface/product_badge_novelty_right.png');
+	background-repeat: no-repeat;
+	bottom: 100%;
+	height: 86px;
+	left: 100%;
+	width: 80px;
+}
+.List.ib.products .ProductBadge.novelty.isRight {
+	margin-bottom: -80px;
+	margin-left: -74px;
+}
+
+.ProductBadge.novelty.isLeft {
+	background-image: resolve('interface/product_badge_novelty_left.png');
+	height: 110px;
+	left: 0;
+	top: 0;
+	width: 115px;
+}
+.ProductCard .ProductBadge.novelty.isLeft {
+	margin-top: -5.5%;
+	margin-left: -5px;
+}
+@media screen and (max-width: 1150px) {
+	.ProductCard .ProductBadge.novelty.isLeft {
+	margin-left: -8px;
+	}
+}
+.ielte8 .ProductCard .ProductBadge.novelty.isLeft {
+
+}
+
+
+
+/* THEME - NAV
+---------------------------------------------------------------------*/
+
+.Paginator {
+	height: 23px; /* компенсация существования красиво оформленных активных страниц */
+}
+.PaginatorPager {
+	color: #666;
+}
+.PaginatorListItem.active {
+	background: resolve('interface/paginator_active_num_bg.png') repeat-x;
+	height: 28px;
+	margin: -5px .8em 0;
+	padding: 0;
+	position: relative;
+	text-align: center;
+	min-width: 1px;
+}
+.PaginatorListItem.active:before,
+.PaginatorListItem.active:after {
+	background-image: resolve('interface/paginator_active_num_border.png');
+	background-repeat: no-repeat;
+	content: "";
+	height: 28px;
+	position: absolute;
+	top: 0;
+	width: 12px;
+}
+.PaginatorListItem.active:before {
+	right: 100%;
+}
+.PaginatorListItem.active:after {
+	background-position: -12px 0;
+	left: 100%;
+}
+.PaginatorListItem.active span {
+	color: #ed1c24;
+	display: inline-block;
+	margin: 0 -.4em;
+	position: relative;
+	top: 5px;
+}
+.ie7 .PaginatorListItem.active span {
+	display: inline;
+	zoom: 1;
+}
+
+
+.BreadcrumsItem:after {
+	background: resolve('interface/breadcrums_shadow_corner.png') no-repeat;
+	height: 22px;
+	width: 9px;
+}
+
+
+
+/* THEME - BANNERS & SLIDERS
+---------------------------------------------------------------------*/
+
+.Banner.main {
+	-webkit-transition: background .2s ease-in-out;
+	 -moz-transition: background .2s ease-in-out;
+		 -o-transition: background .2s ease-in-out;
+			transition: background .2s ease-in-out;
+}
+.BannerSlide {
+	height: 470px;
+}
+
+.BannerControls .Wrapper {
+	position: relative;
+}
+.BannerControl {
+	background: resolve('interface/banner_main_controls.png') no-repeat;
+	height: 53px;
+	opacity: .7;
+	-webkit-transition: opacity .1s ease-in-out;
+	 -moz-transition: opacity .1s ease-in-out;
+		-ms-transition: opacity .1s ease-in-out;
+			transition: opacity .1s ease-in-out;
+	width: 36px;
+}
+.BannerControl:hover {
+	opacity: 1;
+}
+.BannerControl.disabled {
+	opacity: .5;
+}
+.BannerControl.prev {
+	background-position: 0 0;
+}
+.BannerControl.next {
+	background-position: -36px 0;
+}
+
+.Slider.main:after,
+.ShopAddressesWidget {
+	background-image: resolve('interface/slider_main_bg.png');
+	background-repeat: repeat-x;
+	background-color: #fff;
+}
+.ShopAddressesWidget {
+	background-position: 0 -53px;
+}
+.Slider.main {
+	background-color: #fff;
+}
+.Slider.main:after {
+	content: "";
+	display: block;
+	height: 53px;
+}
+
+
+.SliderItemList {
+	position: relative;
+}
+.SliderItemList:before,
+.SliderItemList:after {
+	background-repeat: no-repeat;
+	bottom: 0;
+	content: "";
+	display: block;
+	height: auto;
+	position: absolute;
+	top: 0;
+	width: 10px;
+	z-index: 3;
+
+	-webkit-background-size: 1px 100%, 5px 100%;
+		 -o-background-size: 1px 100%, 5px 100%;
+			background-size: 1px 100%, 5px 100%;
+	-webkit-transition-property: left, right;
+	 -moz-transition-property: left, right;
+		 -o-transition-property: left, right;
+			transition-property: left, right;
+	-webkit-transition-duration: 333ms, 333ms;
+	 -moz-transition-duration: 333ms, 333ms;
+		 -o-transition-duration: 333ms, 333ms;
+			transition-duration: 333ms, 333ms;
+	-webkit-transition-timing-function:
+			cubic-bezier(.1, 0, .25, 1),
+			cubic-bezier(.1, 0, .25, 1);
+	 -moz-transition-timing-function:
+			cubic-bezier(.1, 0, .25, 1),
+			cubic-bezier(.1, 0, .25, 1);
+		 -o-transition-timing-function:
+			cubic-bezier(.1, 0, .25, 1),
+			cubic-bezier(.1, 0, .25, 1);
+			transition-timing-function:
+			cubic-bezier(.1, 0, .25, 1),
+			cubic-bezier(.1, 0, .25, 1);
+}
+
+.SliderItemList:before {
+	background-position: 0 0, 0 0;
+	left: -10px;
+
+	background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, transparent), color-stop(25%, rgba(0, 0, 0, 0.1)), color-stop(75%, rgba(0, 0, 0, 0.1)), color-stop(100%, transparent)), -webkit-gradient(radial, 0 50%, 0, 0 50%, 100, color-stop(0%, rgba(0, 0, 0, 0.2)), color-stop(100%, transparent));
+	background-image: -webkit-linear-gradient(transparent, rgba(0, 0, 0, 0.1) 25%, rgba(0, 0, 0, 0.1) 75%, transparent), -webkit-radial-gradient(0 50%, farthest-side, rgba(0, 0, 0, 0.2), transparent);
+	background-image: -moz-linear-gradient(transparent, rgba(0, 0, 0, 0.1) 25%, rgba(0, 0, 0, 0.1) 75%, transparent), -moz-radial-gradient(0 50%, farthest-side, rgba(0, 0, 0, 0.2), transparent);
+	background-image: -o-linear-gradient(transparent, rgba(0, 0, 0, 0.1) 25%, rgba(0, 0, 0, 0.1) 75%, transparent), -o-radial-gradient(0 50%, farthest-side, rgba(0, 0, 0, 0.2), transparent);
+	background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.1) 25%, rgba(0, 0, 0, 0.1) 75%, transparent), radial-gradient(0 50%, farthest-side, rgba(0, 0, 0, 0.2), transparent);
+}
+.SliderItemList:after {
+	background-position: 100% 0, 100% 0;
+	right: -10px;
+
+	background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, transparent), color-stop(25%, rgba(0, 0, 0, 0.1)), color-stop(75%, rgba(0, 0, 0, 0.1)), color-stop(100%, transparent)), -webkit-gradient(radial, 100% 50%, 0, 100% 50%, 100, color-stop(0%, rgba(0, 0, 0, 0.2)), color-stop(100%, transparent));
+	background-image: -webkit-linear-gradient(transparent, rgba(0, 0, 0, 0.1) 25%, rgba(0, 0, 0, 0.1) 75%, transparent), -webkit-radial-gradient(100% 50%, farthest-side, rgba(0, 0, 0, 0.2), transparent);
+	background-image: -moz-linear-gradient(transparent, rgba(0, 0, 0, 0.1) 25%, rgba(0, 0, 0, 0.1) 75%, transparent), -moz-radial-gradient(100% 50%, farthest-side, rgba(0, 0, 0, 0.2), transparent);
+	background-image: -o-linear-gradient(transparent, rgba(0, 0, 0, 0.1) 25%, rgba(0, 0, 0, 0.1) 75%, transparent), -o-radial-gradient(100% 50%, farthest-side, rgba(0, 0, 0, 0.2), transparent);
+	background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.1) 25%, rgba(0, 0, 0, 0.1) 75%, transparent), radial-gradient(100% 50%, farthest-side, rgba(0, 0, 0, 0.2), transparent);
+}
+
+.SliderItemList.shadowIsVisible:before {
+	left: 0;
+}
+.SliderItemList.shadowIsVisible:after {
+	right: 0;
+}
+
+.SliderItemList.shadowIsVisible.shadowNoLeft:before {
+	left: -10px;
+}
+.SliderItemList.shadowIsVisible.shadowNoRight:after {
+	right: -10px;
+}
+
+
+.SliderItem {
+	text-align: center;
+	width: 19.29em;
+}
+.SliderItem .ProductPhoto {
+	display: block;
+	height: 15.71em;
+	width: 15.71em;
+}
+.SliderItem .ProductLink {
+	background: none;
+	border: 0;
+	-webkit-box-shadow: none;
+	 -moz-box-shadow: none;
+			box-shadow: none;
+	padding: 0;
+}
+.SliderItem .ProductName {
+	border-bottom-color: #7fb7da;
+}
+.SliderItem .ProductLink:hover .ProductName {
+	border-bottom-color: #f68d91;
+}
+
+.SliderProgress {
+	background-image: resolve('interface/slider_main_progress_bg.png');
+	background-repeat: repeat-x;
+	height: 27px;
+	margin: 2em 12px -23px;
+	position: relative;
+}
+.SliderProgress:before,
+.SliderProgress:after {
+	background-image: resolve('interface/slider_main_progress_ears.png');
+	background-repeat: no-repeat;
+	content: "";
+	height: 27px;
+	position: absolute;
+	top: 0;
+	width: 12px;
+}
+.SliderProgress:before {
+	right: 100%;
+}
+.SliderProgress:after {
+	background-position: -12px 0;
+	left: 100%;
+}
+
+.SliderHandler {
+	background: resolve('interface/slider_main_handler_states.png') no-repeat;
+	height: 58px;
+	left: -25px;
+	top: -14px;
+	width: 57px;
+	z-index: 1;
+}
+.SliderHandler:hover,
+.SliderHandler.hover,
+.SliderHandler:active,
+.SliderHandler.active {
+	background-position: -57px 0;
+}
+
+
+
+/* THEME - POPUPS
+---------------------------------------------------------------------*/
+
+
+/* THEME - POPUPS - NOTIFICATIONS
+---------------------------------------------------------------------*/
+
+.NotificationPanel {
+	background-color: #ccc;
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#aaa), to(#eee));
+	background-image: -webkit-linear-gradient(#aaa, #eee);
+	 background-image: -moz-linear-gradient(#aaa, #eee);
+		 background-image: -o-linear-gradient(#aaa, #eee);
+			background-image: linear-gradient(#aaa, #eee);
+	-webkit-box-shadow: inset 0 1px 6px rgba(0,0,0,.35);
+	 -moz-box-shadow: inset 0 1px 6px rgba(0,0,0,.35);
+			box-shadow: inset 0 1px 6px rgba(0,0,0,.35);
+	font-size: 0.93em;
+}
+.NotificationPanel.problem {
+	background-color: #f7e2a3;
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#ecc965), to(#fff3d0));
+	background: -webkit-linear-gradient(#ecc965, #fff3d0);
+	 background: -moz-linear-gradient(#ecc965, #fff3d0);
+		 background: -o-linear-gradient(#ecc965, #fff3d0);
+			background: linear-gradient(#ecc965, #fff3d0);
+}
+
+.NotificationPanel .Wrapper {
+	padding-bottom: 10px;
+	padding-left: 21px;
+	padding-top: 10px;
+}
+.NotificationPanel.problem .NotificationPanelMessage {
+	color: #9c040a;
+}
+.NotificationPanelClose {
+	float: right;
+}
+.NotificationPanelClose.pseudoLink .Icon.close {
+	margin-left: -13px;
+}
+
+
+
+/* THEME - POPUPS - PHOTOS VIEWER
+---------------------------------------------------------------------*/
+
+.PhotoViewer {
+	overflow: hidden;
+}
+
+.PhotoViewerPhoto,
+.PhotoViewerList {
+	float: left;
+	padding: 24px 24px 18px;
+}
+
+.PhotoViewerPhoto {
+	background: #fff;
+	border-right: 1px solid #cfcfcf;
+}
+
+.PhotoViewerList {
+	background: #e6e6e6;
+	border-left: 0;
+	height: 450px;
+	list-style-type: none;
+	margin: 0;
+	margin-left: -6px;
+	overflow: hidden;
+	padding: 40px 24px 32px 0;
+	width: 60px;
+
+	.PhotoPreviewItem .ProductPhoto {
+		height: 48px;
+		width: 48px;
+	}
+}
+.PhotoViewerPhoto + .PhotoViewerList {
+	border-left: 1px solid #ddd;
+	margin-left: 0;
+	padding-left: 24px;
+}
+.List.PhotoViewerList .ListItem {
+	margin: 0 0 9px;
+}
+.List.PhotoViewerList .ListItem.last {
+	margin-bottom: 0;
+}
+
+.PhotoViewerList .ProductPhoto {
+	height: 50px;
+	width: 50px;
+}
+
+
+
+/* PAGES
+---------------------------------------------------------------------*/
+
+.Page {
+	background: resolve('brand/blue_bg.png');
+	font: 1.4em/1 Arial, sans-serif;
+}
+
+
+.Wrapper.main {
+	-webkit-box-sizing: border-box;
+	 -moz-box-sizing: border-box;
+			box-sizing: border-box;
+	margin: auto;
+	padding-right: 30px;
+	padding-left: 30px;
+	min-width: 960px;
+	max-width: 1280px;
+	position: relative;
+}
+
+
+/* Страница с серым шумом */
+.Page.clean,
+.Page.isOverlayed .PageContent {
+	background: resolve('interface/page_bg.png') #f2f2f2;
+}
+
+
+/* создаётся эффект слоя-страницы */
+.Page.isOverlayed .PageHeader {
+	background-color: #fff;
+
+	margin-bottom: -4em;
+}
+.Page.isOverlayed .PageContent {
+	margin-top: -7.5em;
+	width: 100%;
+}
+.Page.isOverlayed .Wrapper.content {
+	position: relative;
+	top: 2em;
+}
+.ielte8 .Page.isOverlayed .Wrapper.content {
+	top: 0;
+}
+.Page.isOverlayed .PageContent .Wrapper.main {
+	background-color: #fff;
+	border-top: 1px solid transparent;
+	-webkit-border-bottom-right-radius: 1em;
+	 -moz-border-bottom-right-radius: 1em;
+			border-bottom-right-radius: 1em;
+	-webkit-border-bottom-left-radius: 1em;
+	 -moz-border-bottom-left-radius: 1em;
+			border-bottom-left-radius: 1em;
+	-webkit-box-shadow: 0px 5px 12px rgba(0,0,0,.2);
+	 -moz-box-shadow: 0px 5px 12px rgba(0,0,0,.2);
+			box-shadow: 0px 5px 12px rgba(0,0,0,.2);
+	padding-top: 9em;
+	padding-bottom: 5em;
+	position: relative;
+}
+.ielte8 .Page.isOverlayed .PageContent .Wrapper.main {
+	border: 1px solid #eee;
+	padding-top: 9em;
+}
+
+.has-csscalc .Page.isOverlayed .Wrapper.content:before {
+	background-color: #fff;
+	-webkit-box-shadow: -12px 12px 12px rgba(0,0,0,.15);
+	 -moz-box-shadow: -12px 12px 12px rgba(0,0,0,.15);
+			box-shadow: -12px 12px 12px rgba(0,0,0,.15);
+	content: "";
+	height: 100%;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: -webkit-calc(50% - 640px);
+	width:-moz-calc(50% - 640px);
+	width: calc(50% - 640px);
+}
+.has-csscalc .Page.isOverlayed .PageContent .Wrapper.main {
+	-webkit-border-bottom-right-radius: 0;
+	 -moz-border-bottom-right-radius: 0;
+			border-bottom-right-radius: 0;
+	-webkit-box-shadow: -12px 12px 12px rgba(0,0,0,.15);
+	 -moz-box-shadow: -12px 12px 12px rgba(0,0,0,.15);
+			box-shadow: -12px 12px 12px rgba(0,0,0,.15);
+}
+
+.Page.isOverlayed .PageFooter {
+	padding-top: 5em;
+}
+.ielte8 .Page.isOverlayed .PageFooter {
+	padding-top: 3em;
+}
+
+
+
+/* PAGES - HEADER
+---------------------------------------------------------------------*/
+
+.PageHeader {
+	background-color: #fff;
+	background-color: rgba(255,255,255,.9);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(0,0,0,0)), to(rgba(0,0,0,.1)));
+	background-image: -webkit-linear-gradient(rgba(0,0,0,0), rgba(0,0,0,.1));
+	 background-image: -moz-linear-gradient(rgba(0,0,0,0), rgba(0,0,0,.1));
+		 background-image: -o-linear-gradient(rgba(0,0,0,0), rgba(0,0,0,.1));
+			background-image: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,.1));
+	-webkit-box-shadow: 0 5px 13px rgba(0,0,0,.2);
+	 -moz-box-shadow: 0 5px 13px rgba(0,0,0,.2);
+			box-shadow: 0 5px 13px rgba(0,0,0,.2);
+	position: relative;
+	z-index: 10;
+}
+.ielte8 .PageHeader {
+	border-bottom: 1px solid #eee;
+}
+
+/* ИЕ не хотят втягивать элементы друг в друга, если у одного из них включено скрытие переполнения (`overflow: hidden`)
+ * у слайдера на главной это правило есть, потому в этой ситуации шапка позиционируется абсолютно */
+.Page.HeaderIsOverlayed .PageHeader,
+.PageHeader.isOverlayed {
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	z-index: 10;
+}
+
+
+/* Панель битрикса накрывает шапку */
+.Page.HeaderIsOverlayed #bx-panel.bx-panel-folded ~ .PageHeader {
+	top: 39px;
+}
+.Page.HeaderIsOverlayed #bx-panel ~ .PageHeader {
+	top: 147px;
+}
+
+
+.PageHeader .Wrapper.main {
+	display: table;
+	padding-left: 0;
+	width: 100%;
+}
+
+
+/* если у body fs1.4em */
+.HeaderLogo,
+.HeaderNav,
+.HeaderSearch {
+	display: table-cell;
+	vertical-align: top;
+}
+
+.HeaderLogo {
+	margin-right: 30px; /* компенсация убранного отступа .Wrapper.main */
+	width: 250px;
+	vertical-align: middle;
+}
+.HeaderNav {
+}
+.HeaderSearch {
+	padding: 2.6em 0 0 3%;
+	width: 20%;
+}
+
+.HeaderLogoLink {
+	border: 0;
+	display: block;
+}
+
+.HeaderLogoImg {
+	background: resolve('brand/logo.png') no-repeat;
+	width: width('brand/logo.png');
+	height: height('brand/logo.png');
+	display: block;
+	margin: auto;
+}
+
+
+.HeaderLinks {
+	display: table;
+	white-space: nowrap;
+	width: 100%;
+}
+.HeaderNavLink {
+	border-right: 1px solid #e5e5e5;
+	border-left: 1px solid #fff;
+	border-right-color: rgba(219,219,219,.5);
+	border-left-color: rgba(255,255,255,.5);
+	border-bottom: 0;
+	color: #434343;
+	display: block;
+	font-size: .79em;
+	font-weight: bold;
+	padding: 4.25em 1em;
+	text-align: center;
+	vertical-align: top;
+	white-space: normal;
+}
+.HeaderNavLink.textUppercase {
+	margin: 0;
+}
+.ie7 .HeaderNavLink {
+	display: inline;
+	zoom: 1;
+}
+
+.List .ListItem.HeaderLinksItem {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.HeaderLinksItem:first-child .HeaderNavLink {
+	border-left: 0;
+}
+.HeaderLinksItem:last-child .HeaderNavLink {
+	border-right: 0;
+}
+.HeaderNavLink:hover,
+.HeaderLinksItem.active a.HeaderNavLink:hover {
+	color: #d00008;
+}
+
+.HeaderNavLink span {
+	border-bottom: 2px solid transparent;
+	line-height: 1.5em;
+}
+
+.HeaderLinksItem.active .HeaderNavLink {
+	color: #000;
+	cursor: default;
+}
+.HeaderLinksItem.active a.HeaderNavLink {
+	cursor: pointer;
+}
+.HeaderLinksItem.active .HeaderNavLink span {
+	border-color: #ed1c24;
+}
+
+
+.HeaderSearch .FormSearch {
+	margin-left: auto;
+	width: 97%;
+}
+
+.HeaderLinksAbout .HeaderNavLink {
+	white-space: nowrap;
+}
+
+
+/* PAGES - FOOTER
+---------------------------------------------------------------------*/
+
+.PageFooter {
+	-webkit-box-shadow: inset 0 10px 10px rgba(0,0,0,.3);
+	 -moz-box-shadow: inset 0 10px 10px rgba(0,0,0,.3);
+			box-shadow: inset 0 10px 10px rgba(0,0,0,.3);
+	font-size: .9em;
+	padding-top: 3em;
+	padding-bottom: 5em;
+}
+
+.FooterNav {
+	float: left;
+}
+.FooterNav,
+.FooterNavLink {
+	color: #fff;
+}
+
+.FooterNavLink {
+	border-color: #fff;
+	border-color: rgba(255,255,255,.65);
+}
+.FooterNavLink:hover {
+	border-color: #fff;
+	color: #fff;
+}
+
+/* ИЕ схлопывает этот список */
+.ielte8 .List.ib.separated .FooterNavLink,
+.ielte8 .List.ib.separated.FooterNav .ListItem:after {
+	display: block;
+	float: left;
+}
+.ielte8 .FooterNavLink {
+	border-color: rgb(200,200,200);
+}
+
+.ie8 .FooterNav .ListItem {
+	display: block;
+	float: left;
+}
+
+.FooterCopy {
+	color: #fff;
+	float: right;
+}
+.FooterCopy .certified {
+	display: block;
+	margin-bottom: 1em;
+}
+
+/* PAGES - MAIN
+---------------------------------------------------------------------*/
+
+.Sidebar.main {
+	float: left;
+	width: 225px;
+}
+.Content.main {
+	margin-left: 250px;
+}
+
+.SidebarBox {
+	margin-bottom: 2.5em;
+}
+
+
+.ContentHeader {
+	line-height: 1.2;
+	margin-top: 0;
+}
+
+
+.ContentNav {
+	background-color: #b4dcf4;
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#c9e6f8), to(#a1d2f1));
+	background: -webkit-linear-gradient(#c9e6f8, #a1d2f1);
+	 background: -moz-linear-gradient(#c9e6f8, #a1d2f1);
+		 background: -o-linear-gradient(#c9e6f8, #a1d2f1);
+			background: linear-gradient(#c9e6f8, #a1d2f1);
+	-webkit-border-radius: .2em;
+	 -moz-border-radius: .2em;
+			border-radius: .2em;
+	cursor: default;
+	margin-top: 2em;
+	margin-left: -39px;
+	position: relative;
+	width: 247px;
+}
+.ContentNav:after {
+	background-image: resolve('interface/content-nav_shadow-bottom.png');
+	background-repeat: no-repeat;
+	content: "";
+	height: 20px;
+	left: -29px;
+	position: absolute;
+	top: 100%;
+	width: 296px;
+}
+
+.ContentNavItem.Header {
+	-webkit-border-top-right-radius: .2em;
+	 -moz-border-top-right-radius: .2em;
+			border-top-right-radius: .2em;
+	-webkit-border-top-left-radius: .2em;
+	 -moz-border-top-left-radius: .2em;
+			border-top-left-radius: .2em;
+	border-top: 0;
+	color: #000;
+	font-weight: bold;
+}
+.has-generatedcontent .ContentNavItem.Header {
+	border-bottom: 0;
+}
+.has-generatedcontent .ContentNavItem.first .ContentNavLink {
+	border-top: 0;
+}
+.ContentNavItem.Header:after {
+	background-image: resolve('interface/content-nav-header_border-bottom.png');
+	background-repeat: repeat-x;
+	height: 4px;
+	left: 0;
+	top: 100%;
+	width: 100%;
+	z-index: 1;
+}
+
+.ContentNavLink {
+	border-top: 1px solid;
+	border-bottom: 1px solid;
+	color: #32414b;
+	color: rgba(0,0,0,.8);
+	display: block;
+	padding: .8em 25px 1em 1em;
+	position: relative;
+	text-shadow: 0 1px rgba(255,255,255,.3);
+}
+.ContentNav .ContentNavLink {
+	border-top-color: #bee0f5;
+	border-bottom-color: #90cbf0;
+}
+.ContentNavList .ContentNavLink:hover,
+.ContentNavList .ContentNavLink.hover {
+	color: #dd4451;
+	color: rgba(221,68,81,1);
+}
+
+.ContentNavLink:before,
+.ContentNavLink:after {
+	content: "";
+	height: 100%;
+	position: absolute;
+}
+.ContentNavLink:before {
+	background: resolve('interface/content-nav-link_shadow.png') repeat-y;
+	left: 0;
+	opacity: .5;
+	top: 0;
+	width: 29px;
+}
+.has-generatedcontent .ContentNavLink {
+	line-height: 1.285714em;
+	padding-left: 30px;
+}
+
+.ContentNavItem.last .ContentNavLink {
+	-webkit-border-bottom-right-radius: .2em;
+	 -moz-border-bottom-right-radius: .2em;
+			border-bottom-right-radius: .2em;
+	-webkit-border-bottom-left-radius: .2em;
+	 -moz-border-bottom-left-radius: .2em;
+			border-bottom-left-radius: .2em;
+	border-bottom: 0;
+}
+
+.ContentNavItem.active .ContentNavLink {
+	color: #ed1c24;
+	font-weight: bold;
+}
+.ContentNavItem.active .ContentNavLink:after {
+	background-image: resolve('interface/content-nav-link_active_mark.png');
+	background-repeat: no-repeat;
+	background-position: 0 50%;
+	right: 0;
+	top: 0;
+	width: 20px;
+}
+
+.ContentNavItem.active a.ContentNavLink:hover{
+	color: #ff8287;
+}
+
+.Breadcrums:first-child {
+	margin-bottom: .7em;
+}
+
+.PageNavigator .Paginator.isRight {
+	float: right;
+}
+.PageNavigatorItems {
+	float: left;
+}
+
+
+
+/* PAGES - MAIN - SHOPS
+---------------------------------------------------------------------*/
+
+@import "modules/_shops";
+
+
+
+/* PAGES - MAIN - ITEMS
+---------------------------------------------------------------------*/
+
+/* PAGES - MAIN - ITEMS - ITEM CARD
+---------------------------------------------------------------------*/
+
+/*
+<div class="ProductCard">
+	<div class="ProductCardPhotos">
+	<img src="http://img1.png" alt="Вентилятор" class="imgFill ProductPhoto main">
+	<ul class="List ib PhotosPreview">
+		<li class="ListItem PhotoPreviewItem active">
+		<span class="PhotoPreviewContaner">
+			<img src="http://img1_preview.png" alt="" class="ProductPhoto">
+		</span>
+		</li><li class="ListItem PhotoPreviewItem">
+		<span class="PhotoPreviewContaner">
+			<img src="http://img2.png" alt="" class="ProductPhoto">
+		</span>
+		</li>
+	</ul>
+	</div><div class="ProductCardInfo Textnode">
+	<span class="ProductCode">Артикул 439043</span>
+	<div class="ProductDescription">Напольный вентилятор - просто.</div>
+	<h4 class="h4 ProductFeaturesHeader">Характеристики</h4>
+	<ul class="ul dashedList ProductFeatures">
+		<li>Диаметр - 40 см.</li>
+		<li>Мощность - 45 Вт.</li>
+	</ul>
+	</div>
+</div>
+*/
+
+.ProductCard {
+	margin-top: 80px;
+	margin-bottom: 110px;
+	margin-left: -1.8%;
+	position: relative;
+	width: 103.6%;
+}
+.has-backgroundsize .ProductCard {
+	background-image: resolve('interface/product-card_bg.png');
+	background-repeat: repeat-y;
+	background-position: 50% 0;
+	-webkit-background-size: contain;
+		 -o-background-size: contain;
+			background-size: contain;
+	margin-top: 80px;
+	margin-bottom: 110px;
+	margin-left: -1.8%;
+	width: 103.6%;
+}
+.has-backgroundsize .ProductCard:before,
+.has-backgroundsize .ProductCard:after {
+	background: no-repeat;
+	-webkit-background-size: contain;
+		 -o-background-size: contain;
+			background-size: contain;
+	content: "";
+	display: block;
+	left: 0;
+	position: absolute;
+	width: 100%;
+}
+.has-backgroundsize .ProductCard:before {
+	background-image: resolve('interface/product-card_top_bg.png');
+	background-position: 50% 100%;
+	bottom: 100%;
+	height: 70px;
+}
+.has-backgroundsize .ProductCard:after {
+	background-image: resolve('interface/product-card_bottom_bg.png');
+	background-position: 50% 0;
+	height: 110px;
+	top: 100%;
+}
+
+.ProductCardPhotos,
+.ProductCardInfo {
+	display: inline-block;
+	vertical-align: top;
+}
+.ProductCardPhotos {
+	padding-right: 5%;
+	padding-left: 5%;
+	width: 30%;
+}
+.ProductCardInfo {
+	padding-right: 4%;
+	padding-left: 6%;
+	position: relative;
+	top: 20px;
+	width: 50%;
+}
+.ielte8 .ProductCardPhotos {
+	padding-right: 5%;
+	padding-left: 9%;
+	width: 26%;
+}
+.ielte8 .ProductCardInfo {
+	padding-right: 8%;
+	padding-left: 6%;
+	position: relative;
+	top: 20px;
+	width: 46%;
+}
+.Textnode .ProductFeatures {
+	padding-left: 1.5em;
+}
+
+
+.ProductsSuggestHeader {
+	font-size: 1.3em;
+	margin-top: 2.5em;
+}
+
+.ProductBigPhotoLink {
+	border: 0;
+	display: inline;
+}
+.ProductPhoto.main {
+	max-height: 320px;
+	margin-bottom: 1.5em;
+	max-width: 320px;
+}
+
+.PhotosPreview {
+	margin-left: -.5em;
+}
+.PhotoPreviewItem {
+	background-color: #e5e5e5;
+	-webkit-border-radius: 2px;
+	 -moz-border-radius: 2px;
+			border-radius: 2px;
+	cursor: pointer;
+	padding: 1px;
+}
+.PhotoPreviewItem:hover,
+.PhotoPreviewItem.hover {
+	background-color: #d31017;
+}
+.PhotoPreviewItem.active {
+	background-color: #f14a51;
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#f05258), to(#7ab4da));
+	background: -webkit-linear-gradient(#f05258, #7ab4da);
+	 background: -moz-linear-gradient(#f05258, #7ab4da);
+		 background: -o-linear-gradient(#f05258, #7ab4da);
+			background: linear-gradient(#f05258, #7ab4da);
+	-webkit-border-radius: 2px;
+	 -moz-border-radius: 2px;
+			border-radius: 2px;
+	-webkit-box-shadow: 0 1px 1px #e8d1d0;
+	 -moz-box-shadow: 0 1px 1px #e8d1d0;
+			box-shadow: 0 1px 1px #e8d1d0;
+	cursor: default;
+	padding: 2px;
+}
+.List.ib .PhotoPreviewContaner {
+	background-color: #fff;
+	border: 0;
+	display: inline-block;
+	padding: 4px;
+	vertical-align: middle;
+}
+.List.ib .PhotoPreviewItem.active .PhotoPreviewContaner {
+	-webkit-box-shadow: inset 0 1px 1px #e8d1d0;
+	 -moz-box-shadow: inset 0 1px 1px #e8d1d0;
+			box-shadow: inset 0 1px 1px #e8d1d0;
+	display: inline-block;
+	padding: 3px;
+}
+.List.ib .PhotoPreviewItem {
+	margin-left: .5em;
+	margin-bottom: .5em;
+}
+
+.PhotoPreviewItem .ProductPhoto {
+	height: 53px;
+	width: 53px;
+}
+
+.ProductCardInfo .ProductCode {
+	display: block;
+	margin-bottom: 1em;
+}
+.ProductCardInfo .ProductFeaturesHeader {
+	margin-bottom: -1em;
+}
+
+.ProductCardInfo__linkToBuy {
+	margin-top: 26px;
+	margin-bottom: 40px;
+}
+
+
+.List.products.productsSuggest .ProductLink {
+	border-bottom: 0;
+	display: inline;
+}
+.List.products.productsSuggest .ProductPhoto {
+	float: left;
+	margin-bottom: .5em;
+}
+.List.products.productsSuggest .ProductName {
+	border-bottom: 0;
+	display: block;
+	margin-left: 65px;
+	text-decoration: none;
+}
+.List.products.productsSuggest .ProductCode {
+	display: block;
+	font-size: .85em;
+	margin-top: .5em;
+	margin-left: 65px;
+}
+
+
+
+/* PAGES - MAIN - FEEDBACK
+---------------------------------------------------------------------*/
+
+/*
+<div class="Wrapper feedbackForm">
+	<form action="#" class="Form FeedbackForm">
+	<label class="FormField FeedbackField ib">
+		<span class="FeedbackFormTitle">Что вас интересует</span><select name="" id="">
+		<option value="">Покупка для своих сотрудников</option>
+		</select>
+	</label>
+	<label class="FormField FeedbackField">
+		<span class="FeedbackFormTitle">Ф.И.О.</span><input type="text" name="" id="" class="FeedbackFormInput">
+	</label>
+	<label class="FormField FeedbackField">
+		<span class="FeedbackFormTitle">Текст сообщения</span><textarea class="FeedbackFormInput"></textarea>
+	</label>
+	<span class="FormField FeedbackField FeedbackSubmit"><button class="Btn BtnDefault primary">Отправить</button></span>
+	</form>
+</div>
+*/
+
+.Wrapper.feedbackForm {
+	background-color: #e9eaeb;
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f0efee), to(#e2e5e7));
+	background-image: -webkit-linear-gradient(#f0efee, #e2e5e7);
+	 background-image: -moz-linear-gradient(#f0efee, #e2e5e7);
+		 background-image: -o-linear-gradient(#f0efee, #e2e5e7);
+			background-image: linear-gradient(#f0efee, #e2e5e7);
+	-webkit-border-radius: .2em;
+	 -moz-border-radius: .2em;
+			border-radius: .2em;
+	margin-top: 2.5em;
+	margin-bottom: 2.5em;
+	position: relative;
+}
+.Wrapper.feedbackForm:after {
+	background: resolve('interface/feedback_form_shadow_bottom_bg.png') 50% 0 no-repeat;
+	-webkit-background-size: contain;
+		 -o-background-size: contain;
+			background-size: contain;
+	content: "";
+	height: 78px;
+	left: 0;
+	position: absolute;
+	top: 100%;
+	width: 100%;
+}
+
+.FeedbackForm {
+	background: resolve('interface/feedback_form_border.png') 0 -162px repeat-x;
+	padding: 60px;
+}
+.has-borderimage .FeedbackForm {
+	background: none;
+	border-style: solid;
+	border-width: 17px 16px;
+	-webkit-border-image: resolve('interface/feedback_form_border.png') 16 round round;
+	 -moz-border-image: resolve('interface/feedback_form_border.png') 16 round round;
+		 -o-border-image: resolve('interface/feedback_form_border.png') 16 round round;
+			border-image: resolve('interface/feedback_form_border.png') 16 round round;
+}
+
+.FeedbackForm .FormField {
+	display: block;
+}
+
+.FormField.personalData {
+	margin-left: 177px;
+	line-height: 1.5em;
+}
+
+.FeedbackForm .Form__field--indent {
+	padding-left: 18px;
+}
+.FeedbackForm .Form__indent {
+	margin-left: -17px;
+}
+
+.FormField.personalData .errorName {
+	display: inline-block;
+	position: static;
+}
+
+.FeedbackField {
+	margin-left: 160px;
+}
+.FeedbackFormTitle {
+	display: inline-block;
+	font-weight: bold;
+	margin-left: -155px;
+	width: 150px;
+}
+.FeedbackSubmit {
+	margin-left: 151px;
+}
+.FeedbackFormInput {
+	width: 100%;
+}
+textarea.FeedbackFormInput {
+	min-height: 7em;
+}
+
+
+
+/* PAGES - MAIN - OPERATION
+---------------------------------------------------------------------*/
+
+.Operation {
+	padding-top: .67em;
+}
+
+.OperationImage,
+.OperationContent {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.OperationImage {
+	margin-right: 20px;
+}
+
+.OperationContent h1 {
+	margin: 0 0 .38em;
+}
+.Operation.succes .ContentHeader {
+	color: #4bb054;
+}
+.Operation.error .ContentHeader {
+	color: #e70202;
+}
+
+.OperationContent p {
+	font-size: 1.14em;
+	margin: 0;
+}
+
+
+
+/* PAGES - MAIN - SERVICE
+---------------------------------------------------------------------*/
+
+.SupportInfo {
+	margin-bottom: 40px;
+	padding-left: 107px;
+	background-repeat: no-repeat;
+	background-position-y: 7px;
+}
+
+.SupportInfo--serviceCenter {
+	background-image: resolve('icons/serviceCenter.png');
+	background-position-x: 10px; 
+}
+
+.SupportInfo--insurancePrint {
+	background-image: resolve('icons/guaranteePrinter.png');
+}
+
+
+
+/* PAGES - ERROR
+---------------------------------------------------------------------*/
+
+.Wrapper.error {
+	margin: auto;
+	padding-top: 65px;
+	text-align: center;
+}
+
+.Wrapper.error.FiveError {
+	padding-top: 180px;
+}
+
+.Error {
+	width: 530px;
+
+	&--503 {
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+
+		&.Wrapper.error {
+			padding: 0;
+		}
+
+		.Copyright {
+			margin-top: 14px;
+			font-size: 14px;
+		}
+
+		.PageFooter {
+			margin-top: 2.3em;
+		}
+
+		.PageFooter__logo {
+			display: inline-block;
+			border: none;
+			background: resolve('brand/logo.png') center/75% no-repeat;
+			width: width('brand/logo.png');
+			height: height('brand/logo.png');
+		}
+	}
+}
+
+.Error__content {
+	&:before {
+		content: '';
+		display: block;
+		background: resolve('errors/503.png') center no-repeat;
+		width: width('errors/503.png');
+		height: height('errors/503.png');
+		margin: 0 auto 0 14%;
+	}
+}
+
+.Error__header {
+	font-size: 1.28em;
+	margin-top: 47px;
+}
+
+.Error__message {
+	margin-top: 12px;
+}
+
+.Error .PageContent {
+	margin-bottom: 40px;
+}
+.ErrorExplanation {
+	font-size: 1.3em;
+	line-height: 1.4em;
+	margin-top: 50px;
+}
+.ErrorNav {
+	margin-top: 95px;
+}
+
+.ErrorText {
+	font-size: 0.96em;
+	margin-top: 7px;
+}
+
+.ErrorNavLogo {
+	background-image: resolve('brand/logos.png');
+	background-repeat: no-repeat;
+	background-position: 0 -48px;
+	border: 0;
+	display: inline-block;
+	height: 13px;
+	margin-right: 35px;
+	position: relative;
+	top: .1em;
+	width: 80px;
+}
+.ErrorNav .List {
+	display: inline-block;
+	font-size: .9em;
+	vertical-align: middle;
+}
+.Wrapper.error .PageFooter {
+	-webkit-box-shadow: none;
+	 -moz-box-shadow: none;
+			box-shadow: none;
+}
+
+.Closed .PageContent {
+	overflow: hidden;
+	position: relative;
+	margin-bottom: 40px;
+}
+.ClosedRibbon {
+	background: url(/assets_sonnen/img/errors/site_closed_ribbon.png) repeat-x;
+	content: "";
+	height: 97px;
+	left: 0;
+	position: absolute;
+	top: 80px;
+	width: 100%;
+	-webkit-transform: rotate(-2deg);
+	 -moz-transform: rotate(-2deg);
+		-o-transform: rotate(-2deg);
+		 transform: rotate(-2deg);
+}
+
+/* PersonalData */
+.PersonalData {
+	color: #000;
+	font: 13px Arial, Helvetica, sans-serif;
+	line-height: 1.5em;
+	width: 720px;
+}
+
+.PersonalData p {
+	font-size: 1em;
+	line-height: 1.5em;
+	margin-bottom: 1em;
+}
+
+
+h1.PersonalData__title {
+	font-size: 23px;
+	font-weight: normal;
+	line-height: 1em;
+	text-align: left;
+	margin: 0 0 .9em;
+}
+
+p.PersonalData__accent {
+	font-size: 11px;
+	color: #666;
+	margin-bottom: 0;
+}
+/* ~PersonalData */
+
+
+
+/* HELPERS
+---------------------------------------------------------------------*/
+
+.disabled {
+	pointer-events: none;
+	cursor: default;
+}

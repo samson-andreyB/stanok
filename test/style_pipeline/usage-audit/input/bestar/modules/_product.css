@@ -1,0 +1,125 @@
+.Product {
+	display: block;
+	position: relative;
+	box-sizing: border-box;
+	padding: 25px;
+	padding-bottom: 35px;
+	line-height: 1.5;
+	color: $colorText;
+	transition: all .2s ease;
+
+	&:before {
+		content: '';
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background-color: #fff;
+		transition: all .2s ease;
+		opacity: 0;
+	}
+
+	&__wrapper {
+		position: relative;
+	}
+
+	&__photo {
+		width: 100%;
+		image-rendering: -webkit-optimize-contrast;
+	}
+
+	&__code {
+		font-size: 13px;
+		color: #a5a5a5;
+		transition: color .2s ease;
+	}
+
+	&__code,
+	&__name {
+		margin-top: 12px;
+	}
+
+	&:hover,
+	&:focus,
+	&:active {
+		text-decoration: none;
+	}
+
+	&:focus,
+	&:active {
+		z-index: 2;
+	}
+
+	&:hover,
+	&:focus {
+		color: $colorActiveHover;
+
+		&:before {
+			top: -10px;
+			right: -10px;
+			bottom: -10px;
+			left: -10px;
+			box-shadow: 0 0 15px rgba(0, 0, 0, .1);
+			opacity: 1;
+		}
+	}
+
+	&:hover {
+		z-index: 3;
+	}
+}
+
+.Product--search {
+	padding: 10px 0;
+	margin: 0 43px 0 20px;
+	font-size: 13px;
+	border-top: 1px solid $colorHeaderBorder;
+	line-height: 1.3;
+
+	&:before {
+		content: none;
+	}
+
+	.Product__wrapper {
+		display: flex;
+		color: $colorHeaderTextFaded;
+	}
+
+	.Product__photoContainer {
+		width: 40px;
+		height: 40px;
+		flex-shrink: 0;
+	}
+
+	.Product__nameContainer {
+		display: flex;
+		min-height: 40px;
+		margin-left: 10px;
+		align-items: center;
+	}
+
+	.Product__name {
+		margin: -3px 0;
+	}
+
+	.Product__match {
+		color: $colorHeaderText;
+	}
+
+	&:hover,
+	&:active,
+	&:focus {
+		outline: none;
+
+		.Product__wrapper {
+			color: $colorHeaderText;
+		}
+	}
+}
+
+.Product--new {
+	.Product__wrapper:before{
+		@mixin badge_new;
+	}
+}

@@ -1,0 +1,235 @@
+.Form--profileInfo {
+
+	.Form__header {
+		@mixin H--sub;
+		border: 0;
+	}
+
+	.Form__field {
+		margin-left: 140px;
+	}
+
+	.Form__title {
+		margin-left: -140px;
+		width: 130px;
+	}
+
+	.Form__submit {
+		@mixin Btn--default;
+		@mixin Btn--main;
+		@mixin Btn--big;
+	}
+}
+
+
+
+.Form--auth {
+
+	.Form__header {
+		@mixin H--sub;
+		border: 0;
+		padding-y: 12px;
+	}
+
+	.Form__footer {
+		@mixin infoBg--img;
+	}
+
+	.Form__set {
+
+		&.buttons {
+			border-top: 1px dotted #bababa;
+			padding-top: 10px;
+		}
+	}
+
+	.Form__tip {
+		font-size: 14px;
+	}
+
+	.Form__field {
+		margin-left: 160px;
+	}
+
+	.Form__title {
+		margin-x: 10px -160px;
+		padding-top: .8em;
+		width: 150px;
+	}
+
+	.Form__input {
+		font-size: 16px;
+	}
+
+	.Form__submit {
+		@mixin Btn--default;
+		@mixin Btn--main;
+		@mixin Btn--big;
+	}
+}
+
+
+
+.Form--toCheckout {
+	.Form__submit {
+		@mixin Btn--default;
+		@mixin Btn--main;
+		@mixin Btn--big;
+		@mixin Btn--arrow-forward;
+	}
+}
+
+
+
+.Form--feedback {
+	margin-bottom: 20px;
+
+	.Form__header {
+		@mixin H--sub;
+		border: 0;
+	}
+
+	.Form__set {
+		margin-left: 0;
+	}
+
+	.Form__field {
+		margin-left: 0;
+	}
+
+	.Select,
+	.Form__input {
+		font-size: 15px;
+	}
+
+	.Form__submit {
+		@mixin Btn--default;
+		@mixin Btn--main;
+		@mixin Btn--big;
+	}
+
+	.Form__close {
+		@mixin Btn--basic;
+		@mixin Btn--sub;
+		@mixin Btn--subBig;
+	}
+
+	.Form__submit + .Form__close,
+	.Form__close + .Form__submit {
+		margin-left: 10px;
+	}
+}
+
+
+
+.Form--feedbackChat {
+	.Form__header {
+		@mixin PseudoTable;
+		width: 100%;
+
+		.H__box {
+			vertical-align: baseline;
+		}
+
+		.H__box.info {
+			padding-left: 20px;
+			text-align: right;
+			white-space: nowrap;
+			width: 0;
+		}
+	}
+}
+
+
+
+.Form--orderByCode {
+	$OrderByCodeWidth: 140px;
+
+	.Form__field {
+		margin-x: 3%;
+	}
+
+	.OrderByCode__code {
+		margin-right: 10px;
+		width: $OrderByCodeWidth;
+	}
+	
+	.OrderByCode__quantity {
+		width: 80px;
+	}
+	
+	.Form__input.OrderByCode__quantity {
+		font-weight: bold;
+		text-align: center;
+	}
+
+	.AddedProducts {
+		margin-top: 0;
+	}
+	
+	.Product {
+		border-color: #a6a6a6;
+		box-shadow: 0 0 4px rgba(0,0,0,.25);
+	}
+	
+	.Product__box {
+		width: 47.3%;
+	}
+	
+	.AddedProducts .Product__box.price .Price,
+	.AddedProducts .Product__box.totalPrice .Price {
+		font-size: 19px;
+	}
+
+	.AddedProducts .Product__box.price .Price.Price--initial {
+		font-size: 14px;
+	}
+
+	.AddedProducts .Product__box.price .Price {
+		font-weight: normal;
+	}
+	
+	.AddedProducts .Product__box.price .Price--discount {
+		font-size: 14px;
+	}
+
+	.Product__code {
+		margin-top: .75em;
+	}
+
+	.Form__submit {
+		@mixin Btn--default;
+		@mixin Btn--main;
+		@mixin Btn--big;
+	}
+
+	.Field__error {
+		left: calc($OrderByCodeWidth + 10px);
+	}
+
+	.Form__set:empty {
+		margin-top: 0;
+	}
+
+	.Form__set--upload {
+		margin-bottom: 16px;
+
+		.Icon--help {
+			margin-left: 8px;
+		}
+	}
+
+	.FieldFile__trigger {
+		@mixin Btn--big;
+	}
+}
+
+
+
+.Form--orderByCode {
+	& .Product__box {
+		&.price {
+			text-align: left;
+		}
+	}
+}

@@ -1,0 +1,91 @@
+.Editor--banners {
+	display: none;
+	position: absolute;
+	z-index: 101;
+	background-color: #fff;
+	width: 450px;
+	
+	&:after {
+		content: '';
+		position: absolute;
+		width: 100%;
+		top: 100%;
+		padding-top: 50px;
+		left: 0;
+	}
+
+	.Editor {
+
+		&__main {
+			padding-y: 20px;
+		}
+
+		&__close {
+			position: absolute;
+			width: 12px;
+			height: 12px;
+			right: 20px;
+			top: 15px;
+			background-image: resolve('icons/cross_12x12_bbb.png');
+			background-repeat: no-repeat;
+			background-position: 50% 50%;
+			cursor: pointer;
+
+			&:hover {
+				background-image: resolve('icons/cross_12x12_777.png');
+			}
+		}
+	}
+
+	.Form {
+		
+		&__set {
+			width: 100%;
+		}
+
+		&__error {
+			display: none;
+			width: auto;
+			margin-left: .6em;
+		}
+
+		&__field {
+
+			&--loading {
+
+				.Spinner {
+					display: inline-block;
+					margin-left: .6em;
+					border-top-color: #aaa;
+				}
+			}
+
+			&--error {
+
+				.Field {
+					border-color: $error;
+					
+					&:focus {
+						border-color: $main;
+					}
+				}
+
+				.Form__error {
+					display: inline-block;
+				}
+			}
+		}
+	}
+
+	.contentWrapper {
+		padding: 10px 20px;
+	}
+
+	.Spinner {
+		display: none;
+	}
+
+	.btn + .btn {
+		margin-left: .6em;
+	}
+}

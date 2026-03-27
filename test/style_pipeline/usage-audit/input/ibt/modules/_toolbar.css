@@ -1,0 +1,33 @@
+.Toolbar--default {
+	background-color: #efefef;
+
+	.Toolbar__group {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.Toolbar__box {
+		padding: 13px 20px;
+		line-height: 1;
+	}
+
+	.Toolbar__defectCause {
+		margin-top: -2px;
+		padding-x: 20px;
+		padding-bottom: 13px;
+	}
+
+	.btnHistory {
+		margin-top: -.2em;
+		cursor: pointer;
+	}
+
+	.pseudoLink + .pseudoLink {
+		margin-left: 17px;
+	}
+
+	.Badge + .btn {
+		margin-left: .3em;
+	}
+}

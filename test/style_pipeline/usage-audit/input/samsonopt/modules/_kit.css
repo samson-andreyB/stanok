@@ -1,0 +1,45 @@
+.Kit--default {
+	font-size: 12px;
+	line-height: 14px;
+
+	.Kit__item {
+		display: table;
+		width: 100%;
+	}
+
+	.Kit__item + .Kit__item,
+	.Kit__list .Kit__item:first-child {
+		margin-top: 8px;
+		border-top: 1px solid #eeebe8;
+	}
+
+	.Kit__list {
+		display: none;
+	}
+
+	.Kit__box {
+		display: table-cell;
+		padding-top: 8px;
+		vertical-align: top;
+
+		&--amount {
+			width: 40px;
+			text-align: right;
+			white-space: nowrap;
+		}
+	}
+
+	.Kit__box + .Kit__box {
+		padding-left: 15px;
+	}
+
+	.Kit__aux {
+		margin-top: 4px;
+		color: #777;
+	}
+
+	.Kit__link {
+		display: inline-block;
+		margin-top: 8px;
+	}
+}

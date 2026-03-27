@@ -1,0 +1,41 @@
+.Timer {
+	display: inline-block;
+	vertical-align: middle;
+	cursor: default;
+
+	&--hide {
+		display: none;	
+	}
+
+	&__title {
+		display: inline-block;
+		vertical-align: middle;
+		margin-right: .75em;
+	}
+
+	&__box {
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	&__item {
+		border: 1px solid #ccc;
+		border-radius: 2px;
+		box-sizing: border-box;
+		color: #666;
+		display: inline-block;
+		line-height: 1em;
+		padding: 3px 0;
+		width: 1em;
+		text-align: center;
+		position: relative;
+
+		& + & {
+			margin-left: 1px;
+		}
+	}
+
+	&__digit {
+		position: relative;
+	}
+}

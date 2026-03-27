@@ -1,0 +1,158 @@
+.Page--jackpotCorrection {
+	@mixin Form__field--error;
+
+	.filter--search {
+		width: 335px;
+	}
+
+	.filters--defined {
+		.filter {
+			max-width: none;
+		}
+	}
+
+	.btn + .btn {
+		margin-left: .6em;
+	}
+
+	.Icon--bubble {
+		margin-left: 3px;
+		margin-bottom: -2px;
+
+		&:hover {
+			background-image: resolve('icons/bubble_main.png');
+			cursor: help;
+		}
+	}
+
+	.Form--jackpotCorrection {
+		padding-y: 20px;
+
+		.Form__field + .Form__field {
+			margin-top: 20px;
+		}
+
+		.Form__hint {
+			color: #777;
+		}
+
+		.Upload {
+			.Spinner {
+				display: block;
+			}
+		}
+
+		.btn + .Upload {
+			margin-left: .6em;
+		}
+
+		.btn--hidden {
+			display: none;
+
+			& + .Upload {
+				margin-left: 0;
+			}
+		}
+
+		.btnInfo {
+			margin: 0;
+		}
+	}
+
+	.Header + .Form--jackpotCorrection {
+		padding-top: 0;
+	}
+
+	.controlPanel--indent {
+		margin-top: 3px;
+	}
+
+	.Upload__btn:before {
+		transition: opacity ease-in-out .2s;
+	}
+
+	.Upload--active {
+		.Upload__label {
+			display: inline-block;
+			pointer-events: none;
+		}
+
+		.Upload__btn {
+			color: #fff;
+
+			&:before {
+				opacity: 0;
+			}
+		}
+
+		.Spinner {
+			border-top-color: $main;
+			border-right-color: $main;
+			visibility: visible;
+			opacity: 1;
+		}
+	}
+
+	.Items--jackpotCorrectionList {
+		.Item--disabled {
+			cursor: pointer;
+		}
+
+		.Item__box {
+			&--date,
+			&--status {
+				white-space: nowrap;
+			}
+		}
+	}
+
+	.Items--jackpotCorrectionData {
+		.Item__box {
+			vertical-align: top;
+
+			&--login {
+				width: 20%;
+			}
+
+			&--name {
+				width: 40%;
+			}
+
+			&--correction {
+				text-align: right;
+			}
+
+			&--spacer {
+				width: 25%;
+			}
+		}
+	}
+}
+
+.FancyModal--jackpotCorrection {
+	min-width: 430px;
+	padding-top: 30px;
+
+	.FancyModal__content {
+		margin-bottom: -15px;
+		line-height: 1.5em;
+	}
+
+	.FancyModal__control {
+		margin-top: 35px;
+	}
+
+	@mixin Form__field--error;
+}
+
+.FancyModal--jackpotCorrectionUpload {
+	width: 420px;
+}
+
+.TipNote--jackpotCorrectionComment {
+	max-width: 200px;
+}
+
+.TipNote--jackpotCorrectionFileStructure {
+	max-width: 215px;
+}

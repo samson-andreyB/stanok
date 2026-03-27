@@ -1,0 +1,94 @@
+/* Base */
+@import "modules/_var";
+@import "lib/desk/_common";
+@import "modules/_mixins";
+
+
+/* Layout */
+@import "modules/_layout";
+@import "modules/_header";
+
+/* Theme */
+@import "modules/_theme";
+
+/* Blocks */
+@import "modules/_autocomplete";
+@import "modules/_badge";
+@import "modules/_badgePhoto";
+@import "modules/_btn";
+@import "modules/_breadcrumbs";
+@import "modules/_competitors";
+@import "modules/_fancyModal";
+@import "modules/_upload";
+@import "modules/_icon";
+@import "modules/_items"; /* Items, FloatingHeader */
+@import "modules/_tableCaption";
+@import "modules/_list";
+@import "modules/_notifications"; /* Notifications, Notification */
+@import "modules/_panels";
+@import "modules/_progressbar";
+@import "modules/_report";
+@import "modules/_search";
+@import "modules/_selectUser"; /* SelectUser, AddHelper, Mangager */
+@import "modules/_status";
+@import "modules/_statusInfo";
+@import "modules/_topMessages"; /* TopMessages, TopMessage*/
+@import "modules/_associatedProducts";
+@import "modules/_fillAnotherCode";
+@import "modules/_steps";
+@import "modules/_alert";
+@import "modules/_pseudoLink";
+@import "modules/_typeWarrantyService";
+@import "modules/_switch";
+@import "modules/_facets";
+@import "modules/_facetValues";
+@import "modules/_legend";
+@import "modules/_toolbar";
+@import "modules/_uploadPhoto";
+@import "modules/_previewImageHover";
+@import "modules/_productReplacement";
+@import "modules/_productReplacementSpecs";
+@import "modules/_productKit";
+@import "modules/_productSpecs";
+@import "modules/_productCertificates";
+@import "modules/_productParamDefect";
+@import "modules/_productPhotos";
+@import "modules/_productPhotosList";
+@import "modules/_productPhotoGallery";
+@import "modules/_productSwitch";
+@import "modules/_addProductCode";
+@import "modules/_changeHistoryStatus";
+@import "modules/_historyPhotoStatus";
+@import "modules/_requiredPhotos";
+@import "modules/_addVideo";
+@import "modules/_costRange";
+@import "modules/_series";
+@import "modules/_form";
+
+
+/* Contexts */
+@import "modules/_stmAdvantages";
+@import "modules/_uploadFilesForProduct";
+@import "modules/_searchPage";
+@import "modules/_mrkPhotographers";
+@import "modules/_reportsGoods";
+@import "modules/_reportsPhotoRequirement";
+@import "modules/_reportsPhotoDealers";
+@import "modules/_kdCompetitorPrices";
+@import "modules/_admin";
+@import "modules/_productCard";
+@import "modules/_marketplacesInfo";
+@import "modules/_uploadCodes";
+@import "modules/_clusters";
+@import "modules/_palette";
+@import "modules/_facetManagement";
+@import "modules/_relatedRubrics";
+@import "modules/_uploadPricingRules";
+@import "modules/_rubricList";
+@import "modules/_bindingGoods";
+@import "modules/_rubricator";
+
+
+/* Additional */
+@import "modules/_animations";
+@import "lib/_helpers";

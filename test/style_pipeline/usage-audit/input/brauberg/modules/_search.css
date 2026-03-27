@@ -1,0 +1,41 @@
+.Search {
+	&__group {
+		display: table;
+		width: 100%;
+	}
+
+	&__box {
+		display: table-cell;
+		vertical-align: middle;
+
+		&--submit {
+			width: 1px;
+		}
+	}
+}
+
+.SearchHelp {
+	font-size: 15px;
+	margin-top: 20px;
+
+	&__title {
+		font-size: 1em;
+		margin: 0 0 5px 0;
+	}
+
+	&__list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	&__item {
+		margin-top: 5px;
+
+		&:before {
+			content: '\2014';
+			margin-right: 5px;
+			vertical-align: baseline;
+		}
+	}
+}

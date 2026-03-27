@@ -1,0 +1,11 @@
+.PersonalData {
+	&__header {
+		margin: 0 0 27px;
+	}
+
+	&__accent {
+		font-size: 12px;
+		line-height: 1.5;
+		color: #858585;
+	}
+}

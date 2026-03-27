@@ -1,0 +1,156 @@
+/* Слайдер
+**********************************************************/
+
+.Slider {
+	box-sizing: border-box;
+	position: relative;
+	cursor: default;
+	overflow: hidden;
+	height: 586px;
+	width: 100%;
+	margin: 38px 0 62px;
+
+	&__imgContainer {
+		margin: -1px 404px -1px 0px;
+		overflow: hidden;
+		height: 586px;
+		border-right: 1px solid #f0f0f0;
+
+		img {
+			display: block;
+		}
+	}
+
+	&__buttonWrapper{
+		margin-top: 20px;
+		line-height: 24px;
+	}
+
+	&__list {
+		white-space: nowrap;
+		width: 100%;
+	}
+
+	&__item {
+		width: 100%;
+		box-sizing: border-box;
+		white-space: normal;
+		vertical-align: top;
+		border: 1px solid #f0f0f0;
+		border-left-width: 0px;
+		background-color: #fdfdfd;
+
+		/*слайд будет визуально скрыт*/
+		visibility: hidden;
+		opacity: 0;
+		transition: visibility, opacity;
+		transition-delay: .3s;
+		transition-duration: 0s;
+
+		position: absolute;
+		top: 0;
+		right: 0;
+		left: 0;
+
+		&--active {
+			visibility: visible;
+			opacity: 1;
+			transition-delay: 0s;
+			transition-duration: .3s;
+			z-index: 1;
+		}
+	}
+
+	&__itemContent {
+		width: 404px;
+		float: right;
+		padding: 41px 35px 90px 45px;
+		box-sizing: border-box;
+	}
+
+	&__itemHeader {
+		font-family: 'Merriweather', 'Times New Roman', serif;
+		font-size: 30px;
+		word-wrap: break-word;
+		color: #3c2211;
+		line-height: 40px;
+	}
+
+	&__itemDescription {
+		margin-top: 19px;
+		line-height: 30px;
+		font-size: 17px;
+		width: 320px;
+		color: #3c2211;
+	}
+
+	&__navigation {
+		position: absolute;
+		width: 315px;
+		right: 45px;
+		bottom: 64px;
+		z-index: 2;
+	}
+
+	&__indicators {
+		user-select: none;
+		text-align: left;
+		margin-right: 20px;
+		display: inline-block;
+	}
+
+	&__indicator {
+		display: inline-block;
+		vertical-align: bottom;
+		width: 15px;
+		height: 15px;
+		background-color: #e6e6e6;
+		border-radius: 50%;
+		box-sizing: border-box;
+
+		&--active,
+		&:hover {
+			cursor: pointer;
+			background-color: $colorActive;
+		}
+
+		&--active,
+		&--active:hover {
+			cursor: default;
+		}
+
+		& + & {
+			margin-left: 4px;
+		}
+	}
+
+	&__arrows {
+		display: inline-block;
+		user-select: none;
+	}
+
+	&__arrow {
+		display: inline-block;
+		vertical-align: bottom;
+		width: width('arrow_left_2.png');
+		height: height('arrow_left_2.png');
+		opacity: 0.8;
+
+		&:hover {
+			opacity: 1;
+			cursor: pointer;
+		}
+
+		& + .Slider__arrow {
+			margin-left: 6px;
+		}
+
+		&--left {
+			background-image: resolve('arrow_left_2.png');
+		}
+
+		&--right {
+			background-image: resolve('arrow_right_2.png');
+		}
+	}
+}

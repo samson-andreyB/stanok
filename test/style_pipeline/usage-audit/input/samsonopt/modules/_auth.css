@@ -1,0 +1,47 @@
+.Auth {
+	background-color: #ebebeb;
+	box-sizing: border-box;
+	line-height: 1.5;
+	margin: 30px auto 50px;
+	padding: 30px 50px;
+	width: 465px;
+	
+	&__header,
+	#mainContent &__header {
+		margin-bottom: 25px;
+		text-align: center;
+	}
+
+	&__form {
+		font-size: 14px;
+		margin-top: 25px;
+		padding-bottom: 30px;
+		
+		.Form__label {
+			color: #000;
+			font-size: 14px;
+		}
+
+		.Form__field + .Form__field {
+			margin-top: 30px;
+		}
+
+		.Field {
+			font-size: inherit;
+			height: 35px;
+		}
+	}
+
+	&__info {
+		border-top: 1px solid #ccc;
+		margin: 0 -50px -30px;
+		padding: 17px 50px;
+	}
+
+	&__submit {
+		font-size: 14px;
+		height: 35px;
+		margin-right: 20px;
+		padding-x: 24px;
+	}
+}

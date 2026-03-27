@@ -1,0 +1,91 @@
+.Reports--default {
+	.Reports__controls {
+		&.contentWrapper {
+			padding: 20px;
+		}
+	}
+}
+
+
+.ReportsList--default {
+	.ReportsList__item {
+		display: none;
+
+		&--active {
+			display: block;
+		}
+
+		&--clientsDevelopment {
+
+			.Upload {
+				display: inline-block;
+			}
+
+			.Upload--disabled {
+				pointer-events: none;
+			}
+
+			.Upload__label {
+				display: inline-block;
+			}
+
+			.btn + .btn {
+				margin-left: 8px;
+			}
+
+			.RichSelect {
+				width: 100%;
+			}
+
+			.filter--clientStatus2 {
+				width: 160px;
+			}
+
+			.filter--lifeCycle {
+				width: 135px;
+			}
+
+			.filter--srk {
+				width: 160px;
+			}
+
+			.filter--employeeSrk {
+				width: 150px;
+			}
+
+			.Items__list {
+				border: none;
+			}
+		}
+
+		&--loyaltyProgram {
+			.filter--branchSubdivision {
+				width: 150px;
+			}
+
+			.filter--pvs {
+				width: 70px;
+				min-width: 0;
+			}
+		}
+	}
+}
+
+
+.filter {
+	&--reportsUnit {
+		width: 150px;
+	}
+
+	&--reportsSum {
+		width: 100px;
+	}
+
+	&--reportsTerritoryErp {
+		width: 130px;
+	}
+
+	&--reportsOkbErp {
+		width: 150px;
+	}
+}

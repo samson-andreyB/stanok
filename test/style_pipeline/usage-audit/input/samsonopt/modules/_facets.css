@@ -1,0 +1,39 @@
+.Facets {
+	&__title {
+		margin-bottom: 8px;
+	}
+
+	&__submit {
+		padding: 8px 15px;
+		font-size: 14px;
+	}
+
+	&__reset {
+		padding-x: 5px;
+		font-size: 13px;
+	}
+
+	&__paletteColors {
+		#selectFacets & {
+			li {
+				margin-y: 6px;
+			}
+
+			.content {
+				padding-top: 1px;
+				padding-bottom: 0;
+				margin-bottom: -1px;
+				padding-left: 16px;
+				display: inline-block;
+				vertical-align: top;
+				position: relative;
+			}
+		}
+
+		.PaletteColor {
+			position: absolute;
+			top: 5px;
+			left: 1px;
+		}
+	}
+}

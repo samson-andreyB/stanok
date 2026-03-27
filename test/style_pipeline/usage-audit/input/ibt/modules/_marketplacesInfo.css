@@ -1,0 +1,42 @@
+.Page--marketplacesInfo {
+	.controlPanel--uploadBox {
+		width: 750px;
+
+		.Form__set {
+			margin-top: 15px;
+
+			&:first-child {
+				margin-top: 0;
+			}
+		}
+	}
+
+	.Form__set {
+		width: auto;
+
+		&--selection {
+			.Form__input,
+			.RichSelect2 {
+				width: 200px;
+			}
+		}
+
+		&--fileUpload {
+			.Rules2 {
+				margin-bottom: 15px;
+			}
+
+			.Form__input {
+				width: 60px;
+			}
+		}
+
+		&--submit {
+			margin-top: 10px;
+
+			& + .StatusMessagesWrapper {
+				margin-top: 10px;
+			}
+		}
+	}
+}

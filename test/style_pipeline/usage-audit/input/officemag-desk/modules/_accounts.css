@@ -1,0 +1,321 @@
+/* ACCOUNTS
+------------------------------------------------------------------------------*/
+
+.Account {
+	&__main {
+		padding: 0;
+
+		.Form__set {
+			width: 100%;
+			box-sizing: border-box;
+		}
+
+		.Items {
+			border: 0;
+
+			&.CommercialOfferContents {
+				.Items__list {
+					border: 0;
+					margin-top: 0;
+				}
+			}
+		}
+
+		.controlPanel + .Items {
+			margin-top: 0;
+		}
+
+		.CommercialOfferSummary {
+			margin-bottom: 0;
+		}
+	}
+
+	.filter--itemsCart {
+		width: 155px;
+	}
+
+	.filter--alignBottom {
+		.btn {
+			margin-top: 0;
+		}
+	}
+
+	.Field--customerCode {
+		width: 130px;
+	}
+
+	.Update--default {
+
+		.Update__results {
+			display: none;
+			padding-top: 5px;
+			font-size: 11px;
+		}
+
+		.Update__error {
+			color: $error;
+		}
+
+		.Update__error + .Update__error {
+			margin-top: 6px;
+		}
+	}
+}
+
+.Specs--accountInfo {
+	.Specs__item {
+		padding-top: 0;
+	}
+
+	.Specs__item + .Specs__item {
+		margin-top: 1.2em;
+	}
+
+	.Specs__header {
+		margin-bottom: 0;
+		font-size: inherit;
+	}
+
+	.Specs__content {
+		margin-top: .3em;
+
+		.pseudoLink {
+			margin-left: 8px;
+			font-size: 11px;
+		}
+
+		.Field {
+			vertical-align: middle;
+		}
+
+		.Field + .btn {
+			margin-left: .6em;
+		}
+
+		&--pseudoLinkBlock {
+			.pseudoLink {
+				margin-left: 0;
+			}
+		}
+	}
+
+	.Specs__list {
+		list-style: none;
+		padding-left: 0;
+
+		& + .pseudoLink {
+			margin-left: 0;
+		}
+	}
+
+	.Specs__hint {
+		color: #777;
+	}
+
+	.Field--subdivision,
+	.Field--clientType {
+		width: 180px;
+	}
+}
+
+.Items--account {
+	.Items__group {
+		.Item__box {
+			vertical-align: top;
+		}
+	}
+
+	.Item {
+		&__box {
+			&--indicator {
+				width: 1px;
+			}
+
+			&--login {
+				width: 19%;
+			}
+
+			&--client {
+				width: 21%;
+				word-break: break-all;
+			}
+
+			&--date {
+				width: 11%;
+			}
+
+			&--responsible {
+				width: 18%;
+			}
+
+			&--accountStatus {
+				width: 17%;
+
+				.StatusChangeDatetime {
+					margin-top: 5px;
+				}
+			}
+		}
+	}
+}
+
+.AccountResetPass {
+	font-size: 13px;
+	padding: 12px;
+
+	&__box {
+		& + & {
+			margin-top: 1em;
+		}
+
+		&--title {
+			color: #4c4c4c;
+			line-height: 1em;
+		}
+	}
+
+	&__link {
+		color: #999;
+		width: 290px;
+		text-overflow: ellipsis;
+	}
+
+	&__notice {
+		color: #b2b2b2;
+		font-size: 12px;
+		vertical-align: middle;
+		margin-left: 10px;
+		display: none;
+	}
+}
+
+.FancyModal--changeConsignee {
+	width: 375px;
+	font-size: 13px;
+
+	.Form__list {
+		max-height: 400px;
+		overflow-y: auto;
+	}
+
+	.Form__field {
+		margin: 0;
+		padding-left: 16px;
+
+		input {
+			margin-left: -16px;
+		}
+	}
+
+	.Form__field + .Form__field {
+		margin-top: .5em;
+	}
+
+	.Form__hint {
+		color: #777;
+	}
+
+	.btn + .btn {
+		margin-left: .6em;
+	}
+}
+
+.FancyModal--unlinkAccount {
+	width: 575px;
+	font-size: 13px;
+
+	.Form {
+		margin-top: .5em;
+	}
+
+	.Form__error {
+		margin: 0;
+	}
+
+	.Form__title {
+		width: auto;
+		margin-left: 0;
+		margin-bottom: .6em;
+		text-align: left;
+		color: #000;
+		font-weight: bold;
+	}
+
+	.Form__field {
+		margin: 0;
+		padding-left: 16px;
+
+		input {
+			margin-left: -16px;
+		}
+	}
+
+	.Form__field + .Form__field {
+		margin-top: .5em;
+	}
+
+	.btn + .btn {
+		margin-left: .6em;
+	}
+
+	.OrdersOwner {
+		margin-top: .25em;
+
+		&__name {
+			font-weight: bold;
+		}
+
+		&__selectUser {
+			margin-top: .5em;
+		}
+	}
+}
+
+.Filters2--accountList {
+	.Filter2 {
+		&--branch {
+			width: 145px
+		}
+
+		&--status {
+			width: 125px;
+		}
+
+		&--search {
+			width: 270px;
+		}
+
+		&--responsiblePerson {
+			width: 165px;
+		}
+
+		&--accountStatus {
+			width: 165px;
+		}
+
+		&--incompleteOrder {
+			width: 135px;
+		}
+
+		&--lastOrder {
+			width: 135px;
+		}
+	}
+}
+
+.SwitchTip--accountResponsiblePerson {
+	width: 245px;
+	box-sizing: border-box;
+}
+
+.Form--account {
+	font-size: 12px;
+
+	.Form__label {
+		margin-bottom: 0.5em;
+	}
+
+	.Form__group + .Form__group {
+		margin-top: 1em;
+	}
+}

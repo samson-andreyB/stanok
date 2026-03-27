@@ -1,0 +1,462 @@
+@define-mixin ActElem--accent {
+	background-color: $theme_accent;
+	color: #fff;
+
+	@if $theme_name == 'op' {
+		box-shadow: inset 0 -3px 0 rgba(0,0,0,.15), 0 2px 2px rgba(0,0,0,.15);
+	}
+
+	&:hover,
+	&.hover {
+		background-color: $theme_aHover;
+	}
+
+	&:active,
+	&.active {
+		background-color: $theme_accent;
+	}
+}
+
+@define-mixin ActElem--disabled {
+	background-color: $disabledColor;
+}
+
+
+@define-mixin ActElem--brand {
+	background-color: $theme_brand;
+	color: #fff;
+
+	&:hover,
+	&.hover {
+		background-color: $theme_bHover;
+	}
+
+	&:active,
+	&.active {
+		background-color: $theme_brand;
+	}
+}
+
+@define-mixin infoBg--img {
+	background-image: resolve('interface/chess.png');
+	box-shadow: inset 0 0 0 1px #fff;
+}
+
+@define-mixin v-a-m-true {
+	margin-top: -.17em;
+	vertical-align: middle;
+}
+
+@define-mixin hideAway {
+	left: -9999px;
+	position: absolute;
+	top: -9999px;
+	visibility: hidden;
+}
+
+@define-mixin hideAway--clear {
+	left: auto;
+	position: static;
+	top: auto;
+	visibility: visible;
+}
+
+
+@define-mixin caret {
+	border: .36em solid transparent;
+	border-top-color: currentColor;
+	border-bottom-width: 0;
+	display: inline-block;
+	height: 0;
+	margin-left: 2px;
+	vertical-align: middle;
+	width: 0;
+
+	.Btn & {
+		margin-left: 0;
+	}
+}
+
+
+@define-mixin caret--top {
+	border-top-color: transparent;
+	border-top-width: 0;
+	border-bottom-color: currentColor;
+	border-bottom-width: .36em;
+}
+
+@define-mixin a--hover {
+	color: $linkHoverColor;
+}
+
+@define-mixin a {
+	color: $linkColor;
+	text-decoration: none;
+
+	&:hover {
+		@mixin a--hover;
+	}
+}
+
+@define-mixin pseudoLink {
+	@mixin a;
+	border-bottom: .1em dotted;
+	cursor: pointer;
+}
+
+
+
+/* предотвращает схлопывание элемента, если в нём есть плавающие */
+@define-mixin group {
+	&:before,
+	&:after {
+		content: " ";
+		display: table;
+	}
+	&:after {
+		clear: both;
+	}
+}
+.group {
+	@mixin group;
+}
+
+/* альтернативный способ */
+@define-mixin groupIB {
+	box-sizing: border-box;
+	display: inline-block;
+	width: 100%;
+}
+.groupIB {
+	@mixin groupIB;
+}
+
+
+
+/* невыделяемый текст */
+@define-mixin noUserSelect {
+	user-select: none;
+
+	&::selection { color: inherit }
+}
+.noUserSelect {
+	@mixin noUserSelect;
+}
+
+
+@define-mixin SidebarBox {
+	margin-bottom: 20px;
+}
+
+
+@define-mixin Page__wrapper {
+	margin: 0 auto;
+	min-width: $wrapperMinWidth;
+	max-width: $wrapperMaxWidth;
+	padding: 0 30px;
+}
+
+
+/* встраиваемое содержимое растягивается на всю ширину контейнера, не искажаясь */
+@define-mixin embedFill {
+	height: auto;
+	width: 100%;
+}
+.embedFill {
+	@mixin embedFill;
+}
+
+
+@define-mixin Search__result {
+	margin-y: -.5em 1.5em;
+	border-top: 1px dotted #b5b5b5;
+	color: $infoColor;
+	font-size: 14px;
+	padding-top: .5em;
+}
+
+/* скрытие текста в элементе */
+@define-mixin textHide {
+	border: 0;
+	font: 0/0 a;
+	text-shadow: none;
+	color: transparent;
+}
+.textHide {
+	@mixin textHide;
+}
+
+
+/* полупробел */
+/* аналог в хтмл С `&#8198;` [отсюда](http://stackoverflow.com/a/8515417) */
+/* неразрывный вариант С `&#8239;` [отсюда](http://en.wikipedia.org/wiki/Non-breaking_space) */
+/* символьные аналоги могут не отображатьсЯ в некоторых системах, поэтому: */
+/*
+<span class="halfSpace">&nbsp;</span>
+*/
+@define-mixin textHalfSpace {
+	font-size: 50%;
+	line-height: 1;
+}
+.textHalfSpace {
+	@mixin textHalfSpace;
+}
+
+
+
+@define-mixin Overlay--before {
+	cursor: default;
+	position: absolute;
+	z-index: 1;
+	background-color: rgba(0,0,0,.5);
+	content: "";
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+
+
+@define-mixin Spinner--potential {
+	position: relative;
+	transition-property: color;
+
+	&,
+	.Spinner {
+		transition-duration: .2s;
+		transition-timing-function: ease-in-out;
+	}
+	.Spinner {
+		opacity: 0;
+		position: absolute;
+		transition-property: opacity;
+	}
+
+	&.Spinner--active {
+		pointer-events: none;
+	}
+}
+
+
+/*
+ * осеревание изображениЯ
+ * http://www.karlhorky.com/2012/06/cross-browser-image-grayscale-with-css.html
+ * https://github.com/karlhorky/gray
+ */
+@define-mixin grayscale {
+	/* filter: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='grayscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/></filter></svg>#grayscale");*/ /* Firefox 10+ */
+	filter: gray; /* IE 6-9 */
+	-webkit-filter: grayscale(100%); /* Chrome 19+, Safari 6+ */
+}
+.grayscale {
+	@mixin grayscale;
+}
+
+
+
+@define-mixin hideSr {
+	border: 0;
+	clip: rect(0,0,0,0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+}
+.hideSr {
+	@mixin hideSr;
+}
+
+
+/* arrow(4px, right, white, 1px, #a6a6a6); */
+/* arrow(6px, left, $brandColor); */
+/* arrow(4px, left, white, 1px, $dividerColor); */
+
+@define-mixin arrowCommon {
+	position: absolute;
+	top: 50%;
+	content: ' ';
+	border: solid transparent;
+}
+
+@define-mixin arrowLeft $size: 20px, $backgroundColor: #fff, $borderWidth: 0, $borderColor: #000 {
+	position: relative;
+
+	&:after {
+		@mixin arrowCommon;
+		right: 100%;
+		margin-top: calc(- $size);
+		border-right-color: $backgroundColor;
+		border-width: $size;
+	}
+
+	@if $borderWidth != 0 {
+		&:before {
+			@mixin arrowCommon;
+			right: 100%;
+			margin-top: calc(- $size - $borderWidth);
+			border-right-color: $borderColor;
+			border-width: calc($size + $borderWidth);
+		}
+	}
+}
+
+@define-mixin arrowRight $size: 20px, $backgroundColor: #fff, $borderWidth: 0, $borderColor: #000 {
+	position: relative;
+
+	&:after {
+		@mixin arrowCommon;
+		left: 100%;
+		margin-top: calc(- $size);
+		border-left-color: $backgroundColor;
+		border-width: $size;
+	}
+
+	@if $borderWidth != 0 {
+		&:before {
+			@mixin arrowCommon;
+			left: 100%;
+			margin-top: calc(- $size - $borderWidth);
+			border-left-color: $borderColor;
+			border-width: calc($size + $borderWidth);
+		}
+	}
+}
+
+
+@define-mixin Dropdown $type: dynamic {
+	display: inline-block;
+
+	&__list {
+		@mixin List--basic;
+		border: 1px solid #c1c1c1;
+		background-color: #fff;
+		box-shadow: 0 1px 3px rgba(0,0,0,.3);
+	}
+
+	@if $type == dynamic {
+		position: relative;
+
+		&__trigger {
+			@mixin pseudoLink;
+		}
+
+		&__list {
+			display: none;
+			position: absolute;
+			top: 100%;
+			left: 0;
+			z-index: 20;
+		}
+
+		&.active &__list {
+			display: block;
+		}
+
+		&.overlay &__list {
+			margin: -11px -16px;
+			top: 0;
+		}
+	}
+
+	&__item {
+		@mixin List__item--basic;
+		border-top: 1px dotted $dividerColor;
+		cursor: pointer;
+		padding: 10px 15px;
+		white-space: nowrap;
+
+		&:first-child {
+			border-top: 0;
+		}
+
+		&:hover {
+			color: $theme_bHover;
+
+			@if $theme_name == 'op' {
+				color: $theme_aHover;
+			}
+
+			&.active {
+				color: #000;
+				cursor: default;
+			}
+		}
+
+		a& {
+			color: #000;
+			display: block;
+
+			&:hover {
+				color: $linkHoverColor;
+			}
+		}
+	}
+
+	&__link {
+		color: #000;
+	}
+
+	&__item:hover &__link {
+		color: $theme_color_3;
+	}
+}
+
+
+
+@define-mixin tunePrice {
+	.PriceCurrency {
+		font-weight: normal;
+	}
+
+	.Price__penny {
+		font-size: 9px;
+		font-weight: normal;
+		top: -.9em;
+	}
+}
+
+
+@define-mixin Loader {
+	position: absolute;
+	background-color: rgba(255, 255, 255, .5);
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	z-index: 3;
+	opacity: 0;
+	visibility: hidden;
+	transition: .3s;
+
+	.Spinner {
+		width: 6em;
+		height: 6em;
+	}
+}
+
+
+@define-mixin customScrollbar $thumb: #c5c5c5, $thumbHover: color(#c5c5c5 blackness(40%)), $track: transparent, $width: 6px {
+	/* Firefox */
+	scrollbar-color: $thumb $track;
+	scrollbar-width: thin;
+
+	/* Chrome */
+	&::-webkit-scrollbar {
+		width: $width;
+	}
+
+	&::-webkit-scrollbar-track {
+		background-color: $track;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background-color: $thumb;
+
+		&:hover {
+			background-color: $thumbHover;
+		}
+	}
+}

@@ -1,0 +1,22 @@
+.Statistics {
+	&__unsubscribe {
+		margin-top: 10px;
+	}
+	&__unsubscribeCount {
+		font-weight: bold;
+	}
+
+	.Item__box {
+
+		&--delta {
+			padding-left: 5px;
+		}
+
+		&--value,
+		&--delta {
+			.Delta:after {
+				margin-left: 3px;
+			}
+		}
+	}
+}

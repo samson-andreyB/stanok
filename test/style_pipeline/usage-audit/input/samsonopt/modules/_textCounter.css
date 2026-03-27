@@ -1,0 +1,81 @@
+.TextCounter {
+	position: relative;
+	display: inline-block;
+	vertical-align: middle;
+
+	&__field {
+		border-radius: $B_RAD;
+	}
+
+	.TextCounter__field {
+		background: #fff;
+		padding-left: 2px;
+		padding-right: 12px;
+		font-size: 14px;
+		text-align: center;
+		width: 50px;
+
+		&--error {
+			border-color: $error;
+		}
+	}
+
+	&__controls {
+		background-color: #fff;
+		width: 10px;
+		position: absolute;
+		top: 1px;
+		bottom: 1px;
+		right: 1px;
+		border-top-right-radius: 3px;
+		border-bottom-right-radius: 3px;
+
+		.TextCounter__more,
+		.TextCounter__less {
+			cursor: pointer;
+			display: block;
+			height: 50%;
+			width: 100%;
+			position: relative;
+
+			&:after {
+				content: '';
+				display: block;
+				width: 0;
+				height: 0;
+				border: 3px solid transparent;
+				position: absolute;
+				right: 0;
+				left: 0;
+				margin: auto;
+				opacity: .6;
+			}
+
+			&:hover:after {
+				opacity: 1;
+			}
+
+			&:active {
+				background-color: #eee;
+
+				&:after {
+					opacity: .6;
+				}
+			}
+		}
+
+		.TextCounter__more {
+			&:after {
+				border-bottom-color: #666;
+				bottom: 40%;
+			}
+		}
+
+		.TextCounter__less {
+			&:after {
+				top: 40%;
+				border-top-color: #666;
+			}
+		}
+	}
+}

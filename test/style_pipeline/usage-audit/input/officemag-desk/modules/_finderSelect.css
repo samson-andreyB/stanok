@@ -1,0 +1,189 @@
+.FinderSelect--default {
+	cursor: default;
+
+	.FinderSelect__selected {
+		display: block;
+		margin: 0;
+		padding: 0;
+	}
+
+	.FinderSelect__option {
+		display: block;
+		margin-top: 0;
+		margin-bottom: .5em;
+
+		&--template {
+			display: none;
+		}
+	}
+
+	.FinderSelect__labelArea {
+
+		&:hover {
+
+			.FinderSelect__remove {
+				visibility: visible;
+			}
+		}
+	}
+
+	.FinderSelect__remove,
+	.FinderSelect__close {
+		display: inline-block;
+		vertical-align: middle;
+		width: 13px;
+		height: 13px;
+		margin-top: -.17em;
+		margin-left: .4em;
+		background-image: resolve('icons/cross_9x9_777.png');
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+		opacity: .37; /* #ccc */
+		visibility: hidden;
+		cursor: pointer;
+
+		&:hover {
+			background-image: resolve('icons/cross_9x9_e55.png');
+			opacity: 1;
+		}
+	}
+
+	.FinderSelect__newOption {
+		display: none;
+
+		.FinderSelect__close {
+			visibility: visible;
+		}
+	}
+	
+	.FinderSelect__inputWrapper {
+		position: relative;
+	}
+
+	.FinderSelect__input {
+		width: 250px;
+		position: relative;
+	}
+
+	.FinderSelect__dropdown {
+		display: none;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		margin-top: -1px;
+		max-height: 250px;
+		overflow-y: auto;
+		overflow-x: hidden;
+		border: 1px solid #bbb;
+		background-color: #fff;
+		z-index: 5;
+	}
+	
+	.FinderSelect__notFound {
+		display: none;
+		padding: 4px 10px 5px;
+	}
+	
+	.FinderSelect__optionsWrapper {
+		overflow: hidden;
+	}
+
+	.FinderSelect__options {
+		padding: 0;
+		margin: 0;
+	}
+
+	.FinderSelect__options--table {
+		display: table;
+
+		.FinderSelect__option {
+			display: table-row;
+			cursor: pointer;
+
+			&:hover {
+
+				.FinderSelect__box {
+					background-color: #e9f8f3;
+				}
+			}
+			
+			&--selected	{
+				display: none;
+			}
+		}
+		
+		.FinderSelect__box {
+			display: table-cell;
+			padding: 4px 10px 5px;
+			box-sizing: border-box;
+			white-space: nowrap;
+		}
+
+		.FinderSelect__box--login {
+			color: #999;
+			padding-right: 40px;
+		}
+	}
+
+	.FinderSelect__error {
+		display: none;
+		width: 300px;
+		margin-top: .4em;
+		color: $error;
+	}
+
+	.FinderSelect__add {
+		font-size: 11px;
+	}
+
+	
+	&.FinderSelect--active {
+
+		.FinderSelect__newOption {
+			display: block;
+		}
+
+		.FinderSelect__controls {
+			display: none;
+		}
+	}
+
+	&.FinderSelect--showDropdown {
+
+		.FinderSelect__dropdown {
+			display: block;
+		}
+		
+		.FinderSelect__input {
+			z-index: 10;
+		}
+	}
+
+	&.FinderSelect--showError {
+
+		.FinderSelect__error {
+			display: block;
+		}
+	}
+
+	&.FinderSelect--notRemovable {
+
+		.FinderSelect__labelArea:hover {
+
+			.FinderSelect__remove {
+				visibility: hidden;
+			}
+		}
+	}
+	
+	&.FinderSelect--notFound {
+
+		.FinderSelect__notFound {
+			display: block;
+		}
+		
+		.FinderSelect__optionsWrapper {
+			height: 0;
+		}
+	}
+}

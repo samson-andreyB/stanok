@@ -1,0 +1,64 @@
+.Icon {
+	display: inline-block;
+	position: relative;
+
+	&--bubble {
+		background-image: resolve('icons/bubble_main_outline.png');
+		width: width('icons/bubble_main_outline.png');
+		height: height('icons/bubble_main_outline.png');
+	}
+
+	&--info {
+		background-image: resolve('icons/info_grey.png');
+		width: width('icons/info_grey.png');
+		height: height('icons/info_grey.png');
+	}
+
+	&--gift {
+		width: width('icons/gift.png');
+		height: height('icons/gift.png');
+		background-image: resolve('icons/gift.png');
+	}
+}
+
+.SiteIcon {
+	display: inline-block;
+	position: relative;
+	cursor: help;
+
+	&--businessMenu {
+		background-image: resolve('brand/b.png');
+		width: width('brand/b.png');
+		height: height('brand/b.png');
+	}
+
+	&--gvardia {
+		background-image: resolve('brand/g.png');
+		width: width('brand/g.png');
+		height: height('brand/g.png');
+	}
+
+	&--ob {
+		background-image: resolve('brand/ob.png');
+		width: width('brand/ob.png');
+		height: height('brand/ob.png');
+	}
+
+	&--op {
+		background-image: resolve('brand/op.png');
+		width: width('brand/op.png');
+		height: height('brand/op.png');
+	}
+
+	&--oz {
+		background-image: resolve('brand/oz.png');
+		width: width('brand/oz.png');
+		height: height('brand/oz.png');
+	}
+
+	&--gs {
+		background-image: resolve('brand/gs.png');
+		width: width('brand/gs.png');
+		height: height('brand/gs.png');
+	}
+}

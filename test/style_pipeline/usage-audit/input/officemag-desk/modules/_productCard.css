@@ -1,0 +1,27 @@
+.ProductCard {
+	&__photoWrapper {
+		width: 1%;
+		padding-right: 10px;
+	}
+
+	&__photo {
+		width: 60px;
+		height: 60px;
+		object-fit: cover;
+	}
+
+	&__code {
+		font-weight: bold;
+	}
+}
+
+.ProductCard--small {
+	.ProductCard__photoWrapper {
+		padding-right: 15px;
+	}
+
+	.ProductCard__photo {
+		width: 40px;
+		height: 40px;
+	}
+}

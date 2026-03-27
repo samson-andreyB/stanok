@@ -1,0 +1,85 @@
+.fancyAddToCartContainer {
+	width: 75%;
+
+	.notice--status,
+	.notice--changeMode {
+		display: flex;
+		padding-y: 10px;
+
+		.icon {
+			flex-shrink: 0;
+			margin-right: 10px;
+		}
+
+		.goodDescription {
+			margin: 0;
+			align-self: center;
+		}
+	}
+
+	.notice--changeMode {
+		align-items: flex-start;
+	}
+
+	@media (max-width: 800px) {
+		left: 0;
+		right: 0;
+		transform: translateX(0);
+		max-width: none;
+		width: auto;
+	}
+}
+
+.FancyModal {
+	&--orderByCodeNotShow,
+	&--canNotBeOrdered,
+	&--notShowToday {
+		padding: 0 !important;
+	}
+
+	&--errorNotice {
+		padding-y: 10px;
+	}
+
+	&--notShowToday {
+		width: auto;
+
+		.Item__box {
+			padding-x: 5px;
+
+			&--info {
+				width: 90%;
+			}
+
+			&--availability {
+				display: none;
+			}
+		}
+
+		.FancyItem + .FancyItem {
+			.Item__box {
+				padding-top: 5px;
+			}
+		}
+
+		.AddedToCart__box--productItem {
+			padding-left: 15px;
+			padding-y: 0;
+		}
+
+		@media (max-width: 330px) {
+			.Item__info {
+				.ProductState {
+					& + .ProductState {
+						margin-left: 0;
+						display: inline-block;
+					}
+
+					&--red {
+						display: block;
+					}
+				}
+			}
+		}
+	}
+}

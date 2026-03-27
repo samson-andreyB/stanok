@@ -1,0 +1,493 @@
+@define-mixin link {
+	color: $LINK;
+	text-decoration: none;
+
+	&:hover {
+		color: $LINK_HOVER;
+	}
+}
+
+@define-mixin Spinner {
+	display: inline-block;
+	vertical-align: middle;
+	box-sizing: border-box;
+	color: #000;
+	border: 2px solid currentColor;
+	border-right-color: transparent;
+	border-radius: 50%;
+	animation: Spinner linear .7s infinite;
+}
+
+@define-mixin Spinner--m {
+	width: 22px;
+	height: 22px;
+}
+
+@define-mixin SpinnerPosition {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: auto;
+}
+
+@define-mixin paginatorSquare {
+	display: flex;
+
+	li {
+		display: inline-block;
+		border-right: 1px solid #e9e4e0;
+		vertical-align: top;
+		text-align: center;
+		min-width: 38px;
+		min-height: 40px;
+
+		&:before { /* выравнивание для многоточия */
+			content: '';
+			display: inline-block;
+			height: 100%;
+			vertical-align: middle;
+		}
+
+		&:last-child {
+			border: none;
+		}
+	}
+
+	li + li {
+		margin-left: -1px;
+	}
+
+	a {
+		display: inline-block;
+		padding-top: 5px;
+		height: 100%;
+		width: 100%;
+		border-left: 1px solid #e9e4e0;
+		box-sizing: border-box;
+
+		&:before {
+			content: '';
+			display: inline-block;
+			height: 100%;
+			vertical-align: middle;
+		}
+
+		&:hover {
+			background-color: #f9f9f9;
+		}
+
+		&.active {
+			background-color: #e2ddd9;
+			border-radius: 0;
+		}
+	}
+}
+
+@define-mixin bannerHover {
+	transition: opacity .2s;
+
+	&:hover {
+		opacity: .8;
+	}
+}
+
+/* Оверлей для раскладочных блоков */
+@define-mixin overlay {
+	position: relative;
+
+	&:before {
+		content: "";
+		position: absolute;
+		top: 0; 
+		left: 0;
+		right: 0;
+		bottom: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 10;
+		visibility: hidden;
+		opacity: 0;
+		background-color: rgba(0,0,0,0.5);
+		transition: .2s;
+	}
+
+	&.disable {
+		&:before {
+			opacity: 1;
+			visibility: visible;
+		}
+	}
+}
+
+/* Носик с углом 45 и белым фоном */
+@define-mixin nose $direction, $size, $color {
+
+	/* вспомогательная примесь (т.к. переменные,
+	определённые в @if, не видны вне этого блока) */
+	@define-mixin noseCommon {
+		position: relative;
+
+		&:before,
+		&:after {
+			content: '';
+			position: absolute;
+			box-sizing: border-box;
+			border: $size solid transparent;
+			z-index: 11;
+			top: calc(50% * $widthMultiplier);
+			left: calc(50% * $heightMultiplier);
+			margin-$(crossDirection): -$size;
+			width: calc(2 * $size);
+			height: $size;
+			border-$(direction)-width: 0;
+			border-$(reverseDirection)-color: $color;
+		}
+
+		&:after {
+			border-$(reverseDirection)-color: #fff;
+			margin-$(reverseDirection): -1px;
+		}
+	}
+
+	/* пробрасываем параметры в примесь noseCommon */
+	$direction: $direction;
+	$size: $size;
+	$color: $color;
+
+	@if $direction == bottom {
+		$reverseDirection: top;
+		$crossDirection: left;
+		$widthMultiplier: 2;
+		$heightMultiplier: 1;
+
+		@mixin noseCommon;
+	}
+
+	@if $direction == right {
+		$reverseDirection: left;
+		$crossDirection: top;
+		$widthMultiplier: 1;
+		$heightMultiplier: 2;
+
+		@mixin noseCommon;
+	}
+}
+
+/* Убирает псевдоэлементы */
+@define-mixin noPseudoElements {
+
+	&:before,
+	&:after {
+		content: none;
+	}
+}
+
+@define-mixin reduceText {
+
+	.HiddingText {
+
+		&:after {
+			display: inline;
+		}
+
+		&__tail {
+			display: none;
+		}
+	}
+}
+
+@define-mixin noUserSelect {
+	user-select: none;
+
+	&::selection {
+		color: inherit;
+	}
+}
+@define-mixin Icons $name {
+	background-image: resolve('interface/$name.png');
+	width: width('interface/$name.png');
+	height: height('interface/$name.png');
+}
+@define-mixin IconsHover $name {
+	&:hover {
+		background-image: resolve('interface/$name.png');
+		width: width('interface/$name.png');
+		height: height('interface/$name.png');
+	}
+}
+
+@define-mixin brightness $delta: 0.1 {
+	opacity: calc(1 - $delta);
+
+	@supports (filter: brightness()) {
+		opacity: 1;
+		filter: brightness(calc(1 + $delta));
+	}
+}
+
+@define-mixin LinkWithIcon $hasPseudoLink: false {
+	@if $hasPseudoLink == true {
+		&.pseudoLink {
+			position: relative;
+
+			&:before {
+				position: absolute;
+			}
+		}
+	}
+
+	&:before {
+		content: '';
+		display: inline-block;
+		vertical-align: middle;
+		background-repeat: no-repeat;
+	}
+}
+
+@define-mixin Loading $animationName {
+	width: 24px;
+	height: 24px;
+	border-radius: 100%;
+	border: 2px solid transparent;
+	border-top-color: $BRAND;
+	border-right-color: $BRAND;
+	animation: $animationName linear 1s infinite;
+}
+
+@define-mixin borderTableCell $color, $beforeStyle: true, $borderTop: true {
+	@if $borderTop == true {
+		border-top: 1px solid $color;
+	}
+
+	border-bottom: 1px solid $color;
+
+	@if $beforeStyle == true {
+		&:before {
+			content: '';
+			position: absolute;
+			top: -1px;
+			left: -1px;
+			width: calc(100% + 2px);
+			height: 1px;
+			border-top: 1px solid $color;
+
+			@media (max-width: 979px) {
+				width: calc(100% + 1px);
+			}
+		}
+	}
+
+	&:first-child {
+		border-left: 1px solid $color;
+	}
+
+	&:last-child {
+		border-right: 1px solid $color;
+	}
+}
+
+
+@define-mixin customScrollbar $thumb: #e2ddd9, $thumbHover: #c4beb9, $track: transparent, $width: 6px {
+	/* Firefox */
+	scrollbar-color: $thumb $track;
+	scrollbar-width: thin;
+
+	/* Chrome */
+	&::-webkit-scrollbar {
+		width: $width;
+	}
+
+	&::-webkit-scrollbar-track {
+		background-color: $track;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		border-radius: $width;
+		background-color: $thumb;
+
+		&:hover {
+			background-color: $thumbHover;
+		}
+	}
+}
+
+@define-mixin blackLink {
+	color: $BRAND_BLACK;
+	transition: color .2s;
+
+	&:hover {
+		color: $LINK_HOVER;
+	}
+}
+
+@define-mixin BtnRemove {
+	background-image: svg('cross_10x9', '[color]: #3a3a3a');
+	background-repeat: no-repeat;
+	background-position: center;
+	background-color: #fff;
+	border-radius: 50%;
+	width: 24px;
+	height: 24px;
+	cursor: pointer;
+
+	&:hover {
+		background-image: svg('cross_10x9', '[color]: #ff0030');
+	}
+}
+
+@define-mixin fullWidthBlock $margin: $PAGE_WRAPPER_PADDING_MOBILE {
+	margin-x: -$margin;
+	padding-x: $margin;
+}
+
+@define-mixin TableResponsive {
+	display: block;
+	width: 100%;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+@define-mixin ordersTableMobile $marginContent: 20px {
+	thead {
+		display: none;
+	}
+
+	table,
+	tbody,
+	tr,
+	td {
+		display: block;
+	}
+
+	td {
+		border-top: none;
+		padding: 0;
+		width: auto;
+
+		&:first-child {
+			padding-left: 0;
+		}
+
+		&:last-child {
+			padding-right: 0;
+		}
+
+		& + td {
+			margin-top: 8px;
+		}
+
+		& + .approvalNums,
+		& + .approvalSum {
+			margin-top: 0;
+		}
+
+		& + .approvalCreated {
+			margin-top: 4px;
+		}
+	}
+
+	tr {
+		padding-y: 15px;
+		position: relative;
+		padding-x: $marginContent;
+
+		& + tr {
+			border-top: 1px solid $B_HR;
+		}
+	}
+
+	.approvalSum {
+		text-align: left;
+		position: absolute;
+		right: $marginContent;
+		top: 15px;
+	}
+}
+
+@define-mixin arrowDown {
+	content: '';
+	display: inline-block;
+	vertical-align: middle;
+	border: 3px solid transparent;
+	border-top-color: currentColor;
+	border-bottom-width: 0;
+	margin-top: -2px;
+}
+
+@define-mixin strikethrough {
+	position: relative;
+
+	&:before {
+		content: '';
+		position: absolute;
+		top: 50%;
+		left: 0;
+		width: 100%;
+		height: 1px;
+		background-color: currentColor;
+		pointer-events: none;
+	}
+}
+
+@define-mixin wordBreak {
+	word-break: break-all;
+	word-break: break-word;
+}
+
+@define-mixin headerWidget $icon {
+	position: relative;
+	display: inline-block;
+	margin-bottom: -4px;
+	vertical-align: top;
+	color: $BRAND_BLACK;
+	line-height: 16px;
+
+	@media screen and (max-width: 1170px) {
+		margin-bottom: 0;
+	}
+
+	&:before {
+		content: '';
+		display: block;
+		width: width('$icon.svg');
+		height: 20px;
+		margin: 0 auto 5px;
+		background-image: svg('$icon', '[color]: $GREY_1');
+		background-position-y: 50%;
+		background-repeat: no-repeat;
+
+		@media screen and (max-width: 1170px) {
+			display: inline-block;
+			vertical-align: middle;
+			margin-bottom: 0;
+		}
+	}
+
+	&:hover {
+		color: $LINK_HOVER;
+
+		&:before {
+			background-image: svg('$icon', '[color]: $LINK_HOVER');
+		}
+	}
+
+	.Badge--counter {
+		position: absolute;
+		left: 50%;
+		top: -2px;
+		margin-left: 6px;
+
+		@media screen and (max-width: 1170px) {
+			position: static;
+			margin-left: -2px;
+		}
+	}
+}
+
+@define-mixin mouseOnly {
+	@media (hover: hover) and (pointer: fine) {
+		@mixin-content;
+	}
+}

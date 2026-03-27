@@ -1,0 +1,35 @@
+.chooseDateRange {
+	display: inline-block;
+
+	&__chosen {
+		padding-top: 8px;
+	}
+}
+
+.TipTip.TipTip--theme-white .TipTip__content {
+	background-color: #fff;
+	background-image: none;
+}
+
+/* autocomplete поверх fancybox */
+.ui-widget.ui-autocomplete {
+	z-index: 1102;
+}
+
+.ReplyText {
+	font-size: 13px;
+}
+
+.ReviewData {
+	& + & {
+		margin-top: 15px;
+	}
+
+	&__name {
+		font-weight: bold;
+	}
+
+	&__value {
+		line-height: 1.3em;
+	}
+}

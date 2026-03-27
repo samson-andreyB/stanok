@@ -1,0 +1,23 @@
+.controlPanel--fixed {
+	position: sticky;
+	bottom: 0;
+	z-index: 1;
+	border-top: 1px solid #dadada;
+
+	&.controlPanel--active {
+		position: sticky;
+	}
+
+	.filter__checkbox {
+		margin-right: 7px;
+	}
+
+	.Icon--prolongation {
+		padding: 7px 15px;
+
+		&:before {
+			margin-right: 5px;
+			margin-top: -1px;
+		}
+	}
+}

@@ -1,0 +1,98 @@
+.Cards {
+	&--default {
+		.Cards__theme {
+			margin-bottom: 20px;
+
+			.Btn {
+				margin-right: 8px;
+				margin-bottom: 10px;
+			}
+		}
+
+		.Cards__header {
+			margin-top: 10px;
+		}
+
+		.Cards__list {
+			display: flex;
+			flex-wrap: wrap;
+			margin-right: -30px;
+		}
+
+		.Cards__item {
+			box-sizing: border-box;
+			border: 2px solid transparent;
+			border-radius: 25px;
+			padding: 28px 28px 15px;
+			background-color: #f3f3f3;
+			transition: border-color .2s;
+			margin-right: 30px;
+			margin-bottom: 30px;
+			width: calc(33.333% - 30px);
+
+			&:hover {
+				border-color: $violet;
+			}
+		}
+
+		.Cards__title {
+			font-size: 26px;
+			line-height: 33px;
+			text-align: center;
+			font-family: $fontFamilyB;
+			margin-bottom: 15px;
+			color: $violet;
+		}
+
+		.Cards__control {
+			padding-top: 28px;
+			display: flex;
+			justify-content: space-between;
+			flex-wrap: wrap;
+			margin-right: -35px;
+		}
+
+		.More {
+			margin-top: 10px;
+		}
+	}
+
+	&__img {
+		max-width: 100%;
+		display: block;
+		margin: 0 auto;
+	}
+
+	&__trigger {
+		display: flex;
+		align-items: center;
+		cursor: pointer;
+		margin-right: 35px;
+		margin-bottom: 10px;
+		color: $violet;
+
+		&:hover {
+			color: $violet_active;
+		}
+
+		&:before {
+			content: '';
+			display: block;
+			width: 21px;
+			height: 21px;
+			margin-right: 10px;
+		}
+
+		&--audio {
+			@mixin iconBefore play;
+
+			&.Cards__trigger--stop {
+				@mixin iconBefore stop;
+			}
+		}
+
+		&--photo {
+			@mixin iconBefore see;
+		}
+	}
+}

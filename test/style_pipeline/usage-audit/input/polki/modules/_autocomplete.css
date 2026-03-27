@@ -1,0 +1,149 @@
+.Autocomplete {
+	position: relative;
+
+	&__field {
+		z-index: 11;
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+
+	/* распорка — для того, чтобы скрыть тень от выпадалки */
+	&__hiddenField {
+		display: inline-block;
+		width: 100%;
+		visibility: hidden;
+	}
+
+	&__list {
+		display: none;
+		position: absolute;
+		width: 100%;
+		top: 100%;
+		left: 0;
+		margin: 0;
+		margin-top: -1px;
+		padding: 0;
+		box-sizing: border-box;
+		max-height: 300px;
+		overflow-y: auto;
+		background-color: #fff;
+		box-shadow: 0 4px 12px 0px rgba(0,0,0,.2);
+		border: 1px solid #bbb;
+		border-bottom-left-radius: $BD_RAD;
+		border-bottom-right-radius: $BD_RAD;
+		z-index: 10;
+	}
+
+	&__item {
+		color: #000;
+		cursor: pointer;
+		display: block;
+		margin: 0;
+		padding: 6px 15px;
+
+		&:hover,
+		&:focus {
+			background-color: #e2f3ed;
+		}
+	}
+
+	&__aux {
+		margin-top: .2em;
+		font-size: 11px;
+		color: #656565;
+	}
+
+	&--active {
+		z-index: 12;
+
+		.Autocomplete__field {
+			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+
+		.Autocomplete__list {
+			display: block;
+		}
+	}
+
+	&--disabled {
+		.Autocomplete__field {
+			background-color: #eee;
+			color: #777;
+			pointer-events: none;
+		}
+	}
+
+	.Spinner {
+		position: absolute;
+		top: 10px;
+		right: 7px;
+		z-index: 13;
+		border-color: $mainColor;
+		border-top-color: transparent;
+		border-right-color: transparent;
+		border-width: .15em;
+	}
+
+	&__group {
+		display: table;
+		width: 100%;
+
+		.Autocomplete__list {
+			width: auto;
+			max-width: 400px;
+		}
+	}
+
+	&__box {
+		display: table-cell;
+		vertical-align: middle;
+
+		&--formInput {
+			width: 130px;
+			position: relative;
+
+			& + .Autocomplete__box {
+				padding-left: 10px;
+			}
+		}
+
+		.Form__error {
+			margin-top: 0;
+		}
+	}
+
+	&__additionalValue {
+		color: #999;
+	}
+
+	&--resetButton {
+		.Autocomplete__reset {
+			position: absolute;
+			right: 0;
+			top: 50%;
+			margin-top: -14px;
+			width: 25px;
+			height: 100%;
+			background-image: resolve('icons/cross_7x7_999.png');
+			background-repeat: no-repeat;
+			background-position: 50% 50%;
+			z-index: 11;
+			display: none;
+			cursor: pointer;
+
+			&:hover {
+				background-image: resolve('icons/cross_7x7_e55.png');
+			}
+		}
+
+		.Form__input {
+			padding-right: 20px;
+
+			&[value] + .Autocomplete__reset {
+				display: block;
+			}
+		}
+	}
+}

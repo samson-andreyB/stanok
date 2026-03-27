@@ -1,0 +1,42 @@
+.AddVideo--default {
+	.AddVideo__box {
+		position: relative;
+		box-sizing: border-box;
+		border: 1px solid #d7d7d7;
+		width: 160px;
+		min-height: 110px;
+		background-color: #000;
+		background-image: resolve('icons/video_43x40_ccc.png');
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+
+		&--empty {
+			background-color: #efefef;
+		}
+
+		&.Loading {
+			&--active {
+				background-image: none;
+			}
+
+			&:before {
+				background: none;
+			}
+
+			&:after {
+				border-width: 2px;
+				border-top-color: #ccc;
+				border-right-color: #ccc;
+				width: 25px;
+				height: 25px;
+			}
+		}
+	}
+
+	.AddVideo__image {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+}

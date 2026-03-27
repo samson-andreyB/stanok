@@ -1,0 +1,640 @@
+/* content
+---------------------------------------------------------------------*/
+
+.bigHeader {
+	margin-top: 30px;
+	margin-bottom: 20px;
+	display: block;
+	border-bottom: 1px solid #c4cbca;
+}
+.bigHeader span {
+	display: inline-block;
+	font-size: 17px;
+	background-color: #fff7ae;
+	padding: 3px 30px;
+	text-transform: uppercase;
+	color: #504d2e;
+	letter-spacing: 0.12em;
+}
+.bigHeader a {
+	display: inline-block;
+	float: right;
+	position:relative;
+	top: 7px;
+}
+
+.Page__main {
+	position: relative;
+	padding-top: 25px;
+	padding-bottom:50px;
+	background-color: #fff;
+}
+
+.bigHeader.homeAbout {
+	margin-top: 0;
+}
+
+.Page__main .aboutCopycenter {
+	list-style: none;
+	margin: 10px 0 10px 0;
+	padding:0;
+}
+
+.Page__main .aboutCopycenter li {
+	display: inline-block;
+	width: 25%;
+	vertical-align: top;
+}
+
+.Page__main .aboutCopycenter li span {
+	display: block;
+	font-size: 14px;
+	padding: 0 30px 10px 90px;
+	line-height: 20px;
+}
+
+.Page__main .aboutCopycenter li span:before {
+	position: absolute;
+	display: block;
+	content: "";
+	height: 40px;
+	background-image: resolve('ui.png');
+	background-repeat: no-repeat;
+}
+
+.Page__main .aboutCopycenter li span.icoClock:before {
+	width: 40px;
+	background-position: 0px -235px;
+	left: 30px;
+}
+.Page__main .aboutCopycenter li span.icoMoney:before {
+	width: 52px;
+	background-position: 0px -286px;
+	left: 18px;
+}
+.Page__main .aboutCopycenter li span.icoBag:before {
+	width: 28px;
+	background-position: -39px -339px;
+	left: 38px;
+}
+.Page__main .aboutCopycenter li span.icoHome:before {
+	width: 29px;
+	background-position: 0px -339px;
+	left: 39px;
+}
+
+.Menu .bigHeader {
+	margin-bottom: 0;
+}
+
+.Menu__content {
+	position: relative;
+	background-color: #eff5ef;
+	padding-top: 25px;
+	padding-bottom: 20px;
+}
+
+
+.Menu__content .menu {
+	list-style: none;
+	margin: 0 -10px 0 0;
+	padding:0;
+}
+
+.Menu__content .menu .menuList {
+	display: inline-block;
+	width: 25%;
+	vertical-align: top;
+	margin: 0;
+	padding: 0 0 10px;
+}
+
+.Menu__content .menu .menuBlock {
+	background-color: white;
+	border: 1px solid #e7e8e8;
+	margin: 0 10px 0 0;
+	padding: 30px 0;
+}
+
+.Menu__content .menu .menuList .listCategories {
+	padding: 10px 20px 0 20px;
+	background-color: white;
+}
+
+.menuHeader {
+	display: block;
+	font-size: 17px;
+	padding: 0 10px 0 10px;
+	text-transform:  uppercase;
+	color: #000;
+	letter-spacing: 0.05em;
+	text-align: center;
+}
+
+.menuSubHeader {
+	padding: 10px 20px 0 20px;
+}
+
+.listCategories + .menuSubHeader {
+	padding-top: 20px;
+}
+
+.menuSubHeader {
+	font-size: 15px;
+	color: #17a44f;
+}
+
+
+.Page__content {
+	display: table;
+	width: 100%;
+}
+
+.Page__main .Page__nav {
+	display: table-cell;
+	vertical-align: top;
+	width:200px;
+}
+
+.Page__main .Content {
+	display: table-cell;
+	vertical-align: top;
+	padding-left: 30px;
+}
+
+.Page__main h1 {
+	font-size: 34px;
+	margin: 10px 0 20px 0;
+}
+
+.Page__main h1.bigHeader {
+	font: inherit;
+}
+
+.Page__main h2 {
+	font-size: 21px;
+	margin: 30px 0 15px 0;
+	position: relative;
+	line-height: 1.7;
+}
+
+.Page__main .Page__subTitle {
+	font-size: 15px;
+	font-family: 'OpenSansRegular';
+	font-weight: bold;
+	margin: 1.7em 0 .7em 0;
+}
+
+.Page__main h2 a {
+	margin-left: 15px;
+	white-space: nowrap;
+	font-family: 'OpenSansRegular', Arial, sans-serif;
+}
+
+.Page__main h2.ico i {
+	margin-right: 10px;
+}
+
+.dateBlock .date {
+	line-height: 1.7;
+	color: #898989;
+	margin: 0;
+	padding: 0;
+}
+.timeBlock .time {
+	text-align: right;
+	line-height: 1.7;
+	margin: 0;
+	padding: 0;
+}
+
+.dateBlock {
+	vertical-align: top;
+	margin-left: 50px;
+	display: inline-block;
+}
+.timeBlock {
+	vertical-align: top;
+	margin-left: 10px;
+	display: inline-block;
+}
+
+.personInfo {
+	background-color: #fff;
+	border: 1px solid #e7e8e8;
+	padding: 10px 15px;
+	display: inline-block;
+	min-width:320px;
+}
+.personInfo .photo {
+	display: inline-block;
+	border-radius: 25px;
+	background-color: #e4ece4;
+	width: 50px;
+	height: 50px;
+	overflow: hidden;
+	vertical-align: top;
+}
+.personInfo .photo img {
+	width: 100%;
+	height: auto;
+}
+
+.personInfo .photoBox {
+	display: table-cell;
+}
+
+.personInfo .infoBox {
+	display: table-cell;
+	padding-left: 10px;
+	vertical-align: top;
+}
+
+.personInfo .name {
+	font-size: 16px;
+	font-weight: 500;
+	padding: 5px 0 0 0;
+	margin: 0;
+}
+.personInfo .secondTxt {
+	padding: 1px 0 0 0;
+	margin: 0;
+}
+.personInfo .contacts {
+	padding: 16px 0 0 0;
+	margin: 0;
+}
+.personInfo .contactsItem {
+	display: block;
+}
+.line {
+	margin: 0 10px 0 0;
+	padding: 0 10px 0 0;
+	position: relative;
+}
+.line:after {
+	position: absolute;
+	content: "";
+	width: 1px;
+	height: 15px;
+	top:2px;
+	right: 0px;
+	border-right: 1px solid #e7e8e8;
+}
+.leftStep {
+	margin-left: 45px;
+}
+.personInfo.noBorder {
+	border: 0;
+	padding: 0;
+}
+
+.copycenterInfoBlock {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+.copycenterInfoBlock .copycenterInfoBlockLi {
+	padding: 0;
+	margin-bottom: 30px;
+}
+
+.copycenterInfoBlock .copycenterInfoBlockLi:first-child {
+	margin-top: 30px;
+}
+
+
+.selectRegion {
+	margin: 10px 0 0 0;
+}
+
+.copycenterConfirm {
+	padding-left: 50px;
+	margin-top: 5px;
+	margin-bottom: 10px;
+}
+
+.copycenterInfo {
+	padding: 0 50px;
+}
+.copycenterInfo.select {
+	background-color: #eff5ef;
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+.copycenterInfo .dateBlock {
+	margin-left: 0;
+}
+
+.copycenterInfo .personInfo {
+	margin-top: 15px;
+}
+
+.mailBox {
+	border: 1px solid #e7e8e8;
+	padding: 15px;
+	margin-bottom: 20px;
+}
+
+.mailBox .boxName {
+	padding: 0;
+	margin: 0 0 7px 0;
+	font-size: 17px;
+}
+.mailBox .boxName--status {
+	margin-bottom: 0;
+}
+.mailBox .Subscribe__state--input .boxName {
+	text-transform: uppercase;
+	letter-spacing: 0.2em;
+}
+
+.mailBox .text {
+	padding: 0;
+	margin: 0 0 14px 0;
+	line-height: 1.6;
+}
+
+
+
+.itemInfoPhotos {
+	display: table-cell;
+	width: 220px;
+	vertical-align: top;
+}
+
+.itemInfoPhotos .main {
+	position: relative;
+	display: block;
+}
+
+.itemInfoPhotos .main img {
+	width: 100%;
+	height: auto;
+}
+
+
+.itemInfoPhotos .thumbs {
+	display: block;
+	margin: 10px 0 0 -10px;
+	list-style: none;
+	padding: 0;
+}
+
+.itemInfoPhotos .thumbs .itemPhoto {
+	display: inline-block;
+	cursor: pointer;
+	width: 50px;
+	margin: 10px 0 0 10px;
+	position: relative;
+	vertical-align: top;
+}
+
+.itemInfoPhotos .thumbs .itemPhoto:hover {
+	box-shadow: 0 0 8px #ffeb36;
+	transition: box-shadow 0.3s linear 0s;
+}
+.itemInfoPhotos .thumbs .itemPhoto.active {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+	cursor: default;
+	box-shadow: 0 0 8px #ffeb36;
+	background: #ffeb36;
+}
+
+.itemInfoPhotos .thumbs .itemPhoto.active img {
+	opacity: 0.8;
+}
+
+.itemInfoPhotos .thumbs li.itemPhoto img {
+	width: 100%;
+	height: auto;
+}
+.cardBlock {
+	display: table;
+	width: 100%;
+}
+.itemInfoTxt {
+	display: table-cell;
+	vertical-align: top;
+	padding-left: 30px;
+}
+
+.itemInfoTxt .buttonBox {
+	margin: -14px -10px 40px 0;
+
+	a {
+		margin-top: 14px;
+		margin-right: 10px;
+	}
+}
+
+.itemInfoTxt .timeBox ~ .buttonBox {
+	margin-top: -24px;
+	margin-bottom: 20px;
+}
+
+.itemInfoTxt p {
+	line-height: 1.7;
+}
+
+.itemInfoTxt .Table + p {
+	margin-top: 1.5em;
+}
+
+.itemInfoTxt .tabsList {
+	margin-bottom: 30px;
+}
+
+.itemInfoTxt .timeBox {
+	border-bottom: 1px solid #c4cbca;
+	margin-bottom: 30px;
+}
+
+.itemInfoTxt img {
+	height: auto;
+	max-width: 100%;
+}
+
+.smallSecondTxt {
+	font-size: 11px;
+	color: #898989;
+}
+
+.aboutCopy p {
+	line-height: 1.7;
+}
+
+.aboutCopy ul {
+	margin: 0 0 1.5em 0;
+	padding: 0;
+	padding-left: 3.5em;
+	list-style-type: disc;
+}
+
+.aboutCopy ul li {
+	line-height: 2.1;
+}
+
+.aboutCopy .photoCopy {
+	display: table;
+	width: 100%;
+	margin-bottom: 30px;
+}
+.aboutCopy .photoCopy .photoBox {
+	display: table-cell;
+	vertical-align: top;
+	padding-right: 10px;
+}
+.aboutCopy .photoCopy .photoBox.last {
+	padding-right: 0px;
+}
+.aboutCopy .photoCopy .photoBox img {
+	height: auto;
+	width: 100%;
+}
+
+.secondSearchBox {
+	padding: 15px;
+	background-color: #eff5ef;
+	margin-bottom: 50px;
+}
+
+
+
+.itemBlock.actionList .item {
+	padding: 30px 0;
+	border-top: 1px solid #e7e8e8;
+	border-bottom: 0;
+	border-right: 0;
+	border-left: 0;
+	position: relative;
+}
+
+.itemBlock.actionList .photo {
+	display: table-cell;
+	width: 160px;
+	height: 120px;
+	vertical-align: top;
+}
+
+.itemBlock.actionInCard .photo {
+	display: table-cell;
+	width: 115px;
+	height: 0;
+	vertical-align: top;
+}
+.itemBlock.actionInCard  {
+	margin: 0 0 25px;
+}
+
+.actionTimeEnd {
+	padding: 0;
+	margin: 0 0 15px 0;
+	font-size: 11px;
+	color: #898989;
+}
+
+.actionTimeEnd  span {
+	padding: 0 3px;
+	background-color: #3cb76d;
+	color: #fff;
+}
+
+.itemBlock.actionList .item.action:before {
+	right: 0;
+	top:30px;
+}
+
+.actionBLock.card {
+	padding: 15px;
+	border: 1px solid #c4cbca;
+	position: relative;
+	margin-bottom: 50px;
+}
+
+.actionBLock.card:before {
+	right: 15px;
+	top: -1px;
+}
+
+
+
+.itemBlock .item.action:before {
+	position: absolute;
+	width: 66px;
+	content: "";
+	height: 36px;
+	background-image: resolve('ui.png');
+	background-repeat: no-repeat;
+	background-position: 0 -389px;
+	right: 15px;
+	top:-1px;
+}
+
+.itemBlock  {
+	padding: 0;
+	margin: 15px 0;
+	list-style: none;
+}
+
+.itemBlock .item {
+	margin: 0;
+	padding: 15px;
+	border-left: 1px solid #c4cbca;
+	border-right: 1px solid #c4cbca;
+	border-top: 0;
+	border-bottom: 1px solid #c4cbca;
+	position: relative;
+}
+.itemBlock .photo {
+	display: table-cell;
+	width: 230px;
+	height: 230px;
+	vertical-align: top;
+}
+.itemBlock .photo img {
+	width: 100%;
+	height: auto;
+}
+
+.itemBlock .info {
+	display: table-cell;
+	vertical-align: top;
+	padding: 0 90px 0 30px;
+}
+
+.itemBlock h2{
+	margin-top: 0;
+	margin-bottom: 24px;
+	line-height: 1;
+}
+
+.itemBlock h2 a {
+	line-height: 1;
+	font-size: 21px;
+	margin: 30px 0 15px 0;
+	position: relative;
+	font-family: 'OpenSansLightRegular', Arial, sans-serif;
+	font-weight: 300;
+	color: #000;
+}
+
+.itemBlock h2 a:hover {
+	color: #17a44f;
+}
+
+.itemBlock .text {
+	padding: 0;
+	margin: 0 0 10px 0;
+	line-height: 1.7;
+}
+
+.itemBlock .item:first-child {
+	border-top: 1px solid #c4cbca;
+}
+
+.itemBlock.actionList .item:first-child {
+	border-top: 0;
+}

@@ -1,0 +1,275 @@
+.Page--ordersOMR {
+
+	.filter {
+
+		&--store,
+		&--status,
+		&--refusalReason,
+		&--responsible,
+		&--receiptWay {
+			width: 165px;
+		}
+
+		&--responsible {
+			padding-left: 0;
+			background-image: none;
+		}
+	}
+
+	.btn + .btn {
+		margin-left: .6em;
+	}
+
+	.OrderDetails {
+		padding-x: 0;
+
+		.Specs {
+			width: 100%;
+			font-size: 12px;
+
+			.Specs__name {
+				width: 1px;
+				padding-left: 20px;
+			}
+
+			.Specs__value {
+				padding-right: 20px;
+				font-weight: bold;
+			}
+		}
+	}
+
+	.OrderDetails {
+
+		&__status {
+			position: relative;
+			margin-left: 15px;
+		}
+		
+		.IntIndicator {
+			content: '';
+			position: absolute;
+			top: 1px;
+			left: -15px;
+			width: 10px;
+			height: 10px;
+			background-color: #d1d1d1;
+			border-radius: 50%;
+
+			&[data-status="new"] {
+				background-color: #28bd8b;
+			}
+
+			&[data-status="processing"] {
+				background-color: #fa8565;
+			}
+
+			&[data-status="deleted"] {
+				background-color: #f3bc13;
+			}
+
+			&[data-status="deletedProcessed"] {
+				background-color: #1782aa;
+			}
+
+			&[data-status="refusal"] {
+				background-color: #e45959;
+			}
+		}
+	}
+}
+
+.Items--ordersOMR {
+
+	.Item__box--comment {
+		padding-left: 10px;
+	}
+
+	.Item__box--comment,
+	.Item__box--indocator,
+	.Item__box--number,
+	.Item__box--summ,
+	.Item__box--received,
+	.Item__box--print {
+		width: 1px;
+	}
+
+	.Item__box--indicator,
+	.Item__box--number {
+		padding-x: 7px;
+	}
+
+	.Item__box--summ,
+	.Item__box--summKOR {
+		text-align: right;
+	}
+
+	.Item__box--print {
+		padding-right: 10px;
+	}
+
+	.Item {
+
+		.Item__box {
+			vertical-align: top;
+		}
+
+		.Item__box--received {
+			white-space: nowrap;
+		}
+
+		.Item__box--status {
+			
+			.Item__aux {
+				white-space: nowrap;
+			}
+		}
+
+		.Item__box--client {
+			.Item__aux {
+				@mixin word-break;
+			}
+		}
+	}
+
+	.Items__header {
+
+		.btnInfo {
+			padding: 0;
+		}
+	}
+
+	.CommentTrigger {
+		padding: 0;
+	}
+
+	.btnPrint {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+
+	.IntIndicator {
+		cursor: help;
+	}
+}
+
+.Items--order {
+
+	.Item__box {
+
+		&--number {
+			width: 1px;
+			font-size: 11px;
+			color: #777;
+		}
+
+		&--quantity,
+		&--stock,
+		&--store,
+		&--price,
+		&--discount,
+		&--sum,
+		&--sumOKT {
+			text-align: right;
+			white-space: nowrap;
+		}
+	}
+
+	.Item {
+
+		.Item__box {
+			vertical-align: top;
+
+			&--sum,
+			&--sumOKT {
+				font-weight: bold;
+			}
+		}
+	}
+
+	.IntIndicator {
+		cursor: help;
+	}
+}
+
+.OrderComment {
+	background-color: #e9f8f3;
+	line-height: 1.5;
+	
+	&__label {
+		color: #555;
+	}
+	&__text {
+		font-weight: bold;
+	}
+}
+
+.OrderTotal {
+	@extend .mainContent .contentWrapper;
+	@extend .Group;
+	background-color: #efefef;
+	
+	.Box {
+		padding-top: 10px;
+		padding-bottom: 10px;
+	}
+}
+
+.OrderTotal__box {
+	@extend .Box;
+	padding-left: 15px;
+	vertical-align: top;
+}
+
+.Order__tip {
+	background-image: resolve('icons/warn.png');
+	min-width: width('icons/warn.png');
+	min-height: height('icons/warn.png');
+	background-position: 0 0;
+	background-repeat: no-repeat;
+	padding-left: calc(width('icons/warn.png') + 10px);
+	color: #777;
+	font-size: 11px;
+}
+
+.Order__till {
+	&:after {
+		content: "*";
+		color: $accent;
+		position: absolute;
+		margin-left: .3em;
+	}
+
+	.OrderCount__tillInfo &:after {
+		position: relative;
+	}
+}
+
+.OrderCount {
+	width: 1px;
+	vertical-align: middle;
+	line-height: 1.5;
+
+	&__info {
+		color: $main;
+	}
+
+	&__item {
+		font-size: 14px;
+		font-weight: bold;
+		white-space: nowrap;
+	}
+		
+	&__discount {
+		margin-bottom: 1em;
+	}
+}
+
+.filter--client {
+	width: 250px;
+}
+
+.FancyModal--xmlCreated {
+	width: 355px;
+	font-size: 14px;
+}

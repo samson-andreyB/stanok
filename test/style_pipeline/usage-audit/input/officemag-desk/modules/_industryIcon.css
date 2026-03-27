@@ -1,0 +1,50 @@
+@define-mixin IndustryIcon $name {
+	background-image: resolve('icons/$name.png');
+	width: width('icons/$name.png');
+	height: height('icons/$name.png');
+
+	&:after {
+		content: '';
+		background-image: resolve('icons/$name.hover.png');
+		width: 0;
+		height: 0;
+	}
+
+	&:hover {
+		background-image: resolve('icons/$name.hover.png');
+	}
+}
+
+.IndustryIcon {
+	display: inline-block;
+	text-indent: 2000px;
+	overflow: hidden;
+	white-space: nowrap;
+	cursor: help;
+
+	& + & {
+		margin-left: 7px;
+	}
+
+	&--inFlyer {
+		@mixin IndustryIcon inFlyer;
+	}
+	&--education {
+		@mixin IndustryIcon education;
+	}
+	&--medical {
+		@mixin IndustryIcon medical;
+	}
+	&--food {
+		@mixin IndustryIcon food;
+	}
+	&--warehouse {
+		@mixin IndustryIcon warehouse;
+	}
+	&--bank {
+		@mixin IndustryIcon bank;
+	}
+	&--gos {
+		@mixin IndustryIcon gos;
+	}
+}

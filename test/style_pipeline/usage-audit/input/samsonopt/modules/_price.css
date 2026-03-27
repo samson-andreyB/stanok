@@ -1,0 +1,41 @@
+/*
+<span class="Price"><span class="Price__count">1<span class="Price__s">&nbsp;</span>572</span>,<span class="Price__penny">90</span><span class="Rub"> руб.</span></span>
+*/
+
+.Price {
+	display: inline-block;
+	white-space: nowrap;
+}
+.Price--incorrect {
+	color: #c22119;
+}
+
+.Price--initial {
+	font-size: 15px;
+	text-decoration: line-through;
+}
+
+.Price--accent {
+	font-weight: bold;
+}
+.Price--accent .Rub {
+	font-weight: normal;
+}
+
+.Price__s {
+	font-size: 50%;
+	line-height: 1;
+}
+
+.Price--best {
+	color: #ca130c;
+}
+
+.Price--short .Price__penny {
+	font-size: 60%;
+	font-weight: normal;
+	vertical-align: 43%;
+}
+.Price--short .Rub {
+	font-weight: normal;
+}

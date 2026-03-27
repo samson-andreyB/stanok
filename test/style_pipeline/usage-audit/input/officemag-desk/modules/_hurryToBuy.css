@@ -1,0 +1,23 @@
+.HurryToBuy {
+
+	.contentWrapper& {
+		padding: 0 $indentX $indentX;
+	}
+
+	&__section {
+
+		& + & {
+			margin-top: 20px;
+		}
+
+		h3 {
+			margin-top: 0;
+			margin-bottom: 12px;
+			font-size: 17px;
+		}
+	}
+
+	.Form__set--controls {
+		margin-top: 15px;
+	}
+}

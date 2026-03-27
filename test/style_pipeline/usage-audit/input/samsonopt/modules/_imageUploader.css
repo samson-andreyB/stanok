@@ -1,0 +1,91 @@
+.ImageUploader--default {
+	position: relative;
+	display: inline-block;
+	box-sizing: border-box;
+	border: 1px solid #ddd;
+	width: 140px;
+	height: 100px;
+	background-color: #fff;
+
+	.ImageUploader__field {
+		display: none;
+	}
+
+	&.ImageUploader--withPreview {
+		.ImageUploader__label {
+			background-image: none;
+		}
+
+		&:hover {
+			.ImageUploader__label {
+				display: none;
+			}
+		}
+	}
+
+	.ImageUploader__label {
+		display: block;
+		width: 100%;
+		height: 100%;
+		background-image: resolve('upload_image_43x38_fff.png');
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+		cursor: pointer;
+	}
+
+	.ImageUploader__preview {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		background-repeat: no-repeat;
+		background-size: cover;
+	}
+
+	.ImageUploader__control {
+		position: absolute;
+		display: none;
+		border: 0;
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+
+		&--remove {
+			top: 0;
+			right: 0;
+			z-index: 2;
+			width: 20px;
+			height: 20px;
+			background-color: rgba(255, 255, 255, .7);
+			background-image: resolve('cross_dark.png');
+
+			&:hover {
+				background-color: #fff;
+				background-image: resolve('cross_10x10_c11.png');
+			}
+		}
+
+		&--zoom {
+			z-index: 1;
+			width: 100%;
+			height: 100%;
+			background-color: #fff;
+			background-image: resolve('zoom_30x30_777.png');
+			opacity: .7;
+		}
+
+		&:hover {
+			cursor: pointer;
+		}
+	}
+
+	&:hover {
+		border-color: #7f7f7f;
+
+		.ImageUploader__label {
+			background-image: resolve('upload_image_43x38_ddd.png');
+		}
+
+		.ImageUploader__control {
+			display: block;
+		}
+	}
+}

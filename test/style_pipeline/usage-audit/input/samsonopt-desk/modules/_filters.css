@@ -1,0 +1,66 @@
+/* ORDERS FILTERS
+------------------------------------------------------------------------------*/
+.filters--defined {
+	.filter {
+		margin-right: 35px;
+	}
+
+	.filter__data {
+		top: -1px;
+		position: relative;
+		padding-top: 1px;
+	}
+}
+
+.filters {
+	&--ordersCompleted {
+		.filter--status,
+		.filter--client,
+		.filter--idp {
+			width: 150px;
+		}
+
+		.filter--idp .RichSelect__options > .RichSelect__list {
+			padding-top: 4px;
+			padding-bottom: 4px;
+		}
+
+		.filter--channel {
+			width: 135px;
+		}
+
+		.filter--zakladka {
+			width: 325px;
+		}
+
+		.filter--tender {
+			width: 60px;
+			min-width: 60px;
+		}
+
+		.filter--call,
+		.filter--scores {
+			min-width: 95px;
+		}
+	}
+}
+
+.filters--demoAccess {
+	.filter--kpl {
+		.RichSelect {
+			width: 85px;
+
+			.RichSelect__options {
+				max-height: 180px;
+			}
+		}
+	}
+
+	.filter--discount {
+		min-width: auto;
+
+		.Field {
+			width: 40px;
+		}
+	}
+}

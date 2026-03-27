@@ -1,0 +1,356 @@
+/* PROMO
+---------------------------------------------------------------------*/
+
+/*doc
+
+## Promo
+
+Баннер адаптивный, увеличивающийся пропорционально.
+
+<div class="Promo">
+	<div class="Promo__box w-3-4">
+		<a class="Promo__link" href="#"><img class="Promo__img" width="718" height="276" src="img/misc/banner_main.png" alt=""></a>
+	</div>
+	<div class="Promo__box">
+		<a class="Promo__link" href="#"><img class="Promo__img" width="230" height="140" src="img/misc/banner_side.png" alt=""></a>
+		<a class="Promo__link" href="#"><img class="Promo__img" width="230" height="140" src="img/misc/banner_side.png" alt=""></a>
+	</div>
+</div>
+
+
+Если используется таким образом, тянется по ширине, при этом изображение также пропорционально увеличивается, обрезаясь контейнером.
+
+<div class="Promo Promo--products">
+	<div class="Promo__box">
+		<a href="#" class="Promo__link"><div style="background-image: url(/assets/img/misc/banner_sub.png);" class="Promo__img"></div></a>
+	</div>
+</div>
+
+Схожий баннер, тянущийся в ИЕ8 (который не поддерживает `background-size` нужный предыдущему).
+
+<div class="Promo Promo--fixed Promo--products">
+	<a class="Promo__link" href="#"><span class="Promo__group"><span class="Promo__box"><img class="Promo__img" width="718" height="276" src="/assets/img/misc/banner_main.png" alt=""/></span></span></a>
+</div>
+
+*/
+
+.Promo {
+	display: table;
+	width: 100%;
+
+	& + & {
+		margin-top: 20px;
+	}
+}
+
+.Promo__group {
+	display: table-row;
+}
+
+.Promo__box {
+	padding-x: 10px;
+	display: table-cell;
+	vertical-align: top;
+
+	&:first-child {
+		padding-left: 0;
+	}
+
+	&:last-child {
+		padding-right: 0;
+	}
+
+	&.big-side {
+		width: 76.585%;
+	}
+
+	&.big-center {
+		width: 62.67%;
+	}
+}
+
+.Promo__title {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background-color: #f1f1f1;
+	color: $infoColor;
+	font-weight: bold;
+	font-size: 15px;
+	text-align: center;
+	word-wrap: break-word;
+	opacity: 0;
+	visibility: hidden;
+}
+
+.Promo__link {
+	display: block;
+	outline: 1px solid transparent;
+	transition: outline .2s ease;
+
+	&:hover {
+		outline: 1px solid $theme_color_3;
+	}
+
+	& + & {
+		margin-top: 20px;
+	}
+}
+
+.Promo__img {
+	@mixin embedFill;
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.Promo__wrapper {
+	position: relative;
+	margin-bottom: 30px;
+
+	&:hover {
+		.Promo__arrow {
+			opacity: 1;
+		}
+	}
+}
+
+.Promo__list {
+	overflow: hidden;
+	white-space: nowrap;
+	outline: 1px solid transparent;
+	transition: outline .2s ease;
+
+	&:hover {
+		outline: 1px solid $theme_color_3;
+	}
+}
+
+.Promo__item {
+	display: inline-block;
+	width: 100%;
+}
+
+.Promo__arrow {
+	position: absolute;
+	top: 50%;
+	z-index: 1;
+	width: 50px;
+	height: 50px;
+	background-color: rgba(255, 255, 255, .4);
+	background-image: resolve('interface/arrow_10x18_111.png');
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	opacity: 0;
+	transition: all .2s;
+	user-select: none;
+
+	&--prev {
+		left: 0;
+		transform: translateY(-25px) scaleX(-1);
+	}
+
+	&--next {
+		right: 0;
+		transform: translateY(-25px);
+	}
+
+	&:hover {
+		background-color: rgba(255, 255, 255, .8);
+	}
+}
+
+.Promo__controlDots {
+	position: absolute;
+	width: 100%;
+	margin-top: 15px;
+	text-align: center;
+}
+
+.Promo__controlDot {
+	display: inline-block;
+	border-radius: 50%;
+	width: 14px;
+	height: 14px;
+	background-color: #ebebeb;
+	cursor: pointer;
+	user-select: none;
+
+	&:hover {
+		background-color: #c8c8c8;
+	}
+
+	& + & {
+		margin-left: 5px;
+	}
+
+	&--active,
+	&--active:hover {
+		background-color: $theme_accent;
+		pointer-events: none;
+	}
+}
+
+.Promo__loader {
+	@mixin Loader;
+	display: none;
+}
+
+.Promo--loading {
+	&.Promo--loadingActive {
+		display: block;
+		position: relative;
+		min-height: 210px;
+
+		.Promo__loader {
+			display: block;
+			opacity: 1;
+			visibility: visible;
+		}
+
+		.Promo__box {
+			display: none;
+		}
+	}
+
+	.Promo__loader + .Promo__box {
+		padding-left: 0;
+	}
+}
+
+.Promo--fixed {
+	display: block;
+
+	.Promo__link {
+		overflow: hidden;
+		position: relative;
+	}
+
+	.Promo__group {
+		display: table;
+		position: absolute;
+		height: 900%;
+		left: 0;
+		top: -400%;
+		width: 100%;
+	}
+
+	.Promo__box {
+		vertical-align: middle;
+	}
+}
+
+.Promo--fixed.Promo--products .Promo__link {
+	height: 150px;
+}
+
+.Promo--showcase {
+	position: relative;
+	height: 100%;
+
+	.Promo__link {
+		overflow: hidden;
+		background-position: center;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+	}
+
+	.Promo__title {
+		display: block;
+		z-index: 2;
+
+		&:before {
+			content: '';
+			height: 100%;
+			display: inline-block;
+			vertical-align: middle;
+		}
+	}
+
+	.Promo__alt {
+		display: inline-block;
+		vertical-align: middle;
+		white-space: normal;
+		padding: 1em;
+	}
+
+	&.Promo--loading {
+		.Promo__title {
+			opacity: 1;
+			visibility: visible;
+		}
+	}
+}
+
+.Promo--main {
+	.Promo__box {
+		&--narrow {
+			padding-left: 20px;
+			padding-right: 0;
+		}
+
+		&--wide {
+			width: 78.8135593220339%;
+			padding-x: 0;
+
+			@media (max-width: 1100px) {
+				width: 79.2%;
+			}
+		}
+	}
+}
+
+.Promo--fullWidth {
+	table-layout: fixed;
+}
+
+.Promo--productCard {
+	display: flex;
+	justify-content: space-between;
+	height: 60px;
+	margin-bottom: 20px;
+
+	.Promo {
+		&__link {
+			position: relative;
+			width: calc((100% - 40px) / 3);
+			margin-top: 0;
+			overflow: hidden;
+
+			&--loading {
+				.Promo {
+					&__title {
+						opacity: 1;
+						visibility: visible;
+					}
+
+					&__img {
+						opacity: 0;
+						visibility: hidden;
+					}
+				}
+			}
+		}
+
+		&__title {
+			box-sizing: border-box;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 1em;
+		}
+
+		&__img {
+			position: absolute;
+			left: 50%;
+			transform: translateX(-50%);
+			width: auto;
+			height: 100%;
+			transition: 0.2s;
+		}
+	}
+}

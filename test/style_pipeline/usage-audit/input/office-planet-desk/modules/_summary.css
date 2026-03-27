@@ -1,0 +1,129 @@
+.Summary {
+	&.contentWrapper {
+		padding: 20px 20px 0;
+	}
+
+	&__box {
+		margin-bottom: 40px;
+	}
+
+	.ChartView {
+		width: 100%;
+		height: 360px;
+	}
+
+	&--dks {
+		.SummaryInfo {
+			display: flex;
+			justify-content: space-between;
+
+			&:after {
+				display: none;
+			}
+
+			&__item {
+				width: auto;
+				flex-grow: 1;
+				padding-x: 10px;
+
+				& + .SummaryInfo__item {
+					margin-left: 13px;
+				}
+			}
+		}
+
+		.ChartView {
+			height: 420px;
+		}
+	}
+}
+
+.SummaryInfo {
+	text-align: justify;
+	font-size: 1px;
+	line-height: 0;
+
+	&:after {
+		content: '';
+		display: inline-block;
+		width: 100%;
+		height: 0;
+	}
+
+	&__item {
+		border: 1px solid #28bd8b;
+		box-sizing: border-box;
+		display: inline-block;
+		vertical-align: top;
+		text-align: center;
+		width: 210px;
+		padding: 15px;
+		line-height: 1.3;
+	}
+
+	&__count {
+		color: #28bd8b;
+		font-size: 23px;
+	}
+
+	&__title {
+		color: #888;
+		font-size: 11px;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		margin-top: 5px;
+	}
+}
+
+.filters--summary {
+	padding: 0;
+	margin-bottom: 15px;
+
+	.filter {
+		margin-top: 0;
+		min-width: auto;
+
+		&__header {
+			display: inline-block;
+			margin-bottom: 0;
+			margin-right: .5em;
+		}
+
+		&__field {
+			width: auto;
+		}
+	}
+}
+
+.Items--Summary {
+	position: relative;
+	width: 100%;
+
+	.Item__box {
+		text-align: right;
+	}
+}
+
+.Loading--summary,
+.Loading--summaryChart {
+	&:after {
+		visibility: hidden;
+		opacity: 0;
+	}
+}
+
+.Page--dksSummary {
+	.filter--site,
+	.filter--site .RichSelect {
+		width: 150px;
+	}
+
+	.Field--chartRange {
+		width: 130px;
+	}
+
+	.Item__box--name {
+		text-align: left;
+		width: 33%;
+	}
+}

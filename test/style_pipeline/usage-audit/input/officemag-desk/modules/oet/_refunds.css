@@ -1,0 +1,48 @@
+.Refunds--default {
+	.filter {
+		.RichSelect {
+			width: 100%;
+		}
+
+		&--shop,
+		&--reason,
+		&--status {
+			width: 150px;
+		}
+
+		&--number {
+			width: 250px;
+		}
+	}
+
+	.Header2__extra {
+		align-self: flex-end;
+	}
+
+	.controlPanel {
+		& + .contentWrapper.accent {
+			margin-top: 3px;
+		}
+	}
+
+	.contentWrapper {
+		&.accent {
+			padding-top: 20px;
+			padding-bottom: 15px;
+		}
+	}
+
+	.Specs__item--status {
+		.btnInfo {
+			padding-x: 0;
+		}
+	}
+}
+
+.RefundsModal {
+	max-width: 500px;
+
+	&__message {
+		word-break: break-word;
+	}
+}

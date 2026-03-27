@@ -1,0 +1,29 @@
+.StatusInfo {
+
+	& + & {
+		margin-top: 10px;
+	}
+
+	&--head {
+		font-weight: bold;
+		margin-bottom: 1em;
+	}
+
+	&__item {
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	.Status {
+		padding: 0;
+		width: 10px;
+		height: 10px;
+		margin: -.15em .5em 0 0;
+		
+		&--sale,
+		&--remove {
+			border-bottom: none;
+			height: 0;
+		}
+	}
+}

@@ -1,0 +1,21 @@
+.SocialLinks {
+	letter-spacing: 6px;
+	cursor: default;
+
+	&__item {
+		display: inline-block;
+		text-decoration: none;
+		vertical-align: middle;
+		border-radius: 7px;
+		
+		&--vk {
+			background-image: resolve('interface/socialLinks__vk.png');
+			width: width('interface/socialLinks__vk.png');
+			height: height('interface/socialLinks__vk.png');
+		}
+
+		&:hover {
+			opacity: 0.8;
+		}
+	}
+}

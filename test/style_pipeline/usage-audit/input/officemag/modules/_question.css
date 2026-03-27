@@ -1,0 +1,21 @@
+.Question {
+	&__list {
+		margin-top: 5px;
+		width: 800px;
+		color: #111;
+	}
+
+	&__item {
+		& + & {
+			margin-top: 25px;
+		}
+	}
+
+	&__query {
+		font-weight: bold;
+	}
+
+	&__answer {
+		margin-top: 6px;
+	}
+}

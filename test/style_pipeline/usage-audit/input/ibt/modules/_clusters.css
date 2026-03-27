@@ -1,0 +1,467 @@
+.Page--clusters {
+	.Filter2 {
+		&--id,
+		&--productCode {
+			width: 70px;
+			min-width: 70px;
+		}
+
+		&--clusterName {
+			width: 200px;
+		}
+
+		&--status {
+			width: 110px;
+		}
+
+		&--rubric {
+			width: 230px;
+		}
+
+		&--brand {
+			width: 170px;
+		}
+
+		&--activeModifiers {
+			width: 150px;
+		}
+	}
+
+	.statusPanel {
+		border: none;
+		background: #efefef;
+		color: $error;
+	}
+
+	.Header2 {
+		.btnHistory {
+			cursor: pointer;
+		}
+	}
+}
+
+.Items {
+	&--clusters {
+		.Item__box {
+			&--statusIndicator {
+				width: 1%;
+				padding-right: 0;
+
+				.BadgeStatus {
+					display: block;
+				}
+			}
+
+			&--status {
+				width: 6%;
+				padding-left: 0;
+			}
+
+			&--id {
+				width: 4%;
+			}
+
+			&--parentCategory {
+				width: 27%;
+			}
+
+			&--brand {
+				width: 14%;
+			}
+
+			&--activeModifiers {
+				width: 9%;
+			}
+
+			&--date {
+				width: 8%;
+			}
+		}
+
+		& + .ControlPanel {
+			border-top: none;
+	  }
+	}
+
+	&--clusterProducts {
+		.Items__list {
+			margin-top: 0;
+		}
+
+		.Items__header {
+			position: sticky;
+			top: 0;
+			z-index: 1;
+
+			.Item__box {
+				background-color: #fff;
+				border-bottom: 1px solid #dadada;
+			}
+		}
+
+		.Form__header + & {
+			margin-top: 5px;
+		}
+
+		.Item {
+			&:first-child {
+				.Item__box {
+					border-top: none;
+				}
+			}
+
+			.Item__box--name {
+				width: 100%;
+
+				a {
+					padding-y: .3em;
+				}
+			}
+
+			.Form__set--products &__box {
+				&:first-child {
+					padding-left: 0;
+				}
+
+				&:last-child {
+					padding-right: 0;
+				}
+			}
+
+			&__image {
+				width: 40px;
+				height: 40px;
+			}
+
+			&--selected {
+				background-color: #fff2d9;
+			}
+		}
+
+		& + .ControlPanel {
+			border-top: none;
+		}
+	}
+
+	&--clusterConflictingCombinations {
+		.Items {
+			&__list {
+				margin-top: 0;
+			}
+
+			&__header {
+				display: table;
+				width: 100%;
+				table-layout: fixed;
+
+				.Item__box {
+					&--combination {
+						width: 115px;
+					}
+
+					&--products {
+						padding-left: 16px;
+					}
+				}
+			}
+
+			&__group {
+				.Item__box {
+					&--combination {
+						border-right: 1px solid #dadada;
+						min-width: 115px;
+						vertical-align: top;
+					}
+
+					&--products {
+						padding: 0;
+						vertical-align: top;
+						width: 100%;
+
+						.Item__box {
+							border-top: none;
+						}
+					}
+				}
+
+				&--conflictingCombinations {
+					display: block;
+					border-top: 1px solid #dadada;
+					max-height: 570px;
+					overflow: auto;
+
+					.Item:first-child {
+						.Item__box {
+							border-top: none;
+						}
+					}
+				}
+			}
+		}
+
+		.Item__box {
+			padding-x: 7px;
+
+			&:first-child {
+				padding-left: 15px;
+			}
+
+			&--checkbox {
+				width: 15px;
+			}
+
+			&--code {
+				width: 70px;
+			}
+
+			&--image {
+				width: 40px;
+			}
+		}
+	}
+
+	&--clusterConflictingCombinationsEdit {
+		.Items__header {
+			.Item__box--products {
+				padding-left: 45px;
+			}
+		}
+	}
+}
+
+.Form--clusterCard {
+	.Form {
+		&__set {
+			width: auto;
+
+			&.accent {
+				& + .Form__set {
+					margin-top: 0;
+				}
+
+				& + .Form__set--products {
+					margin-top: 25px;
+				}
+			}
+
+			& + .controlPanel {
+				margin-top: 20px;
+			}
+
+			&--products {
+				.Form__hint {
+					color: #999;
+					font-weight: normal;
+				}
+			}
+		}
+
+		&__field {
+			&--clusterName {
+				.Form__input {
+					width: 450px;
+				}
+			}
+
+			&--rubric {
+				.RichSelect2 {
+					width: 300px;
+				}
+			}
+
+			&--clusterFacet,
+			&--brand {
+				.Form__input {
+					width: 300px;
+				}
+			}
+
+			&--modifiers {
+				.Form__value {
+					&.Blocked {
+						filter: none;
+						opacity: .45;
+					}
+				}
+
+				.Badge {
+					margin-top: 10px;
+					margin-right: 7px;
+				}
+
+				.PaletteColor {
+					margin-top: 10px;
+				}
+
+				& + .Form__field--modifiers {
+					margin-top: 1.4em;
+				}
+			}
+
+			&--design,
+			&--mainModifier {
+				.Form__input {
+					width: 240px;
+				}
+			}
+
+			&--code {
+				.Form__input {
+					width: 100px;
+				}
+
+				.Form__error {
+					display: inline;
+					margin-left: 10px;
+				}
+
+				& + .ControlPanel {
+					margin-top: 20px;
+				}
+			}
+
+			&--modifiersError {
+				margin-top: 15px;
+
+				.Form__value {
+					margin-top: 5px;
+				}
+
+				& + .Form__field {
+					margin-top: 20px;
+				}
+			}
+		}
+
+		&__header {
+			border: none;
+			margin: 0;
+			padding: 0;
+
+			& + .controlPanel {
+				margin-top: 20px;
+			}
+
+			.btnHistory {
+				margin-left: 6px;
+				vertical-align: bottom;
+				cursor: pointer;
+			}
+		}
+
+		&__value--empty,
+		&__hint {
+			color: #777;
+		}
+	}
+
+	.statusPanel + .Form__set {
+		margin-top: 3px;
+	}
+
+	.controlPanel--fixed {
+		position: fixed;
+		bottom: 0;
+		z-index: 5;
+		box-sizing: border-box;
+		box-shadow: 0 0 9px rgba(0, 0, 0, .2);
+	}
+}
+
+.FancyModal {
+	&--clusterChangeRubric,
+	&--clusterChangeBrand {
+		width: 460px;
+	}
+
+	&--clusterChangeFacet {
+		width: 505px;
+	}
+
+	&--clusterRemove {
+		width: 335px;
+	}
+
+	&--clusterDeactivation {
+		width: 415px;
+	}
+
+	&--clusterProductManagement {
+		width: 710px;
+	}
+
+	&--clusterConflictingCombinations {
+		width: 840px;
+	}
+}
+
+.ClusterProductList {
+	border: 1px solid #dadada;
+	max-height: 610px;
+	overflow: auto;
+	margin-top: 20px;
+}
+
+.ClusterConflictingCombinations {
+	border: 1px solid #dadada;
+	margin-top: 20px;
+
+	&_item {
+		& + & {
+			margin-top: 7px;
+		}
+	}
+}
+
+.BadgeModifier {
+	background: #f5f5f5;
+	border-color: #bbb;
+	border-radius: 4px;
+	font-size: 12px;
+	font-weight: normal;
+	line-height: 16px;
+	padding: 5px 7px;
+	margin-top: 0;
+}
+
+.Items--clusterHistory {
+	.Item__box {
+		&--changedBy {
+			width: 155px;
+		}
+
+		&--history {
+			padding: 0;
+		}
+
+		&--property {
+			width: 230px;
+		}
+
+		&--old {
+			width: 165px;
+		}
+	}
+}
+
+.Items--clusterChanges {
+	.Items__list {
+		border-width: 0;
+	}
+
+	.Item {
+		&:not(:first-child) {
+			.Item__box {
+				padding-top: 0;
+			}
+		}
+
+		&__box {
+			border-top-width: 0;
+
+			&:first-child {
+				padding-left: 10px;
+			}
+		}
+	}
+}

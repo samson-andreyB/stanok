@@ -1,0 +1,228 @@
+.Product {
+	display: table;
+	margin: 45px 0 90px;
+	width: 100%;
+
+	&__box {
+		display: table-cell;
+		vertical-align: top;
+
+		& + & {
+			padding-left: 60px;
+		}
+	}
+}
+
+.ProductPhoto {
+	width: 1px;
+
+	&__box {
+		&--thumbnails {
+			margin-right: -10px;
+		}
+	}
+
+	&__main {
+		display: block;
+		width: 480px;
+		height: 480px;
+
+		&--video {
+			position: relative;
+			overflow: hidden;
+
+			&:before,
+			&:after {
+				content: '';
+				display: block;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				z-index: 1;
+			}
+
+			&:before {
+				height: 100px;
+				width: 100px;
+				border-radius: 100%;
+				background-color: #f2453f;
+				margin: -50px 0 0 -50px;
+			}
+			&:after {
+				border: 23px solid transparent;
+				border-left: 32px solid #fff;
+				margin: -23px 0 0 -10px;
+				height: 1px;
+			}
+
+			&:hover:before {
+				background-color: #de2821;
+			}
+
+			.ProductPhoto__big {
+				position: absolute;
+				top: -9999px;
+				right: -9999px;
+				bottom: -9999px;
+				left: -9999px;
+				margin: auto;
+				min-width: 100%;
+				min-height: 100%;
+				cursor: pointer;
+			}
+		}
+	}
+
+	&__big {
+		width: auto;
+		height: 100%;
+		cursor: pointer;
+		cursor: url('/assets_brauberg/img/cursors/zoom_in.cur'), auto;
+		cursor: zoom-in;
+	}
+
+	&__small {
+		opacity: .5;
+		width: 46px;
+		height: 46px;
+		transition: opacity .15s ease-out;
+		object-fit: cover;
+		object-position: 50% 50%;
+		overflow: hidden;
+	}
+
+	&__item {
+		box-sizing: border-box;
+		border: 2px solid #ccc;
+		display: inline-block;
+		padding: 5px;
+		margin: 10px 10px 0 0;
+		transition: border-color .15s ease-out;
+		user-select: none;
+
+		&--video {
+			position: relative;
+
+			&:before,
+			&:after {
+				content: '';
+				display: block;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				z-index: 1;
+			}
+
+			&:before {
+				height: 23px;
+				width: 23px;
+				border-radius: 100%;
+				background-color: #f18c88;
+				margin: -11px 0 0 -11px;
+			}
+			&:after {
+				border: 5px solid transparent;
+				border-left: 7px solid #fff;
+				margin: -5px 0 0 -2px;
+				height: 1px;
+			}
+
+			&:hover:before {
+				background-color: #f2453f;
+			}
+		}
+
+		&:hover {
+			border-color: #999;
+			cursor: pointer;
+
+			.ProductPhoto__small {
+				opacity: 1;
+			}
+		}
+
+		&.active {
+			border-color: #f2453f;
+			cursor: default;
+			pointer-events: none;
+
+			&:before {
+				background-color: #f2453f;
+			}
+
+			.ProductPhoto__small {
+				opacity: 1;
+			}
+		}
+	}
+}
+
+.ProductInfo {
+	font-size: 15px;
+
+	&__box {
+		& + & {
+			margin-top: 20px;
+		}
+
+		&--desc {
+			line-height: 1.5em;
+		}
+
+		&--article {
+			color: #808080;
+			font-size: 14px;
+		}
+
+		&--list {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		& + &--linkToBuy {
+			margin-top: 30px;
+		}
+	}
+
+	&__item {
+		margin-top: 5px;
+
+		&:before {
+			content: '\2014';
+			margin-right: 5px;
+			vertical-align: baseline;
+		}
+	}
+}
+
+.Items--product {
+	.Item__box {
+		padding-right: 10px;
+		padding-left: 10px;
+
+		&--img {
+			width: 80px;
+			height: 80px;
+			padding-right: 40px;
+		}
+
+		&--desc {
+			padding-top: 20px;
+		}
+	}
+
+	.Item__link {
+		border-bottom: none;
+
+		&:hover {
+			color: #e5322c;
+		}
+	}
+}
+
+.File {
+	&__size {
+		margin-top: 0;
+	}
+}

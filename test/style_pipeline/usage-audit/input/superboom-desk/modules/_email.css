@@ -1,0 +1,27 @@
+.filters--email {
+	.filter {
+		&--search {
+			width: 300px;
+		}
+	}
+}
+
+.Items--email {
+	.Item__box {
+		&--indicator,
+		&--number,
+		&--look,
+		&--send {
+			width: 1px;
+		}
+
+		&--theme,
+		&--type {
+			word-break: break-word;
+		}
+
+		&--date {
+			white-space: nowrap;
+		}
+	}
+}

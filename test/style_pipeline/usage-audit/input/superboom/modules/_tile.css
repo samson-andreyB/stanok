@@ -1,0 +1,50 @@
+.Tile {
+	display: inline-block;
+	align-content: normal;
+
+	.Tile__imgContainer {
+		@mixin bannerHover;
+
+		display: block;
+		margin-bottom: 10px;
+	}
+
+	.Tile__img {
+		display: block;
+		border-radius: $BD_RAD_BANNER;
+		width: 100%;
+		height: auto;
+	}
+
+	.Tile__name {
+		max-width: 100%;
+		word-wrap: break-word;
+	}
+
+	.Tile__link {
+		@mixin blackLink;
+
+		padding-y: .3em;
+	}
+
+	&--furniture {
+		max-width: 180px;
+	}
+
+	&--rubric {
+		max-width: 180px;
+
+		.Tile__name {
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow: hidden;
+
+			@supports (-webkit-line-clamp: 2) {
+				white-space: initial;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
+			}
+		}
+	}
+}

@@ -1,0 +1,67 @@
+/* Lock
+------------------------------------------------------------------------------*/
+
+.Lock {
+	color: #777;
+	display: inline-block;
+	font-size: 13px;
+	cursor: pointer;
+
+	&:before {
+		content: "";
+		background-position: 0% 100%;
+		background-repeat: no-repeat;
+		display: inline-block;
+		vertical-align: middle;
+		margin: -.25em -.1em 0 0;
+		width: 12px;
+		height: 10px;
+	}
+
+	&--immutable {
+		cursor: default;
+		pointer-events: none;
+
+		.Lock__label {
+			border-bottom: none;
+		}
+	}
+
+	&--closed {
+		&:before {
+			background-image: resolve('icons/lock_closed.png');
+		}
+
+		&:hover {
+			&:before {
+				background-image: resolve('icons/lock_active_opened.png');
+			}
+		}
+	}
+
+	&--opened {
+		&:before {
+			background-image: resolve('icons/lock_opened.png');
+		}
+
+		&:hover {
+			&:before {
+				background-image: resolve('icons/lock_active_closed.png');
+			}
+		}
+	}
+
+	&--loading {
+		&:before {
+			@mixin Loading;
+		}
+	}
+
+	&__label {
+		border-bottom: 1px dotted currentcolor;
+
+		&:hover {
+			color: $linkHover;
+		}
+	}
+}

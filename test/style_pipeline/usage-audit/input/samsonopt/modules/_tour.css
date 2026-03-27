@@ -1,0 +1,23 @@
+@import 'modules/_link';
+
+
+.Pseudolink[data-tour-finish] {
+	border-bottom: 0;
+	color: $C_GRAY;
+	
+	&:hover {
+		color: $C_LINK_H;
+	}
+}
+
+.Tour {
+	z-index: 1000;
+}
+
+.TourSlide {
+	z-index: 1001;
+
+	.TipTip__content {
+		font-size: 14px;
+	}
+}

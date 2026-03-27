@@ -1,0 +1,22 @@
+/* Список товаров
+**********************************************************/
+
+.ProductList {
+
+	&__items {
+		display: flex;
+		flex-wrap: wrap;
+		margin-right: -5px;
+	}
+
+	&__controls {
+		margin-top: -1px;
+		border-top: 5px solid $colorBackground;
+	}
+
+	.Product {
+		width: 25%;
+		margin-left: -1px;
+		margin-top: -1px;
+	}
+}

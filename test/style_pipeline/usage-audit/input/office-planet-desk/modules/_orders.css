@@ -1,0 +1,131 @@
+.Orders {
+	.Defs {
+		&__box {
+			& + .Defs__box {
+				margin-top: 12px;
+			}
+
+			&--notif {
+				margin-top: 25px;
+			}
+
+			&--limitWidth {
+				width: 450px;
+			}
+		}
+
+		&__name {
+			font-weight: bold;
+		}
+
+		&__value {
+			margin-top: 4px;
+
+			.Form--addComment {
+				margin-top: .5em;
+			}
+
+			.fileLink {
+				line-height: 18px;
+			}
+
+			& + .Defs__info {
+				margin-top: .4em;
+			}
+		}
+
+		&__info {
+			color: #999;
+		}
+
+		.contentWrapper__header {
+			margin-bottom: 13px;
+		}
+	}
+
+	.controlPanel {
+		&--filters {
+			padding: 0px 20px 15px;
+		}
+	}
+
+	.paySum {
+		font-weight: normal;
+		font-size: 18px;
+		padding: 20px;
+		text-align: right;
+		margin-top: 0;
+	}
+
+	.Item {
+		&--cancelBacklight {
+			background-color: #EFEFEF;
+		}
+
+		&--attentionBacklight {
+			background-color: #faefef;
+		}
+	}
+
+	.Header2__badges {
+		.OperatorCall {
+			vertical-align: middle;
+			margin-top: -3px;
+		}
+	}
+}
+
+.OperatorCall {
+	display: inline-block;
+	top: 1px;
+	position: relative;
+	cursor: help;
+
+	&--need {
+		background-image: resolve('icons/operator_need_call.png');
+		width: width('icons/operator_need_call.png');
+		height: height('icons/operator_need_call.png');
+	}
+
+	&--created {
+		background-image: resolve('icons/operator_created_call.png');
+		width: width('icons/operator_created_call.png');
+		height: height('icons/operator_created_call.png');
+	}
+
+	&:hover {
+		opacity: .8;
+	}
+}
+
+.TipTipMenu--citySelect {
+	padding: 0;
+	max-height: 207px;
+	overflow: auto;
+	width: 148px;
+
+	.TipTipMenu__list {
+		list-style: none;
+		margin: 0;
+		padding: 8px 4px 8px 12px;
+		line-height: 17px;
+	}
+}
+
+.Form--orders {
+	width: 740px;
+	padding: 10px 20px;
+	box-sizing: border-box;
+
+	.Form__label {
+		font-weight: bold;
+	}
+
+	.Form__set {
+		width: auto;
+	}
+
+	.Form__set + .Form__set {
+		margin-top: 10px;
+	}
+}

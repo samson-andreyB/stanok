@@ -1,0 +1,11 @@
+.PhoneControl {
+	white-space: nowrap;
+
+	&--default {
+		width: 155px;
+	}
+
+	&--fullWidth {
+		width: 100%;
+	}
+}

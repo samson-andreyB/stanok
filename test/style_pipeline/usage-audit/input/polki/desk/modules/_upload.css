@@ -1,0 +1,74 @@
+.Upload--default {
+	display: inline-flex;
+
+	.Upload__list {
+		order: 1;
+		margin-top: -12px;
+		margin-left: 1.667em;
+		word-spacing: 1.667em;
+
+		.File__name {
+			height: 1.3em; /* For a browser without support `-webkit-box` */
+			overflow: hidden;
+			text-overflow: ellipsis;
+
+			@supports (display: -webkit-box) {
+				display: -webkit-box;
+				height: auto;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 1;
+				word-break: break-all;
+			}
+		}
+	}
+
+	.Upload__label, /* deprecated */
+	.Upload__control {
+		flex-shrink: 0;
+		align-self: baseline;
+	}
+
+	.Upload__button {
+		vertical-align: baseline;
+	}
+
+	.Upload__additional {
+		align-self: baseline;
+		margin-left: .5em;
+
+		.btnInfo {
+			margin-x: -5px;
+		}
+	}
+
+	.Upload__error,
+	.Upload__hint {
+		align-self: baseline;
+		margin-left: 1.667em;
+		line-height: 1;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.Upload__hint {
+		color: $C_GRAY_DARK;
+	}
+
+	.Upload__error {
+		color: $error;
+	}
+}
+
+.Upload--disabled {
+	.Upload__trigger {
+		@mixin Blocked;
+	}
+}
+
+.Upload--loading {
+	.Upload__label, /* deprecated */
+	.Upload__trigger {
+		pointer-events: none;
+	}
+}

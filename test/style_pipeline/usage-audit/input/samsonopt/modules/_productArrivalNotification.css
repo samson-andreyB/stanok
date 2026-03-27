@@ -1,0 +1,83 @@
+.ProductArrivalNotification--default {
+	position: relative;
+	height: 35px;
+	font-size: 12px;
+	line-height: 1.34;
+	overflow: hidden;
+	cursor: pointer;
+	transition: all .25s;
+	user-select: none;
+
+	&:hover {
+		background-color: #f1f1f1;
+	}
+
+	.ProductArrivalNotification__enable {
+		@mixin Link;
+		height: 100%;
+	}
+
+	.ProductArrivalNotification__enabled {
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.ProductArrivalNotification__enable,
+	.ProductArrivalNotification__enabled {
+		position: absolute;
+		top: 0;
+		left: 0;
+		box-sizing: border-box;
+		width: 100%;
+		padding-top: 10px;
+		text-align: center;
+		transition: all .25s;
+
+		&:before {
+			content: '';
+			display: inline-block;
+			margin-top: 1px;
+			margin-right: 7px;
+			width: 16px;
+			height: 12px;
+			vertical-align: top;
+			background-image: svg('mail_16x12', '[color]: #666666');
+		}
+	}
+
+	.ProductArrivalNotification__enabled {
+		&:before {
+			background-image: svg('mail_16x12', '[color]: #4FB861');
+		}
+	}
+
+	.ProductArrivalNotification__content {
+		display: inline-block;
+		width: 148px;
+		text-align: left;
+	}
+
+	.ProductArrivalNotification__link {
+		@mixin Link;
+		cursor: pointer;
+	}
+}
+
+.ProductArrivalNotification--active {
+	height: 48px;
+	cursor: default;
+
+	&,
+	&:hover {
+		background-color: $C_YELLOW;
+	}
+
+	.ProductArrivalNotification__enable {
+		opacity: 0;
+	}
+
+	.ProductArrivalNotification__enabled {
+		opacity: 1;
+		pointer-events: all;
+	}
+}

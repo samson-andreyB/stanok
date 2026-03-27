@@ -1,0 +1,56 @@
+.SiteMode--default {
+
+	.SiteMode__box {
+		&:before {
+			content: "";
+			display: block;
+			width: 100%;
+			height: 190px;
+			margin-bottom: 24px;
+			background-position-y: bottom;
+			background-repeat: no-repeat;
+		}
+
+		&--job {
+			width: 310px;
+			padding-right: 30px;
+			border-right: 1px solid #e2ddd9;
+
+			&:before {
+				background-image: url("/assets/img/interface/siteMode/job.png");
+			}
+		}
+
+		&--home {
+			padding-left: 68px;
+			padding-right: 20px;
+
+			&:before {
+				background-image: url("/assets/img/interface/siteMode/home.png");
+			}
+		}
+	}
+
+	.SiteMode__header {
+		margin-bottom: 13px;
+		font-size: 24px;
+	}
+
+	.SiteMode__description {
+		color: #3a3a3a;
+		margin-bottom: 15px;
+	}
+
+	.SiteMode__notify {
+		margin-top: 51px;
+		color: #777;
+		font-size: 12px;
+		line-height: 18px;
+	}
+}
+
+.FancyModal.FancyModal--siteMode {
+	box-sizing: border-box;
+	width: 830px;
+	padding: 30px 40px 30px 60px;
+}

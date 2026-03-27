@@ -1,0 +1,45 @@
+.NavMenu--default {
+	.Nav--main {
+		background-color: $navMain;
+	}
+
+	.Nav--main .NavList__item--active .NavList__link,
+	.Nav--sub {
+		background-color: $navSub;
+	}
+}
+
+.ErrorPageStatus2--404 .ErrorPageStatus2__image:after {
+	background-color: $navSub;
+}
+
+.Footer--ibt {
+	display: flex;
+	align-items: center;
+	margin: 35px auto 0;
+	padding-y: 10px;
+	border-top: 1px solid #dadada;
+}
+
+.Footer__copyright {
+	.Box + .Box {
+		margin-left: 10px;
+		padding-left: 9px;
+		border-left: 1px solid #dadada;
+	}
+}
+
+.Footer__extra {
+	flex-grow: 1;
+	text-align: right;
+
+	.PseudoLink {
+		margin-right: 20px;
+	}
+}
+
+@media (max-width: 1340px) {
+	.BackTop--default .BackTop__trigger {
+		margin-left: 0;
+	}
+}

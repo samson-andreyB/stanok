@@ -1,0 +1,30 @@
+.Series--default {
+	.Series__empty {
+		color: #999;
+		font-weight: bold;
+	}
+
+	.Series__controls {
+		margin-top: 15px;
+	}
+
+	.Series__btnCopy {
+		margin-right: 15px;
+	}
+
+	.Specs__item--characteristics {
+		.Specs__name {
+			&:after {
+				content: ' \2014 ';
+			}
+		}
+
+		.Specs__value {
+			padding-left: 0;
+		}
+
+		.Specs__item + .Specs__item {
+			padding-top: .42em;
+		}
+	}
+}

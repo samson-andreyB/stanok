@@ -1,0 +1,20 @@
+.CabinetRetail--default {
+	.CabinetRetail__description {
+		margin-y: 15px;
+		line-height: 1.5;
+
+		.pseudoLink {
+			cursor: help;
+		}
+	}
+}
+
+
+.BrandListTip--default {
+	min-width: 75px;
+	padding: 4px;
+
+	.BrandListTip__item {
+		line-height: 1.5;
+	}
+}

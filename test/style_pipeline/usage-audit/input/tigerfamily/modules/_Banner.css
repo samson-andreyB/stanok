@@ -1,0 +1,135 @@
+/* Banner
+---------------------------------------------------------------------*/
+
+/*
+<div class="Banner" style="background-color: #88c3ff;">
+	<div class="Wrapper main">
+		<div class="Banner__container">
+			<ul class="Banner__slides">
+				<li class="Banner__slide">
+					<a class="Banner__link" href="#">
+						<img src="/img/banner.png" alt="" width="" height="" class="BannerImage">
+					</a>
+				</li>
+			</ul>
+			<div class="Banner__controls">
+				<div class="Banner__control prev"></div>
+				<div class="Banner__control next"></div>
+			</div>
+		</div>
+	</div>
+</div>
+*/
+
+.Banner {
+	transition: background .2s ease-in-out;
+}
+.Banner__container {
+	background-image: resolve('background-slider.jpg');
+	position: relative;
+}
+
+.Banner__slides {
+	overflow: hidden;
+	white-space: nowrap;
+	padding-left: 0;
+}
+
+.Banner__slide {
+	background: no-repeat 50% 50%;
+	display: inline-block;
+	position: relative;
+	vertical-align: top;
+	height: height('background-slider.jpg');
+	width: 100%;
+	margin: 0;
+}
+.Banner__link {
+	border-bottom: 0;
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+.BannerImage {
+	display: block;
+}
+
+.Banner__controls {
+	margin-top: 10px;
+	position: absolute;
+	top: 50%;
+	width: 100%;
+	
+	.Page__wrapper {
+		position: relative;
+	}
+}
+.Banner__control {
+	background-repeat: no-repeat;
+	cursor: pointer;
+	display: block;
+	position: absolute;
+	top: 0;
+	
+	&.disabled {
+		visibility: hidden;
+	}
+
+	&.prev {
+		background-image: resolve('arrow_left_shadow_white.png');
+		width: width('arrow_left_shadow_white.png');
+		height: height('arrow_left_shadow_white.png');
+		margin-top: -calc(height('arrow_left_shadow_white.png')/2);
+		left: 0;
+		
+		&:hover {
+			background-image: resolve('arrow_left_shadow_hover.png');
+		}
+	}
+
+	&.next {
+		background-image: resolve('arrow_right_shadow_white.png');
+		width: width('arrow_right_shadow_white.png');
+		height: height('arrow_right_shadow_white.png');
+		margin-top: -calc(height('arrow_right_shadow_white.png')/2);
+		right: 0;
+		
+		&:hover {
+			background-image: resolve('arrow_right_shadow_hover.png');
+		}
+	}
+}
+.Banner__triggers {
+	cursor: default;
+	line-height: 1em;
+	margin-top: 1em;
+	text-align: center;
+}
+.Banner__trigger {
+	display: inline-block;
+	cursor: pointer;
+	padding: .15em;
+	
+	&:after {
+		content: "";
+		background-color: #e5e5e5;
+		display: inline-block;
+		border-radius: @width;
+		width: 10px;
+		height: @width;
+	}
+
+	&:hover:after {
+		background-color: $hover;
+	}
+	
+	&.active {
+		cursor: default;
+		
+		&:after {
+			background-color: $accent;
+		}
+	}
+}

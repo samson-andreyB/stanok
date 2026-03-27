@@ -1,0 +1,309 @@
+.OetCustomerOrders--default {
+	.BadgeStatus,
+	.Badge--mail,
+	.Badge--seo,
+	.Badge--cpc,
+	.Badge--cpm {
+		cursor: help;
+	}
+
+	.Items {
+		.Items__header .Item__box {
+			vertical-align: bottom;
+		}
+
+		&--customerOrdersList {
+			.Item__box {
+				&--numberDate {
+					width: 85px;
+				}
+
+				&--city {
+					width: 105px;
+				}
+
+				&--total {
+					text-align: right;
+					width: 110px;
+				}
+
+				&--status {
+					width: 10%;
+				}
+
+				&--accountable {
+					width: 140px;
+
+					.btn {
+						white-space: nowrap;
+					}
+				}
+			}
+
+			.Badge {
+				margin-top: 4px;
+				margin-right: 2px;
+			}
+		}
+
+		&--furnitureSets {
+			.Item__partCode {
+				color: #656565;
+			}
+
+			.Item--part .Item__box--product {
+				padding-left: 30px;
+			}
+
+			.Item__box {
+				&--count {
+					width: 45px;
+				}
+
+				&--sum {
+					width: 70px;
+				}
+
+				&--price,
+				&--sum {
+					text-align: right;
+				}
+			}
+		}
+
+		&--oetCustomerOrder {
+			.Items__list {
+				margin-top: 25px;
+			}
+
+			.Item__box {
+				&--code {
+					width: 50px;
+				}
+
+				&--salePrice {
+					width: 100px;
+				}
+
+				&--sum {
+					width: 70px;
+				}
+
+				&--markup,
+				&--basePrice,
+				&--salePrice,
+				&--discount,
+				&--sum {
+					text-align: right;
+				}
+			}
+		}
+
+		&--documents {
+			.Items__list {
+				margin-top: 0;
+				width: auto;
+			}
+
+			.Items__header {
+				.Item__box {
+					padding-top: 0;
+				}
+			}
+		}
+
+		&--erpDocuments {
+			.Item__box {
+				&--kind {
+					width: 55px;
+				}
+
+				&--number {
+					width: 110px;
+				}
+
+				&--date {
+					width: 100px;
+				}
+
+				&--weight,
+				&--volume,
+				&--sum {
+					text-align: right;
+				}
+
+				&--weight {
+					width: 10%;
+				}
+
+				&--volume,
+				&--sum {
+					width: 20%;
+				}
+			}
+		}
+
+		&--siteDocuments {
+			.Item__box {
+				&--kind {
+					width: 140px;
+				}
+
+				&--number {
+					width: 65px;
+				}
+
+				&--date {
+					width: 130px;
+				}
+
+				&--status {
+					width: 150px;
+				}
+			}
+		}
+
+		.Item__box {
+			vertical-align: top;
+		}
+	}
+
+	.controlPanel--orderInfo {
+		padding-y: 20px;
+	}
+
+	.Specs {
+		font-size: 13px;
+
+		&__header {
+			font-size: 15px;
+			font-weight: normal;
+			color: #656565;
+			margin-bottom: 12px;
+		}
+
+		&__item {
+			&--reasonCancellation {
+				.Form__input {
+					width: 325px;
+					min-height: 70px;
+					padding: 10px 25px 10px 10px;
+				}
+			}
+		}
+
+		&__value {
+			&--truncated {
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+
+			&--negative {
+				color: #e45959;
+			}
+		}
+	}
+
+	.Spoiler--ordersSummary {
+		.Specs {
+			display: inline-block;
+			vertical-align: top;
+			max-width: 50%;
+			padding-right: 70px;
+			box-sizing: border-box;
+		}
+	}
+
+	.btn + .btn,
+	.btn + .Dropdown--button,
+	.Dropdown--button + .btn {
+		margin-left: 8px;
+	}
+}
+
+.OetCustomerOrders {
+	.Reply {
+		margin-top: 0;
+		padding-bottom: 0;
+		max-width: 550px;
+
+		&__container {
+			display: block;
+
+			& + .Reply__container {
+				margin-top: 10px;
+			}
+
+			& +  .Form {
+				margin-top: 20px;
+			}
+		}
+
+		.ReplyInfo {
+			font-size: 13px;
+		}
+
+		.ReplyText {
+			padding: 0;
+
+			&:before {
+				display: none;
+			}
+		}
+	}
+}
+
+.Items--oetOrderExpenseReportGoods {
+	.Item__box {
+		vertical-align: top;
+
+		&--price,
+		&--sum {
+			width: 75px;
+		}
+
+		&--erpOrder {
+			width: 90px;
+		}
+
+		&--count,
+		&--price,
+		&--sum,
+		&--erpOrder {
+			text-align: right;
+		}
+	}
+}
+
+.FancyModal {
+	&--oetOrderExpenseReport {
+		width: 810px;
+
+		.FancyModal__content {
+			padding: 0;
+		}
+	}
+}
+
+.Filters2--oetCustomerOrders {
+	.Filter2--shop,
+	.Filter2--status,
+	.Filter2--responsible {
+		width: 155px;
+	}
+
+	.Filter2--type {
+		width: 130px;
+	}
+
+	.Filter2--attractionChannel {
+		.RichSelect2 {
+			width: 130px;
+		}
+	}
+
+	.Filter2--search {
+		width: 300px;
+	}
+}

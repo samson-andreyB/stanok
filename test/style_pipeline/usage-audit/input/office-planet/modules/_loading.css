@@ -1,0 +1,26 @@
+.Loading {
+	&:after {
+		display: none;
+	}
+
+	&:before {
+		z-index: 2;
+	}
+
+	.Spinner--large {
+		top: 50%;
+		left: 50%;
+		bottom: auto;
+		right: auto;
+		transform: translate(-50%, -50%) rotate(0deg);
+		animation: LoadingSpinner linear .7s infinite;
+		z-index: 2;
+		display: none;
+	}
+
+	&--active {
+		.Spinner--large {
+			display: block;
+		}
+	}
+}

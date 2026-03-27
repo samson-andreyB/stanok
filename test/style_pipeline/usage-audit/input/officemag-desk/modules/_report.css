@@ -1,0 +1,192 @@
+/* Report
+------------------------------------------------------------------------------*/
+
+.Report,
+.mainContent .contentWrapper.Report {
+	margin-bottom: 15px;
+	padding-y: 0;
+}
+
+.Report {
+	.Rules {
+		&:not(:first-child) {
+			margin-top: 15px;
+		}
+	}
+}
+
+.Report__header,
+.mainContent h3.Report__header {
+	font-size: 17px;
+	margin-bottom: .5em;
+	margin-top: 0;
+}
+
+.StatusMessagesWrapper {
+	margin-top: 15px;
+
+	& + .Tabs2--report {
+		margin-top: 20px;
+	}
+}
+
+.FileLoader + .Tabs2--report {
+	margin-top: 20px;
+}
+
+.Report__description {
+	margin-bottom: 10px;
+}
+
+.Report__link {
+	margin-top: .5em;
+}
+
+.Report__list {
+	list-style: none;
+}
+.Report__item {
+	margin: 0 0 16px;
+	
+	.File {
+		margin: 0;
+	}
+}
+
+.Report__actions {
+	display: flex;
+	align-items: center;
+
+	.Upload {
+		&:not(:first-child) {
+			margin-left: 1.667em;
+		}
+	}
+
+	.Upload__hint {
+		align-self: center;
+		white-space: normal;
+	}
+}
+
+.Conditions {
+	margin-top: 1.5em;
+
+	&__header {
+		font-weight: bold;
+	}
+
+	&__info {
+		color: #6a6a6a;
+		font-size: .9em;
+		margin-top: .9em;
+
+		& + & {
+			margin-top: .6em;
+		}
+	}
+}
+
+.Condition {
+	margin-top: .3em;
+
+	&__asterisk {
+		color: $accent;
+
+		.Condition > & {
+			display: inline-block;
+			vertical-align: top;
+			margin-top: -2px;
+		}
+	}
+
+	&__hint {
+		font-size: 11px;
+		color: #777;
+	}
+}
+
+
+.Tabs2--report {
+	.Items__list--report {
+		border-width: 0;
+		width: auto;
+		
+		.Item__box {
+			padding: 10px 15px;
+			
+			&:first-child {
+				padding-left: 0;
+				text-align: right;
+			}
+		}
+	}
+}
+
+.Page--omr .Tabs2--reportSubscribers {
+	.Items__list--report {
+		.Item__box {
+			&:first-child {
+				text-align: right;
+			}
+			&:last-child {
+				padding-right: 20px;
+			}
+			&--error {
+				width: 35.5%;
+			}
+		}
+	}
+}
+
+.Page--omr .Items__list--report {
+	.Items__group .Item__box {
+		vertical-align: baseline;
+	}
+
+	.Items__header {
+		.Item__box--discount {
+			white-space: nowrap;
+		}
+	}
+
+	.Item__box {
+		&:last-child {
+			padding-right: 0;
+		}
+
+		&--subscription,
+		&--mail,
+		&--discount {
+			word-break: break-all;
+			word-break: break-word;
+		}
+
+		&--subscription {
+			width: 100px;
+		}
+
+		&--mail {
+			width: 135px;
+		}
+
+		&--discount,
+		&--status {
+			width: 1px;
+		}
+
+		&--error {
+			.error {
+				display: block;
+
+				& + .error {
+					margin-top: 4px;
+				}
+			}
+		}
+	}
+}
+
+.Report--reportSettlement {
+	margin-bottom: 0;
+}

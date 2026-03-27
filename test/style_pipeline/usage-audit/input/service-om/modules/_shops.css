@@ -1,0 +1,97 @@
+$SHOP_LINK_COLOR: $colorLink;
+$SHOP_LINK_COLOR_HOVER: $colorLinkHover;
+
+$SHOP_BOX_BTN_BG: $colorActive;
+$SHOP_BOX_BTN_COLOR: $colorActiveContrast;
+
+$SHOP_BOX_BTN_BG_HOVER: $colorActiveHover;
+$SHOP_BOX_BTN_COLOR_HOVER: $colorActiveContrast;
+
+$SHOP_CITYSELECTOR__LINK_COLOR: $SHOP_LINK_COLOR;
+$SHOP_CITYSELECTOR__LINK_COLOR_HOVER: $SHOP_LINK_COLOR_HOVER;
+
+$SHOP_RADIUS_MAIN: 10px;
+$SHOP_RADIUS_BTN: 4px;
+$SHOP_RADIUS_TAB_SUB: $SHOP_RADIUS_MAIN;
+
+$SHOP_TAB_ACTIVE_COLOR: $colorActive;
+
+@import "lib/stm/_shops";
+
+.ShopAddressesView {
+	&__controlBox {
+		&--place,
+		&--category {
+			width: 1px;
+			white-space: nowrap;
+		}
+
+		&--place {
+			padding-right: 15px;
+		}
+	}
+}
+
+.CitySelector__current {
+	font-size: 15px;
+}
+
+.ShopAddressesSelect {
+	position: relative;
+	padding-right: 15px;
+	padding-bottom: 5px;
+	display: inline-block;
+
+	&:hover {
+		.ShopAddressesSelect__label {
+			color: $SHOP_LINK_COLOR_HOVER;
+		}
+
+		&:after {
+			background-image: svg('arrow_10x5.svg', '[color]: $SHOP_LINK_COLOR_HOVER');
+		}
+	}
+
+	&:after {
+		content: '';
+		position: absolute;
+		top: 50%;
+		right: 0;
+		width: width('arrow_10x5.svg');
+		height: height('arrow_10x5.svg');
+		margin-top: -5px;
+		background-image: svg('arrow_10x5.svg', '[color]: $SHOP_LINK_COLOR');
+	}
+
+	&__label {
+		font-size: 15px;
+		line-height: 18px;
+		border-bottom: 1px dashed;
+		color: $SHOP_LINK_COLOR;
+		cursor: pointer;
+	}
+
+	&__select {
+		position: absolute;
+		top: 0;
+		left: 0;
+		display: block;
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+		cursor: pointer;
+	}
+}
+
+.Items--shopAddressesList {
+	.Item__box {
+		&--category {
+			width: 13.2em;
+		}
+
+		&--phone {
+			max-width: 18em;
+			word-wrap: break-word;
+		}
+	}
+}

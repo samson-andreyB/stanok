@@ -1,0 +1,149 @@
+/* ACTION
+---------------------------------------------------------------------*/
+
+.Action {
+	&__group {
+		@mixin PseudoTable;
+		width: 100%;
+	}
+
+	&__box {
+		@mixin PseudoTable__cell;
+		vertical-align: top;
+	}
+
+	&__img {
+		@mixin embedFill;
+	}
+
+	&__duration {
+		.Icon {
+			@mixin OtherIcon watch, $theme_accent;
+		}
+	}
+
+	&__description {
+		font-size: 14px;
+	}
+}
+
+
+
+.Action--list {
+	.Action__item {
+		border: 1px solid $dividerColor;
+		margin-top: 10px;
+		position: relative;
+
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+
+	.Action__box.img {
+		width: 160px;
+	}
+
+	.Action__box.info {
+		padding: 20px;
+	}
+
+	.Action__header {
+		font-size: 18px;
+		margin-bottom: 10px;
+	}
+
+	.Action__description {
+		margin-bottom: 14px;
+	}
+
+	.Action__duration {
+		color: $infoColor;
+	}
+
+	.Action__details {
+		@mixin Btn--default;
+		@mixin Btn--main;
+		position: absolute;
+		right: 20px;
+		bottom: 20px;
+	}
+}
+
+
+
+.Action--productCard {
+	border: 2px solid $actionColor;
+
+	&:not(:first-child) {
+		margin-top: 15px;
+	}
+
+	.Action__item {
+		border-width: 0;
+		margin-top: 0;
+	}
+
+	.Action__item + .Action__item {
+		border-top-width: 1px;
+		border-top-style: dotted;
+	}
+
+	.Action__box.info {
+		padding-y: 15px;
+	}
+
+	.Action__header {
+		font-size: 16px;
+		margin-bottom: 5px;
+
+		a {
+			color: $actionColor;
+
+			&:hover {
+				color: $actionColorHover;
+			}
+		}
+	}
+
+	.Action__duration {
+		.Icon {
+			color: $actionColor;
+		}
+	}
+}
+
+
+.Action--card {
+	.Action__group {
+		margin-bottom: 20px;
+	}
+
+	.Action__box.img {
+		width: $sidebarWidth;
+	}
+
+	.Action__box.info {
+		padding-left: 40px;
+	}
+
+	.Action__duration {
+		color: $theme_accent;
+		border-bottom: 1px dotted $dividerColor;
+		margin-bottom: 30px;
+		padding-bottom: 10px;
+	}
+
+	.Action__info {
+		border-top: 1px dotted $dividerColor;
+		color: $infoColor;
+		font-size: .9em;
+		font-style: italic;
+		margin-top: 30px;
+		padding-top: 10px;
+	}
+
+	.Action__description p {
+		margin-bottom: 1em;
+	}
+}

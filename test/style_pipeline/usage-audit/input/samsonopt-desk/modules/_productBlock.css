@@ -1,0 +1,49 @@
+@define-mixin ProductBlock--default $photoSize: '', $descriptionIndent: '', $infoIndent: '' {
+	display: table;
+
+	.ProductBlock__photoContainer {
+		display: table-cell;
+		width: 1px;
+		vertical-align: top;
+
+		@if $descriptionIndent != '' {
+			padding-right: $descriptionIndent;
+		}
+	}
+
+	.ProductBlock__photo {
+		display: inline-block;
+		vertical-align: middle;
+
+		@if $photoSize != '' {
+			width: $photoSize;
+			height: $photoSize;
+		}
+	}
+
+	.ProductBlock__description {
+		display: table-cell;
+		vertical-align: middle;
+	}
+
+	@if $infoIndent != '' {
+		.ProductBlock__info + .ProductBlock__info {
+			margin-top: $infoIndent;
+		}
+	}
+}
+
+.ProductBlock--returnRequest {
+	@mixin ProductBlock--default 45px, 10px, 4px;
+
+	.ProductBlock__missingPhoto {
+		display: inline-block;
+		width: width('icons/missing_photo_45x45.png');
+		height: height('icons/missing_photo_45x45.png');
+		background-image: resolve('icons/missing_photo_45x45.png');
+	}
+
+	.ProductBlock__info--name {
+		line-height: 1.15;
+	}
+}

@@ -1,0 +1,43 @@
+/* Иконки
+**********************************************************/
+
+@define-mixin icon {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+@define-mixin iconArrowRight {
+	width: width('angle_right_white.png');
+	height: height('angle_right_white.png');
+	background-image: resolve('angle_right_white.png');
+}
+
+@define-mixin iconArrowLeft {
+	width: width('angle_left_white.png');
+	height: height('angle_left_white.png');
+	background-image: resolve('angle_left_white.png');
+}
+
+@define-mixin iconPlus {
+	width: width('plus.png');
+	height: height('plus.png');
+	background-image: resolve('plus.png');
+}
+
+@define-mixin iconPlusWhite {
+	width: width('plus_white.png');
+	height: height('plus_white.png');
+	background-image: resolve('plus_white.png');
+}
+
+@define-mixin iconMinus {
+	width: width('minus.png');
+	height: height('minus.png');
+	background-image: resolve('minus.png');
+}
+
+@define-mixin iconMinusWhite {
+	width: width('minus_white.png');
+	height: height('minus_white.png');
+	background-image: resolve('minus_white.png');
+}

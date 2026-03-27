@@ -1,0 +1,40 @@
+.SelectSupplierWindow {
+	width: 440px;
+	padding: 40px;
+	padding-bottom: 0;
+	box-sizing: border-box;
+	cursor: default;
+
+	&__title {
+		margin: 0;
+		vertical-align: middle;
+		font-size: 24px;
+	}
+
+	&__hint {
+		margin-top: 10px;
+		line-height: 1.5em;
+		font-size: 11px;
+		color: #cd1727;
+	}
+
+	&__city {
+		margin: 15px 0;
+		font-size: 14px;
+
+		.pseudoLink {
+			margin-left: 5px;
+		}
+	}
+
+	&__list {
+		max-height: 400px;
+		margin-x: -40px;
+		padding-x: 40px;
+		overflow-y: auto;
+	}
+
+	.CompaniesList {
+		margin-bottom: 40px;
+	}
+}

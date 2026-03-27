@@ -1,0 +1,454 @@
+/*!
+	
+	USEFUL
+ 
+ */
+
+
+$lineHeight: 1.5em !default;
+
+
+/* USEFUL
+---------------------------------------------------------------------*/
+
+/* предотвращает схлопывание элемента, если в нём есть плавающие */
+.group {
+	&:before,
+	&:after {
+		content: " ";
+		display: table;
+	}
+	&:after {
+		clear: both;
+	}
+}
+
+/* альтернативный способ */
+.groupIB {
+	box-sizing: border-box;
+	display: inline-block;
+	width: 100%;
+}
+
+.hideAway {
+	left: -9999px;
+	position: absolute;
+	top: -9999px;
+	visibility: hidden;
+}
+.hideAway\! {
+	left: -9999px !important;
+	position: absolute !important;
+	top: -9999px !important;
+	visibility: hidden !important;
+}
+
+.hideAway--clear {
+	left: auto;
+	position: static;
+	top: auto;
+	visibility: visible;
+}
+.hideAway--clear\! {
+	left: auto !important;
+	position: static !important;
+	top: auto !important;
+	visibility: visible !important;
+}
+
+.hideSr {
+	border: 0;
+	clip: rect(0,0,0,0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+}
+
+
+/* грамотное выравнивание */
+.v-a-m-true {
+	margin-top: -.17em;
+	vertical-align: middle;
+}
+
+.v-a-m-tranY {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+
+img[align="left"],
+.align-left {
+	float: left;
+	margin-right: .75em;
+}
+img[align="right"],
+.align-right {
+	float: right;
+	margin-left: .75em;
+}
+
+
+/* встраиваемое содержимое растягивается на всю ширину контейнера, не искажаясь */
+.embedFill {
+	height: auto;
+	width: 100%;
+}
+
+
+/* предзагрузка изображений */
+/*
+<button>
+<span class="Icon order imgPreload imgPreloadLoading"></span>
+Купить
+</button>
+*/
+
+.imgPreload {
+	&:after {
+		content: '';
+		display: inline;
+	}
+}
+/*.imgPreloadLoading:after,
+.Btn.loading .Icon {
+	background: url(/img/icons/loading.gif);
+}*/
+
+/*
+ * осеревание изображения
+ * http://www.karlhorky.com/2012/06/cross-browser-image-grayscale-with-css.html
+ * https://github.com/karlhorky/gray
+ */
+.grayscale {
+	-webkit-filter: grayscale(100%); /* Chrome 19+, Safari 6+ */
+	        filter: grayscale(100%); /* Chrome 19+, Safari 6+ */
+}
+
+
+/*
+<label for="input">Заголовок</label>
+<input id="input" type="text" />
+*/
+
+.fieldRequired {
+
+	&:after {
+		color: red;
+		content: '*';
+		font-weight: bold;
+		margin-left: .3em;
+	}
+
+	.ielte7 & {
+		background-color: #fdd;
+		display: inline;
+		min-height: 1em;
+		min-width: 1em;
+		zoom: 1;
+	}
+}
+
+
+.Required {
+	&:after {
+		content: '*';
+		color: #e35959;
+	}
+}
+
+
+/* скрытие элементов, нуждающихся в джс, класс для модернизра */
+.isNeedsJS {
+	opacity: 0;
+	visibility: hidden;
+	
+	.has-js & {
+		opacity: 1;
+		visibility: visible;
+	}
+}
+
+
+/* скрытие текста в элементе */
+.textHide {
+	border: 0;
+	font: 0/0 a;
+	text-shadow: none;
+	color: transparent;
+	
+	.ielte7 & {
+		text-indent: -9999px; /* проблема: строчно-блоковые элементы улетают */
+	}
+}
+
+.textHideAway {
+	text-indent: -9999px;
+}
+
+
+/* невыделяемый текст */
+.noUserSelect {
+	user-select: none;
+	
+	&::selection { color: inherit }
+}
+
+/* отключение всплытия информации о ссылке при долгом нажатии на ней, http://developer.apple.com/library/safari/#documentation/AppleApplications/Reference/SafariCSSRef/Articles/StandardCSSProperties.html#/apple_ref/css/property/-webkit-touch-callout */
+.noTouchCallout {
+	-webkit-touch-callout: none;
+}
+
+/* https://developer.apple.com/library/safari/#documentation/AppleApplications/Reference/SafariWebContent/AdjustingtheTextSize/AdjustingtheTextSize.html */
+/* аналог для ИЕ10 на ВинФон8 — http://blogs.windows.com/windows_phone/b/wpdev/archive/2012/11/15/adapting-your-webkit-optimized-site-for-internet-explorer-10.aspx */
+.noTapHighlight {
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+/* верхний регистр с разрядкой */
+.textUppercase {
+	font-size: .875em;
+	letter-spacing: .1em;
+	margin-right: -.1em;
+	text-transform: uppercase;
+}
+
+/* полупробел */
+/* аналог в хтмл — `&#8198;` [отсюда](http://stackoverflow.com/a/8515417) */
+/* неразрывный вариант — `&#8239;` [отсюда](http://en.wikipedia.org/wiki/Non-breaking_space) */
+/* символьные аналоги могут не отображаться в некоторых системах, поэтому: */
+/*
+<span class="halfSpace">&nbsp;</span>
+*/
+.textHalfSpace {
+	font-size: 50%;
+	line-height: 1;
+}
+
+
+/*doc
+
+### .TextFade
+
+Плавное опрозрачнивание однострочного текста
+
+Не работает в опере 12, в ИЕ скрывается троеточиями (где возможно)
+*/
+
+.TextFade {
+	display: block;
+	overflow: hidden;
+	white-space: nowrap;
+	mask-image: linear-gradient(to left, transparent 0, #000 3em);
+	-ms-text-overflow: ellipsis;
+}
+
+
+/* вытягивание текста в одну строку и обрезание троеточием */
+.fillLine {
+	display: inline-block;
+	overflow: hidden;
+	-ms-text-overflow: ellipsis;
+			text-overflow: ellipsis;
+	white-space: nowrap;
+	max-width: 100%;
+}
+
+
+/*
+Скрытие текста обрезанием
+
+http://www.mobify.com/blog/multiline-ellipsis-in-pure-css/
+
+```html
+<p class="Ellipsify"><span class="Ellipsify__text">Эксикатор разрушаем. Заиливание волнообразно. Очевидно, что надолба перемещает легкосуглинистый бур, вне зависимости от предсказаний теоретической модели явления. Латерит, как следует из полевых и лабораторных наблюдений, восстанавливает пахотный чернозём одинаково по всем направлениям.<span></p>
+```
+*/
+
+.Ellipsify {
+	height: calc($lineHeight * 4);
+	line-height: $lineHeight;
+	overflow: hidden;
+	
+	&:before {
+		content: "";
+		float: left;
+		height: calc($lineHeight * 4);
+		width: 5px;
+	}
+	&:after {
+		box-sizing: content-box;
+		content: "\02026";  
+		float: right;
+		left: 100%;
+		margin-left: -1em;
+		padding-right: 5px;
+		position: relative;
+		text-align: right;
+		top: -$lineHeight;
+		width: 1em;
+	}
+}
+.Ellipsify__text {
+	float: right;
+	margin-left: -5px;
+	width: 100%;
+}
+
+
+/* добавление индикатора выпадаемости */
+@define-mixin Caret $size: .36em, $addModifiers: false {
+	border: $size solid transparent;
+	border-top-color: currentColor;
+	border-bottom-width: 0;
+	display: inline-block;
+	vertical-align: middle;
+	width: 0;
+	height: 0;
+
+	@if $addModifiers == true {
+		&--top {
+			border-top: 0;
+			border-bottom-color: currentColor;
+			border-bottom-width: $size;
+		}
+
+		&--left {
+			border-right: 0;
+			border-left-color: currentColor;
+			border-top-color: transparent;
+			border-bottom-width: $size;
+		}
+
+		&--right {
+			border-left: 0;
+			border-right-color: currentColor;
+			border-top-color: transparent;
+			border-bottom-width: $size;
+		}
+
+		&--after {
+			margin-left: .4em;
+		}
+
+		&--before {
+			margin-right: .4em;
+		}
+
+		.Btn & {
+			margin-left: 0;
+		}
+	}
+}
+
+.caret {
+	@mixin Caret .36em, true;
+}
+
+
+/* добавление внешних стрелок, удобно для ссылок со стрелками */
+.larr,
+.rarr {
+	position: relative;
+}
+.larr {
+	margin-left: 1.5em;
+}
+.rarr {
+	margin-right: 1.5em;
+}
+.larr:before,
+.rarr:after {
+	font-size: 1.2em;
+	line-height: 1em;
+	position: absolute;
+	top: 0;
+}
+.larr:before {
+	content: "\2190";
+	margin-right: .3em;
+	right: 100%;
+}
+.rarr:after {
+	content: "\2192";
+	left: 100%;
+	margin-left: .3em;
+}
+
+.Delta {
+	color: #999;
+
+	&--positiveDown,
+	&--positive {
+		color: #48b28b;
+
+		&:after {
+			content: '\2191';
+			position: relative;
+			top: -.15em;
+		}
+	}
+	&--positiveDown:after {
+		content: '\2193';
+	}
+
+	&--negativeUp,
+	&--negative {
+		color: #e45959;
+
+		&:after {
+			content: '\2193';
+			position: relative;
+			top: -.15em;
+		}
+	}
+	&--negativeUp:after {
+		content: '\2191';
+	}
+}
+
+
+/* Адаптивные таблицы */
+.TableResponsive {
+	display: block;
+	width: 100%;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+
+@define-mixin hocus {
+	&:hover,
+	&.hover,
+	&:focus,
+	&.focus {
+		@mixin-content;
+	}
+}
+
+@define-mixin hocusac {
+	&:hover,
+	&.hover,
+	&:focus,
+	&.focus,
+	&:active,
+	&.active {
+		@mixin-content;
+	}
+}
+
+@define-mixin defhocusac {
+	&,
+	&:hover,
+	&.hover,
+	&:focus,
+	&.focus,
+	&:active,
+	&.active {
+		@mixin-content;
+	}
+}

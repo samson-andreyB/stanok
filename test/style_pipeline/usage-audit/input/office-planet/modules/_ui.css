@@ -1,0 +1,6 @@
+.Blank + * {
+	margin-top: 24px;
+}
+.Promo + .Blank {
+	margin-top: 20px;
+}

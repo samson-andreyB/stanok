@@ -1,0 +1,67 @@
+.MenuList {
+	a&__item {
+		color: inherit;
+		display: block;
+		padding: 7px 12px;
+		text-decoration: none;
+
+		.CounterBadge {
+			margin-left: 0.6em;
+			margin-top: -0.25em;
+		}
+
+		&:hover,
+		&.hover {
+			background-color: $C_BRAND;
+			color: #fff;
+
+			.CounterBadge {
+				background-color: #FFF;
+				color: $C_BRAND;
+			}
+		}
+	}
+	&__item--divided {
+		border-top: 1px solid #d6d6d6;
+
+		&:hover,
+		&.hover {
+			border-top-color: $C_BRAND;
+		}
+	}
+	a&__item--disabled {
+		color: #999;
+		pointer-events: none;
+	}
+}
+
+.MenuList--account {
+	font-size: 14px;
+	border-radius: 3px;
+	overflow: hidden;
+}
+
+.MenuList--cart {
+	border-radius: $B_RAD;
+	max-height: 320px;
+	overflow: hidden;
+	font-size: 14px;
+	line-height: 18px;
+
+	.MenuList__item {
+		white-space: nowrap;
+	}
+}
+.TipTip--scrollable {
+	.TipTip__content {
+		padding-top: 8px;
+		padding-right: 8px;
+		padding-bottom: 8px;
+	}
+
+	.MenuList--cart {
+		border-radius: 0;
+		overflow-y: auto;
+		overflow-block: scroll;
+	}
+}

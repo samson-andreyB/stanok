@@ -1,0 +1,24 @@
+@define-mixin Link {
+	color: $C_LINK;
+	text-decoration: none;
+	
+	&:hover {
+		color: $C_LINK_H;
+	}
+}
+a {
+	@mixin Link;
+}
+
+@define-mixin Pseudolink {
+	border-bottom: 1px dotted;
+	color: $C_LINK;
+	cursor: pointer;
+	
+	&:hover {
+		color: $C_LINK_H;
+	}
+}
+.Pseudolink {
+	@mixin Pseudolink;
+}

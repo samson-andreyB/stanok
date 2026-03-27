@@ -1,0 +1,25 @@
+html {
+	height: 100%;
+}
+
+.Page__wrapper {
+	max-width: $contentWidth;
+}
+
+header,
+.pageMain,
+footer {
+	width: 100%;
+}
+
+.mainContent {
+	border: 0;
+
+	& > .contentWrapper {
+		padding-x: 0;
+	}
+}
+
+.Page--wide {
+	min-width: $contentWidth;
+}

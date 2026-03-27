@@ -1,0 +1,29 @@
+.Form--returnRequest {
+	.Form__header {
+		font-size: 15px;
+		font-weight: normal;
+		color: #656565;
+		margin-top: 10px;
+		border-bottom: none;
+		margin-bottom: 0;
+		padding-bottom: 0;
+
+		& + .Form__divider {
+			margin-top: 10px;
+		}
+	}
+
+	.Form__divider {
+		margin-y: 1.5em;
+	}
+
+	.Form__value {
+		line-height: 1.6;
+	}
+
+	.contentWrapper {
+		&:first-child {
+			padding-bottom: 20px;
+		}
+	}
+}

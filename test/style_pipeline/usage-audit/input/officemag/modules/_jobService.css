@@ -1,0 +1,75 @@
+.JobService {
+	.JobService__link {
+		&:before {
+			visibility: hidden;
+			display: block;
+			width: 0;
+			height: 0;
+		}
+
+		&:after {
+			content: '';
+			display: inline-block;
+			vertical-align: middle;
+			margin-top: -3px;
+			margin-left: 5px;
+		}
+
+		& + .JobService__link {
+			margin-left: 10px;
+		}
+
+		&--hh {
+			border-color: #e1011c;
+			color: #e1011c;
+
+			&:before {
+				content: url('/assets/img/misc/hh_hover.png');
+			}
+
+			&:after {
+				width: 20px;
+				height: 20px;
+				background-image: url('/assets/img/misc/hh.png');
+			}
+
+			&:hover,
+			&:active,
+			&:focus {
+				background-color: #e1011c;
+				color: #fff;
+
+				&:after {
+					background-image: url('/assets/img/misc/hh_hover.png');
+				}
+			}
+		}
+
+
+		&--superJob {
+			border-color: #00aa87;
+			color: #00aa87;
+
+			&:before {
+				content: url('/assets/img/misc/superJob_hover.png');
+			}
+
+			&:after {
+				width: 72px;
+				height: 16px;
+				background-image: url('/assets/img/misc/superJob.png');
+			}
+
+			&:hover,
+			&:active,
+			&:focus {
+				background-color: #00aa87;
+				color: #fff;
+
+				&:after {
+					background-image: url('/assets/img/misc/superJob_hover.png');
+				}
+			}
+		}
+	}
+}

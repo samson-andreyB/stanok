@@ -1,0 +1,135 @@
+.Slider.main {
+	box-sizing: border-box;
+	padding-top: 2em;
+}
+.Slider__content {
+	position: relative;
+}
+
+.Slider__wrapper {
+	@mixin PageWrapper;
+}
+
+.Slider__header {
+	font-family: $fontAccent;
+	font-size: 34px;
+	margin-top: 0;
+	text-align: center;
+}
+
+.Products--slider {
+	overflow: hidden;
+	position: relative;
+	white-space: nowrap;
+	padding: 0;
+	
+	.ProductsItem {
+		display: inline-block;
+		margin: 0;
+		text-align: center;
+		vertical-align: top;
+		white-space: normal;
+		width: 19.29em;
+		
+		& + .ProductsItem {
+			padding-left: 1em;
+		}
+		
+		.ProductsItem__image {
+			display: block;
+			margin-right: auto;
+			margin-left: auto;
+			margin-bottom: 0.5em;
+			height: 15.71em;
+			width: 15.71em;
+		}
+	}
+}
+
+.Slider__control {
+	background-color: rgba(255,255,255,.75);
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	position: absolute;
+	top: 0;
+	height: 100%;
+	width: 30px;
+	cursor: pointer;
+	
+	transition: .2s;
+	opacity: 1;
+	visibility: visible;
+	
+	&--prev {
+		left: 0;
+		background-image: resolve('arrow_left_main.png');
+		width: calc(width('arrow_left_main.png')*2);
+		
+		&:hover {
+			background-color: #fff;
+			background-image: resolve('arrow_left_hover.png');
+		}
+
+		.Slider--no-prev & {
+			opacity: 0;
+			visibility: hidden;
+		}
+	}
+	
+	&--next {
+		right: 0;
+		background-image: resolve('arrow_right_main.png');
+		width: calc(width('arrow_right_main.png')*2);
+		
+		&:hover {
+			background-color: #fff;
+			background-image: resolve('arrow_right_hover.png');
+		}
+
+		.Slider--no-next & {
+			opacity: 0;
+			visibility: hidden;
+		}
+	}
+}
+
+.Slider__progress {
+	background-image: resolve('slider_progress.png');
+	height: height('slider_progress.png');
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	margin-top: 2em;
+	position: relative;
+}
+
+.Slider__handler {
+	background-color: $main;
+	border-radius: $bdrad;
+	height: 40px;
+	left: -calc(@width/2);
+	top: -15px;
+	width: 14px;
+	z-index: 1;
+	cursor: move;
+	cursor: grab;
+	display: block;
+	position: relative;
+	
+	&:after {
+		content: "";
+		position: absolute;
+		left: -100%;
+		top: 0;
+		width: 300%;
+		height: 100%;
+	}
+}
+.Slider__handler:hover,
+.Slider__handler.hover {
+	background-color: $hover;
+}
+.Slider__handler:active,
+.Slider__handler.active {
+	background-color: $active;
+	cursor: grabbing;
+}

@@ -1,0 +1,139 @@
+.ActiveActions {
+	border-top: 2px solid $actionColor;
+}
+
+.ActiveActions__header {
+	font-size: 15px;
+}
+.ActiveActions__link {
+	color: $actionColor;
+
+	&:hover {
+		color: $actionColorHover;
+	}
+}
+
+.ActiveActions__lifeTime {
+	color: #6c6c6c;
+	font-size: 12px;
+
+	p {
+		margin-bottom: 0;
+
+		& + p {
+			margin-top: calc($lineHeight / 2);
+		}
+	}
+
+	& .Icon {
+		@mixin OtherIcon watch, $actionColor;
+		margin-right: .6em;
+	}
+}
+
+.ActiveActions__list {
+	@mixin infoBg--img;
+	@mixin List--basic;
+	border: 1px solid $dividerColor;
+	border-top: 0;
+}
+
+.ActiveActions__item {
+	@mixin PseudoTable;
+	@mixin List__item--basic;
+	border-top: 1px dotted #898989;
+	padding: 15px 20px;
+	width: 100%;
+
+	&:first-child {
+		border-top: 0 none;
+	}
+}
+
+.ActiveActions__name,
+.ActiveActions__actionCard,
+.ActiveActions__progress {
+	@mixin PseudoTable__cell;
+}
+.ActiveActions__name {
+	width: 30%;
+}
+.ActiveActions__actionCard {
+	width: 45%;
+}
+.ActiveActions__progress {
+	width: 25%;
+}
+
+.ActiveActions__name + .ActiveActions__actionCard {
+	padding-left: 20px;
+}
+
+.ActiveActions__group {
+	display: table;
+	width: 100%;
+}
+.ActiveActions__box {
+	display: table-cell;
+	vertical-align: middle;
+
+	& + & {
+		padding-left: 15px;
+	}
+
+	&.img {
+		width: 1px;
+	}
+}
+
+.ActiveActions__picture {
+	height: 70px;
+	width: 70px;
+}
+
+.ActiveActions__information {
+	display: block;
+}
+
+.ActiveActions__secondaryInformation {
+	display: block;
+	color: $infoColor;
+}
+
+.ActiveActions__mainInformation {
+	display: block;
+	font-size: 16px;
+	color: #000;
+}
+
+.ActiveActions__progress {
+	padding-left: 20px;
+	width: 29%;
+}
+
+
+.ActiveActions__wrapper.limit {
+	margin-top: 15px;
+}
+.ActiveActions__limit {
+	@mixin pseudoLink;
+	color: $theme_accent;
+	cursor: help;
+	font-size: 12px;
+
+	&:hover {
+		 color: $theme_aHover;
+	}
+}
+
+.ActiveActions__footnote {
+	color: #888;
+	display: block;
+	font-size: 12px;
+	font-style: italic;
+	margin-top: 5px;
+}
+
+.ActiveActions + .Message {
+	margin-top: 26px;
+}

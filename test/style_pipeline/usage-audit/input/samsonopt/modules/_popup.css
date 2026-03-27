@@ -1,0 +1,20 @@
+.Popup--default {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, .3);
+	z-index: 10000;
+	cursor: pointer;
+
+	.FancyModal {
+		background-color: #fff;
+		box-shadow: 0 10px 45px rgba(0, 0, 0, 0.35);
+		cursor: default;
+	}
+}

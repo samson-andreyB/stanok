@@ -1,0 +1,113 @@
+.Badge {
+	&--strictRed {
+		background-color: #d02d2d;
+		color: #fff;
+		white-space: nowrap;
+		padding: 0 3px;
+		cursor: help;
+
+		&Inverted {
+			color: #d02d2d;
+			border: 1px solid currentColor;
+			white-space: nowrap;
+			padding: 0 3px;
+		}
+	}
+
+	&--strictYellow {
+		background-color: #eaab14;
+		color: #fff;
+		white-space: nowrap;
+		padding: 0 3px;
+	}
+
+	&--seo {
+		color: #f78040;
+	}
+
+	&--cpm {
+		color: #b75dde;
+	}
+
+	&--cpc {
+		color: #309ac7;
+	}
+
+	&--edo,
+	&--kb {
+		color: #f59f00;
+	}
+
+	&--supplierPortal {
+		color: #98cc08;
+	}
+
+	&--removedERP,
+	&--notVisit {
+		font-weight: bold;
+		color: #bb16f1;
+	}
+
+	&--unused {
+		@mixin Badge--fill #e45959;
+
+		text-transform: uppercase;
+		font-weight: bold;
+	}
+
+	&--firstOrder {
+		@mixin Badge--fill #28bd8b;
+	}
+
+	&--notConfirmed {
+		@mixin BadgeOutline;
+		@mixin Badge--fill #70589e;
+		text-transform: uppercase;
+		letter-spacing: .1em;
+	}
+
+	&--otherOrder {
+		@mixin Badge--fill #f59f00;
+
+		&.tipTip:hover {
+			background-color: #ffb630;
+			cursor: help;
+		}
+	}
+
+	&--countdown {
+		color: #999;
+
+		&.Badge--accent {
+			@mixin Badge--fill #f59f00;
+		}
+	}
+
+	&--mail {
+		color: #6fca3e;
+	}
+
+	&--discount {
+		color: #d02d2d;
+	}
+
+	&--green {
+		color: #28bd8b;
+	}
+
+	&--yellow {
+		color: #f78040;
+	}
+
+	&--red {
+		color: #e45959;
+	}
+
+	&--grey {
+		color: #999;
+	}
+
+	&--violet {
+		color: #6365e0;
+	}
+}

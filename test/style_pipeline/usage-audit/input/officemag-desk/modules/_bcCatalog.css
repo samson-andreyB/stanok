@@ -1,0 +1,133 @@
+.BcCatalog--default {
+	.filter {
+		&--search {
+			width: 300px;
+		}
+
+		&--department {
+			width: 190px;
+		}
+
+		&--shift,
+		&--move {
+			vertical-align: middle;
+			margin-right: 15px;
+		}
+	}
+
+	.Items {
+		&--bcCatalogList {
+			.Item__box {
+				&--name {
+					width: 33%;
+				}
+
+				&--clientsCount {
+					width: 13%;
+				}
+			}
+
+			.Item__aux {
+				display: inline;
+				font-size: 12px;
+			}
+		}
+
+		&--bcClientsList {
+			.Item__box {
+				&--code {
+					width: 13%;
+				}
+
+				&--status2 {
+					width: 18%;
+				}
+
+				&--remove,
+				&--checkbox {
+					width: 1%;
+				}
+
+				&--checkbox {
+					padding-right: 5px;
+				}
+			}
+		}
+
+		&__list {
+			margin-top: 0;
+		}
+	}
+
+	.Loading {
+		display: none;
+
+		&:after {
+			left: 10px;
+			width: 15px;
+			height: 15px;
+			border-width: 2px;
+		}
+	}
+
+	.Form {
+		&__set {
+			&--clientAdd {
+				width: 100%;
+			}
+
+			& + .Form__set {
+				margin-top: 25px;
+			}
+		}
+
+		&__header {
+			border: none;
+			padding-bottom: 0;
+		}
+
+		&__hint {
+			color: #999;
+			font-weight: normal;
+		}
+
+		&__field {
+			&--subdivision {
+				width: 170px;
+			}
+		}
+
+		&__value {
+			font-weight: bold;
+		}
+	}
+
+	.contentWrapper + .Group--submit {
+		margin-top: 10px;
+	}
+}
+
+.FancyModal {
+	&--bcClientPlaced {
+		width: 480px;
+		line-height: 18px;
+	}
+
+	&--bcRemove {
+		width: 520px;
+	}
+
+	&--bcClientMove {
+		width: 380px;
+	}
+}
+
+.RichSelect--bcSelector {
+	width: 340px;
+
+	&.RichSelect--filtering {
+		.RichSelect__list {
+			max-height: 180px;
+		}
+	}
+}

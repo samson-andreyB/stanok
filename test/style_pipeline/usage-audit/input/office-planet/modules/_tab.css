@@ -1,0 +1,101 @@
+/* BLOCKS — TABS
+---------------------------------------------------------------------- */
+
+.Tabs2--default > .Tabs2__nav {
+	border-bottom-color: $theme_brand;
+
+	@if $theme_name == 'op' {
+		border-bottom-color: $theme_accent;
+	}
+
+	.Tab2 {
+		&__text {
+			color: $theme_brand;
+
+			@if $theme_name == 'op' {
+				color: $theme_accent;
+			}
+		}
+
+		&--active {
+			background-color: $theme_brand;
+
+			@if $theme_name == 'op' {
+				background-color: $theme_accent;
+			}
+		}
+
+		&:hover {
+			background-color: $theme_bHover;
+
+			@if $theme_name == 'op' {
+				background-color: $theme_aHover;
+			}
+		}
+	}
+}
+
+.TabLink--seeAll {
+	position: absolute;
+	right: 0;
+	top: 11px;
+	font-size: 14px;
+}
+
+.Tabs2--mainPage {
+	position: relative;
+
+	& + .Promo,
+	.Promo + &,
+	& + & {
+		margin-top: 20px;
+	}
+
+	.Promo--main + &,
+	.Promo--fullWidth + & {
+		margin-top: 10px;
+	}
+
+	&.Loading--active {
+		min-height: 600px;
+
+		.Showcase,
+		.TabLink,
+		.Tabs2__nav {
+			display: none;
+		}
+
+		.Spinner {
+			width: 6em;
+			height: 6em;
+		}
+	}
+}
+
+.Tabs2--singleTab {
+	padding-top: 30px;
+
+	.Page--contentAndSidebar .Content__wrapper + &,
+	.Sidebar + & {
+		clear: both;
+		padding-top: 40px;
+	}
+
+	.Product--card + & {
+		padding-top: 0;
+	}
+}
+
+.Tabs2 {
+	.Page--purchasedGoods & {
+		margin-bottom: 10px;
+	}
+
+	&--profile {
+		.Tabs2__nav {
+			.Tab2__text {
+				padding-x: 18px;
+			}
+		}
+	}
+}

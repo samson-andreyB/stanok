@@ -1,0 +1,22 @@
+.Page--dksStatisticsPrices {
+	.Filter2 {
+		&--login {
+			width: 120px;
+		}
+		&--client {
+			width: 220px;
+		}
+	}
+
+	.Table__box {
+		&--login {
+			width: 10%;
+		}
+		&--date {
+			width: 15%;
+		}
+		&--price {
+			width: 25%;
+		}
+	}
+}

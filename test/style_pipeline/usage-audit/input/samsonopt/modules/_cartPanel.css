@@ -1,0 +1,158 @@
+$cartPanelOffsetY: 15px;
+$cartPanelOffsetX: 10px;
+.CartPanel--default {
+	position: relative;
+	text-align: right;
+	cursor: default;
+
+	.CartPanel__row {
+		position: relative;
+		padding: $cartPanelOffsetY $cartPanelOffsetX;
+		background-color: #e7e7e7;
+		box-sizing: border-box;
+	}
+
+	.CartPanel__layer {
+		transition: padding .5s;
+
+		&--selector,
+		&--recalc {
+			position: absolute;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			padding: calc($cartPanelOffsetY - 6px) $cartPanelOffsetX;
+		}
+
+		&--recalc {
+			right: 0;
+			background-color: rgba(231, 231, 231, .9);
+			z-index: 1;
+
+			.btn + .btn {
+				margin-left: 10px;
+			}
+		}
+	}
+
+	.CartPanel__row {
+		transition: padding .5s;
+
+		&--summary {
+			border-top: 3px solid #dfdfdf;
+			transition: border-top-width .5s;
+		}
+
+		&--aux {
+			padding-top: 0;
+			margin-top: -10px;
+		}
+
+		&--actionProducts {
+			padding-y: 10px 9px;
+			border-top: 1px solid #dfdfdf;
+			line-height: 22px;
+			font-size: 14px;
+			font-weight: bold;
+			text-align: center;
+			background-color: #fffbe6;
+
+			.btn {
+				margin-left: 15px;
+			}
+		}
+	}
+
+	.CartPanel__sticky {
+		transition: margin .5s;
+
+		&--enabled {
+			position: fixed;
+			bottom: 0;
+			margin-top: 5px;
+			box-shadow: 0 -1px 6px 2px rgba(0, 0, 0, .2);
+
+			.CartPanel__layer--recalc,
+			.CartPanel__layer--selector {
+				padding-y: calc($cartPanelOffsetY - 8px);
+			}
+
+			.CartPanel__row {
+				border-top-width: 1px;
+
+				&:first-child {
+					border-top-width: 0;
+				}
+			}
+
+			.CartPanel__row--summary {
+				padding-y: 13px;
+			}
+
+			.orderSummary__jackpot,
+			.paySumm {
+				font-size: 16px;
+			}
+
+			.btn,
+			.Btn {
+				height: 28px;
+				padding-y: 7px;
+			}
+		}
+	}
+
+	.CartPanel__row:after,
+	.CartPanel__layer--recalc {
+		visibility: hidden;
+		opacity: 0;
+		transition: .5s opacity;
+	}
+
+	.btn,
+	.Btn {
+		transition: padding .5s, height .5s;
+	}
+
+	.BtnCheck {
+		padding-x: 10px;
+
+		&__input {
+			margin-right: 3px;
+			cursor: pointer;
+		}
+	}
+
+	.btn.remove {
+		margin-right: .5em;
+	}
+
+	.orderSelectAll input {
+		margin-right: 3px;
+	}
+
+	.BtnGroup--noProblemProducts {
+		.Btn {
+			display: none;
+		}
+
+		.Btn:first-child {
+			display: inline-block;
+			border-right-width: 1px;
+			border-radius: 4px;
+		}
+	}
+}
+
+
+.CartPanel--recalc {
+	.CartPanel__row:after,
+	.CartPanel__layer--recalc {
+		visibility: visible;
+		opacity: 1;
+	}
+
+	.orderSelecting__removal {
+		display: none;
+	}
+}

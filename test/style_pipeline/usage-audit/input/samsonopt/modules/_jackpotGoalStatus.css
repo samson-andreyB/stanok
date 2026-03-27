@@ -1,0 +1,39 @@
+.JackpotGoalStatus--default {
+	@mixin Link;
+	padding: 10px;
+	cursor: pointer;
+	user-select: none;
+
+	&:before {
+		content: '';
+		display: inline-block;
+		width: width('safe_16x17_4b6.svg');
+		height: height('safe_16x17_4b6.svg');
+		margin: -5px 10px -3px 0;
+		vertical-align: middle;
+		background-image: resolve('safe_16x17_4b6.svg');
+	}
+
+	&:hover {
+		&:before {
+			background-image: resolve('safe_16x17_5d7.svg');
+		}
+	}
+
+	&.JackpotGoalStatus--active {
+		color: #fff;
+		background-color: $C_JACKPOT;
+
+		&:before {
+			background-image: resolve('safe_16x17_f90.svg');
+		}
+
+		&:hover {
+			background-color: $C_JACKPOT_LIGHT;
+
+			&:before {
+				background-image: resolve('safe_16x17_fa1.svg');
+			}
+		}
+	}
+}

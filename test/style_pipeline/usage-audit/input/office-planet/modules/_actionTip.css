@@ -1,0 +1,18 @@
+.ActionTip {
+	color: $infoColor;
+
+	&__header {
+		color: $actionColor;
+		font-size: 1.1em;
+		font-weight: bold;
+		margin-y: 0 .5em;
+	}
+
+	p {
+		margin-bottom: 0;
+	}
+
+	p + p {
+		margin-top: calc($lineHeight / 2);
+	}
+}

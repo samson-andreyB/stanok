@@ -1,0 +1,145 @@
+/***********************************
+*          СУПЕРКАТЕГОРИИ          *
+***********************************/
+
+.Rubricator--superCategories {
+	margin-top: 13px;
+
+	@mixin overlay;
+
+	.Rubrics--main {
+		position: relative;
+		box-sizing: border-box;
+		font-size: 1px;
+		text-align: justify;
+
+		&:after {
+			content: '';
+			display: inline-block;
+			width: 100%;
+		}
+
+		& > .Rubric {
+			display: inline-block;
+			vertical-align: top;
+			width: 90px;
+			box-sizing: border-box;
+			height: 100%;
+			font-size: 14px;
+
+			& > .Rubric__link {
+				display: block;
+				width: 110px;
+				margin-left: -10px;
+				text-align: center;
+				padding-y: 5px 8px;
+				transition: color .25s ease;
+				cursor: pointer;
+			}
+
+			@media (max-width: 1250px) {
+				width: 60px;
+				font-size: 12px;
+
+				& > .Rubric__link {
+					width: 80px;
+				}
+			}
+		}
+	}
+}
+
+
+
+/********************************************
+*          ИКОНКИ: ЦВЕТА, АНИМАЦИЯ          *
+********************************************/
+
+@define-mixin icon $type, $color, $bg {
+	&--$(type) {
+		&:hover,
+		&.Rubric--active {
+
+			& > .Rubric__link {
+				color: $color;
+			}
+		}
+
+		& > .Rubric__link {
+
+			.Rubric__icon:before {
+				background-color: $bg;
+			}
+		}
+
+		@mixin-content;
+	}
+}
+
+.Rubric {
+	&__icon {
+		display: table;
+		width: $CATALOG_ICO_WIDTH;
+		height: $CATALOG_ICO_HEIGHT;
+		border-radius: 50%;
+		margin: 0 auto 6px;
+		position: relative;
+
+		&:before,
+		&:after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			border-radius: 50%;
+			transition: all .25s ease;
+		}
+
+		&:after {
+			opacity: 0;
+		}
+	}
+
+	&__img {
+		display: table-cell;
+		position: relative;
+		z-index: 1;
+		vertical-align: middle;
+		padding-top: .2em;
+		text-align: center;
+		box-sizing: border-box;
+	}
+
+	&:hover {
+		& > .Rubric__link {
+			.Rubric__icon {
+				&:after,
+				&:before {
+					transform: scale(1.3);
+				}
+
+				&:after {
+					opacity: 1;
+				}
+			}
+		}
+	}
+
+	&__name {
+		line-height: 1.3em;
+	}
+
+	@mixin icon orange, #a57114, #fabb00;
+
+	@mixin icon green, #2e7811, #0cac29;
+
+	@mixin icon violet, #673499, #7518db;
+
+	@mixin icon blue, #005a97, #0b86df;
+
+	@mixin icon lightBlue, #005997, #45abef;
+
+	@mixin icon red, #a31717, #e82111;
+}

@@ -1,0 +1,9 @@
+.Progressbar--waiting {
+	border-radius: 1px;
+	padding: 4px 10px 3px;
+	background-size: 30px 30px;
+	font-weight: normal;
+	color: #fff;
+	@mixin zebra #e7a66f, #e39656;
+	animation: moveBackground30 1s linear infinite;
+}

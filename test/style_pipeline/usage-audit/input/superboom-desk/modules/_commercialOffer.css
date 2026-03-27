@@ -1,0 +1,133 @@
+
+.CommercialOfferContents {
+	border-bottom: 1px solid #dadada;
+
+	&__productPhoto {
+		width: 38px;
+	}
+
+	&__productName {
+		padding-left: 1em;
+	}
+
+	&__productLink {
+		padding: 3px 0;
+	}
+
+	.Items__header .Item__box {
+		white-space: nowrap;
+	}
+
+	.Item .Item__box,
+	.Item .Box {
+		vertical-align: top;
+	}
+
+	.Item__box {
+
+		&--code .Item__aux {
+			.Badge + .Badge {
+				margin-top: .2em;
+			}
+		}
+
+		&--price,
+		&--summ,
+		&--discount {
+			text-align: right;
+		}
+
+		&--count {
+			.Item__aux {
+				min-width: 55px;
+			}
+		}
+
+		&--tax {
+			display: none;
+		}
+
+		&--column {
+			.RichSelect {
+				width: 80px;
+			}
+
+			.RichSelect__list {
+				max-height: 155px;
+			}
+		}
+	}
+
+	.Item--notAvailable {
+		background-color: #f8e9e9;
+	}
+}
+
+.CommercialOfferContents--crm {
+	.Item__box {
+		&--count {
+			width: 95px;
+
+			.AvailabilityList--default {
+				margin-top: 2px;
+				color: #999;
+				font-size: 11px;
+				line-height: 14px;
+			}
+
+			.TextCounter + .AvailabilityList--default {
+				margin-top: 5px;
+			}
+		}
+	}
+}
+
+.CommercialOfferSummary {
+	&__summ {
+		padding-top: 3px;
+		font-size: 18px;
+		line-height: 1;
+	}
+
+	&__tax {
+		padding-y: 4px 2px;
+		font-size: 11px;
+		line-height: 1;
+		color: #777;
+	}
+
+	.Box {
+		vertical-align: baseline;
+
+		& + .Box {
+			padding-left: 40px;
+		}
+	}
+}
+
+.pseudoLink--pzk {
+	&,
+	&:hover {
+		color: #a7126a;
+	}
+}
+
+
+.Items--quantityDiscount {
+	.Items__list {
+		margin-top: 0;
+	}
+
+	.Item__box {
+		padding: 4px 0;
+		vertical-align: top;
+
+		& + .Item__box {
+			padding-left: 20px;
+		}
+	}
+
+	.Item--active {
+		font-weight: bold;
+	}
+}

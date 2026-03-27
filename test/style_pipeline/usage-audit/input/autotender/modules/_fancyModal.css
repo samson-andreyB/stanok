@@ -1,0 +1,87 @@
+#fancybox-close {
+	margin-bottom: -30px;
+
+	&:before {
+		content: none;
+	}
+}
+
+
+/* FANCYMODAL
+------------------------------------------------------------------------------*/
+.FancyModal {
+	min-width: 300px;
+
+	&--lowerBid {
+		min-width: 340px;
+
+		.controlPanel--Price {
+			padding: 20px;
+		}
+
+		.Form__header {
+			border: 0;
+			margin: 10px 0 5px;
+			padding: 0;
+			font-weight: normal;
+		}
+
+		.Form__field {
+			margin-top: 5px;
+		}
+
+		.Form__field .Form__input,
+		.Autocomplete {
+			width: 165px;
+		}
+
+		.Form__error {
+			margin-left: 18px;
+		}
+
+		.Autocomplete {
+			display: inline-block;
+			vertical-align: middle;
+		}
+	}
+}
+
+.FancyModal--editBid,
+.FancyModal--editBidConfirm,
+.FancyModal--editBidSuccess,
+.FancyModal--prolongationBidConfirm,
+.FancyModal--prolongationBidSuccess,
+.FancyModal--acceptBid {
+	width: 360px;
+}
+
+.FancyModal--editBid {
+	.Form__field.inputFull .Form__input {
+		width: 92px;
+	}
+
+	.TimeField {
+		margin-left: 16px;
+	}
+
+	.Form__field--carrier {
+		width: 150px;
+
+		.RichSelect__options {
+			min-width: 220px;
+
+			.RichSelect__list {
+				max-height: 240px;
+			}
+		}
+	}
+}
+
+.FancyModal--editBidConfirm,
+.FancyModal--editBidSuccess,
+.FancyModal--prolongationBidConfirm,
+.FancyModal--prolongationBidSuccess {
+	.FancyModal__content {
+		line-height: 1.5;
+	}
+}

@@ -1,0 +1,28 @@
+.Icon {
+	display: inline-block;
+	vertical-align: middle;
+	background-repeat: no-repeat;
+
+	&--help {
+		background-image: svg('question_mark_13x13', '[color]: #3e791e');
+		height: height('question_mark_13x13.svg');
+		width: width('question_mark_13x13.svg');
+	}
+
+	&--feedback {
+		background-image: svg('feedback_14x13', '[color]: $BRAND');
+		width: width('feedback_14x13.svg');
+		height: height('feedback_14x13.svg');
+	}
+
+	&--copy {
+		background-image: svg('copy_10x13', '[color]: $LINK');
+		width: width('copy_10x13.svg');
+		height: height('copy_10x13.svg');
+		cursor: pointer;
+
+		&:hover {
+			background-image: svg('copy_10x13', '[color]: $LINK_HOVER');
+		}
+	}
+}

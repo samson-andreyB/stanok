@@ -1,0 +1,32 @@
+.DeliveryRequisites {
+	@mixin PseudoTable;
+	border: 1px solid $dividerColor;
+	padding: 14px 20px;
+	width: 100%;
+
+	&__row {
+		@mixin PseudoTable__row;
+	}
+	&__row + &__row &__field,
+	&__row + &__row &__value {
+		padding-top: 10px;
+	}
+
+	&__field,
+	&__value {
+		@mixin PseudoTable__cell;
+		vertical-align: top;
+	}
+	&__field {
+		color: $infoColor;
+		font-weight: normal;
+		padding-right: 20px;
+		text-align: right;
+		width: 30%;
+	}
+	&__value {
+		font-size: 14px;
+		font-weight: bold;
+		width: 70%;
+	}
+}

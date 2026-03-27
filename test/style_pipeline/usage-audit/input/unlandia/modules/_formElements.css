@@ -1,0 +1,210 @@
+/* FORM ELEMENTS
+---------------------------------------------------------------------*/
+
+@import "lib/modules/_form";
+@import "lib/modules/_custom-radio-checkbox";
+@import "lib/modules/_custom-select";
+
+.Form {
+	color: $color_main;
+	font-size: 16px;
+	
+	&__set {
+		margin-top: 0;
+	}
+
+	&__field {	
+		& + & {
+			margin-top: 30px;
+		}
+	}
+	&__title {
+		font-size: 16px;
+		text-align: left;
+		padding-top: 16px;
+	}
+}
+
+.Field {
+	background-color: #fff;
+	box-sizing: border-box;
+	border: 1px solid #c5c5c5;
+	border-radius: 25px;
+	color: $color_main;
+	font-size: 16px;
+	padding: 13px 20px;
+
+	&:focus {
+		border-color: $violet;
+	}
+}
+
+textarea.Field {
+	min-height: 52px;
+}
+
+.Select,
+.Field {
+	& + .Form__error {
+		margin-left: 20px;
+	}
+}
+.Form__field.error {
+	.Select__text,
+	.Checkbox__button,
+	.Radio__button {
+		border-color: $error;
+	}
+}
+.Form__field.error .Form__title {
+	color: inherit;
+}
+
+
+@define-mixin CheckboxRadioUnlandia {
+	&__label {
+		padding-left: 42px;
+	}
+
+	&__button {
+		width: 30px;
+		height: 30px;
+		border: 1px solid #c5c5c5;
+		background-color: #fff;
+		box-sizing: border-box;
+		border-radius: 5px;
+		float: left;
+		margin-right: 12px;
+		margin-left: -42px;
+	}
+
+	&__input:checked + &__label &__button {
+		border-color: #eee492;
+		background-color: #fffacf;
+	}
+	&__input:focus + &__label &__button {
+		border-color: $violet;
+	}
+		
+	&__input:checked + &,
+	&--checked {
+		background-color: #777;
+	}
+
+	&__text {
+		display: inline-block;
+		padding-top: 3px;
+	}
+}
+
+.Checkbox {
+	@mixin CheckboxRadioCommon;
+	@mixin CheckboxRadioUnlandia;
+
+	&__input:checked + &__label &__button {
+		background-image: resolve('interface/check_mark.png');
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+		color: $violet;
+	}
+}
+
+.Radio {
+	@mixin CheckboxRadioCommon;
+	@mixin CheckboxRadioUnlandia;
+	
+	&__button {
+		border-radius: 50%;
+	}
+	
+	&__input:checked + &__label &__button {
+		position: relative;
+		
+		&:before {
+			content: '';
+			background-color: $violet;
+			width: 10px;
+			height: 10px;
+			position: absolute;
+			left: 9px;
+			top: 9px;
+			border-radius: 100%;
+		}
+	}
+}
+
+
+.Select {
+	@mixin CustomSelectCommon;
+	
+	&__text {
+		padding-right: calc(width('interface/select_arrow_down.png') + 30px);
+	}
+	&__text.Form__input {
+		padding-top: .5em;
+		padding-right: 25px;
+		padding-bottom: .56em;
+	}
+	.Form__field.inputFull &__text.Form__input {
+		width: auto;
+	}
+	.ielte8 &__text.Form__input {
+		padding-bottom: 0;
+	}
+	&__text:after {
+		position: absolute;
+		top: 50%;
+		margin-top: calc(-(height('interface/select_arrow_down.png') / 2));
+		right: 20px;
+
+		background-image: resolve('interface/select_arrow_down.png');
+		width: width('interface/select_arrow_down.png');
+		height: height('interface/select_arrow_down.png');
+		content: '';
+	}
+
+	&__select:focus + &__text {
+		border-color: $violet;
+	}
+}
+
+
+
+/*
+<div class="Upload">
+	<ul class="Upload__list">
+		<li class="Upload__file">
+			<span class="Upload__name">banner-345x120.jpg</span>
+			<span class="Upload__remove">Удалить</span>
+		</li>
+	</ul>
+	<label class="Upload__label">
+		<input type="file" name="" id="" class="Upload__field">
+		<span tabindex="0" class="Btn--clipActive Upload__btn">Загрузить работу</span>
+	</label>
+</div>
+*/
+
+.Upload {
+	display: inline-block;
+	
+	&__list,
+	&__file {
+		display: block;
+		margin: 0;
+		padding: 0;
+	}
+
+	&__remove {
+		margin-left: 10px;
+		vertical-align: top;
+	}
+
+	&__field {
+		display: none;
+	}
+
+	&--simple {
+		display: inline-block;
+	}
+}

@@ -1,0 +1,27 @@
+hr.dottedDivider {
+	border: 0;
+	border-top: 1px dotted $dividerColor;
+	margin: $lineHeight 0;
+}
+
+.fieldRequired {
+
+	&:after {
+		color: red;
+		content: '*';
+		font-weight: bold;
+		margin-left: .3em;
+	}
+}
+
+/* верхний регистр с разрядкой */
+.textUppercase {
+	font-size: .875em;
+	letter-spacing: .1em;
+	margin-right: -.1em;
+	text-transform: uppercase;
+}
+
+.pseudoLink {
+	@mixin pseudoLink;
+}

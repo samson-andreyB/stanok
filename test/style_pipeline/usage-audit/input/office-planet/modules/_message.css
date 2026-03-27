@@ -1,0 +1,46 @@
+.Message {
+	padding: 15px 20px;
+
+	&--warning {
+		background-color: #ffeec7;
+	}
+
+	&--default {
+		background-color: #f1f1f1;
+	}
+
+	&--traceableGoods,
+	&--markingGoods {
+		.Message__title {
+			& + .Message__text {
+				margin-top: 10px;
+			}
+		}
+	}
+
+	&__title {
+		font-size: 16px;
+		line-height: 1.5;
+		font-weight: 700;
+
+		& + .Message__text {
+			margin-top: 5px;
+		}
+	}
+
+	&__text {
+		font-size: 14px;
+		line-height: 1.4;
+		max-width: 810px;
+	}
+
+	&__paragraph {
+		& + & {
+			margin-top: 5px;
+		}
+	}
+
+	& + & {
+		margin-top: 15px;
+	}
+}

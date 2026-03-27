@@ -1,0 +1,127 @@
+/* BLOCKS - LISTS
+---------------------------------------------------------------------*/
+
+/*doc
+<ul class="List">
+	<li class="List__item">Пункт меню, например</li>
+</ul>
+*/
+
+@define-mixin List--basic {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.List {
+	@mixin List--basic;
+}
+
+@define-mixin List__item--basic {
+	margin: 0;
+
+	&:before {
+		display: none;
+	}
+}
+
+.List__item {
+	@mixin List__item--basic;
+}
+
+
+@define-mixin List--ib {
+	@mixin List--basic;
+}
+
+@define-mixin List__item--ib {
+	@mixin List__item--basic;
+	display: inline-block;
+}
+
+.List.ib {
+	/* @mixin List--ib; */
+}
+
+
+/*doc
+
+```js
+// добавление специального элемента-заглушки
+// для жесткого задания количества можно воспользоваться атрибутом data-cols у объекта
+if ($('.js-addListItemFake').length) {
+	$('.js-addListItemFake').each(function(){
+		var obj = $(this);
+		var dataCols = obj.attr('data-cols');
+		var dataClass = obj.attr('data-class');
+		var cols, classname;
+		if (dataCols && dataCols !== "") {
+			cols = dataCols;
+		} else {
+			cols = Math.floor(obj.width()/obj.children(':first').outerWidth());
+		}
+		if (dataClass && dataClass !== "") {
+			classname = dataClass;
+		} else {
+			classname = 'List__item';
+		}
+		for (var i = (cols - obj.children().length % cols) % cols; i > 0; i--) {
+			obj.append('<li class="'+ classname +' fake"></li> ');
+		}
+	});
+}
+// ~ добавление специального элемента-заглушки
+```
+*/
+
+@define-mixin List--justify {
+
+}
+
+@define-mixin List--justify {
+	@mixin List--basic;
+	text-align: justify;
+
+	&:after {
+		content: "";
+		display: inline-block;
+		height: 1px;
+		width: 100%;
+	}
+
+	& .List__item {
+		text-align: left;
+	}
+}
+
+.List.ib.justify {
+	@mixin List--justify;
+}
+
+
+@define-mixin List__item--separated {
+
+	&:after {
+		content: "|";
+		cursor: default;
+		margin-left: .45em;
+		margin-right: .75em;
+		opacity: .75;
+	}
+	&.last:after {
+		content: none;
+	}
+}
+
+
+@define-mixin List--separated {
+	@mixin List--basic;
+
+	& .List__item {
+		@mixin List__item--separated;
+	}
+}
+
+.List.ib.separated {
+	@mixin List--separated;
+}

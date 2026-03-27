@@ -1,0 +1,84 @@
+.Files {
+	padding-top: 5px;
+}
+
+.File {
+	display: flex;
+	align-items: center;
+	&:before {
+		content: '';
+		background-repeat: no-repeat;
+		background-position: center left;
+		width: 25px;
+		height: 30px;
+		flex: 0 0 auto;
+	}
+
+	&--other {
+		&:before {
+			background-image: resolve('file_25x30_other.png');
+		}
+	}
+
+	&--doc {
+		&:before {
+			background-image: resolve('file_25x30_doc.png');
+		}
+	}
+
+	&--pdf {
+		&:before {
+			background-image: resolve('file_25x30_pdf.png');
+		}
+	}
+
+	&--xls {
+		&:before {
+			background-image: resolve('file_25x30_xls.png');
+		}
+	}
+
+	&--zip {
+		&:before {
+			background-image: resolve('file_25x30_zip.png');
+		}
+	}
+
+	&--png {
+		&:before {
+			background-image: resolve('file_25x30_png.png');
+		}
+	}
+
+	&--jpg {
+		&:before {
+			background-image: resolve('file_25x30_jpg.png');
+		}
+	}
+
+	&__info {
+		line-height: 1.22;
+		margin-left: 8px;
+		max-width: 402px;
+	}
+
+	&__nameWrapper {
+		display: block;
+		text-decoration: none;
+		border: none;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		padding-bottom: 2px;
+	}
+
+	&__size {
+		color: #949494;
+		font-size: 12px;
+		margin-top: 3px;
+	}
+}
+
+.File + .File {
+	margin-top: 20px;
+}

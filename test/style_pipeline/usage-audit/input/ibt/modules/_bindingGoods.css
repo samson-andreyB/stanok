@@ -1,0 +1,32 @@
+.Page--bindingGoods {
+	.Filter2 {
+		&--code {
+			width: 75px;
+		}
+
+		&--name {
+			width: 250px;
+		}
+	}
+
+	.controlPanel--fixed {
+		border-top: 1px solid #dadada;
+		position: sticky;
+		bottom: 0;
+		z-index: 1;
+		display: none;
+
+		.filter__label {
+			margin-right: 17px;
+		}
+
+		.filter__checkbox {
+			margin-right: 7px;
+		}
+
+		.RichSelect2 {
+			width: 300px;
+			margin-right: 10px;
+		}
+	}
+}

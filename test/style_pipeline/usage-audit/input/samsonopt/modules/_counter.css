@@ -1,0 +1,46 @@
+@define-mixin counter {
+	background-color: #db241f;
+	border-radius: 1em;
+	color: #fff;
+	font-size: 12px;
+	line-height: 1;
+	padding: .3em .4em .2em;
+	text-align: center;
+	min-width: 1em;
+}
+
+@define-mixin counterSquare {
+	display: inline-block;
+	box-sizing: border-box;
+	min-width: 16px;
+	padding-x: 4px;
+	padding-y: 9px;
+	border-radius: 3px;
+	line-height: 0;
+	font-size: 12px;
+	font-weight: bold;
+	background: $C_BRAND;
+}
+
+.CounterBadge {
+	@mixin counter;
+}
+
+.CounterBadge--square {
+	@mixin counterSquare;
+}
+
+.CounterBadge--header {
+	/* Reset defaults */
+	background-color: transparent;
+	border-radius: 0;
+	padding: 0;
+
+	/* Set actual properties */
+	min-width: 30px;
+	margin-right: -10px;
+
+	.CounterBadge__value {
+		@mixin counterSquare;
+	}
+}

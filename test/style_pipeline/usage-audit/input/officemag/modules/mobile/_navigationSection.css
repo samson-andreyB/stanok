@@ -1,0 +1,376 @@
+.NavigationSection {
+	display: block;
+	font-size: 16px;
+	min-width: 100%;
+	background: $BG;
+	position: absolute;
+	z-index: 10;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	overflow-y: auto;
+	transform: translateX(100%);
+	transition: .15s;
+	transition-delay: .15s;
+	visibility: hidden;
+
+	&--receivingMethod,
+	&--buyerType,
+	&--profile {
+		transform: translateX(0);
+	}
+
+	&--receivingMethod {
+		.NavigationSection__linkTitle .Price {
+			font-weight: normal;
+		}
+	}
+
+	&--active {
+		transform: translateX(0);
+		transition-delay: 0s;
+		z-index: 11;
+		visibility: visible;
+	}
+
+	&__title {
+		padding: 18px 45px;
+		position: relative;
+		text-align: center;
+		font-weight: bold;
+		line-height: 1.1;
+		cursor: pointer;
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	&__back {
+		content: '';
+		background-image: svg('arrow_left_7x12', '[color]: $BRAND_BLACK');
+		background-position: center;
+		background-repeat: no-repeat;
+		width: 34px;
+		height: 34px;
+		position: absolute;
+		top: 9px;
+		left: 11px;
+		z-index: 2;
+		cursor: pointer;
+	}
+
+	&__close {
+		background-image: svg('cross_14x14', '[color]: $BRAND_BLACK');
+		background-position: center;
+		background-repeat: no-repeat;
+		width: 34px;
+		height: 34px;
+		position: absolute;
+		right: 14px;
+		top: 9px;
+		z-index: 2;
+		cursor: pointer;
+	}
+
+	&__content {
+		padding-bottom: 15px;
+		position: relative;
+	}
+
+	&__userName {
+		font-weight: bold;
+		padding: 14px 20px;
+
+		.pseudoLink {
+			color: #000;
+
+			&:after {
+				content: '';
+				display: inline-block;
+				vertical-align: middle;
+				border: 3px solid transparent;
+				border-top-color: currentColor;
+				border-bottom-width: 0;
+				margin-top: -2px;
+				margin-right: -11px;
+			}
+		}
+	}
+
+	&__categories {
+		background: #fff;
+
+		.NavigationSection__registerOffer + &,
+		& + & {
+			margin-top: 15px;
+		}
+
+		&--loyaltyInformation {
+			background: none;
+
+			.NavigationSection {
+				&__category {
+					padding: 15px 20px 15px 45px;
+					position: relative;
+
+					p + p {
+						margin-top: 5px;
+					}
+				}
+
+				&__loyalty {
+					margin: 0;
+					position: absolute;
+					top: 17px;
+					left: 20px;
+				}
+			}
+		}
+	}
+
+	&__category {
+		user-select: none;
+
+		& + & {
+			.NavigationSection__item,
+			.NavigationSection__link {
+				border-top: 1px solid $B_LIGHT;
+			}
+		}
+
+		strong {
+			font-weight: bold;
+		}
+	}
+
+	&__item,
+	&__link {
+		display: block;
+		padding: 15px 30px 15px 20px;
+		position: relative;
+		min-height: 24px;
+	}
+
+	&__item {
+		&--disabled {
+			color: $GREY_2;
+
+			.NavigationSection__linkIcon--city {
+				background-image: svg('placemark_11x16', '[color]: $GREY_2');
+			}
+		}
+	}
+
+	&__link {
+		color: $BRAND_BLACK;
+
+		&:hover {
+			color: $BRAND_BLACK;
+		}
+
+		&:after {
+			content: '';
+			background-image: svg('arrow_right_7x12', '[color]: $B_ACTION');
+			width: width('arrow_right_7x12.svg');
+			height: height('arrow_right_7x12.svg');
+			position: absolute;
+			top: 50%;
+			right: 21px;
+			transform: translateY(-50%);
+		}
+
+		.Icon--bestConditions,
+		.Badge--counter,
+		.Icon--favoriteOrder {
+			margin-left: 5px;
+		}
+	}
+
+	&__linkIcon {
+		background-repeat: no-repeat;
+		background-position: center;
+		width: 18px;
+		height: 18px;
+		position: absolute;
+		left: 20px;
+		top: calc(((1.4em - 18px) / 2) + 15px);
+
+		&--siteMode {
+			background-image: svg('arrow_change_18x12', '[color]: #736f6c');
+		}
+
+		&--city {
+			background-image: svg('placemark_11x16', '[color]: #736f6c');
+		}
+
+		&--onlineQuestion {
+			background-image: svg('question_mark_18x18', '[color]: #736f6c');
+		}
+
+		&--improvement {
+			background-image: svg('check_mark_15x12', '[color]: #736f6c');
+		}
+
+		&--promotions {
+			background-image: svg('percent_14x14', '[color]: #c22119');
+
+			& + .NavigationSection__linkTitle {
+				color: #c22119;
+			}
+		}
+
+		&--individualCatalog {
+			background-image: svg('catalog_15x18', '[color]: #736f6c');
+		}
+
+		&--limitBalance {
+			background-image: svg('purse_18x15', '[color]: #736f6c');
+		}
+
+		&--overdueDebt {
+			background-image: svg('warning_18x17', '[color]: #c22119');
+		}
+
+		&--chat {
+			background-image: svg('chat_16x15', '[color]: #736f6c');
+		}
+
+		&--callback {
+			background-image: svg('phone_12x18', '[color]: #736f6c');
+		}
+
+		&--feedback {
+			background-image: svg('mail_18x12', '[color]: #736f6c');
+		}
+
+		&--documentFlow {
+			background-image: svg('tablet_16x19', '[color]: #736f6c');
+		}
+
+		&--eDocumentFlow {
+			background-image: svg('eTablet_18x19', '[color]: $GREY_1');
+		}
+
+		&--error {
+			background-image: svg('warning_18x17', '[color]: #736f6c');
+		}
+
+		&--faq {
+			background-image: svg('question_mark_18x18', '[color]: #736f6c');
+		}
+
+		& + .NavigationSection__linkTitle {
+			margin-left: 26px;
+		}
+	}
+
+	&__linkTitle {
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	&__registerOffer {
+		background: #fff;
+		padding: 30px 20px;
+		font-size: 14px;
+
+		.btn {
+			margin-top: 16px;
+
+			&:hover {
+				color: #fff;
+			}
+
+			& + .btn {
+				margin-left: 5px;
+			}
+		}
+
+		p + p {
+			margin-top: 8px;
+		}
+	}
+
+	&__registerOfferTitle {
+		font-weight: bold;
+		font-size: 20px;
+
+		& + p {
+			margin-top: 8px;
+		}
+	}
+
+	&__loyalty {
+		color: #7518db;
+		font-weight: bold;
+		display: inline-block;
+		vertical-align: middle;
+		margin-left: 6px;
+
+		&:before {
+			content: '';
+			display: inline-block;
+			background-image: svg('loyaltyProgram_18x18', '[color]: #7518db');
+			width: width('loyaltyProgram_18x18.svg');
+			height: height('loyaltyProgram_18x18.svg');
+			margin-right: 6px;
+			vertical-align: middle;
+			margin-top: -3px;
+		}
+	}
+
+	&__loyaltyNegative {
+		color: #c22119;
+	}
+
+	.Price {
+		font-weight: bold;
+	}
+
+	.Contract {
+		padding-x: 20px;
+		display: block;
+
+		&__box {
+			padding: 20px 20px;
+			margin-x: -20px;
+		}
+
+		&__header {
+			font-size: 16px;
+		}
+
+		&__link + .Contract__header {
+			margin-top: 15px;
+		}
+
+		.pseudoLink {
+			font-size: 14px;
+			display: inline-block;
+			margin-top: 5px;
+		}
+
+		&__controls {
+			margin-top: 11px;
+		}
+	}
+
+	.ContractManager {
+		&__info {
+			margin-bottom: 1em;
+			font-weight: bold;
+		}
+
+		&__name {
+			font-weight: normal;
+			font-size: inherit;
+		}
+	}
+
+	.Contract__unbind:hover,
+	a:hover {
+		color: inherit;
+	}
+
+	.TipTip--linkedAccount {
+		font-size: 12px;
+	}
+}

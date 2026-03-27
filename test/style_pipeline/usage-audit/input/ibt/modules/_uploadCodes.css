@@ -1,0 +1,6 @@
+.Page--uploadCodes {
+	.FileLoader {
+		max-width: 560px;
+		margin-top: 20px;
+	}
+}

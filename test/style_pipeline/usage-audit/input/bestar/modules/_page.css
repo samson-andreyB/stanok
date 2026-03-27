@@ -1,0 +1,79 @@
+/* Страница
+**********************************************************/
+
+.Page {
+	display: flex;
+	flex-direction: column;
+	background-color: $colorBackground;
+	color: $colorText;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 15px;
+	line-height: 1.3;
+
+	&__wrapper {
+		@mixin Limiter;
+
+		&--grow {
+			display: flex;
+			flex-direction: column;
+			flex-grow: 1;
+		}
+	}
+
+	&__main {
+		display: flex;
+		flex-grow: 1;
+		padding-bottom: 60px;
+		background-color: $colorBackground;
+
+		&,
+		& .Page__wrapper {
+			display: flex;
+			flex-direction: column;
+			flex-shrink: 0;
+		}
+	}
+}
+
+
+.Page--about {
+
+	.Page__main {
+		padding-bottom: 80px;
+	}
+
+	.Section {
+
+		&__header {
+			padding-top: 10px;
+		}
+
+		&__content {
+			padding-bottom: 0;
+		}
+
+		&__sidebar {
+			text-align: center;
+
+			img {
+				max-width: 100%;
+			}
+		}
+	}
+
+	.Section + .Section {
+		margin-top: 40px;
+	}
+
+	p + p {
+		margin-top: 14px;
+	}
+}
+
+
+.Page--feedback {
+
+	.Form {
+		margin-bottom: 110px;
+	}
+}

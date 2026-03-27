@@ -1,0 +1,93 @@
+.Notify--attention {
+	&.Notify--accent {
+		padding: 1.4em 1.5em;
+	}
+
+	&.Notify--withIcon {
+		.Notify__title {
+			&:before {
+				content: '';
+				display: inline-block;
+				margin-top: -.2em;
+				margin-right: .3em;
+				width: width('attention_13x13.svg');
+				height: height('attention_13x13.svg');
+				vertical-align: middle;
+				background-image: svg('attention_13x13', '[color]: #404040');
+			}
+		}
+
+		&.Notify--textAccent {
+			.Notify__content{
+				&:before {
+					content: '';
+					display: inline-block;
+					background-image: svg('attention_13x13', '[color]: $RED');
+					width: width('attention_13x13.svg');
+					height: height('attention_13x13.svg');
+					margin-top: -2px;
+					margin-right: 5px;
+					vertical-align: middle;
+				}
+			}
+		}
+	}
+
+	.Notify__title {
+		font-weight: bold;
+	}
+
+	.Notify__content {
+		margin-top: .2em;
+	}
+
+	.Notify__paragraph + .Notify__paragraph {
+		margin-top: .3em;
+	}
+}
+
+.Notify--addedToCart {
+	padding: 13px;
+	padding-left: 20px;
+
+	&.Notify--withIcon {
+		background-image: svg('attention_13x13', '[color]: $RED');
+		background-repeat: no-repeat;
+		background-position: 20px 15px;
+		padding-right: 25px;
+		padding-left: 40px;
+	}
+}
+
+.Notify--controls {
+	background-color: #f2eeea;
+}
+
+.Notify__content--accent {
+	color: $C_PZK;
+}
+
+.Notify--accent {
+	background-color: $ATTENTION;
+
+	@media (min-width: 980px) {
+		border-radius: $BD_RAD;
+	}
+}
+
+.Notify__contentWrapper {
+	max-width: 500px;
+	display: inline-block;
+}
+
+.Notify--reorganization {
+	margin-bottom: 20px;
+
+	.Notify__content {
+		margin-top: .5em;
+	}
+}
+
+.Notify--textAccent {
+	color: $RED;
+}

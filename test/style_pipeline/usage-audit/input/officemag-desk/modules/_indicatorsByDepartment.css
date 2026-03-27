@@ -1,0 +1,22 @@
+.Items__list--indicatorsByDepartment {
+	.Item__box {
+		padding-x: 15px;
+
+		&:first-child {
+			padding-left: 20px;
+		}
+
+		&:last-child {
+			padding-right: 20px;
+		}
+
+		&--value {
+			white-space: nowrap;
+			text-align: left;
+		}
+
+		&--city {
+			min-width: 50px;
+		}
+	}
+}

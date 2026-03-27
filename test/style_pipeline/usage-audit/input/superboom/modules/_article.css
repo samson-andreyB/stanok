@@ -1,0 +1,527 @@
+$a_black: #404040;
+$a_gray: #e2ddd9;
+$a_blue: $LINK;
+$a_green: #47bc19;
+$a_red: $RED;
+$a_yellow: #fcd127;
+
+$columnIndent: 2.5%;
+
+.Article--default {
+	color: #404040;
+	font-size: 18px;
+
+	.Article__header {
+		margin-y: 20px;
+	}
+
+	.Article__headerText {
+		display: inline-block;
+		border-bottom: 2px solid;
+	}
+
+	h1.Article__header {
+		.Article__headerText {
+			margin: 0;
+			font-size: 29px;
+			line-height: 36px;
+			border: 0;
+		}
+	}
+
+	h2.Article__header {
+		.Article__headerText {
+			margin: 20px 0 0;
+			font-size: 22px;
+			padding-bottom: 11px;
+		}
+	}
+
+	h3.Article__header {
+		.Article__headerText {
+			font-size: 19px;
+			border: none;
+		}
+	}
+
+	p {
+		margin-y: 20px;
+	}
+
+	p + ul {
+		margin-top: -10px;
+	}
+
+	img {
+		max-width: 100%;
+		height: auto;
+		display: block;
+	}
+
+	.Files--list {
+		margin-top: 20px;
+		line-height: normal;
+		font-size: 12px;
+	}
+
+	.sp-video-gallery {
+		margin-top: 20px;
+	}
+
+	.sp-video-gallery-large-thumbnail-wrapper img {
+		max-width: 100%;
+		max-height: 100%;
+	}
+
+	.Article__photoGallery {
+		.sp-video-gallery-large-thumbnail-container {
+			height: 380px !important;
+			margin-bottom: 8px;
+		}
+
+		.sp-video-gallery-thumbnails-list-container {
+			height: auto !important;
+			overflow-y: hidden !important;
+			overflow-x: auto !important;
+		}
+
+		.sp-video-gallery-thumbnails-list {
+			position: relative;
+			width: 100% !important;
+			height: 80px !important;
+			text-align: center;
+			white-space: nowrap;
+		}
+
+		.sp-video-gallery-thumbnails-list-item {
+			background-color: transparent;
+			width: auto !important;
+			float: none;
+			display: inline-block;
+		}
+
+		.sp-video-gallery-thumbnails-list-item + .sp-video-gallery-thumbnails-list-item {
+			margin-left: 1px;
+		}
+
+		.sp-video-gallery-thumbnails-list-item img {
+			left: auto;
+			position: relative;
+			top: auto;
+			transform: none;
+			max-width: 100%;
+			max-height: 100%;
+		}
+	}
+
+	.Article__caption {
+		margin-top: 10px;
+		font-size: 16px;
+		text-align: left;
+	}
+
+	.Article__media {
+		margin-top: 30px;
+		text-align: center;
+
+		iframe {
+			 display: block;
+		}
+
+		.Article__plainText {
+			margin-top: 0;
+
+			p:first-child {
+				margin-top: 0;
+			}
+		}
+
+		.Article__imgContainer {
+			display: inline-block;
+			text-align: left;
+		}
+
+		.Article__img {
+			margin: 0 auto;
+		}
+
+		&--map {
+			position: relative;
+			line-height: 0;
+		}
+
+		&--picture {
+			text-align: left;
+			overflow: hidden;
+
+			&:before,
+			&:after {
+				content: '';
+				display: table;
+			}
+
+			&:after {
+				clear: both;
+			}
+
+			.Box {
+				display: block;
+
+				&__title {
+					font-size: 19px;
+					margin: 0 0 5px;
+				}
+
+				&--img {
+					display: table;
+					max-width: 500px;
+					margin-top: 4px;
+					margin-right: 35px;
+					margin-bottom: 20px;
+					float: left;
+
+					.Article__caption {
+						display: table-caption;
+						caption-side: bottom;
+						margin-y: 10px 0;
+					}
+				}
+
+				&--alignRight {
+					display: table;
+					float: right;
+					margin-right: 0;
+					margin-left: 35px;
+					margin-bottom: 20px;
+				}
+			}
+		}
+	}
+
+	.Article__plainText {
+		margin-top: 20px;
+	}
+
+	.Article__plainText,
+	.Spoiler2__content,
+	.Article__attention {
+		b,
+		strong {
+			font-weight: bold;
+		}
+
+		em {
+			font-style: italic;
+		}
+
+		ul,
+		ol {
+			display: table;
+			margin: 15px 0 15px 14px;
+
+			li {
+				position: relative;
+			}
+
+			li:before {
+				content: '';
+				position: absolute;
+				border-radius: 100%;
+			}
+
+			li + li {
+				margin-top: 10px;
+			}
+		}
+
+		ul {
+			li {
+				padding-left: 20px;
+			}
+
+			li:before {
+				left: 0;
+				top: 9px;
+				width: 6px;
+				height: 6px;
+				background-color: $a_black;
+			}
+		}
+
+		ol {
+			counter-reset: item;
+			list-style-type: none;
+
+			li {
+				padding-left: 30px;
+			}
+
+			li:before {
+				left: 1px;
+				top: 2px;
+				width: 18px;
+				height: 18px;
+				border: 1px solid $a_black;
+			}
+
+			li:after {
+				content: counter(item, decimal);
+				counter-increment: item;
+				position: absolute;
+				left: 1px;
+				top: 2px;
+				background-color: transparent;
+				font-size: 11px;
+				line-height: 20px;
+				width: 20px;
+				text-align: center;
+			}
+		}
+	}
+
+	.Article__list {
+		margin-top: 20px;
+		margin-left: 14px;
+
+		.Article__list {
+			margin-top: 10px;
+			margin-left: 0;
+		}
+
+		li {
+			position: relative;
+			padding-left: 20px;
+		}
+
+		li + li {
+			margin-top: 10px;
+		}
+
+		&--disc > li:before,
+		&--check > li:before,
+		&--dash > li:before,
+		&--checkRound > li:after {
+			content: '';
+			position: absolute;
+			background-color: $a_black;
+		}
+
+		&--checkRound > li:before,
+		&--number > li:before {
+			content: '';
+			position: absolute;
+			background-color: transparent;
+			border-radius: 100%;
+			border-width: 1px;
+			border-style: solid;
+		}
+
+		&--disc > li:before {
+			left: 0;
+			top: 9px;
+			width: 6px;
+			height: 6px;
+			border-radius: 100%;
+		}
+
+		&--check > li:before {
+			left: 0;
+			top: 8px;
+			background-image: resolve('interface/check_mask.png');
+			width: width('interface/check_mask.png');
+			height: height('interface/check_mask.png');
+		}
+
+		&--dash > li:before {
+			left: -1px;
+			top: 13px;
+			width: 17px;
+			height: 1px;
+		}
+
+		&--checkRound > li {
+			padding-left: 30px;
+
+			&:after {
+				left: 6px;
+				top: 7px;
+				background-image: resolve('interface/check_mask.png');
+				width: 10px;
+				height: height('interface/check_mask.png');
+			}
+
+			&:before {
+				left: 1px;
+				top: 3px;
+				width: 18px;
+				height: 18px;
+			}
+		}
+
+		&--number {
+			counter-reset: item;
+			list-style-type: none;
+
+			& > li {
+				padding-left: 30px;
+			}
+
+			& > li:before {
+				left: 1px;
+				top: 2px;
+				width: 18px;
+				height: 18px;
+			}
+
+			& > li:after {
+				content: counter(item, decimal);
+				counter-increment: item;
+				position: absolute;
+				left: 1px;
+				top: 2px;
+				background-color: transparent;
+				font-size: 11px;
+				line-height: 20px;
+				width: 20px;
+				text-align: center;
+			}
+		}
+	}
+
+	.Article__header + .Article__list {
+		margin-top: -10px;
+	}
+
+	.Article__attention {
+		border: 1px solid $a_black;
+		border-radius: 5px;
+		padding: 25px 30px;
+		margin-top: 20px;
+
+		p {
+			&:first-child {
+				margin-top: 0;
+			}
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		.Article__media {
+			margin-top: 0;
+		}
+
+		.Box {
+			vertical-align: middle;
+
+			&--img {
+				width: 1%;
+			}
+
+			img {
+				max-width: none;
+				margin-right: 15px;
+			}
+		}
+	}
+
+	.Article__spoiler {
+		border: 1px solid $a_gray;
+		background-color: color(#fff blend($a_gray 7%));
+		border-radius: 5px;
+		padding: 25px 30px;
+		margin-top: 20px;
+	}
+
+	.Article__spoilerItem + .Article__spoilerItem {
+		margin-top: 15px;
+	}
+
+	.Spoiler2__content {
+		.Article__media {
+			padding-top: 10px;
+		}
+
+		.Article__media,
+		.Group {
+			margin-top: 0;
+		}
+	}
+
+	.Article__table {
+		width: 100%;
+		margin-top: 25px;
+		text-align: left;
+
+		th {
+			font-weight: bold;
+			border: 1px solid #e2ddd9;
+			padding: 14px 18px;
+		}
+
+		td {
+			padding: 14px 18px;
+			border: 1px solid #e2ddd9;
+		}
+	}
+
+	.btn + .btn {
+		margin-left: 15px;
+	}
+}
+
+@define-mixin colorizeArticle $color {
+	.Article__headerText,
+	&.Article__list li:before,
+	&.Article__attention {
+		border-color: $color;
+	}
+
+	&.Article__list {
+		&--disc,
+		&--check {
+			li:before {
+				background-color: $color;
+			}
+		}
+	}
+
+	&.Article__attention {
+		background-color: color(#fff blend($color 7%));
+	}
+}
+
+.Article__color {
+	&--black {
+		@mixin colorizeArticle $a_black;
+
+		&.Article__attention {
+			background-color: color(#fff blend($a_gray 7%));
+		}
+	}
+
+	&--gray {
+		@mixin colorizeArticle $a_gray;
+	}
+
+	&--blue {
+		@mixin colorizeArticle $a_blue;
+	}
+
+	&--green {
+		@mixin colorizeArticle $a_green;
+	}
+
+	&--red {
+		@mixin colorizeArticle $a_red;
+	}
+
+	&--yellow {
+		@mixin colorizeArticle $a_yellow;
+	}
+
+	&--violet {
+		@mixin colorizeArticle $VIOLET;
+	}
+}

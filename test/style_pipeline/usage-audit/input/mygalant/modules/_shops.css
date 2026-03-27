@@ -1,0 +1,88 @@
+$SHOP_LINK_COLOR: #B5D8FF;
+$SHOP_LINK_COLOR_HOVER: #CE2F2F;
+
+$SHOP_TAB_BORDER_HOVER: $SHOP_LINK_COLOR_HOVER;
+
+$SHOP_BOX_BTN_BG: #CE2F2F;
+$SHOP_BOX_BTN_COLOR: #fff;
+
+$SHOP_BOX_BTN_BG_HOVER: #E43838;
+$SHOP_BOX_BTN_COLOR_HOVER: $SHOP_BOX_BTN_COLOR;
+
+$SHOP_CITYSELECTOR__LINK_COLOR: $SHOP_LINK_COLOR;
+$SHOP_CITYSELECTOR__LINK_COLOR_HOVER: $SHOP_LINK_COLOR_HOVER;
+
+$SHOP_REPRESENT_HOVER_COLOR: $SHOP_LINK_COLOR_HOVER;
+
+$SHOP_TAB_ACTIVE_COLOR: #B5D8FF;
+
+$SHOP_PILL_COLOR: #CE2F2F;
+$SHOP_PILL_ACTIVE_COLOR: #E43838;
+
+$SHOP_RADIUS_MAIN: 10px;
+$SHOP_RADIUS_BTN: 4px;
+$SHOP_RADIUS_TAB_SUB: $SHOP_RADIUS_MAIN;
+
+@import "lib/stm/_shops";
+
+.ShopAddresses {
+	text-align: left;
+}
+
+.PageSlide--shops {
+	padding-y: 75px;
+	text-align: center;
+
+	@media screen and (min-width: 1240px) {
+		.PageSlide__wrapper {
+			width: 80%;
+		}
+	}
+}
+
+.Address--balloonContent {
+	color: #000;
+}
+
+.Tabs--shopAddresses .Tab--active:after {
+	border-bottom-color: #0F1213;
+}
+
+.Items--shopAddressesList .Item + .Item .Item__box {
+	border-color: #343638;
+}
+
+.ShopAddresses .ShopAddresses__represent.active:after {
+	border-top-color: #0F1213;
+}
+
+.ShopAddressesWidget {
+	margin-top: 0;
+	margin-bottom: -20px;
+	text-align: left;
+
+	&__header {
+		font-style: normal;
+		font-size: 20px;
+		line-height: 23px;
+		letter-spacing: .1em;
+		text-transform: uppercase;
+		color: #FFDE8A;
+		margin-bottom: 22px;
+	}
+
+	.BuyOnline {
+		margin-top: 0;
+	}
+
+	.BuyOnline__link {
+		border-color: #dcdcdc;
+		height: 40px;
+		line-height: 40px;
+		padding: 25px 20px;
+	}
+
+	.BuyOnline__title {
+		margin-top: 3px;
+	}
+}

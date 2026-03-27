@@ -1,0 +1,474 @@
+/* BTN-mixin
+---------------------------------------------------------------------*/
+
+@keyframes Spinner {
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+@define-mixin Btn {
+	font-family: $fontFamilyB;
+	font-size: 16px;
+	box-sizing: border-box;
+	padding: .9375em 2em;
+	line-height: 1;
+	text-transform: uppercase;
+	color: $violet;
+	display: inline-block;
+	cursor: pointer;
+	border-radius: 2em;
+	border: 2px solid $violet;
+	background-color: #fff;
+	outline: none;
+	user-select: none;
+	position: relative;
+
+	&::selection {
+		color: inherit;
+	}
+
+	&:hover {
+		color: #fff;
+		background-color: $violet;
+	}
+
+	&:active {
+		color: #fff;
+		background-color: #712f79;
+	}
+
+	&.disabled {
+		opacity: 0.3;
+		pointer-events: none;
+	}
+
+	&__spinner {
+		display: none;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 20px;
+		height: 20px;
+		margin-top: -10px;
+		margin-left: -10px;
+		box-sizing: border-box;
+		border: 3px solid transparent;
+		border-top-color: $violet;
+		border-right-color: $violet;
+		border-radius: 50%;
+		animation: Spinner .8s linear infinite;
+	}
+}
+
+@define-mixin BtnMain {
+	@mixin Btn;
+
+	color: #fff;
+	background-color: $violet;
+
+	&:focus,
+	&:hover {
+		background-color: $violet_active;
+		border-color: $violet_active;
+	}
+}
+
+@define-mixin Btn--circle {
+	padding: 1.25em;
+	position: relative;
+	background-color: $yellow;
+	border-color: $yellow;
+
+	&:before {
+		content: '';
+		position: absolute;
+		display: inline-block;
+		left: .75em;
+		top: .75em;
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+		width: 32px;
+		height: 32px;
+	}
+
+	&:after {
+		content: ' ';
+		position: relative;
+		display: inline-block;
+		width: 1em;
+	}
+
+	&:focus,
+	&:hover {
+		border-color: $yellow_active;
+		background-color: $yellow_active;
+	}
+}
+
+@define-mixin Btn--yellow {
+	background-color: $yellow;
+	border-color: $yellow;
+
+	&:hover,
+	&:focus {
+		background-color: $yellow_active;
+		border-color: $yellow_active;
+		color: $violet;
+	}
+}
+
+@define-mixin BtnLite {
+	border: 0;
+	position: relative;
+	display: inline-block;
+	line-height: 0;
+	cursor: pointer;
+	background-color: transparent;
+
+	&:before {
+		content: '';
+		position: relative;
+		display: inline-block;
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+	}
+
+	&:focus,
+	&:hover {
+		background-color: transparent;
+	}
+}
+
+@define-mixin Btn--icon {
+	padding-left: 4em;
+	position: relative;
+
+	&:before {
+		content: '';
+		position: absolute;
+		display: inline-block;
+		width: 32px;
+		height: 32px;
+		left: 1.75em;
+		top: .5em;
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+		margin-top: -1px;
+	}
+}
+
+@define-mixin icon $name, $width, $height, $left, $top {
+	&:before {
+		background-image: url('/assets_unlandia/img/src/interface/$name.png');
+		width: $width;
+		height: $height;
+		left:  $left;
+		top: $top;
+	}
+}
+
+@define-mixin icon2 $name, $width, $height, $left, $top {
+	& {
+		background-image: svg('assets_unlandia/img/svg/$name.hover.svg');
+		background-position: -1000px;
+		background-repeat: no-repeat;
+	}
+
+	&:before {
+		background-image: svg('assets_unlandia/img/svg/$name.svg');
+		width: $width;
+		height: $height;
+		left:  $left;
+		top: $top;
+	}
+
+	&:focus,
+	&:hover {
+		&:before {
+			background-image: svg('assets_unlandia/img/svg/$name.hover.svg');
+		}
+	}
+}
+
+.Btn {
+	@mixin Btn;
+
+	&--yellow {
+		@mixin Btn--yellow;
+	}
+
+	&--group {
+		.Btn,
+		.BtnMain,
+		.Btn--yellow {
+			border-radius: 0;
+			border-width: 2px 1px;
+
+			&:first-child {
+				border-radius: 2em 0 0 2em;
+				border-left-width: 2px;
+			}
+
+			&:last-child {
+				border-radius: 0 2em 2em 0;
+				border-right-width: 2px;
+			}
+		}
+	}
+}
+
+.Btn--active,
+.BtnMain {
+	@mixin BtnMain;
+}
+
+.BtnLite {
+	@mixin BtnLite;
+
+	&--crossMin {
+		@mixin icon2 close_btn, 28px, 28px;
+	}
+
+	&--backwardBig {
+		@mixin icon2 arrow_back_big, 26px, 47px;
+	}
+
+	&--forwardBig {
+		@mixin icon2 arrow_fwd_big, 26px, 47px;
+	}
+
+	&--arrTop {
+		@mixin icon2 arrow_up_small, 24px, 14px;
+	}
+
+	&--arrDown {
+		@mixin icon2 arrow_down_small, 24px, 14px;
+	}
+
+	&--arrTopMid {
+		@mixin icon2 arrow_up_mid_btn, 27px, 16px;
+	}
+
+	&--arrDownMid {
+		@mixin icon2 arrow_down_mid_btn, 27px, 16px;
+	}
+}
+
+/* BTN--icon
+---------------------------------------------------------------------*/
+.Btn {
+	&--print {
+		& {
+			@mixin Btn--circle;
+			background-color: $violet;
+			border-color: $violet;
+		}
+
+		&:before {
+			background-image: svg('assets_unlandia/img/svg/print_btn.svg');
+		}
+
+		&:hover {
+			background-color: $violet_active;
+			border-color: $violet_active;
+		}
+	}
+
+	&--cross {
+		@mixin Btn--circle;
+		@mixin icon2 close_btn;
+	}
+
+	&--backward {
+		@mixin Btn--circle;
+		@mixin icon2 arrow_back_mid_btn, 28px, 28px, 13px, 14px;
+	}
+
+	&--forward {
+		@mixin Btn--circle;
+		@mixin icon2 arrow_fwd_mid_btn, 28px, 28px, 16px, 14px;
+	}
+
+	.SliderBanner &--backward,
+	.SliderBanner &--forward {
+		background-color: #fff;
+		border-color: #fff;
+
+		&:focus,
+		&:hover {
+			background-color: $violet_active;
+			border-color: $violet_active;
+		}
+	}
+
+	.SliderBanner &--backward {
+		&:focus,
+		&:hover {
+			&:before {
+				background-image: svg('assets_unlandia/img/svg/arrow_back_mid_btn.white.svg');
+			}
+		}
+	}
+
+	.SliderBanner &--forward {
+		&:focus,
+		&:hover {
+			&:before {
+				background-image: svg('assets_unlandia/img/svg/arrow_fwd_mid_btn.white.svg');
+			}
+		}
+	}
+
+	&--video {
+		@mixin Btn--circle;
+		@mixin icon2 play_video_btn;
+	}
+
+	&--backwardBig {
+		@mixin icon2 arrow_back_big, 26px, 47px;
+	}
+
+	&--forwardBig {
+		@mixin icon2 arrow_fwd_big, 26px, 47px;
+	}
+
+	&--clip {
+		@mixin Btn--icon;
+		@mixin icon2 upload, 24px, 26px, 31px, 12px;
+	}
+
+	&--clipActive {
+		& {
+			@mixin Btn--icon;
+
+			color: #fff;
+			background-color: $violet;
+		}
+
+		&:before {
+			background-image: svg('assets_unlandia/img/svg/upload.hover.svg');
+			width: 24px;
+			height: 26px;
+			left:  31px;
+			top: 12px;
+		}
+
+		&:hover {
+			background-color: $violet_active;
+			border-color: $violet_active;
+		}
+	}
+
+
+}
+
+.Btn--wait {
+	color: transparent;
+	pointer-events: none;
+
+	&:hover,
+	&:active {
+		background-color: transparent;
+		color: transparent;
+		cursor: default;
+	}
+
+	.Btn__spinner {
+		display: block;
+	}
+}
+
+
+
+/* BtnSocial
+---------------------------------------------------------------------*/
+
+.BtnSocial {
+	box-sizing: border-box;
+	display: inline-block;
+	outline: none;
+	user-select: none;
+	position: relative;
+	width: 40px;
+	height: 40px;
+	vertical-align: middle;
+
+	&:focus {
+		outline: none;
+	}
+
+	&:before,
+	&:after {
+		content: '';
+		position: absolute;
+		display: block;
+	}
+
+	&:before {
+		width: inherit;
+		height: inherit;
+		left: 0;
+		top: 0;
+		border-radius: 50%;
+		transition: .1s ease-in-out;
+	}
+
+	&:after {
+		width: 22px;
+		height: 22px;
+		left: 9px;
+		top: 9px;
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+
+	&:hover,
+	&--active {
+		&:before {
+			left: -5px;
+			top: -5px;
+			width: 50px;
+			height: 50px;
+		}
+	}
+
+	&--vk {
+		&:before {
+			background-color: #5181b8;
+		}
+		&:after {
+			background-image: svg('assets_unlandia/img/svg/social_vk.svg');
+		}
+	}
+
+	&--insta {
+		&:before {
+			background-image: svg('assets_unlandia/img/svg/social_inst_new_gradient.svg');
+			background-repeat: no-repeat;
+		}
+		&:after {
+			background-image: svg('assets_unlandia/img/svg/social_inst_new.svg');
+			background-size: 100%;
+		}
+	}
+
+	&--ok {
+		&:before {
+			background-color: #ed812b;
+		}
+		&:after {
+			background-image: svg('assets_unlandia/img/svg/social_ok.svg');
+		}
+	}
+
+	&--youtube {
+		&:before {
+			background-color: #de2221;
+		}
+		&:after {
+			background-image: svg('assets_unlandia/img/svg/social_youtube.svg');
+		}
+	}
+}

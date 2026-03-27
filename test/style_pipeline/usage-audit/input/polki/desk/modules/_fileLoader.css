@@ -1,0 +1,80 @@
+.FileLoader--default {
+	.FileLoader__header {
+		font-size: 17px;
+		line-height: 1;
+	}
+
+	.FileLoader__description {
+		line-height: 1.333;
+	}
+
+	.FileLoader__examplesHeader {
+		font-weight: bold;
+	}
+
+	.FileLoader__examplesHint {
+		margin-top: 4px;
+	}
+
+	.FileLoader__examplesContent {
+		margin-top: 8px;
+
+		.Files--inline {
+			word-spacing: 20px;
+		}
+	}
+
+	& > * ~ *,
+	.FileLoader__content > * ~ * {
+		margin-top: 10px;
+	}
+
+	.Spoiler__header {
+		margin-bottom: 5px;
+		padding: 0;
+	}
+
+	.Spoiler__label {
+		font-size: inherit;
+
+		&:after {
+			border-width: .292em;
+			border-bottom-width: 0;
+			margin-top: -.1em;
+			margin-left: .429em;
+		}
+	}
+
+	.Spoiler__content {
+		padding: 0;
+	}
+
+	.Form__field + & {
+		margin-top: 1em;
+	}
+}
+
+.FileLoader--widget {
+	display: inline-flex;
+
+	&.FileLoader--flip {
+		.Upload {
+			flex-direction: row-reverse;
+
+			.Upload__hint {
+				margin-right: 1.667em;
+				margin-left: 0;
+			}
+
+			.Upload__additional {
+				margin-right: .5em;
+				margin-left: 0;
+			}
+		}
+	}
+}
+
+.FileLoader--accent {
+	padding: 15px 20px;
+	background-color: #efefef;
+}
