@@ -1857,7 +1857,7 @@ function renderFilesTable() {
     const mainRow = \`
       <tr class="fr\${isOpen ? ' open' : ''}" data-file="\${escAttr(r.file)}">
         <td class="exp-col"><span class="exp-icon">\${isOpen ? '▼' : '▶'}</span></td>
-        <td><span class="file-path">\${escHtml(r.file)}</span></td>
+        <td><span class="file-path">\${escHtml(r.file.startsWith(filesProjKey + '/') ? r.file.slice(filesProjKey.length + 1) : r.file)}</span></td>
         <td><span class="matches">\${r.total}</span></td>
         <td><div class="plugin-chips">\${
           sortedPlugins.map(p => \`<span class="badge p-\${escAttr(priorityBadgeClass(effectivePriorityById(p.id, plugins)))}">\${escHtml(p.id)} <span class="count-muted">\${p.count}</span></span>\`).join('')
