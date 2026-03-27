@@ -37,6 +37,63 @@ const INPUT_DIR = getArg('--input') ?? path.join(ROOT, 'test/style_pipeline/usag
 const OUTPUT_PATH = getArg('--output') ?? null;
 const FORMAT = getArg('--format') ?? 'all'; // 'all' | 'markdown' | 'json' | 'html'
 const LOCKFILE_PATH = path.join(ROOT, 'package-lock.json');
+const PROJECT_MAP_PATH = getArg('--project-map') ?? null;
+
+function loadProjectAliasMap(filePath) {
+  if (!filePath || !fs.existsSync(filePath)) return {};
+  try {
+    const raw = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    const source = raw && typeof raw === 'object' && !Array.isArray(raw)
+      ? (raw.projects && typeof raw.projects === 'object' && !Array.isArray(raw.projects) ? raw.projects : raw)
+      : {};
+
+    const aliases = {};
+    for (const [realName, aliasName] of Object.entries(source)) {
+      const from = String(realName ?? '').trim();
+      const to = String(aliasName ?? '').trim();
+      if (!from || !to) continue;
+      aliases[from] = to;
+    }
+    return aliases;
+  } catch (error) {
+    console.warn(`Не удалось прочитать project map: ${filePath}`);
+    console.warn(error instanceof Error ? error.message : String(error));
+    return {};
+  }
+}
+
+const PROJECT_ALIASES = loadProjectAliasMap(PROJECT_MAP_PATH);
+
+function aliasProjectName(projectName) {
+  return PROJECT_ALIASES[projectName] ?? projectName;
+}
+
+function aliasRelativePath(relPath) {
+  const parts = String(relPath).split('/');
+  if (parts.length <= 1) return relPath;
+  const projectName = parts[0];
+  return [aliasProjectName(projectName), ...parts.slice(1)].join('/');
+}
+
+function validateAliasedProjects(inputDir, projectAliases) {
+  const aliasToSource = new Map();
+  const projectNames = fs.existsSync(inputDir)
+    ? fs.readdirSync(inputDir, { withFileTypes: true })
+      .filter(entry => entry.isDirectory())
+      .map(entry => entry.name)
+    : [];
+
+  for (const projectName of projectNames) {
+    const alias = projectAliases[projectName] ?? projectName;
+    const prev = aliasToSource.get(alias);
+    if (prev && prev !== projectName) {
+      throw new Error(`Два проекта используют один alias "${alias}": "${prev}" и "${projectName}"`);
+    }
+    aliasToSource.set(alias, projectName);
+  }
+}
+
+validateAliasedProjects(INPUT_DIR, PROJECT_ALIASES);
 
 function loadPackageVersions(lockfilePath) {
   if (!fs.existsSync(lockfilePath)) return {};
@@ -656,7 +713,7 @@ function findCssFiles(dir) {
 // Scan
 // ---------------------------------------------------------------------------
 
-function scanFiles(files, inputDir) {
+function scanFiles(files) {
   const results = [];
 
   for (const plugin of PLUGINS) {
@@ -679,9 +736,9 @@ function scanFiles(files, inputDir) {
     for (const pat of plugin.patterns) {
       const patResult = { label: pat.label, count: 0, examples: [], files: new Set(), fileMatches: {}, fileExamples: {} };
 
-      for (const file of files) {
-        const content = fs.readFileSync(file, 'utf8');
-        const relPath = path.relative(inputDir, file).replace(/\\/g, '/');
+      for (const fileEntry of files) {
+        const content = fs.readFileSync(fileEntry.abs, 'utf8');
+        const relPath = fileEntry.rel;
         const matches = content.match(pat.re) ?? [];
 
         if (matches.length > 0) {
@@ -724,18 +781,20 @@ function scanByProject(inputDir) {
 
   for (const file of allFiles) {
     const rel = path.relative(inputDir, file).replace(/\\/g, '/');
-    sources[rel] = fs.readFileSync(file, 'utf8');
+    const aliasedRel = aliasRelativePath(rel);
+    sources[aliasedRel] = fs.readFileSync(file, 'utf8');
     const parts = rel.split('/');
-    const projectName = parts.length > 1 ? parts[0] : '(root)';
+    const originalProjectName = parts.length > 1 ? parts[0] : '(root)';
+    const projectName = aliasProjectName(originalProjectName);
     if (!groups[projectName]) groups[projectName] = [];
-    groups[projectName].push(file);
+    groups[projectName].push({ abs: file, rel: aliasedRel });
   }
 
   const projects = {};
   for (const [name, files] of Object.entries(groups)) {
     projects[name] = {
       filesScanned: files.length,
-      plugins: scanFiles(files, inputDir),
+      plugins: scanFiles(files),
     };
   }
   return { allFiles, projects, sources };
@@ -1090,6 +1149,35 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .popover-row{display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;font-size:13px;transition:background .1s;color:var(--text)}
 .popover-row:hover{background:var(--bg)}
 .popover-row.current{background:var(--bg);font-weight:600}
+.hdr-actions{display:flex;align-items:center;gap:8px}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;transition:border-color .15s,background .15s,transform .15s}
+.icon-btn:hover{border-color:var(--accent);background:var(--hover)}
+.icon-btn:focus-visible{outline:none;box-shadow:0 0 0 3px var(--focus-ring)}
+.icon-btn:active{transform:translateY(1px)}
+.settings-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(15,23,42,.44);backdrop-filter:blur(6px);z-index:1200}
+.settings-modal.open{display:flex}
+.settings-dialog{width:min(560px,100%);background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:0 24px 80px rgba(15,23,42,.18);overflow:hidden}
+html.dark .settings-dialog{box-shadow:0 24px 80px rgba(0,0,0,.45)}
+.settings-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:20px 22px 14px;border-bottom:1px solid var(--border)}
+.settings-title{font-size:18px;font-weight:700;line-height:1.2}
+.settings-subtitle{margin-top:6px;font-size:13px;line-height:1.45;color:var(--muted)}
+.settings-close{font-size:18px}
+.settings-body{padding:20px 22px 22px;display:grid;gap:14px}
+.settings-label{display:grid;gap:8px;font-size:13px;font-weight:600;color:var(--text)}
+.settings-input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text);font:inherit}
+.settings-input::placeholder{color:var(--muted)}
+.settings-input:focus-visible{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--focus-ring)}
+.settings-hint{font-size:12px;line-height:1.5;color:var(--muted)}
+.settings-status{min-height:20px;font-size:12px;line-height:1.45;color:var(--muted)}
+.settings-status.error{color:#b91c1c}
+.settings-status.success{color:#0f766e}
+.settings-actions{display:flex;justify-content:flex-end;gap:10px}
+.settings-btn{display:inline-flex;align-items:center;justify-content:center;min-width:112px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);font:inherit;font-weight:600;cursor:pointer;transition:border-color .15s,background .15s}
+.settings-btn:hover{border-color:var(--accent);background:var(--hover)}
+.settings-btn:focus-visible{outline:none;box-shadow:0 0 0 3px var(--focus-ring)}
+.settings-btn--primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.settings-btn--primary:hover{filter:brightness(1.03)}
+.settings-note{padding:10px 12px;border-radius:12px;background:var(--bg);border:1px solid var(--border);font-size:12px;line-height:1.5;color:var(--muted)}
 
 .empty-state{padding:32px;text-align:center;color:var(--muted)}
 </style>
@@ -1104,7 +1192,10 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
       </div>
       <div class="hdr-right">
         <span class="hdr-meta" id="hdr-meta"></span>
-        <button class="theme-btn" id="theme-btn" title="Переключить тему" aria-label="Переключить тему">🌙</button>
+        <div class="hdr-actions">
+          <button class="icon-btn" id="settings-btn" type="button" title="Настройки" aria-label="Настройки">⚙</button>
+          <button class="icon-btn" id="theme-btn" type="button" title="Переключить тему" aria-label="Переключить тему">🌙</button>
+        </div>
       </div>
     </header>
     <div class="view-toggle">
@@ -1179,6 +1270,30 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
       </table>
     </div>
   </div>
+  <div class="settings-modal" id="settings-modal" aria-hidden="true">
+    <div class="settings-dialog" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+      <div class="settings-head">
+        <div>
+          <div class="settings-title" id="settings-title">Настройки отчёта</div>
+          <div class="settings-subtitle">Подключите внешний JSON, чтобы подставлять реальные названия проектов поверх алиасов.</div>
+        </div>
+        <button class="icon-btn settings-close" id="settings-close-btn" type="button" title="Закрыть окно" aria-label="Закрыть окно">✕</button>
+      </div>
+      <div class="settings-body">
+        <label class="settings-label" for="project-map-url-input">
+          URL JSON с названиями проектов
+          <input class="settings-input" id="project-map-url-input" type="url" inputmode="url" placeholder="https://example.com/project-names.json" />
+        </label>
+        <div class="settings-hint">Поддерживаются оба варианта: <code>project-001 → Реальное имя</code> и <code>Реальное имя → project-001</code>. Можно использовать объект целиком или поле <code>projects</code>.</div>
+        <div class="settings-note">URL сохраняется только локально в браузере через <code>localStorage</code> для этого отчёта.</div>
+        <div class="settings-status" id="settings-status"></div>
+        <div class="settings-actions">
+          <button class="settings-btn" id="settings-clear-btn" type="button">Очистить</button>
+          <button class="settings-btn settings-btn--primary" id="settings-save-btn" type="button">Сохранить</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div id="files-section" class="files-section">
     <div class="files-proj-tabs" id="files-proj-tabs"></div>
     <div class="files-tbl-wrap">
@@ -1220,6 +1335,7 @@ const COMPLEXITY_CYCLE = ['trivial','low','medium','high','n/a'];
 const LS_KEY = 'plugin-audit-priorities';
 const LS_COMPLEXITY_KEY = 'plugin-audit-complexities';
 const LS_THEME_KEY = 'plugin-audit-theme';
+const LS_PROJECT_LABELS_URL_KEY = 'plugin-audit-project-labels-url';
 
 let projSel = new Set();
 let filters = new Set();
@@ -1238,6 +1354,9 @@ let overrides = {};
 let complexityOverrides = {};
 let searchQuery = '';
 let popover = { id: null, el: null };
+let settingsState = { open: false };
+let projectLabelsUrl = '';
+let projectLabels = {};
 let expandAll = false;
 let projNone = false;
 let filtersNone = false;
@@ -1264,6 +1383,139 @@ function toggleTheme() {
   const isDark = document.documentElement.classList.toggle('dark');
   try { localStorage.setItem(LS_THEME_KEY, isDark ? 'dark' : 'light'); } catch {}
   document.getElementById('theme-btn').textContent = isDark ? '☀️' : '🌙';
+}
+
+function extractProjectLabelSource(raw) {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
+  if (raw.projects && typeof raw.projects === 'object' && !Array.isArray(raw.projects)) return raw.projects;
+  if (raw.labels && typeof raw.labels === 'object' && !Array.isArray(raw.labels)) return raw.labels;
+  if (raw.aliases && typeof raw.aliases === 'object' && !Array.isArray(raw.aliases)) return raw.aliases;
+  return raw;
+}
+
+function normalizeProjectLabels(raw) {
+  const source = extractProjectLabelSource(raw);
+  const knownProjects = new Set(Object.keys(DATA.projects || {}));
+  const normalized = {};
+  for (const [left, right] of Object.entries(source)) {
+    const a = String(left ?? '').trim();
+    const b = String(right ?? '').trim();
+    if (!a || !b) continue;
+    if (knownProjects.has(a)) normalized[a] = b;
+    else if (knownProjects.has(b)) normalized[b] = a;
+  }
+  return normalized;
+}
+
+function getProjectDisplayName(projectKey) {
+  return projectLabels[projectKey] || projectKey;
+}
+
+function getProjectDisplayLabel(projectKey) {
+  const name = getProjectDisplayName(projectKey);
+  return name === projectKey ? projectKey : name;
+}
+
+function refreshProjectNameViews() {
+  renderProjSel();
+  renderFilesProjTabs();
+  renderSourcesProjTabs();
+  renderSourcesList();
+  renderSourcesContent();
+  renderBody();
+}
+
+function setSettingsStatus(message = '', tone = '') {
+  const el = document.getElementById('settings-status');
+  if (!el) return;
+  el.textContent = message;
+  el.className = 'settings-status' + (tone ? ' ' + tone : '');
+}
+
+function openSettingsModal() {
+  closeOpenPanels();
+  settingsState.open = true;
+  const modal = document.getElementById('settings-modal');
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  const input = document.getElementById('project-map-url-input');
+  input.value = projectLabelsUrl;
+  setSettingsStatus(projectLabelsUrl ? 'Текущий URL сохранён локально. Можно заменить его и перезагрузить названия.' : '', projectLabelsUrl ? 'success' : '');
+  setTimeout(() => input.focus(), 0);
+}
+
+function closeSettingsModal() {
+  settingsState.open = false;
+  const modal = document.getElementById('settings-modal');
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+}
+
+async function loadProjectLabelsFromUrl(url, { silent = false } = {}) {
+  const normalizedUrl = String(url ?? '').trim();
+  if (!normalizedUrl) {
+    projectLabels = {};
+    if (!silent) setSettingsStatus('Внешний JSON отключён. Показываются алиасы из отчёта.', '');
+    refreshProjectNameViews();
+    return true;
+  }
+
+  try {
+    if (!silent) setSettingsStatus('Загружаю JSON...', '');
+    const response = await fetch(normalizedUrl, { cache: 'no-store' });
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    const raw = await response.json();
+    const nextLabels = normalizeProjectLabels(raw);
+    projectLabels = nextLabels;
+    if (!silent) {
+      const count = Object.keys(nextLabels).length;
+      setSettingsStatus(count > 0 ? 'Названия обновлены: ' + count + ' проект(ов).' : 'JSON загружен, но совпадающих проектов не найдено.', count > 0 ? 'success' : '');
+    }
+    refreshProjectNameViews();
+    return true;
+  } catch (error) {
+    projectLabels = {};
+    refreshProjectNameViews();
+    if (!silent) setSettingsStatus('Не удалось загрузить JSON: ' + (error instanceof Error ? error.message : String(error)), 'error');
+    return false;
+  }
+}
+
+function initSettingsModal() {
+  const modal = document.getElementById('settings-modal');
+  const input = document.getElementById('project-map-url-input');
+  const openBtn = document.getElementById('settings-btn');
+  const closeBtn = document.getElementById('settings-close-btn');
+  const saveBtn = document.getElementById('settings-save-btn');
+  const clearBtn = document.getElementById('settings-clear-btn');
+
+  openBtn.onclick = () => openSettingsModal();
+  closeBtn.onclick = () => closeSettingsModal();
+  modal.onclick = e => {
+    if (e.target === modal) closeSettingsModal();
+  };
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && settingsState.open) closeSettingsModal();
+  });
+
+  saveBtn.onclick = async () => {
+    const nextUrl = String(input.value || '').trim();
+    const ok = await loadProjectLabelsFromUrl(nextUrl);
+    if (!ok) return;
+    projectLabelsUrl = nextUrl;
+    try {
+      if (projectLabelsUrl) localStorage.setItem(LS_PROJECT_LABELS_URL_KEY, projectLabelsUrl);
+      else localStorage.removeItem(LS_PROJECT_LABELS_URL_KEY);
+    } catch {}
+  };
+
+  clearBtn.onclick = async () => {
+    input.value = '';
+    projectLabelsUrl = '';
+    try { localStorage.removeItem(LS_PROJECT_LABELS_URL_KEY); } catch {}
+    await loadProjectLabelsFromUrl('');
+  };
 }
 
 function getPlugins(keys) {
@@ -1388,7 +1640,7 @@ function renderFilesProjTabs() {
   const projects = Object.keys(DATA.projects);
   const container = document.getElementById('files-proj-tabs');
   container.innerHTML = projects.map(key =>
-    \`<button class="fptab\${filesProjKey === key ? ' active' : ''}" data-proj="\${escAttr(key)}">\${escHtml(key)}</button>\`
+    \`<button class="fptab\${filesProjKey === key ? ' active' : ''}" data-proj="\${escAttr(key)}">\${escHtml(getProjectDisplayLabel(key))}</button>\`
   ).join('');
   container.querySelectorAll('.fptab').forEach(btn => {
     btn.onclick = () => {
@@ -1575,7 +1827,7 @@ function renderSourcesProjTabs() {
   const projects = Object.keys(DATA.projects);
   const container = document.getElementById('sources-proj-tabs');
   container.innerHTML = projects.map(key =>
-    '<button class="fptab' + (sourceProjKey === key ? ' active' : '') + '" data-proj="' + escAttr(key) + '">' + escHtml(key) + '</button>'
+    '<button class="fptab' + (sourceProjKey === key ? ' active' : '') + '" data-proj="' + escAttr(key) + '">' + escHtml(getProjectDisplayLabel(key)) + '</button>'
   ).join('');
   container.querySelectorAll('.fptab').forEach(btn => {
     btn.onclick = () => {
@@ -1685,9 +1937,13 @@ function init() {
   loadTheme();
   loadOverrides();
   loadComplexityOverrides();
+  projectLabelsUrl = (() => {
+    try { return localStorage.getItem(LS_PROJECT_LABELS_URL_KEY) || ''; } catch { return ''; }
+  })();
   const isDark = document.documentElement.classList.contains('dark');
   document.getElementById('theme-btn').textContent = isDark ? '☀️' : '🌙';
   document.getElementById('theme-btn').onclick = toggleTheme;
+  initSettingsModal();
   ['proj-panel', 'priority-panel', 'complexity-panel', 'files-plugin-panel', 'export-panel'].forEach(id => {
     const panel = document.getElementById(id);
     if (panel) panel.addEventListener('click', e => e.stopPropagation());
@@ -1696,6 +1952,7 @@ function init() {
   renderAll();
   initPopover();
   initCxPopover();
+  if (projectLabelsUrl) loadProjectLabelsFromUrl(projectLabelsUrl, { silent: true });
   document.querySelectorAll('.vbtn').forEach(b => {
     b.onclick = () => switchView(b.dataset.view);
   });
@@ -1720,7 +1977,7 @@ function renderProjSel() {
     const allSel = projSel.size === 0 && !projNone;
     if (projNone) { triggerLabel.textContent = 'Ничего (0)'; return; }
     if (allSel) triggerLabel.textContent = \`Все (\${projects.length})\`;
-    else if (projSel.size === 1) triggerLabel.textContent = [...projSel][0];
+    else if (projSel.size === 1) triggerLabel.textContent = getProjectDisplayLabel([...projSel][0]);
     else triggerLabel.textContent = \`Выбрано: \${projSel.size}\`;
   }
 
@@ -1729,7 +1986,7 @@ function renderProjSel() {
     panel.innerHTML = [
       \`<label class="proj-option all-option"><input type="checkbox" id="po-all" \${allSel ? 'checked' : ''}> Все (\${projects.length})</label>\`,
       ...projects.map(p =>
-        \`<label class="proj-option"><input type="checkbox" data-proj="\${escAttr(p)}" \${(allSel || projSel.has(p)) ? 'checked' : ''}> \${escHtml(p)}</label>\`
+        \`<label class="proj-option"><input type="checkbox" data-proj="\${escAttr(p)}" \${(allSel || projSel.has(p)) ? 'checked' : ''}> \${escHtml(getProjectDisplayLabel(p))}</label>\`
       )
     ].join('');
     updateTriggerLabel();
@@ -2101,7 +2358,7 @@ function renderBody() {
             <div class="d-label">Проекты (\${projectUsageList.length})</div>
             <div>\${projectUsageList.map(item => \`
               <div class="proj-usage-row">
-                <div class="pats"><span class="pat-chip"><span class="pcl">\${escHtml(item.project)}</span><span class="pcc">\${item.matches} совпадений, \${item.filesCount} файлов</span></span></div>
+                <div class="pats"><span class="pat-chip"><span class="pcl">\${escHtml(getProjectDisplayLabel(item.project))}</span><span class="pcc">\${item.matches} совпадений, \${item.filesCount} файлов</span></span></div>
                 <div class="files-txt">\${item.files.map(file => {
                   const short = file.startsWith(item.project + '/') ? file.slice(item.project.length + 1) : file;
                   return \`<button type="button" class="file-jump" data-file="\${escAttr(file)}">\${escHtml(short)}</button>\`;
