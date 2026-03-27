@@ -630,6 +630,28 @@ function scanByProject(inputDir) {
   return { allFiles, projects, sources };
 }
 
+function aggregatePlugins(projects) {
+  const merged = new Map();
+  for (const project of Object.values(projects)) {
+    for (const p of (project.plugins || [])) {
+      if (!merged.has(p.id)) {
+        merged.set(p.id, {
+          id: p.id,
+          order: p.order,
+          lightning: p.lightning,
+          priority: p.priority,
+          complexity: p.complexity,
+          recommendation: p.recommendation,
+          totalMatches: 0,
+        });
+      }
+      const row = merged.get(p.id);
+      row.totalMatches += Number(p.totalMatches || 0);
+    }
+  }
+  return [...merged.values()].sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+}
+
 // ---------------------------------------------------------------------------
 // Render: Markdown
 // ---------------------------------------------------------------------------
@@ -638,57 +660,18 @@ function renderMarkdown(projects, generatedDate) {
   const now = generatedDate.slice(0, 10);
   const totalFiles = Object.values(projects).reduce((s, p) => s + p.filesScanned, 0);
   const projectCount = Object.keys(projects).length;
-
-  // Use first project for the main report (or merged if only one)
-  const firstProject = Object.values(projects)[0];
-  const results = firstProject?.plugins ?? [];
+  const results = aggregatePlugins(projects);
 
   let md = `# Plugin Usage Audit\n\n`;
   md += `Generated: ${now}  \n`;
   md += `Files scanned: ${totalFiles} CSS files across ${projectCount} project(s)  \n`;
   md += `Input dir: \`${INPUT_DIR}\`\n\n`;
   md += `---\n\n`;
-
+  md += `## Summary (All Projects)\n\n`;
+  md += `| Order | Plugin | Matches | Lightning CSS | Priority | Complexity |\n`;
+  md += `|---|---|---:|---|---|---|\n`;
   for (const r of results) {
-    const statusIcon = r.totalMatches === 0 ? '⚪' :
-      r.lightning.startsWith('yes') ? '🟢' :
-      r.lightning.startsWith('none') ? '🔴' : '🟡';
-
-    md += `## ${statusIcon} ${r.id} (order: ${r.order})\n\n`;
-    md += `**Lightning CSS:** ${r.lightning}  \n`;
-    md += `**Priority:** ${r.priority}  \n`;
-    md += `**Recommendation:** ${r.recommendation}  \n`;
-    md += `**Total matches:** ${r.totalMatches}\n\n`;
-
-    if (r.totalMatches === 0) {
-      md += `> ⚠️ Not found in any file — candidate for removal / out of scope\n\n`;
-    } else {
-      const patWithHits = r.patterns.filter(p => p.count > 0);
-      md += `| Pattern | Count | Examples |\n`;
-      md += `|---|---|---|\n`;
-      for (const p of patWithHits) {
-        const exStr = p.examples.map(e => `\`${e.slice(0, 60)}\``).join(', ');
-        md += `| ${p.label} | ${p.count} | ${exStr} |\n`;
-      }
-      md += `\n`;
-
-      const allFiles = [...new Set(patWithHits.flatMap(p => p.files))].sort();
-      if (allFiles.length > 0) {
-        md += `Files: ${allFiles.join(', ')}\n\n`;
-      }
-    }
-
-    md += `---\n\n`;
-  }
-
-  md += `## Summary\n\n`;
-  md += `| Order | Plugin | Matches | Lightning CSS | Priority | Recommendation |\n`;
-  md += `|---|---|---|---|---|---|\n`;
-  for (const r of results) {
-    const icon = r.totalMatches === 0 ? '⚪ 0' : `**${r.totalMatches}**`;
-    const lcs = r.lightning.startsWith('yes') ? '✅' :
-      r.lightning.startsWith('none') ? '❌' : '⚠️';
-    md += `| ${r.order} | ${r.id} | ${icon} | ${lcs} | ${r.priority} | ${r.recommendation} |\n`;
+    md += `| ${r.order} | ${r.id} | ${r.totalMatches} | ${r.lightning} | ${r.priority} | ${r.complexity} |\n`;
   }
 
   return md;
@@ -741,6 +724,7 @@ h1{font-size:22px;font-weight:800;letter-spacing:-.3px;line-height:1.2}
 .hdr-sub{font-size:12px;color:var(--muted)}
 .hdr-meta{font-size:11px;color:var(--muted);white-space:nowrap}
 .hdr-right{display:flex;align-items:center;gap:10px}
+.export-option{width:100%;border:0;background:transparent;text-align:left}
 .theme-btn{width:32px;height:32px;border:1px solid var(--border);border-radius:6px;background:var(--surface);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color .15s;line-height:1}
 .theme-btn:hover{border-color:var(--accent)}
 .theme-btn:focus-visible,.proj-trigger:focus-visible,.vbtn:focus-visible,.fptab:focus-visible,.toggle-zero input:focus-visible{outline:none;box-shadow:0 0 0 3px var(--focus-ring)}
@@ -761,12 +745,13 @@ h1{font-size:22px;font-weight:800;letter-spacing:-.3px;line-height:1.2}
 .proj-panel{position:absolute;top:calc(100% + 4px);left:0;min-width:200px;max-width:320px;background:var(--surface);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:100;overflow:hidden;display:none}
 html.dark .proj-panel{box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .proj-panel.open{display:block}
+#export-panel{left:auto;right:0;min-width:170px;max-width:220px}
 .proj-option{display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;font-size:13px;transition:background .1s;color:var(--text)}
 .proj-option:hover{background:var(--hover)}
 .proj-option input[type="checkbox"]{cursor:pointer;accent-color:var(--accent)}
 .proj-option.all-option{border-bottom:1px solid var(--border);font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
 
-.ctrl-group--filters{display:grid;grid-template-columns:minmax(220px,280px) minmax(220px,280px) minmax(220px,280px) auto;align-items:end;gap:10px 12px}
+.ctrl-group--filters{display:grid;grid-template-columns:minmax(220px,280px) minmax(220px,280px) minmax(220px,280px) auto auto;align-items:end;gap:10px 12px}
 .select-field{display:flex;flex-direction:column;gap:4px;min-width:0}
 .select-field .ctrl-label{min-width:0}
 .select-field .proj-dropdown{width:100%}
@@ -774,6 +759,10 @@ html.dark .proj-panel{box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .select-meta{font-size:11px;color:var(--muted);line-height:1.25}
 .toggle-zero{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer;white-space:nowrap;height:36px;align-self:end;padding-left:4px}
 .toggle-zero input{cursor:pointer;margin:0;width:18px;height:18px;flex:0 0 18px}
+.plugins-export-wrap{justify-self:end;align-self:end}
+#plugins-export-dropdown .proj-trigger{max-width:none;min-width:112px;background:var(--accent);border-color:var(--accent);color:#fff}
+#plugins-export-dropdown .proj-trigger .trigger-arrow{color:rgba(255,255,255,.9)}
+#plugins-export-dropdown .proj-trigger:hover{filter:brightness(1.06)}
 .search-input{padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-size:13px;width:180px;transition:border-color .15s}
 .search-input:focus{outline:none;border-color:var(--accent)}
 .search-input::placeholder{color:var(--muted)}
@@ -791,6 +780,7 @@ html.dark .proj-panel{box-shadow:0 8px 24px rgba(0,0,0,.4)}
   .ctrl-group--filters{grid-template-columns:1fr 1fr}
   .select-field--project{grid-column:1 / -1}
   .toggle-zero{grid-column:1 / -1;padding-left:0}
+  .plugins-export-wrap{grid-column:1 / -1;justify-self:end}
 }
 @media (max-width: 640px){
   #app{padding:12px 10px}
@@ -798,6 +788,8 @@ html.dark .proj-panel{box-shadow:0 8px 24px rgba(0,0,0,.4)}
   .controls{gap:8px}
   .ctrl-group--filters{grid-template-columns:1fr}
   .proj-trigger{max-width:100%}
+  .plugins-export-wrap{justify-self:stretch}
+  #plugins-export-dropdown .proj-trigger{width:100%}
 }
 col.cf-file{width:auto}
 col.cf-matches{width:124px}
@@ -901,9 +893,9 @@ thead th.sorted .sort-arrow{opacity:1}
 #plugins-table tbody tr.pr.open td:first-child,
 #plugins-table tbody tr.pr.open td:nth-child(2){background:var(--hover)}
 
-tbody tr.pr{cursor:pointer;transition:background .1s}
-tbody tr.pr:hover{background:var(--hover)}
-tbody tr.pr.open{background:var(--hover)}
+tbody tr.pr{cursor:pointer}
+tbody tr.pr:hover td{background:var(--hover)}
+tbody tr.pr.open td{background:var(--hover)}
 tbody tr.pr td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:baseline}
 tbody tr.dr td{padding:0;border-bottom:1px solid var(--border)}
 tbody tr.hidden{display:none}
@@ -1037,6 +1029,13 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
       <label class="toggle-zero">
         <input type="checkbox" id="hide-zero"> Скрыть нулевые
       </label>
+      <div class="proj-dropdown plugins-export-wrap" id="plugins-export-dropdown">
+        <button class="proj-trigger" id="export-trigger" type="button" title="Скачать отчёт" aria-label="Скачать отчёт">
+          <span id="export-trigger-label">Экспорт</span>
+          <span class="trigger-arrow">▾</span>
+        </button>
+        <div class="proj-panel export-panel" id="export-panel"></div>
+      </div>
     </div>
     </div>
   </div>
@@ -1248,7 +1247,7 @@ function buildFileIndex(plugins) {
 }
 
 function closeOpenPanels(exceptId = '') {
-  ['proj-panel', 'priority-panel', 'complexity-panel', 'files-plugin-panel'].forEach(id => {
+  ['proj-panel', 'priority-panel', 'complexity-panel', 'files-plugin-panel', 'export-panel'].forEach(id => {
     if (id !== exceptId) document.getElementById(id)?.classList.remove('open');
   });
 }
@@ -1506,13 +1505,14 @@ function openSourceLine(filePath, lineNo) {
 }
 
 function init() {
+  initExportButtons();
   loadTheme();
   loadOverrides();
   loadComplexityOverrides();
   const isDark = document.documentElement.classList.contains('dark');
   document.getElementById('theme-btn').textContent = isDark ? '☀️' : '🌙';
   document.getElementById('theme-btn').onclick = toggleTheme;
-  ['proj-panel', 'priority-panel', 'complexity-panel', 'files-plugin-panel'].forEach(id => {
+  ['proj-panel', 'priority-panel', 'complexity-panel', 'files-plugin-panel', 'export-panel'].forEach(id => {
     const panel = document.getElementById(id);
     if (panel) panel.addEventListener('click', e => e.stopPropagation());
   });
@@ -2069,6 +2069,91 @@ function highlightCssLine(line) {
   return out.replace(/%%TOK(\\d+)%%/g, (m, idx) => tokens[Number(idx)] ?? m);
 }
 
+function downloadTextFile(fileName, content, mimeType) {
+  const blob = new Blob([content], { type: mimeType + ';charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+function buildUnifiedPluginsForExport() {
+  const merged = new Map();
+  const projects = DATA.projects || {};
+  Object.values(projects).forEach(project => {
+    (project.plugins || []).forEach(p => {
+      if (!merged.has(p.id)) {
+        merged.set(p.id, {
+          id: p.id,
+          order: p.order,
+          lightning: p.lightning,
+          priority: p.priority,
+          complexity: p.complexity,
+          totalMatches: 0,
+        });
+      }
+      const row = merged.get(p.id);
+      row.totalMatches += Number(p.totalMatches || 0);
+    });
+  });
+  return [...merged.values()].sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+}
+
+function buildMarkdownReport() {
+  const projects = DATA.projects || {};
+  const projectKeys = Object.keys(projects);
+  const generated = DATA.generated ? String(DATA.generated) : new Date().toISOString();
+  const day = generated.slice(0, 10);
+  const totalFiles = projectKeys.reduce((sum, key) => sum + (projects[key]?.filesScanned || 0), 0);
+  const plugins = buildUnifiedPluginsForExport();
+  let md = '# Plugin Usage Audit\\n\\n';
+  md += 'Generated: ' + day + '  \\n';
+  md += 'Files scanned: ' + totalFiles + ' CSS files across ' + projectKeys.length + ' project(s)\\n\\n';
+  md += '## Summary (All Projects)\\n\\n';
+  md += '| Order | Plugin | Matches | Lightning | Priority | Complexity |\\n';
+  md += '|---|---|---:|---|---|---|\\n';
+  plugins.forEach(p => {
+    md += '| ' + (p.order ?? '') + ' | ' + p.id + ' | ' + (p.totalMatches ?? 0) + ' | ' + (p.lightning || '') + ' | ' + (p.priority || '') + ' | ' + (p.complexity || '') + ' |\\n';
+  });
+  return md;
+}
+
+function initExportButtons() {
+  const day = (DATA.generated ? String(DATA.generated) : new Date().toISOString()).slice(0, 10);
+  const panel = document.getElementById('export-panel');
+  const trigger = document.getElementById('export-trigger');
+  if (!panel || !trigger) return;
+
+  panel.innerHTML = [
+    '<button type="button" class="proj-option export-option" data-format="md">Markdown (.md)</button>',
+    '<button type="button" class="proj-option export-option" data-format="json">JSON (.json)</button>',
+  ].join('');
+
+  panel.querySelectorAll('[data-format]').forEach(btn => {
+    btn.onclick = () => {
+      const format = btn.dataset.format;
+      if (format === 'md') {
+        downloadTextFile('plugin-audit-' + day + '.md', buildMarkdownReport(), 'text/markdown');
+      } else if (format === 'json') {
+        const json = JSON.stringify({ generated: DATA.generated, plugins: buildUnifiedPluginsForExport() }, null, 2);
+        downloadTextFile('plugin-audit-' + day + '.json', json, 'application/json');
+      }
+      panel.classList.remove('open');
+    };
+  });
+
+  trigger.onclick = e => {
+    e.stopPropagation();
+    const willOpen = !panel.classList.contains('open');
+    closeOpenPanels('export-panel');
+    panel.classList.toggle('open', willOpen);
+  };
+}
+
 function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
@@ -2111,7 +2196,7 @@ if (FORMAT === 'html') {
   console.log(`HTML report written to: ${out}`);
 
 } else if (FORMAT === 'json') {
-  const json = JSON.stringify({ generated: generatedDate, projects }, null, 2);
+  const json = JSON.stringify({ generated: generatedDate, plugins: aggregatePlugins(projects) }, null, 2);
   const out = OUTPUT_PATH ?? path.join(DEFAULT_REPORT_DIR, 'plugin-usage.json');
   fs.mkdirSync(path.dirname(out), { recursive: true });
   fs.writeFileSync(out, json, 'utf8');
@@ -2133,7 +2218,7 @@ if (FORMAT === 'html') {
   const htmlPath = path.join(DEFAULT_REPORT_DIR, 'plugin-usage.html');
 
   fs.writeFileSync(mdPath,   renderMarkdown(projects, generatedDate), 'utf8');
-  fs.writeFileSync(jsonPath, JSON.stringify({ generated: generatedDate, projects }, null, 2), 'utf8');
+  fs.writeFileSync(jsonPath, JSON.stringify({ generated: generatedDate, plugins: aggregatePlugins(projects) }, null, 2), 'utf8');
   fs.writeFileSync(htmlPath, renderHtml(projects, sources, generatedDate), 'utf8');
 
   // Console summary
