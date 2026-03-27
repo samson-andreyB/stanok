@@ -445,6 +445,16 @@ function renderHtml(projects, generatedDate) {
   --scope-bg: #f1f5f9;    --scope: #64748b;
   --removed-bg: #f1f5f9;  --removed: #94a3b8;
 }
+html.dark {
+  --bg: #0f172a; --surface: #1e293b; --border: #334155; --text: #e2e8f0;
+  --muted: #94a3b8; --accent: #60a5fa;
+  --critical-bg: #450a0a; --critical: #fca5a5;
+  --high-bg: #431407;     --high: #fdba74;
+  --medium-bg: #422006;   --medium: #fcd34d;
+  --native-bg: #052e16;   --native: #86efac;
+  --scope-bg: #1e293b;    --scope: #94a3b8;
+  --removed-bg: #1e293b;  --removed: #64748b;
+}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font:14px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text)}
 #app{max-width:1200px;margin:0 auto;padding:24px 16px}
@@ -452,27 +462,56 @@ body{font:14px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgr
 header{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
 h1{font-size:18px;font-weight:700}
 .hdr-meta{color:var(--muted);font-size:12px;margin-left:auto}
-select{padding:5px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);font-size:13px;cursor:pointer}
+.theme-btn{width:32px;height:32px;border:1px solid var(--border);border-radius:6px;background:var(--surface);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color .15s;line-height:1}
+.theme-btn:hover{border-color:var(--accent)}
+.proj-dropdown{position:relative}
+.proj-trigger{padding:5px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;max-width:240px;transition:border-color .15s;color:var(--text)}
+.proj-trigger:hover{border-color:var(--accent)}
+.proj-trigger .trigger-arrow{margin-left:auto;color:var(--muted);font-size:10px}
+.proj-panel{position:absolute;top:calc(100% + 4px);left:0;min-width:200px;max-width:320px;background:var(--surface);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:100;overflow:hidden;display:none}
+html.dark .proj-panel{box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.proj-panel.open{display:block}
+.proj-option{display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;font-size:13px;transition:background .1s;color:var(--text)}
+.proj-option:hover{background:var(--bg)}
+.proj-option input[type="checkbox"]{cursor:pointer;accent-color:var(--accent)}
+.proj-option.all-option{border-bottom:1px solid var(--border);font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
 
-.controls{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.controls{display:flex;align-items:center;gap:12px;margin-bottom:4px;flex-wrap:wrap}
 .filter-tabs{display:flex;gap:4px;flex-wrap:wrap}
-.fbtn{padding:4px 12px;border:1px solid var(--border);border-radius:20px;background:var(--surface);cursor:pointer;font-size:12px;transition:all .1s;white-space:nowrap}
+.fbtn{padding:4px 12px;border:1px solid var(--border);border-radius:20px;background:var(--surface);color:var(--text);cursor:pointer;font-size:12px;transition:all .1s;white-space:nowrap}
 .fbtn:hover{border-color:var(--accent)}
 .fbtn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 .toggle-zero{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);cursor:pointer;margin-left:auto;white-space:nowrap}
 .toggle-zero input{cursor:pointer}
+.search-input{padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-size:13px;width:180px;transition:border-color .15s}
+.search-input:focus{outline:none;border-color:var(--accent)}
+.search-input::placeholder{color:var(--muted)}
+.expand-all-btn{padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--muted);font-size:12px;cursor:pointer;transition:border-color .15s,color .15s;white-space:nowrap}
+.expand-all-btn:hover{border-color:var(--accent);color:var(--text)}
+.filter-summary{font-size:11px;color:var(--muted);margin-bottom:10px;min-height:18px}
+.filter-summary a{color:var(--accent);cursor:pointer;text-decoration:none}
+.filter-summary a:hover{text-decoration:underline}
 
-.tbl-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
-table{width:100%;border-collapse:collapse}
-thead th{background:#f8fafc;padding:9px 12px;text-align:left;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;user-select:none}
+.tbl-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:auto;max-height:calc(100vh - 180px);scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.tbl-wrap::-webkit-scrollbar{width:6px;height:6px}
+.tbl-wrap::-webkit-scrollbar-track{background:transparent}
+.tbl-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.tbl-wrap::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+col.c-order{width:60px}
+col.c-plugin{width:auto}
+col.c-lightning{width:145px}
+col.c-priority{width:160px}
+col.c-matches{width:95px}
+thead th{position:sticky;top:0;z-index:10;background:var(--bg);padding:9px 12px;text-align:left;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;user-select:none}
 thead th:hover{color:var(--text)}
 thead th.sorted{color:var(--accent)}
 thead th .sort-arrow{margin-left:4px;opacity:.5}
 thead th.sorted .sort-arrow{opacity:1}
 
 tbody tr.pr{cursor:pointer;transition:background .1s}
-tbody tr.pr:hover{background:#f8fafc}
-tbody tr.pr.open{background:#f8fafc}
+tbody tr.pr:hover{background:var(--bg)}
+tbody tr.pr.open{background:var(--bg)}
 tbody tr.pr td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
 tbody tr.dr td{padding:0;border-bottom:1px solid var(--border)}
 tbody tr.hidden{display:none}
@@ -502,7 +541,7 @@ tbody tr.hidden{display:none}
 .matches{font-weight:600}
 .matches-zero{color:var(--muted);font-weight:400}
 
-.detail{padding:12px 16px 16px 38px;background:#fafbfc}
+.detail{padding:12px 16px 16px 38px;background:var(--bg)}
 .d-section{margin-bottom:10px}
 .d-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
 .pats{display:flex;gap:6px;flex-wrap:wrap}
@@ -512,8 +551,16 @@ tbody tr.hidden{display:none}
 .files-txt{font-size:12px;color:var(--muted);line-height:2}
 .files-txt code{background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:0 3px;font-family:'SFMono-Regular',Consolas,monospace;color:var(--text);font-size:11px}
 .exs{display:flex;gap:5px;flex-wrap:wrap}
-.ex-chip{background:#f1f5f9;border-radius:4px;padding:2px 6px;font-size:12px;font-family:'SFMono-Regular',Consolas,monospace}
+.ex-chip{background:var(--bg);border-radius:4px;padding:2px 6px;font-size:12px;font-family:'SFMono-Regular',Consolas,monospace}
 .rec-txt{font-size:12px;color:var(--muted);font-style:italic}
+.override-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--accent);margin-left:4px;vertical-align:middle}
+mark{background:#fef08a;color:inherit;border-radius:2px}
+html.dark mark{background:#854d0e;color:#fef9c3}
+.popover{position:fixed;background:var(--surface);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:1000;min-width:170px;overflow:hidden;visibility:hidden}
+html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.popover-row{display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;font-size:13px;transition:background .1s;color:var(--text)}
+.popover-row:hover{background:var(--bg)}
+.popover-row.current{background:var(--bg);font-weight:600}
 
 .empty-state{padding:32px;text-align:center;color:var(--muted)}
 </style>
@@ -522,8 +569,15 @@ tbody tr.hidden{display:none}
 <div id="app">
   <header>
     <h1>intcss Plugin Audit</h1>
-    <select id="proj-sel"></select>
+    <div class="proj-dropdown" id="proj-dropdown">
+      <button class="proj-trigger" id="proj-trigger">
+        <span id="proj-trigger-label">…</span>
+        <span class="trigger-arrow">▾</span>
+      </button>
+      <div class="proj-panel" id="proj-panel"></div>
+    </div>
     <span class="hdr-meta" id="hdr-meta"></span>
+    <button class="theme-btn" id="theme-btn" title="Переключить тему" aria-label="Переключить тему">🌙</button>
   </header>
   <div class="controls">
     <div class="filter-tabs" id="ftabs"></div>
@@ -531,8 +585,12 @@ tbody tr.hidden{display:none}
       <input type="checkbox" id="hide-zero"> Скрыть нулевые
     </label>
   </div>
+  <div class="filter-summary" id="filter-summary"></div>
   <div class="tbl-wrap">
     <table>
+      <colgroup>
+        <col class="c-order"><col class="c-plugin"><col class="c-lightning"><col class="c-priority"><col class="c-matches">
+      </colgroup>
       <thead id="thead"></thead>
       <tbody id="tbody"></tbody>
     </table>
@@ -550,14 +608,18 @@ const PRIORITY_WEIGHT = {critical:0,high:1,medium:2,native:3,'out-of-scope':4,re
 const LIGHTNING_LABEL = {yes:'✅ Native', none:'❌ None', partial:'⚠️ Partial'};
 
 const LS_KEY = 'plugin-audit-priorities';
+const LS_THEME_KEY = 'plugin-audit-theme';
 
-let proj = Object.keys(DATA.projects)[0] || '';
+let projSel = [Object.keys(DATA.projects)[0] || ''];
 let filter = 'all';
 let sortCol = 'order';
 let sortDir = 1;
 let hideZero = false;
 let expanded = new Set();
 let overrides = {};
+let searchQuery = '';
+let popover = { id: null, el: null };
+let expandAll = false;
 
 function loadOverrides() {
   try { overrides = JSON.parse(localStorage.getItem(LS_KEY) || '{}'); } catch { overrides = {}; }
@@ -566,8 +628,48 @@ function saveOverrides() {
   try { localStorage.setItem(LS_KEY, JSON.stringify(overrides)); } catch {}
 }
 
+function loadTheme() {
+  try { if (localStorage.getItem(LS_THEME_KEY) === 'dark') document.documentElement.classList.add('dark'); } catch {}
+}
+function toggleTheme() {
+  const isDark = document.documentElement.classList.toggle('dark');
+  try { localStorage.setItem(LS_THEME_KEY, isDark ? 'dark' : 'light'); } catch {}
+  document.getElementById('theme-btn').textContent = isDark ? '☀️' : '🌙';
+}
+
 function getPlugins() {
-  return DATA.projects[proj]?.plugins || [];
+  if (projSel.length === 0) return [];
+  if (projSel.length === 1) return DATA.projects[projSel[0]]?.plugins || [];
+  const merged = new Map();
+  for (const projectKey of projSel) {
+    const plugins = DATA.projects[projectKey]?.plugins || [];
+    for (const p of plugins) {
+      if (!merged.has(p.id)) {
+        merged.set(p.id, {
+          ...p,
+          patterns: p.patterns.map(pat => ({
+            ...pat, files: [...pat.files], examples: [...pat.examples]
+          }))
+        });
+      } else {
+        const m = merged.get(p.id);
+        m.totalMatches += p.totalMatches;
+        for (const pat of p.patterns) {
+          const ex = m.patterns.find(mp => mp.label === pat.label);
+          if (ex) {
+            ex.count += pat.count;
+            const fs = new Set([...ex.files, ...pat.files]);
+            ex.files = [...fs];
+            const es = new Set([...ex.examples, ...pat.examples]);
+            ex.examples = [...es].slice(0, 5);
+          } else {
+            m.patterns.push({ ...pat, files: [...pat.files], examples: [...pat.examples] });
+          }
+        }
+      }
+    }
+  }
+  return [...merged.values()];
 }
 
 function effectivePriority(plugin) {
@@ -575,9 +677,14 @@ function effectivePriority(plugin) {
 }
 
 function init() {
+  loadTheme();
   loadOverrides();
+  const isDark = document.documentElement.classList.contains('dark');
+  document.getElementById('theme-btn').textContent = isDark ? '☀️' : '🌙';
+  document.getElementById('theme-btn').onclick = toggleTheme;
   renderProjSel();
   renderAll();
+  initPopover();
 }
 
 function renderAll() {
@@ -588,22 +695,65 @@ function renderAll() {
 }
 
 function renderProjSel() {
-  const sel = document.getElementById('proj-sel');
-  sel.innerHTML = Object.keys(DATA.projects).map(p =>
-    \`<option value="\${p}" \${p === proj ? 'selected' : ''}>\${p}</option>\`
-  ).join('');
-  sel.onchange = e => { proj = e.target.value; expanded.clear(); renderAll(); };
+  const projects = Object.keys(DATA.projects);
+  const panel = document.getElementById('proj-panel');
+  const triggerLabel = document.getElementById('proj-trigger-label');
+
+  function updateTriggerLabel() {
+    const allSel = projSel.length === projects.length;
+    if (projSel.length === 0) triggerLabel.textContent = 'Нет проектов';
+    else if (allSel) triggerLabel.textContent = 'Все проекты';
+    else if (projSel.length === 1) triggerLabel.textContent = projSel[0];
+    else triggerLabel.textContent = \`\${projSel.length} проекта\`;
+  }
+
+  function renderPanel() {
+    const allSel = projSel.length === projects.length;
+    panel.innerHTML = [
+      \`<label class="proj-option all-option"><input type="checkbox" id="po-all" \${allSel ? 'checked' : ''}> Все проекты</label>\`,
+      ...projects.map(p =>
+        \`<label class="proj-option"><input type="checkbox" data-proj="\${escAttr(p)}" \${projSel.includes(p) ? 'checked' : ''}> \${escHtml(p)}</label>\`
+      )
+    ].join('');
+    updateTriggerLabel();
+    panel.querySelector('#po-all').onchange = e => {
+      projSel = e.target.checked ? [...projects] : [];
+      expanded.clear(); expandAll = false;
+      renderPanel(); renderAll();
+    };
+    panel.querySelectorAll('[data-proj]').forEach(cb => {
+      cb.onchange = () => {
+        const key = cb.dataset.proj;
+        if (cb.checked) { if (!projSel.includes(key)) projSel.push(key); }
+        else projSel = projSel.filter(k => k !== key);
+        expanded.clear(); expandAll = false;
+        updateTriggerLabel(); renderAll();
+      };
+    });
+  }
+
+  renderPanel();
+
+  document.getElementById('proj-trigger').onclick = e => {
+    e.stopPropagation();
+    panel.classList.toggle('open');
+  };
+  document.addEventListener('click', () => panel.classList.remove('open'));
 }
 
 function renderMeta() {
-  const d = DATA.projects[proj];
+  const total = projSel.reduce((s, k) => s + (DATA.projects[k]?.filesScanned ?? 0), 0);
   const date = DATA.generated ? DATA.generated.slice(0,10) : '';
-  document.getElementById('hdr-meta').textContent =
-    \`\${d?.filesScanned ?? 0} файлов · \${date}\`;
+  document.getElementById('hdr-meta').textContent = \`\${total} файлов · \${date}\`;
 }
 
 function renderFtabs() {
-  const plugins = getPlugins();
+  const allPlugins = getPlugins();
+  const plugins = allPlugins.filter(p => {
+    if (hideZero && p.totalMatches === 0) return false;
+    if (searchQuery && !p.id.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    return true;
+  });
   const counts = { all: plugins.length };
   for (const p of plugins) {
     const pr = effectivePriority(p);
@@ -625,16 +775,16 @@ function renderFtabs() {
 
 function renderHead() {
   const cols = [
-    {key:'order', label:'#'},
-    {key:'id', label:'Плагин'},
-    {key:'lightning', label:'Lightning CSS'},
-    {key:'priority', label:'Приоритет'},
-    {key:'matches', label:'Matches'},
+    {key:'order', label:'#', title:'Порядок в списке'},
+    {key:'id', label:'Плагин', title:'Идентификатор плагина'},
+    {key:'lightning', label:'Lightning CSS', title:'Поддержка в Lightning CSS: yes / partial / none'},
+    {key:'priority', label:'Приоритет', title:'Приоритет миграции (кликни на бейдж для изменения)'},
+    {key:'matches', label:'Matches', title:'Количество совпадений паттернов во всех файлах'},
   ];
   document.getElementById('thead').innerHTML = \`<tr>\${cols.map(c => {
     const sorted = sortCol === c.key;
     const arrow = sorted ? (sortDir > 0 ? '↑' : '↓') : '↕';
-    return \`<th class="\${sorted ? 'sorted' : ''}" data-col="\${c.key}">\${c.label}<span class="sort-arrow">\${arrow}</span></th>\`;
+    return \`<th class="\${sorted ? 'sorted' : ''}" data-col="\${c.key}" title="\${escAttr(c.title)}">\${c.label}<span class="sort-arrow">\${arrow}</span></th>\`;
   }).join('')}</tr>\`;
   document.getElementById('thead').querySelectorAll('th').forEach(th => {
     th.onclick = () => {
@@ -646,11 +796,15 @@ function renderHead() {
 }
 
 function renderBody() {
-  const plugins = getPlugins().filter(p => {
+  closePopover();
+  const allPlugins = getPlugins();
+  const plugins = allPlugins.filter(p => {
     if (hideZero && p.totalMatches === 0) return false;
     if (filter !== 'all' && effectivePriority(p) !== filter) return false;
+    if (searchQuery && !p.id.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     return true;
   });
+  renderFilterSummary(allPlugins.length, plugins.length);
 
   const sorted = [...plugins].sort((a, b) => {
     let av, bv;
@@ -668,6 +822,8 @@ function renderBody() {
   });
 
   const tbody = document.getElementById('tbody');
+  const wrap = document.querySelector('.tbl-wrap');
+  const savedScroll = wrap ? wrap.scrollTop : 0;
   if (sorted.length === 0) {
     tbody.innerHTML = \`<tr><td colspan="5"><div class="empty-state">Нет плагинов для выбранного фильтра</div></td></tr>\`;
     return;
@@ -710,16 +866,18 @@ function renderBody() {
       </td>
     </tr>\` : '';
 
+    const dotHtml = overrides[p.id] !== undefined ? '<span class="override-dot" title="Переопределено вручную"></span>' : '';
     return \`<tr class="pr\${isOpen ? ' open' : ''}" data-id="\${escAttr(p.id)}">
       <td><span class="exp-icon">▶</span> <span class="plugin-order">\${p.order}</span></td>
-      <td><span class="plugin-name">\${escHtml(p.id)}</span></td>
+      <td><span class="plugin-name">\${highlightMatch(p.id, searchQuery)}</span></td>
       <td><span class="badge l-\${lightKey}">\${LIGHTNING_LABEL[lightKey]}</span></td>
-      <td><span class="badge p-\${ep} pbadge" data-id="\${escAttr(p.id)}" title="Нажми, чтобы изменить">\${PRIORITY_LABEL[ep]}</span></td>
+      <td><span class="badge p-\${ep} pbadge" data-id="\${escAttr(p.id)}" title="Изменить приоритет">\${PRIORITY_LABEL[ep]}\${dotHtml}</span></td>
       <td><span class="\${p.totalMatches === 0 ? 'matches-zero' : 'matches'}">\${p.totalMatches}</span></td>
     </tr>\${detailHtml}\`;
   });
 
   tbody.innerHTML = rows.join('');
+  if (wrap) wrap.scrollTop = savedScroll;
 
   // Row click to expand
   tbody.querySelectorAll('tr.pr').forEach(tr => {
@@ -731,23 +889,103 @@ function renderBody() {
     };
   });
 
-  // Priority badge click
+  // Priority badge click → popover
   tbody.querySelectorAll('.pbadge').forEach(badge => {
     badge.onclick = e => {
       e.stopPropagation();
-      const id = badge.dataset.id;
-      const plugin = getPlugins().find(p => p.id === id);
-      if (!plugin) return;
-      const cur = effectivePriority(plugin);
-      const idx = PRIORITY_CYCLE.indexOf(cur);
-      const next = PRIORITY_CYCLE[(idx + 1) % PRIORITY_CYCLE.length];
-      if (next === plugin.priority) delete overrides[id];
-      else overrides[id] = next;
-      saveOverrides();
-      renderFtabs();
-      renderBody();
+      if (popover.id === badge.dataset.id) { closePopover(); return; }
+      openPopover(badge, badge.dataset.id);
     };
   });
+}
+
+function initPopover() {
+  const el = document.createElement('div');
+  el.className = 'popover';
+  el.id = 'priority-popover';
+  document.body.appendChild(el);
+  popover.el = el;
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopover(); });
+  document.addEventListener('click', e => {
+    if (popover.id && !e.target.closest('#priority-popover') && !e.target.closest('.pbadge')) closePopover();
+  });
+}
+
+function openPopover(badge, pluginId) {
+  const plugin = getPlugins().find(p => p.id === pluginId);
+  if (!plugin) return;
+  const cur = effectivePriority(plugin);
+  popover.el.innerHTML = PRIORITY_CYCLE.map(val =>
+    \`<div class="popover-row\${cur === val ? ' current' : ''}" data-val="\${val}">\${PRIORITY_LABEL[val]}</div>\`
+  ).join('');
+  popover.el.querySelectorAll('.popover-row').forEach(row => {
+    row.onclick = e => {
+      e.stopPropagation();
+      const next = row.dataset.val;
+      if (next === plugin.priority) delete overrides[pluginId];
+      else overrides[pluginId] = next;
+      saveOverrides();
+      closePopover();
+      renderFtabs(); renderBody();
+    };
+  });
+  popover.el.style.visibility = 'hidden';
+  popover.el.style.display = 'block';
+  const rect = badge.getBoundingClientRect();
+  const pw = popover.el.offsetWidth, ph = popover.el.offsetHeight;
+  let top = rect.bottom + 4, left = rect.left;
+  if (left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
+  if (top + ph > window.innerHeight - 8) top = rect.top - ph - 4;
+  popover.el.style.top = top + 'px';
+  popover.el.style.left = left + 'px';
+  popover.el.style.visibility = 'visible';
+  popover.id = pluginId;
+}
+
+function closePopover() {
+  if (popover.el) { popover.el.style.display = 'none'; popover.el.style.visibility = 'hidden'; }
+  popover.id = null;
+}
+
+function initExpandAll() {
+  const btn = document.getElementById('expand-all-btn');
+  btn.onclick = () => {
+    expandAll = !expandAll;
+    if (expandAll) { getPlugins().forEach(p => expanded.add(p.id)); btn.textContent = 'Свернуть все'; }
+    else { expanded.clear(); btn.textContent = 'Развернуть все'; }
+    renderBody();
+  };
+}
+
+function initSearch() {
+  const input = document.getElementById('search-input');
+  input.oninput = () => {
+    searchQuery = input.value.trim();
+    renderFtabs(); renderBody();
+  };
+}
+
+function renderFilterSummary(total, shown) {
+  const parts = [];
+  if (filter !== 'all') parts.push(\`фильтр: <b>\${filter}</b>\`);
+  if (searchQuery) parts.push(\`поиск: <b>\${escHtml(searchQuery)}</b>\`);
+  if (hideZero) parts.push('скрыты нулевые');
+  const el = document.getElementById('filter-summary');
+  if (parts.length === 0) { el.textContent = ''; return; }
+  el.innerHTML = \`Показано \${shown} из \${total} · \${parts.join(' · ')} · <a id="reset-filters">Сбросить</a>\`;
+  document.getElementById('reset-filters').onclick = () => {
+    filter = 'all'; searchQuery = ''; hideZero = false;
+    document.getElementById('search-input').value = '';
+    document.getElementById('hide-zero').checked = false;
+    renderFtabs(); renderBody();
+  };
+}
+
+function highlightMatch(text, query) {
+  if (!query) return escHtml(text);
+  const idx = text.toLowerCase().indexOf(query.toLowerCase());
+  if (idx === -1) return escHtml(text);
+  return escHtml(text.slice(0, idx)) + '<mark>' + escHtml(text.slice(idx, idx + query.length)) + '</mark>' + escHtml(text.slice(idx + query.length));
 }
 
 function escHtml(s) {
