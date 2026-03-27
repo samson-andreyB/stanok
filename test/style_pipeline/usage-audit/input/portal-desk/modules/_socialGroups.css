@@ -1,0 +1,110 @@
+.SocialGroups {
+	.Specs__header {
+		font-size: inherit;
+	}
+
+	.RichSelect {
+		min-width: 320px;
+	}
+
+	.Plaques {
+		background-color: #fff;
+	}
+
+	&__path {
+		margin-top: 10px;
+		line-height: 14px;
+	}
+
+	.pseudoLink--addSocialGroups {
+		position: relative;
+		margin-left: 13px;
+
+		&:before {
+			content: '';
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			margin-y: auto;
+			left: -13px;
+
+			background-image: resolve('icons/plus_8x8_18a.png');
+			width: width('icons/plus_8x8_18a.png');
+			height: height('icons/plus_8x8_18a.png');
+		}
+
+		&:hover:before {
+			background-image: resolve('icons/plus_8x8_2b8.png');
+		}
+	}
+
+	.Form__item {
+		position: relative;
+	}
+
+	.Form__item + .Form__item {
+		margin-top: 3px;
+	}
+
+	.Form__itemRemove {
+		position: absolute;
+		right: 8px;
+		top: 8px;
+		padding: 6px;
+		background-image: resolve('icons/cross_10x10_ccc.png');
+		width: width('icons/cross_10x10_ccc.png');
+		height: height('icons/cross_10x10_ccc.png');
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+		cursor: pointer;
+		display: none;
+		z-index: 3;
+
+		&:hover {
+			background-image: resolve('icons/cross_10x10_e55.png');
+		}
+	}
+
+	.Filter2--search {
+		width: 260px;
+	}
+
+	.Items--socialGroups {
+		.Items__list {
+			table-layout: fixed;
+		}
+
+		.Item__box {
+			vertical-align: top;
+
+			&--name {
+				width: 150px;
+			}
+
+			&--cfo {
+				width: 40px;
+			}
+
+			&--department {
+				min-width: 185px;
+			}
+
+			&--position {
+				min-width: 415px;
+			}
+
+			&--department,
+			&--position {
+				.Item__boxEllipsis {
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
+			}
+		}
+	}
+
+	.controlPanel.Specs {
+		margin-top: 0;
+	}
+}

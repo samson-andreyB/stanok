@@ -1,0 +1,18 @@
+.ChangingResponsible {
+	.importExport__log {
+		border-top: none;
+	}
+
+	.controlPanel {
+		padding-y: 15px;
+
+		&__header {
+			font-size: 17px;
+		}
+	}
+
+	.FileLoader + .Form__controls,
+	.Form__controls + .StatusMessagesWrapper {
+		margin-top: 10px;
+	}
+}

@@ -1,0 +1,13 @@
+.Form {
+	& > .contentWrapper:first-child {
+		padding-top: 0;
+	}
+
+	.contentWrapper.controlPanel {
+		margin-top: 5px;
+	}
+}
+
+.RichSelect--selectDepartment {
+	width: 427px;
+}

@@ -1,0 +1,43 @@
+@import "modules/_var";
+@import "lib/desk/_common";
+
+/* blocks
+-------------------------------------------------------*/
+@import "modules/_activeLabel";
+@import "modules/_spoiler";
+@import "modules/_changesHistory";
+@import "modules/_selectRubric";
+@import "modules/_attachments";
+@import "modules/_notice";
+@import "modules/_fancyModal";
+@import "modules/_items";
+@import "modules/_form";
+
+/* contexts
+-------------------------------------------------------*/
+@import "modules/_employeeTransfer";
+@import "modules/_copyDefaultUsers";
+@import "modules/_assortmentGuide";
+@import "modules/_crm";
+@import "modules/_employeesManagement";
+@import "modules/_sdoAdminControl";
+@import "modules/_socialGroups";
+@import "modules/_replacementMatrix";
+@import "modules/_clientsTransfer";
+@import "modules/_сhangingResponsible";
+@import "modules/_personnelRecords";
+@import "modules/_referenceBook";
+@import "modules/_consumables";
+@import "modules/_equipment";
+@import "modules/_createMail";
+@import "modules/_approversRules";
+@import "modules/_theme";
+@import "modules/_header";
+
+/* Bitrix customization
+-------------------------------------------------------*/
+@import "modules/_bitrixCrutches";
+
+/* helpers
+-------------------------------------------------------*/
+@import "lib/_helpers";

@@ -1,0 +1,13 @@
+.mainContent .Specs--employeeTransfer {
+	.Specs__header {
+		display: block;
+		margin-bottom: 6px;
+		font-size: inherit;
+	}
+	.Specs__content {
+		width: 425px;
+	}
+	.RichSelect {
+		width: 100%;
+	}
+}

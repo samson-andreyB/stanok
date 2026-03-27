@@ -1,0 +1,13 @@
+/* Выпадалка выбора подразделения в разделе "Перевод сотрудника" */
+
+.company-department-employee-selected,
+.company-department-employee-selected .company-department-arrow,
+.company-department-employee-selected .company-department-text {
+    background-color: #f0f0f0;
+}
+
+.company-department-employee-selected:hover,
+.company-department-employee-selected:hover .company-department-arrow,
+.company-department-employee-selected:hover .company-department-text {
+    background-color: #f7f7f7;
+}

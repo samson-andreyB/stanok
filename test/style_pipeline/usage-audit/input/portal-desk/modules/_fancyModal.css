@@ -1,0 +1,134 @@
+#fancybox-close {
+	margin: 0 0 -30px;
+
+	&:before {
+		content: none;
+	}
+}
+
+.FancyModal--dismissal {
+	width: 350px;
+
+	.FancyModal__header {
+		margin-bottom: .8em;
+	}
+
+	.FancyModal__header,
+	.FancyModal__content,
+	.FancyModal__control {
+		padding-x: 30px;
+	}
+
+	.Form {
+		&__title {
+			color: #000;
+		}
+
+		&__value {
+			font-weight: bold;
+		}
+
+		&__field {
+			.Form__input--select {
+				width: 110px;
+			}
+		}
+	}
+
+	.RichSelect {
+		line-height: 1em;
+		display: block;
+
+		&--active {
+			&:after {
+				display: none;
+			}
+		}
+	}
+
+	.RichSelect__options {
+		max-height: 430px;
+		max-width: 100%;
+		padding-top: 5px;
+	}
+}
+
+
+.FancyModal--addPersonnelRecord {
+	width: 350px;
+
+	.Form__value {
+		font-weight: bold;
+	}
+
+	.RichSelect {
+		width: 100%;
+	}
+
+	.Field--position {
+		width: 100%;
+	}
+
+	.Field--satate {
+		width: 110px;
+	}
+}
+
+.FancyModal--addExpenseItem {
+	width: 510px;
+}
+
+.FancyModal--addExpenseItem {
+	.RichSelect__option {
+		font-weight: normal;
+	}
+}
+
+.FancyModal--creationCFO {
+	width: 340px;
+
+	.Form__field {
+		.Form__input--sorting {
+			width: 65px;
+		}
+	}
+}
+
+.FancyModal--addConsumable {
+	width: 490px;
+
+	.Form__field {
+		&--code,
+		&--agreement {
+			.Form__input {
+				width: 110px;
+			}
+		}
+	}
+}
+
+.FancyModal--addEquipment {
+	width: 490px;
+
+	.FormControl {
+		&--cfo {
+			.RichSelect2 {
+				width: 240px;
+			}
+		}
+	}
+}
+
+.FancyModal--employeesMoveUnavailable {
+	width: 350px;
+
+	.Form__field--reason {
+		.Form__input {
+			width: 150px;
+		}
+	}
+
+	.Form__value {
+		font-weight: bold;
+	}
+}

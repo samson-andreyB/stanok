@@ -1,0 +1,103 @@
+.assortmentGuide {
+
+	.mainContent &__archivedArticle {
+		padding-top: 25px;
+		padding-bottom: 50px;
+	}
+
+	&__archivedArticle {
+		.Specs__content {
+			line-height: 19px;
+		}
+	}
+
+	&__sidebar {
+		float: left;
+		text-align: center;
+
+		& .Form__btn {
+			margin: 0;
+		}
+	}
+
+	&__image {
+		width: 180px;
+		height: 180px;
+		padding: 3px;
+		box-sizing: border-box;
+		border: 1px solid #d7d7d7;
+		text-align: center;
+		line-height: 170px;
+		font-size: 14px;
+		font-weight: bold;
+		color: #999;
+
+		& img {
+			width: 100%;
+			height: 100%;
+			object-fit: contain;
+		}
+	}
+
+	&__controls {
+		border-bottom: 1px solid #d8d8d8;
+		padding: 5px 0 20px 0;
+
+		.Upload__btn {
+			margin-top: 10px;
+		}
+	}
+
+	&__tasks {
+		padding-top: 20px;
+		text-align: left;
+	}
+
+	&__task:after {
+		content: '';
+		display: block;
+		height: 3px;
+	}
+
+	&__content {
+		overflow: hidden;
+		padding-bottom: 10px;
+		padding-left: 18px;
+
+		.Specs__item {
+			.Specs__content {
+				margin-bottom: 1.5em;
+			}
+			.Specs__content:last-child {
+				margin-bottom: 0;
+			}
+		}
+
+		.bx-html-editor {
+			box-sizing: border-box;
+		}
+		
+		.bxhtmled-iframe-cnt {
+			min-width: 100%;
+		}
+	}
+
+	.Group--submit .Box:last-child .Form__btn:last-child {
+		margin: 0;
+	}
+
+	.Filters2 .Field2[type="text"] {
+		width: 240px;
+	}
+}
+
+.Items--assortmentGuideList  {
+	.Item__box {
+		&--manager {
+			width: 160px;
+		}
+		&--status {
+			width: 110px;
+		}
+	}
+}

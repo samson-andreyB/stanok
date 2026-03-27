@@ -1,0 +1,20 @@
+.Items--changesHistory  {
+	.Items__list {
+		margin-top: 0;
+	}
+	.Item__box {
+		&--date {
+			width: 140px;
+		}
+		&--editedBy {
+			width: 170px;
+		}
+	}
+	.Items__header .Item__box {
+		padding-top: 2px;
+	}
+}
+
+.Spoiler--changesHistory .Spoiler__trigger {
+	font-weight: bold;
+}

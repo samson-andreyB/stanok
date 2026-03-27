@@ -1,0 +1,7 @@
+.Header2--default {
+	.Header2__badges {
+		.BadgeStatus {
+			margin-left: 6px;
+		}
+	}
+}

@@ -1,0 +1,12 @@
+.Equipment {
+	.Filter2 {
+
+		&--modelName{
+			width: 335px;
+		}
+
+		&--cfoName {
+			width: 220px;
+		}
+	}
+}

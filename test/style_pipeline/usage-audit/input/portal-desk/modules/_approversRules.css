@@ -1,0 +1,140 @@
+.Filters2--approversReferenceBook {
+	.Filters2__row--general,
+	.Filters2__row--additional {
+		.Filter2 {
+			width: 150px;
+		}
+	}
+
+	.Filters2__row--additional {
+		.Filter2 {
+			&--total {
+				width: 50px;
+			}
+
+			&--name,
+			&--stage {
+				width: 250px;
+			}
+		}
+	}
+}
+
+.ScrollableTable--approversRules {
+	.ScrollableTable__fixed {
+		width: 70px;
+		border-right: 0;
+	}
+
+	.ScrollableTable__scrollable {
+		margin-left: 70px;
+	}
+
+	.Items__list {
+		.Items__header {
+			.Item__box {
+				vertical-align: bottom;
+			}
+		}
+
+		.Items__group {
+			.Item__box {
+				vertical-align: top;
+				line-height: 16px;
+
+				&--name {
+					min-width: 160px;
+				}
+
+				&--cfo,
+				&--payment,
+				&--payer,
+				&--budgetItem,
+				&--budgetSubItem {
+					min-width: 120px;
+				}
+
+				&--sum {
+					text-align: right;
+					white-space: nowrap;
+				}
+
+				&--stage {
+					min-width: 130px;
+				}
+
+				.Item__aux--exception {
+					@extend .Item__aux--error;
+
+					display: block;
+					white-space: nowrap;
+					margin-top: 0;
+					font-size: inherit;
+					line-height: inherit;
+				}
+			}
+		}
+	}
+}
+
+.Form--approversRule {
+	.Form__set {
+		width: 600px;
+
+		& + .Form__set {
+			margin-top: 30px;
+		}
+
+		.Form__header {
+			margin-bottom: 10px;
+			padding-bottom: 0;
+			font-size: 15px;
+			line-height: 18px;
+			border: 0;
+		}
+
+		.Form__aux {
+			color: #666;
+		}
+
+		.Form__group {
+			display: flex;
+
+			.Form__field {
+				margin-top: 0;
+
+				& + .Form__field {
+					margin-left: 10px;
+				}
+			}
+		}
+
+		.Form__input {
+			&--sum {
+				width: 90px;
+			}
+
+			&--priority {
+				width: 56px;
+			}
+		}
+	}
+}
+
+.controlPanel--approversRule {
+	border-top: 1px solid #dadada;
+
+	&.controlPanel {
+		padding-y: 15px;
+	}
+
+	.controlPanel__header {
+		font-size: 17px;
+	}
+
+	.importExport__log {
+		padding-top: 0;
+		padding-left: 20px;
+		border: 0;
+	}
+}

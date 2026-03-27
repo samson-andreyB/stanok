@@ -1,0 +1,40 @@
+@keyframes bouncing {
+	0% { transform: translateY(0); }
+	98% { transform: translateY(0); }
+	99% { transform: translateY(-8px); }
+	99.5% { transform: translateY(-4px); }
+	100% { transform: translateY(-8px); }
+}
+
+@keyframes bouncing2 {
+	0% { transform: translateY(0); }
+	98% { transform: translateY(0); }
+	99% { transform: translateY(8px); }
+	99.5% { transform: translateY(4px); }
+	100% { transform: translateY(8px); }
+}
+
+a.notifierTask {
+	animation: bouncing 10s linear infinite alternate;
+	display: block;
+	background-color: #00ac61;
+	box-sizing: border-box;
+	color: #fff;
+	text-decoration: none;
+	width: 100%;
+	padding: 10px 0;
+	text-align: center;
+	position: absolute;
+	top: -37px;
+	transition: background-color .15s ease;
+}
+
+a.notifierTask--top {
+	animation: bouncing2 10s linear infinite alternate;
+	top: 37px;	
+}
+
+a.notifierTask:hover {
+	animation: none;
+	background-color: #12c577;
+}

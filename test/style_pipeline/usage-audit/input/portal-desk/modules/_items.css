@@ -1,0 +1,96 @@
+.Item__box--actions {
+	text-align: right;
+
+	.btnError {
+		margin-left: 10px;
+	}
+}
+
+.Items--personnelRecords {
+	.Items__list {
+		margin-top: 0;
+	}
+
+	.Item__box {
+		vertical-align: top;
+
+		&--subdivision,
+		&--position {
+			width: 35%;
+		}
+
+		&--date {
+			width: 9%;
+		}
+
+		&--state {
+			width: 9%;
+		}
+
+		&--actions {
+			width: 12%;
+		}
+	}
+}
+
+.Items--expenseItem {
+	.Items__list {
+		table-layout: fixed;
+	}
+
+	.Item__box {
+		vertical-align: top;
+
+		&--actions {
+			width: 20%;
+		}
+	}
+}
+
+.Items--referenceBook {
+	.Items__list {
+		table-layout: fixed;
+	}
+
+	.Item__box {
+		&--grouping {
+			width: 20%;
+		}
+	}
+}
+
+.Items--consumables {
+	.Item__box {
+		vertical-align: top;
+
+		&--code {
+			width: 9%;
+		}
+
+		&--agreement {
+			width: 10%;
+		}
+
+		&--actions {
+			width: 13%;
+
+			.btnError {
+				margin-left: 10px;
+			}
+		}
+	}
+}
+
+.Items--equipment {
+	.Item__box {
+		vertical-align: top;
+
+		&--actions {
+			width: 13%;
+
+			.btnError {
+				margin-left: 10px;
+			}
+		}
+	}
+}

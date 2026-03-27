@@ -1,0 +1,31 @@
+.activeLabel {
+	font-size: 11px;
+	border-bottom: 1px dotted;
+	cursor: pointer;
+	white-space: nowrap;
+
+	&--remove {
+		position: relative;
+		margin-left: 13px;
+		color: #777;
+
+		&:hover {
+			color: #e45959;
+		}
+
+		&:before {
+			content: '';
+			display: block;
+			position: absolute;
+			top: 1px;
+			left: -13px;
+			background-image: resolve('icons/cross_grey.png');
+			width: width('icons/cross_grey.png');
+			height: height('icons/cross_grey.png');
+		}
+
+		&:hover:before {
+			background-image: resolve('icons/cross_red.png');
+		}
+	}
+}

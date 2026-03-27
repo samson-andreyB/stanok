@@ -1,0 +1,17 @@
+.mainContent .Specs--copyDefaultUsers {
+	.Specs__header {
+		display: block;
+		margin-bottom: 6px;
+		font-size: inherit;
+	}
+
+	.Specs__item--department {
+		width: 425px;
+	}
+	.RichSelect {
+		width: 100%;
+	}
+	.RichSelect__field {
+		cursor: default;
+	}
+}

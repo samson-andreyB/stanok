@@ -1,0 +1,92 @@
+.Attachments {
+	word-spacing: 15px;
+
+	&--hidden {
+		display: none;
+	}
+
+	&__item {
+		overflow: hidden;
+		display: inline-block;
+		position: relative;
+		word-spacing: normal;
+		padding-left: 34px;
+		height: 30px;
+		color: #000;
+		margin: 5px 0;
+		cursor: default;
+	}
+
+	&__name,
+	&__size,
+	&__delete {
+		display: block;
+		transition: all .2s;
+	}
+
+	&__size,
+	&__delete {
+		color: #666666;
+		font-size: 11px;
+		user-select: none;
+	}
+
+	&__name {
+		margin-top: 1px;
+	}
+
+	&__item:before,
+	&__item:after {
+		content: '';
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 25px;
+		height: 30px;
+		background: url('/img/desk/icons/file-types.png') no-repeat;
+		transition: all .2s;
+	}
+
+	&__item--zip:before {
+		background-position: -30px 0;
+	}
+	&__item--pdf:before {
+		background-position: -60px 0;
+	}
+	&__item--doc:before {
+		background-position: -90px 0;
+	}
+	&__item--xls:before {
+		background-position: -120px 0;
+	}
+	&__item--jpg:before {
+		background-position: -150px 0;
+	}
+	&__item--png:before {
+		background-position: -180px 0;
+	}
+
+	&__item:after {
+		background-position: -210px 0;
+		opacity: 0;
+	}
+
+	&__item:hover {
+		cursor: pointer;
+	}
+	&__item:hover &__size {
+		height: 0;
+		overflow: hidden;
+	}
+	&__item:hover &__name {
+		color: #cc6666;	
+	}
+
+	&__item:hover:before {
+		opacity: 0;
+	}
+	&__item:hover:after {
+		opacity: 1;
+	}
+}

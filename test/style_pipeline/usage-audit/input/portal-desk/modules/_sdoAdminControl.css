@@ -1,0 +1,42 @@
+.SdoAdminControl {
+	.contentWrapper {
+		&.controlPanel {
+			margin-top: 10px;
+		}
+
+		& + .ScrollableTable {
+			margin-top: -10px;
+		}
+	}
+
+	.Form__set {
+		width: auto;
+	}
+}
+
+.ScrollableTable--sdoAccessControl {
+	.ScrollableTable__fixed {
+		width: 210px;
+		border-right-width: 0;
+
+		&--hasScrolled {
+			.Items__header--floating {
+				width: 210px;
+				z-index: 101;
+			}
+		}
+	}
+
+	.ScrollableTable__scrollable {
+		margin-left: 210px;
+
+		.Item__box {
+			padding-x: 15px;
+			width: 8%;
+		}
+	}
+
+	.Items__list {
+		margin-top: 0;
+	}
+}

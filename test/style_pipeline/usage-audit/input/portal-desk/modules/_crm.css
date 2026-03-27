@@ -1,0 +1,51 @@
+.importExport {
+	&__log {
+		margin-left: -20px;
+		margin-right: -20px;
+		padding: 10px 0 0 10px;
+		border-top: 1px solid #dadada;
+	}
+
+	&__logHeader {
+		font-size: 14px;
+		font-weight: bold;
+		margin-y: 5px;
+	}
+
+	&__logText {
+		max-height: 350px;
+		overflow: auto;
+		white-space: pre;
+	}
+
+	&__downloadBtn {
+		margin-top: .8em;
+	}
+
+	.Specs__item:last-child {
+		padding-bottom: 10px;
+	}
+}
+
+.groupTasking {
+	.Specs {
+		width: 620px;
+	}
+
+	&__description {
+		height: 100px;
+	}
+
+	.contentWrapper {
+		& + .contentWrapper:not(.controlPanel) {
+			padding-top: 0;
+		}
+	}
+}
+
+.FancyModal--taskingProgress {
+	.Progress {
+		width: 390px;
+		margin: 0 auto;
+	}
+}

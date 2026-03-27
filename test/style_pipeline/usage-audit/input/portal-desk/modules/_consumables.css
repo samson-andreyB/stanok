@@ -1,0 +1,12 @@
+.Consumables {
+	.Filter2 {
+		&--code {
+			width: 90px;
+		}
+
+		&--consumableName,
+		&--modelName {
+			width: 335px;
+		}
+	}
+}

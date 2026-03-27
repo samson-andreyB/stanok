@@ -709,7 +709,7 @@ function renderHtml(projects, generatedDate) {
 <style>
 :root {
   --bg: #eef3f8; --surface: #fff; --border: #d3dde9; --text: #132238;
-  --muted: #5c7088; --accent: #006adc;
+  --muted: #5c7088; --accent: #006adc; --surface-soft:#f4f7fc;
   --hover:#eaf1f8; --focus-ring:rgba(0,106,220,.28);
   --critical-bg: #fee2e2; --critical: #dc2626;
   --high-bg: #fff7ed;     --high: #c2410c;
@@ -720,7 +720,7 @@ function renderHtml(projects, generatedDate) {
 }
 html.dark {
   --bg: #0b1322; --surface: #131f33; --border: #2d3f57; --text: #e2e8f0;
-  --muted: #98abc4; --accent: #67b2ff; --hover:#1f324d; --focus-ring:rgba(96,165,250,.35);
+  --muted: #98abc4; --accent: #67b2ff; --surface-soft:#192842; --hover:#1f324d; --focus-ring:rgba(96,165,250,.35);
   --critical-bg: #450a0a; --critical: #fca5a5;
   --high-bg: #431407;     --high: #fdba74;
   --native-bg: #052e16;   --native: #86efac;
@@ -731,24 +731,29 @@ html.dark {
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{font:14px/1.5 "Manrope",-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);height:100%}
-#app{max-width:1320px;margin:0 auto;padding:20px 14px;height:100%;display:flex;flex-direction:column;box-sizing:border-box}
+#app{max-width:1320px;margin:0 auto;padding:16px 14px;height:100%;display:flex;flex-direction:column;box-sizing:border-box}
 
-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:0}
-.hdr-title{display:flex;flex-direction:column;gap:3px}
-h1{font-size:24px;font-weight:800;letter-spacing:-.3px;line-height:1.2}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
+.hdr-title{display:flex;align-items:baseline;gap:10px}
+h1{font-size:22px;font-weight:800;letter-spacing:-.3px;line-height:1.2}
 .hdr-sub{font-size:12px;color:var(--muted)}
 .hdr-meta{font-size:11px;color:var(--muted);white-space:nowrap}
+.hdr-right{display:flex;align-items:center;gap:10px}
 .theme-btn{width:32px;height:32px;border:1px solid var(--border);border-radius:6px;background:var(--surface);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color .15s;line-height:1}
 .theme-btn:hover{border-color:var(--accent)}
-.theme-btn:focus-visible,.proj-trigger:focus-visible,.vbtn:focus-visible,.fbtn:focus-visible,.fptab:focus-visible,.toggle-zero input:focus-visible{outline:none;box-shadow:0 0 0 3px var(--focus-ring)}
+.theme-btn:focus-visible,.proj-trigger:focus-visible,.vbtn:focus-visible,.fptab:focus-visible,.toggle-zero input:focus-visible{outline:none;box-shadow:0 0 0 3px var(--focus-ring)}
 
-.top-panel{display:flex;flex-direction:column;gap:10px;margin-bottom:8px;padding:12px;border:1px solid var(--border);border-radius:12px;background:linear-gradient(130deg,rgba(0,106,220,.08),rgba(0,106,220,.02) 40%),var(--surface);box-shadow:0 8px 20px rgba(18,38,63,.08)}
+.top-panel{display:flex;flex-direction:column;gap:12px;margin-bottom:8px;padding:14px;border:1px solid var(--border);border-radius:14px;background:radial-gradient(120% 160% at 0% 0%,rgba(0,106,220,.14),rgba(0,106,220,0) 48%),var(--surface);box-shadow:0 10px 24px rgba(18,38,63,.12)}
 .controls{display:flex;flex-direction:column;gap:10px;margin-bottom:0}
-.ctrl-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ctrl-group{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .ctrl-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;min-width:64px}
+#files-plugin-ctrl{display:flex;flex-direction:column;align-items:stretch;gap:4px;min-width:220px;max-width:320px;width:100%}
+#files-plugin-ctrl .ctrl-label{min-width:0}
+#files-plugin-ctrl .proj-dropdown{width:100%}
+#files-plugin-ctrl .proj-trigger{width:100%;max-width:none}
 
 .proj-dropdown{position:relative}
-.proj-trigger{padding:5px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;max-width:240px;transition:border-color .15s;color:var(--text)}
+.proj-trigger{padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;max-width:260px;transition:border-color .15s,color .15s,background-color .15s;color:var(--text)}
 .proj-trigger:hover{border-color:var(--accent)}
 .proj-trigger .trigger-arrow{margin-left:auto;color:var(--muted);font-size:10px}
 .proj-panel{position:absolute;top:calc(100% + 4px);left:0;min-width:200px;max-width:320px;background:var(--surface);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:100;overflow:hidden;display:none}
@@ -759,12 +764,14 @@ html.dark .proj-panel{box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .proj-option input[type="checkbox"]{cursor:pointer;accent-color:var(--accent)}
 .proj-option.all-option{border-bottom:1px solid var(--border);font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
 
-.filter-tabs{display:flex;gap:4px;flex-wrap:wrap}
-.fbtn{padding:4px 12px;border:1px solid var(--border);border-radius:20px;background:var(--surface);color:var(--text);cursor:pointer;font-size:12px;transition:all .1s;white-space:nowrap}
-.fbtn:hover{border-color:var(--accent)}
-.fbtn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.toggle-zero{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);cursor:pointer;white-space:nowrap}
-.toggle-zero input{cursor:pointer}
+.ctrl-group--filters{display:grid;grid-template-columns:minmax(220px,280px) minmax(220px,280px) minmax(220px,280px) auto;align-items:end;gap:10px 12px}
+.select-field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.select-field .ctrl-label{min-width:0}
+.select-field .proj-dropdown{width:100%}
+.select-field .proj-trigger{width:100%;max-width:none}
+.select-meta{font-size:11px;color:var(--muted);line-height:1.25}
+.toggle-zero{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer;white-space:nowrap;height:36px;align-self:end;padding-left:4px}
+.toggle-zero input{cursor:pointer;margin:0;width:18px;height:18px;flex:0 0 18px}
 .search-input{padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-size:13px;width:180px;transition:border-color .15s}
 .search-input:focus{outline:none;border-color:var(--accent)}
 .search-input::placeholder{color:var(--muted)}
@@ -774,13 +781,25 @@ html.dark .proj-panel{box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .filter-summary a{color:var(--accent);cursor:pointer;text-decoration:none}
 .filter-summary a:hover{text-decoration:underline}
 
-.view-toggle{display:flex;gap:4px;margin-bottom:12px}
-.vbtn{padding:5px 14px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--muted);cursor:pointer;font-size:13px;font-weight:600;transition:all .15s}
+.view-toggle{display:inline-flex;gap:4px;margin-bottom:2px;padding:3px;border:1px solid var(--border);border-radius:10px;background:var(--surface-soft);width:max-content}
+.vbtn{padding:6px 16px;border:1px solid transparent;border-radius:8px;background:transparent;color:var(--muted);cursor:pointer;font-size:13px;font-weight:600;transition:all .15s}
 .vbtn:hover{border-color:var(--accent);color:var(--text)}
 .vbtn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media (max-width: 980px){
+  .ctrl-group--filters{grid-template-columns:1fr 1fr}
+  .select-field--project{grid-column:1 / -1}
+  .toggle-zero{grid-column:1 / -1;padding-left:0}
+}
+@media (max-width: 640px){
+  #app{padding:12px 10px}
+  .top-panel{padding:12px}
+  .controls{gap:8px}
+  .ctrl-group--filters{grid-template-columns:1fr}
+  .proj-trigger{max-width:100%}
+}
 col.cf-file{width:auto}
-col.cf-matches{width:110px}
-col.cf-plugins{width:340px}
+col.cf-matches{width:124px}
+col.cf-plugins{width:62%}
 .plugin-chips{display:flex;gap:4px;flex-wrap:wrap}
 .file-path{font-family:'SFMono-Regular',Consolas,monospace;font-size:12px}
 .files-section{display:none;flex:1 1 0;min-height:0;flex-direction:column;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
@@ -795,9 +814,18 @@ col.cf-plugins{width:340px}
 .files-tbl-wrap::-webkit-scrollbar-thumb:hover{background:var(--muted)}
 #files-table thead th{position:sticky;top:0;z-index:10;background:var(--bg);padding:9px 12px;text-align:left;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
 #files-table col.cf-exp{width:32px}
-#files-table tbody td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
-#files-table tbody td:nth-child(3){vertical-align:middle;text-align:right}
-#files-table tbody td.exp-col{padding:10px 8px;text-align:center;color:var(--muted);vertical-align:middle}
+#files-table tbody td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:baseline}
+#files-table tbody td:nth-child(3){vertical-align:baseline;text-align:left}
+#files-table thead th:nth-child(3){text-align:left}
+#files-table tbody td.exp-col{padding:10px 8px;text-align:center;color:var(--muted);vertical-align:baseline}
+#files-table thead th:first-child{left:0;z-index:13}
+#files-table thead th:nth-child(2){left:32px;z-index:12}
+#files-table tbody tr.fr td:first-child{position:sticky;left:0;z-index:7;background:var(--surface)}
+#files-table tbody tr.fr td:nth-child(2){position:sticky;left:32px;z-index:6;background:var(--surface)}
+#files-table tbody tr.fr:hover td:first-child,
+#files-table tbody tr.fr:hover td:nth-child(2),
+#files-table tbody tr.fr.open td:first-child,
+#files-table tbody tr.fr.open td:nth-child(2){background:var(--hover)}
 tr.fr{cursor:pointer}
 tr.fr:hover td{background:var(--hover)}
 tr.fr.open td{background:var(--hover)}
@@ -827,11 +855,19 @@ thead th:hover{color:var(--text)}
 thead th.sorted{color:var(--accent)}
 thead th .sort-arrow{margin-left:4px;opacity:.5}
 thead th.sorted .sort-arrow{opacity:1}
+#plugins-table thead th:first-child{left:0;z-index:13}
+#plugins-table thead th:nth-child(2){left:60px;z-index:12}
+#plugins-table tbody tr.pr td:first-child{position:sticky;left:0;z-index:7;background:var(--surface)}
+#plugins-table tbody tr.pr td:nth-child(2){position:sticky;left:60px;z-index:6;background:var(--surface)}
+#plugins-table tbody tr.pr:hover td:first-child,
+#plugins-table tbody tr.pr:hover td:nth-child(2),
+#plugins-table tbody tr.pr.open td:first-child,
+#plugins-table tbody tr.pr.open td:nth-child(2){background:var(--hover)}
 
 tbody tr.pr{cursor:pointer;transition:background .1s}
 tbody tr.pr:hover{background:var(--hover)}
 tbody tr.pr.open{background:var(--hover)}
-tbody tr.pr td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+tbody tr.pr td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:baseline}
 tbody tr.dr td{padding:0;border-bottom:1px solid var(--border)}
 tbody tr.hidden{display:none}
 
@@ -874,6 +910,11 @@ tbody tr.hidden{display:none}
 .pat-chip .pcc{font-weight:600;margin-left:3px}
 .files-txt{font-size:12px;color:var(--muted);line-height:2}
 .files-txt code{background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:0 3px;font-family:'SFMono-Regular',Consolas,monospace;color:var(--text);font-size:11px}
+.files-txt .file-jump{background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:0 3px;font-family:'SFMono-Regular',Consolas,monospace;color:var(--text);font-size:11px;cursor:pointer}
+.files-txt .file-jump:hover{border-color:var(--accent);color:var(--accent)}
+.files-txt .file-jump:focus-visible{outline:none;box-shadow:0 0 0 2px var(--focus-ring)}
+.proj-usage-row{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.proj-usage-row:last-child{margin-bottom:0}
 .exs{display:flex;gap:5px;flex-wrap:wrap}
 .ex-chip{background:var(--bg);border-radius:4px;padding:2px 6px;font-size:12px;font-family:'SFMono-Regular',Consolas,monospace}
 .rec-txt{font-size:12px;color:var(--muted);font-style:italic}
@@ -904,25 +945,17 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
         <h1>Plugin Audit</h1>
         <span class="hdr-sub">PostCSS → Rust / Lightning CSS</span>
       </div>
-      <button class="theme-btn" id="theme-btn" title="Переключить тему" aria-label="Переключить тему">🌙</button>
+      <div class="hdr-right">
+        <span class="hdr-meta" id="hdr-meta"></span>
+        <button class="theme-btn" id="theme-btn" title="Переключить тему" aria-label="Переключить тему">🌙</button>
+      </div>
     </header>
     <div class="view-toggle">
       <button class="vbtn active" data-view="plugins">Плагины</button>
       <button class="vbtn" data-view="files">Файлы</button>
     </div>
     <div class="controls">
-    <div class="ctrl-group" id="proj-ctrl">
-      <span class="ctrl-label">Проект</span>
-      <div class="proj-dropdown" id="proj-dropdown">
-        <button class="proj-trigger" id="proj-trigger">
-          <span id="proj-trigger-label">…</span>
-          <span class="trigger-arrow">▾</span>
-        </button>
-        <div class="proj-panel" id="proj-panel"></div>
-      </div>
-      <span class="hdr-meta" id="hdr-meta"></span>
-    </div>
-    <div class="ctrl-group" id="files-plugin-ctrl" style="display:none">
+    <div class="select-field" id="files-plugin-ctrl" style="display:none">
       <span class="ctrl-label">Плагины</span>
       <div class="proj-dropdown" id="files-plugin-dropdown">
         <button class="proj-trigger" id="files-plugin-trigger">
@@ -932,23 +965,47 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
         <div class="proj-panel" id="files-plugin-panel"></div>
       </div>
     </div>
-    <div class="ctrl-group" id="priority-ctrl">
-      <span class="ctrl-label">Приоритет</span>
-      <div class="filter-tabs" id="ftabs"></div>
+    <div class="ctrl-group ctrl-group--filters" id="plugins-filters-ctrl">
+      <label class="select-field select-field--project" for="proj-trigger">
+        <span class="ctrl-label">Проект</span>
+        <div class="proj-dropdown" id="proj-dropdown">
+          <button class="proj-trigger" id="proj-trigger" type="button">
+            <span id="proj-trigger-label">…</span>
+            <span class="trigger-arrow">▾</span>
+          </button>
+          <div class="proj-panel" id="proj-panel"></div>
+        </div>
+      </label>
+      <label class="select-field" for="priority-trigger">
+        <span class="ctrl-label">Приоритет</span>
+        <div class="proj-dropdown" id="priority-dropdown">
+          <button class="proj-trigger" id="priority-trigger" type="button">
+            <span id="priority-trigger-label">Все</span>
+            <span class="trigger-arrow">▾</span>
+          </button>
+          <div class="proj-panel" id="priority-panel"></div>
+        </div>
+      </label>
+      <label class="select-field" for="complexity-trigger">
+        <span class="ctrl-label">Сложность</span>
+        <div class="proj-dropdown" id="complexity-dropdown">
+          <button class="proj-trigger" id="complexity-trigger" type="button">
+            <span id="complexity-trigger-label">Все</span>
+            <span class="trigger-arrow">▾</span>
+          </button>
+          <div class="proj-panel" id="complexity-panel"></div>
+        </div>
+      </label>
       <label class="toggle-zero">
         <input type="checkbox" id="hide-zero"> Скрыть нулевые
       </label>
-    </div>
-    <div class="ctrl-group" id="complexity-ctrl">
-      <span class="ctrl-label">Сложность</span>
-      <div class="filter-tabs" id="cxtabs"></div>
     </div>
     </div>
   </div>
   <div id="plugins-section" style="display:flex;flex-direction:column;flex:1 1 0;min-height:0">
     <div class="filter-summary" id="filter-summary"></div>
     <div class="tbl-wrap">
-      <table>
+      <table id="plugins-table">
         <colgroup>
           <col class="c-order"><col class="c-plugin"><col class="c-lightning"><col class="c-complexity"><col class="c-priority"><col class="c-matches">
         </colgroup>
@@ -989,7 +1046,7 @@ const LS_KEY = 'plugin-audit-priorities';
 const LS_COMPLEXITY_KEY = 'plugin-audit-complexities';
 const LS_THEME_KEY = 'plugin-audit-theme';
 
-let projSel = [Object.keys(DATA.projects)[0] || ''];
+let projSel = new Set();
 let filters = new Set();
 let complexityFilters = new Set();
 let sortCol = 'order';
@@ -1029,7 +1086,7 @@ function toggleTheme() {
 }
 
 function getPlugins(keys) {
-  const sel = keys ?? projSel;
+  const sel = keys ?? (projSel.size === 0 ? Object.keys(DATA.projects) : [...projSel]);
   if (sel.length === 0) return [];
   if (sel.length === 1) return DATA.projects[sel[0]]?.plugins || [];
   const merged = new Map();
@@ -1040,7 +1097,13 @@ function getPlugins(keys) {
         merged.set(p.id, {
           ...p,
           patterns: p.patterns.map(pat => ({
-            ...pat, files: [...pat.files], examples: [...pat.examples]
+            ...pat,
+            files: [...pat.files],
+            examples: [...pat.examples],
+            fileMatches: { ...(pat.fileMatches ?? {}) },
+            fileExamples: Object.fromEntries(
+              Object.entries(pat.fileExamples ?? {}).map(([k, v]) => [k, [...v]])
+            ),
           }))
         });
       } else {
@@ -1054,8 +1117,23 @@ function getPlugins(keys) {
             ex.files = [...fs];
             const es = new Set([...ex.examples, ...pat.examples]);
             ex.examples = [...es].slice(0, 5);
+            for (const [file, cnt] of Object.entries(pat.fileMatches ?? {})) {
+              ex.fileMatches[file] = (ex.fileMatches[file] ?? 0) + (Number(cnt) || 0);
+            }
+            for (const [file, examples] of Object.entries(pat.fileExamples ?? {})) {
+              const prev = ex.fileExamples[file] ?? [];
+              ex.fileExamples[file] = [...new Set([...prev, ...examples])].slice(0, 5);
+            }
           } else {
-            m.patterns.push({ ...pat, files: [...pat.files], examples: [...pat.examples] });
+            m.patterns.push({
+              ...pat,
+              files: [...pat.files],
+              examples: [...pat.examples],
+              fileMatches: { ...(pat.fileMatches ?? {}) },
+              fileExamples: Object.fromEntries(
+                Object.entries(pat.fileExamples ?? {}).map(([k, v]) => [k, [...v]])
+              ),
+            });
           }
         }
       }
@@ -1118,6 +1196,12 @@ function buildFileIndex(plugins) {
     .sort((a, b) => b.total - a.total);
 }
 
+function closeOpenPanels(exceptId = '') {
+  ['proj-panel', 'priority-panel', 'complexity-panel', 'files-plugin-panel'].forEach(id => {
+    if (id !== exceptId) document.getElementById(id)?.classList.remove('open');
+  });
+}
+
 function renderFilesProjTabs() {
   const projects = Object.keys(DATA.projects);
   const container = document.getElementById('files-proj-tabs');
@@ -1145,14 +1229,14 @@ function renderFilesPluginDropdown() {
   const triggerLabel = document.getElementById('files-plugin-trigger-label');
 
   function updateLabel() {
-    if (filePluginFilters.size === 0) { triggerLabel.textContent = 'Все плагины'; return; }
+    if (filePluginFilters.size === 0) { triggerLabel.textContent = \`Все (\${plugins.length})\`; return; }
     if (filePluginFilters.size === 1) { triggerLabel.textContent = [...filePluginFilters][0]; return; }
-    triggerLabel.textContent = \`\${filePluginFilters.size} плагина\`;
+    triggerLabel.textContent = \`Выбрано: \${filePluginFilters.size}\`;
   }
 
   function renderPanel() {
     panel.innerHTML = [
-      \`<label class="proj-option all-option"><input type="checkbox" id="fpf-all" \${filePluginFilters.size === 0 ? 'checked' : ''}> Все плагины</label>\`,
+      \`<label class="proj-option all-option"><input type="checkbox" id="fpf-all" \${filePluginFilters.size === 0 ? 'checked' : ''}> Все (\${plugins.length})</label>\`,
       ...plugins.map(p =>
         \`<label class="proj-option"><input type="checkbox" data-plugin="\${escAttr(p.id)}" \${filePluginFilters.has(p.id) ? 'checked' : ''}> \${escHtml(p.id)}</label>\`
       ),
@@ -1169,8 +1253,7 @@ function renderFilesPluginDropdown() {
         const id = cb.dataset.plugin;
         if (cb.checked) filePluginFilters.add(id); else filePluginFilters.delete(id);
         fileExpanded.clear();
-        panel.querySelector('#fpf-all').checked = filePluginFilters.size === 0;
-        updateLabel();
+        renderPanel();
         renderFilesTable();
       };
     });
@@ -1179,7 +1262,9 @@ function renderFilesPluginDropdown() {
   renderPanel();
   document.getElementById('files-plugin-trigger').onclick = e => {
     e.stopPropagation();
-    panel.classList.toggle('open');
+    const willOpen = !panel.classList.contains('open');
+    closeOpenPanels('files-plugin-panel');
+    panel.classList.toggle('open', willOpen);
   };
 }
 
@@ -1249,18 +1334,30 @@ function renderFilesView() {
 
 let currentView = 'plugins';
 
-function switchView(view) {
+function switchView(view, opts = {}) {
+  const preserveFileExpanded = Boolean(opts.preserveFileExpanded);
   currentView = view;
   document.querySelectorAll('.vbtn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
   const isPlugins = view === 'plugins';
   document.getElementById('plugins-section').style.display = isPlugins ? 'flex' : 'none';
   document.getElementById('files-section').style.display = isPlugins ? 'none' : 'flex';
-  document.getElementById('proj-ctrl').style.display = isPlugins ? '' : 'none';
-  document.getElementById('priority-ctrl').style.display = isPlugins ? '' : 'none';
-  document.getElementById('complexity-ctrl').style.display = isPlugins ? '' : 'none';
+  document.getElementById('plugins-filters-ctrl').style.display = isPlugins ? '' : 'none';
   document.getElementById('files-plugin-ctrl').style.display = isPlugins ? 'none' : '';
-  fileExpanded.clear();
+  if (!preserveFileExpanded) fileExpanded.clear();
   if (!isPlugins) renderFilesView();
+}
+
+function openFileInFilesView(filePath) {
+  const projectKey = String(filePath).split('/')[0] || '';
+  if (projectKey && DATA.projects[projectKey]) filesProjKey = projectKey;
+  filePluginFilters.clear();
+  fileExpanded.clear();
+  fileExpanded.add(filePath);
+  switchView('files', { preserveFileExpanded: true });
+  requestAnimationFrame(() => {
+    const row = document.querySelector(\`#files-tbody tr.fr[data-file="\${CSS.escape(filePath)}"]\`);
+    if (row) row.scrollIntoView({ block: 'center' });
+  });
 }
 
 function init() {
@@ -1270,6 +1367,10 @@ function init() {
   const isDark = document.documentElement.classList.contains('dark');
   document.getElementById('theme-btn').textContent = isDark ? '☀️' : '🌙';
   document.getElementById('theme-btn').onclick = toggleTheme;
+  ['proj-panel', 'priority-panel', 'complexity-panel', 'files-plugin-panel'].forEach(id => {
+    const panel = document.getElementById(id);
+    if (panel) panel.addEventListener('click', e => e.stopPropagation());
+  });
   renderProjSel();
   renderAll();
   initPopover();
@@ -1293,34 +1394,33 @@ function renderProjSel() {
   const triggerLabel = document.getElementById('proj-trigger-label');
 
   function updateTriggerLabel() {
-    const allSel = projSel.length === projects.length;
-    if (projSel.length === 0) triggerLabel.textContent = 'Нет проектов';
-    else if (allSel) triggerLabel.textContent = 'Все проекты';
-    else if (projSel.length === 1) triggerLabel.textContent = projSel[0];
-    else triggerLabel.textContent = \`\${projSel.length} проекта\`;
+    const allSel = projSel.size === 0;
+    if (allSel) triggerLabel.textContent = \`Все (\${projects.length})\`;
+    else if (projSel.size === 1) triggerLabel.textContent = [...projSel][0];
+    else triggerLabel.textContent = \`Выбрано: \${projSel.size}\`;
   }
 
   function renderPanel() {
-    const allSel = projSel.length === projects.length;
+    const allSel = projSel.size === 0;
     panel.innerHTML = [
-      \`<label class="proj-option all-option"><input type="checkbox" id="po-all" \${allSel ? 'checked' : ''}> Все проекты</label>\`,
+      \`<label class="proj-option all-option"><input type="checkbox" id="po-all" \${allSel ? 'checked' : ''}> Все (\${projects.length})</label>\`,
       ...projects.map(p =>
-        \`<label class="proj-option"><input type="checkbox" data-proj="\${escAttr(p)}" \${projSel.includes(p) ? 'checked' : ''}> \${escHtml(p)}</label>\`
+        \`<label class="proj-option"><input type="checkbox" data-proj="\${escAttr(p)}" \${projSel.has(p) ? 'checked' : ''}> \${escHtml(p)}</label>\`
       )
     ].join('');
     updateTriggerLabel();
-    panel.querySelector('#po-all').onchange = e => {
-      projSel = e.target.checked ? [...projects] : [];
+    panel.querySelector('#po-all').onchange = () => {
+      projSel.clear();
       expanded.clear(); expandAll = false;
       renderPanel(); renderAll();
     };
     panel.querySelectorAll('[data-proj]').forEach(cb => {
       cb.onchange = () => {
         const key = cb.dataset.proj;
-        if (cb.checked) { if (!projSel.includes(key)) projSel.push(key); }
-        else projSel = projSel.filter(k => k !== key);
+        if (cb.checked) projSel.add(key);
+        else projSel.delete(key);
         expanded.clear(); expandAll = false;
-        updateTriggerLabel(); renderAll();
+        renderPanel(); renderAll();
       };
     });
   }
@@ -1329,16 +1429,19 @@ function renderProjSel() {
 
   document.getElementById('proj-trigger').onclick = e => {
     e.stopPropagation();
-    panel.classList.toggle('open');
+    const willOpen = !panel.classList.contains('open');
+    closeOpenPanels('proj-panel');
+    panel.classList.toggle('open', willOpen);
   };
   document.addEventListener('click', () => {
+    closeOpenPanels();
     panel.classList.remove('open');
-    document.getElementById('files-plugin-panel')?.classList.remove('open');
   });
 }
 
 function renderMeta() {
-  const total = projSel.reduce((s, k) => s + (DATA.projects[k]?.filesScanned ?? 0), 0);
+  const selectedProjects = projSel.size === 0 ? Object.keys(DATA.projects) : [...projSel];
+  const total = selectedProjects.reduce((s, k) => s + (DATA.projects[k]?.filesScanned ?? 0), 0);
   const date = DATA.generated ? DATA.generated.slice(0,10) : '';
   document.getElementById('hdr-meta').textContent = \`\${total} файлов · \${date}\`;
 }
@@ -1355,28 +1458,55 @@ function renderFtabs() {
     const pr = effectivePriority(p);
     counts[pr] = (counts[pr] || 0) + 1;
   }
-  const tabs = ['all','critical','high','native','out-of-scope','removed'];
+  const options = ['all','critical','high','native','out-of-scope','removed'];
   const labels = {
     all: 'Все', critical: 'Critical', high: 'High',
     native: 'Native', 'out-of-scope': 'Out of scope', removed: 'Removed'
   };
-  const ftabs = document.getElementById('ftabs');
-  ftabs.innerHTML = tabs.filter(t => t === 'all' || counts[t]).map(t => {
-    const isAll = t === 'all';
-    const active = isAll ? filters.size === 0 : filters.has(t);
-    return \`<button class="fbtn\${active ? ' active' : ''}" data-filter="\${t}">\${labels[t]}\${counts[t] ? \` (\${counts[t]})\` : ''}</button>\`;
-  }).join('');
-  ftabs.querySelectorAll('.fbtn').forEach(btn => {
-    btn.onclick = () => {
-      if (btn.dataset.filter === 'all') {
-        filters.clear();
-      } else {
-        const t = btn.dataset.filter;
-        if (filters.has(t)) filters.delete(t); else filters.add(t);
-      }
-      renderFtabs(); renderBody();
+  const panel = document.getElementById('priority-panel');
+  const triggerLabel = document.getElementById('priority-trigger-label');
+  const available = options.filter(t => t !== 'all' && counts[t]);
+
+  function updateLabel() {
+    if (filters.size === 0) {
+      triggerLabel.textContent = \`Все (\${counts.all ?? 0})\`;
+    } else if (filters.size === 1) {
+      const key = [...filters][0];
+      triggerLabel.textContent = \`\${labels[key]} (\${counts[key] ?? 0})\`;
+    } else {
+      triggerLabel.textContent = \`Выбрано: \${filters.size}\`;
+    }
+  }
+
+  panel.innerHTML = [
+    \`<label class="proj-option all-option"><input type="checkbox" id="pr-all" \${filters.size === 0 ? 'checked' : ''}> Все (\${counts.all ?? 0})</label>\`,
+    ...available.map(key =>
+      \`<label class="proj-option"><input type="checkbox" data-priority="\${key}" \${filters.has(key) ? 'checked' : ''}> \${labels[key]} (\${counts[key] ?? 0})</label>\`
+    )
+  ].join('');
+  updateLabel();
+
+  panel.querySelector('#pr-all').onchange = () => {
+    filters.clear();
+    renderFtabs();
+    renderBody();
+  };
+  panel.querySelectorAll('[data-priority]').forEach(cb => {
+    cb.onchange = () => {
+      const key = cb.dataset.priority;
+      if (cb.checked) filters.add(key);
+      else filters.delete(key);
+      renderFtabs();
+      renderBody();
     };
   });
+
+  document.getElementById('priority-trigger').onclick = e => {
+    e.stopPropagation();
+    const willOpen = !panel.classList.contains('open');
+    closeOpenPanels('priority-panel');
+    panel.classList.toggle('open', willOpen);
+  };
 }
 
 function renderCxtabs() {
@@ -1391,25 +1521,52 @@ function renderCxtabs() {
     const cx = effectiveComplexity(p);
     counts[cx] = (counts[cx] || 0) + 1;
   }
-  const tabs = ['all', ...COMPLEXITY_CYCLE];
+  const options = ['all', ...COMPLEXITY_CYCLE];
   const labels = { all: 'Все', trivial: 'Trivial', low: 'Low', medium: 'Medium', high: 'High', 'n/a': 'N/A' };
-  const cxtabs = document.getElementById('cxtabs');
-  cxtabs.innerHTML = tabs.filter(t => t === 'all' || counts[t]).map(t => {
-    const isAll = t === 'all';
-    const active = isAll ? complexityFilters.size === 0 : complexityFilters.has(t);
-    return \`<button class="fbtn\${active ? ' active' : ''}" data-cxfilter="\${t}">\${labels[t]}\${counts[t] ? \` (\${counts[t]})\` : ''}</button>\`;
-  }).join('');
-  cxtabs.querySelectorAll('.fbtn').forEach(btn => {
-    btn.onclick = () => {
-      if (btn.dataset.cxfilter === 'all') {
-        complexityFilters.clear();
-      } else {
-        const t = btn.dataset.cxfilter;
-        if (complexityFilters.has(t)) complexityFilters.delete(t); else complexityFilters.add(t);
-      }
-      renderCxtabs(); renderBody();
+  const panel = document.getElementById('complexity-panel');
+  const triggerLabel = document.getElementById('complexity-trigger-label');
+  const available = options.filter(t => t !== 'all' && counts[t]);
+
+  function updateLabel() {
+    if (complexityFilters.size === 0) {
+      triggerLabel.textContent = \`Все (\${counts.all ?? 0})\`;
+    } else if (complexityFilters.size === 1) {
+      const key = [...complexityFilters][0];
+      triggerLabel.textContent = \`\${labels[key]} (\${counts[key] ?? 0})\`;
+    } else {
+      triggerLabel.textContent = \`Выбрано: \${complexityFilters.size}\`;
+    }
+  }
+
+  panel.innerHTML = [
+    \`<label class="proj-option all-option"><input type="checkbox" id="cx-all" \${complexityFilters.size === 0 ? 'checked' : ''}> Все (\${counts.all ?? 0})</label>\`,
+    ...available.map(key =>
+      \`<label class="proj-option"><input type="checkbox" data-complexity="\${key}" \${complexityFilters.has(key) ? 'checked' : ''}> \${labels[key]} (\${counts[key] ?? 0})</label>\`
+    )
+  ].join('');
+  updateLabel();
+
+  panel.querySelector('#cx-all').onchange = () => {
+    complexityFilters.clear();
+    renderCxtabs();
+    renderBody();
+  };
+  panel.querySelectorAll('[data-complexity]').forEach(cb => {
+    cb.onchange = () => {
+      const key = cb.dataset.complexity;
+      if (cb.checked) complexityFilters.add(key);
+      else complexityFilters.delete(key);
+      renderCxtabs();
+      renderBody();
     };
   });
+
+  document.getElementById('complexity-trigger').onclick = e => {
+    e.stopPropagation();
+    const willOpen = !panel.classList.contains('open');
+    closeOpenPanels('complexity-panel');
+    panel.classList.toggle('open', willOpen);
+  };
 }
 
 function renderHead() {
@@ -1481,6 +1638,24 @@ function renderBody() {
     const isOpen = expanded.has(p.id);
     const matchHits = p.patterns.filter(pat => pat.count > 0);
     const allFiles = [...new Set(matchHits.flatMap(pat => pat.files))].sort();
+    const projectUsage = new Map();
+    for (const pat of matchHits) {
+      for (const [file, count] of Object.entries(pat.fileMatches ?? {})) {
+        const project = String(file).split('/')[0] || 'unknown';
+        if (!projectUsage.has(project)) projectUsage.set(project, { files: new Set(), matches: 0 });
+        const usage = projectUsage.get(project);
+        usage.files.add(file);
+        usage.matches += Number(count) || 0;
+      }
+    }
+    const projectUsageList = [...projectUsage.entries()]
+      .map(([project, usage]) => ({
+        project,
+        matches: usage.matches,
+        files: [...usage.files].sort(),
+        filesCount: usage.files.size,
+      }))
+      .sort((a, b) => b.matches - a.matches || a.project.localeCompare(b.project));
 
     const lightKey = p.lightning.startsWith('yes') ? 'yes' : p.lightning.startsWith('none') ? 'none' : 'partial';
 
@@ -1500,10 +1675,18 @@ function renderBody() {
             <div class="exs">\${p.patterns.flatMap(pat => pat.examples.slice(0,2))
               .slice(0,8).map(e => \`<code class="ex-chip">\${escHtml(e.slice(0,70))}</code>\`).join('')}</div>
           </div>\` : ''}
-          \${allFiles.length ? \`
+          \${projectUsageList.length ? \`
           <div class="d-section">
-            <div class="d-label">Файлы (\${allFiles.length})</div>
-            <div class="files-txt">\${allFiles.slice(0,8).map(f => \`<code>\${escHtml(f)}</code>\`).join(' ')}\${allFiles.length > 8 ? \` <em>+\${allFiles.length - 8} ещё</em>\` : ''}</div>
+            <div class="d-label">Проекты (\${projectUsageList.length})</div>
+            <div>\${projectUsageList.map(item => \`
+              <div class="proj-usage-row">
+                <div class="pats"><span class="pat-chip"><span class="pcl">\${escHtml(item.project)}</span><span class="pcc">\${item.matches} / \${item.filesCount} ф.</span></span></div>
+                <div class="files-txt">\${item.files.map(file => {
+                  const short = file.startsWith(item.project + '/') ? file.slice(item.project.length + 1) : file;
+                  return \`<button type="button" class="file-jump" data-file="\${escAttr(file)}">\${escHtml(short)}</button>\`;
+                }).join(' ')}</div>
+              </div>
+            \`).join('')}</div>
           </div>\` : ''}
           \${p.transforms?.length ? \`
           <div class="d-section">
@@ -1550,6 +1733,13 @@ function renderBody() {
       const id = tr.dataset.id;
       if (expanded.has(id)) expanded.delete(id); else expanded.add(id);
       renderBody();
+    };
+  });
+
+  tbody.querySelectorAll('.file-jump').forEach(btn => {
+    btn.onclick = e => {
+      e.stopPropagation();
+      openFileInFilesView(btn.dataset.file || '');
     };
   });
 
@@ -1601,7 +1791,7 @@ function openPopover(badge, pluginId) {
       else overrides[pluginId] = next;
       saveOverrides();
       closePopover();
-      renderFtabs(); renderBody();
+      renderFtabs(); renderCxtabs(); renderBody();
     };
   });
   popover.el.style.visibility = 'hidden';
@@ -1650,7 +1840,7 @@ function openCxPopover(badge, pluginId) {
       else complexityOverrides[pluginId] = next;
       saveComplexityOverrides();
       closeCxPopover();
-      renderCxtabs(); renderBody();
+      renderFtabs(); renderCxtabs(); renderBody();
     };
   });
   cxPopover.el.style.visibility = 'hidden';
@@ -1685,7 +1875,7 @@ function initSearch() {
   const input = document.getElementById('search-input');
   input.oninput = () => {
     searchQuery = input.value.trim();
-    renderFtabs(); renderBody();
+    renderFtabs(); renderCxtabs(); renderBody();
   };
 }
 
@@ -1720,7 +1910,7 @@ function escAttr(s) { return escHtml(s); }
 
 document.getElementById('hide-zero').onchange = e => {
   hideZero = e.target.checked;
-  renderBody();
+  renderFtabs(); renderCxtabs(); renderBody();
 };
 
 init();

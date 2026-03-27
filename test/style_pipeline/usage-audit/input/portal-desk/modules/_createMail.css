@@ -1,0 +1,31 @@
+.CreateMail {
+	.Form__set {
+		width: 100%;
+
+		& + .Form__set {
+			margin-top: 10px;
+		}
+	}
+
+	.controlPanel {
+		padding-y: 15px;
+
+		&__header {
+			font-size: 17px;
+		}
+
+		&__description + .Form__set {
+			margin-top: 10px;
+		}
+
+		&__paragraph + .controlPanel__paragraph {
+			margin-top: 6px;
+		}
+
+		.importExport__log {
+			padding-top: 0;
+			padding-left: 20px;
+			border: 0;
+		}
+	}
+}

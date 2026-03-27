@@ -1,0 +1,33 @@
+.SelectRubric {
+    position: absolute;
+    padding: 10px;
+    top: 100%;
+    left: -1px;
+    border: 1px solid #bbb;
+    background-color: #fff;
+    z-index: 200;
+    display: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,.25);
+
+    .Field {
+        width: 235px;
+        display: block;
+        margin-bottom: 7px;
+        display: none;
+
+        &:first-child {
+            display: block;
+        }
+    }
+
+    &__addBtn {
+        @mixin btnMain;
+        margin-right: 10px;
+        margin-top: 3px;
+    }
+    &__cancelBtn {
+        @mixin btnMain;
+	    @mixin btnOutlineMain;
+        margin-top: 3px;
+    }
+}

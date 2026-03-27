@@ -1,0 +1,22 @@
+.PersonnelRecords {
+	padding-bottom: 10px;
+
+	&__input {
+		max-width: 300px;
+	}
+
+	.Form__field {
+		margin-bottom: 20px;
+	}
+
+	&__content {
+		.btnAdd {
+			margin-left: 20px;
+			margin-bottom: 10px;
+		}
+	}
+
+	.contentWrapper.Form {
+		padding-bottom: 0;
+	}
+}

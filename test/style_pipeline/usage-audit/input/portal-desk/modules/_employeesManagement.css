@@ -1,0 +1,184 @@
+.EmployeesManagement { /* ^ page */
+
+	.RichSelect--employee {
+		display: block;
+		width: 270px;
+		margin-top: .6em;
+		margin-bottom: 1em;
+	}
+
+	.controlPanel {
+		margin-top: 1em;
+
+		.btn + .btn {
+			margin-left: 9px;
+		}
+	}
+}
+
+.EmployeeTransfer { /* ^ block */
+	width: 320px;
+
+	&__employee {
+		margin: .8em 0;
+		font-weight: bold;
+	}
+
+	.filters {
+		padding: 0;
+	}
+
+	&--department {
+
+		.filter {
+			display: block;
+			margin-right: 0;
+		}
+
+		.filter + .filter {
+			margin-top: 1.5em;
+		}
+
+		.filter--department .RichSelect,
+		.filter--post .Field {
+			width: 100%;
+		}
+	}
+
+	&--maternity {
+		.Form__group {
+			.Form__field {
+				display: inline-block;
+			}
+		}
+
+		.Form__field {
+			&--resourcesAccess {
+				margin-top: 1.4em;
+			}
+		}
+	}
+}
+
+.EditEmployeeProfile { /* ^ page */
+
+	&__sidebar {
+		float: left;
+		width: 200px;
+		text-align: center;
+	}
+
+	&__image {
+		height: 200px;
+		padding: 3px;
+		box-sizing: border-box;
+		border: 1px solid #d7d7d7;
+		text-align: center;
+		line-height: 190px;
+		font-size: 14px;
+		font-weight: bold;
+		color: #999;
+
+		& img {
+			width: 100%;
+			height: 100%;
+			object-fit: contain;
+		}
+	}
+
+	&__controls {
+		padding: 2px 0 20px 0;
+
+		.Upload2 {
+			display: block;
+			margin-top: 10px;
+
+			&__button {
+				width: 100%;
+			}
+		}
+	}
+
+	&__actions {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-top: 10px;
+
+		.Button {
+			&:first-child {
+				flex-grow: 1;
+			}
+		}
+	}
+
+	&__content {
+		overflow: hidden;
+		padding-bottom: 10px;
+		padding-left: 18px;
+
+		.Specs__item {
+			padding: 0;
+
+			&--name {
+
+				.Field {
+					width: 270px;
+				}
+			}
+
+			&--remoteWorker {
+				.Specs__label {
+					display: block;
+
+					& + .Specs__label {
+						margin-top: 5px;
+					}
+				}
+			}
+		}
+
+		.Specs__item + .Specs__item {
+			margin-top: 1em;
+		}
+
+		.Specs__content {
+			margin-bottom: 0;
+
+			& > .File {
+				margin-top: 0;
+			}
+		}
+	}
+
+	.controlPanel {
+		clear: both;
+
+		.btn + .btn {
+			margin-left: .6em;
+		}
+	}
+}
+
+.Upload--singleAttachment {
+	.Upload__additional {
+		align-self: flex-start;
+		order: 5;
+		margin-left: 15px;
+	}
+}
+
+.CropImage {
+	height: 500px;
+
+	> img {
+		display: block;
+		max-width: 100%;
+		max-height: 100%;
+		opacity: 0;
+	}
+
+	.cropper-view-box {
+		border-radius: 50%;
+	}
+}

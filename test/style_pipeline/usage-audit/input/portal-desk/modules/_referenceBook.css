@@ -1,0 +1,11 @@
+.ReferenceBook {
+	.Filter2 {
+		&--name {
+			width: 260px;
+		}
+
+		&--grouping {
+			width: 155px;
+		}
+	}
+}

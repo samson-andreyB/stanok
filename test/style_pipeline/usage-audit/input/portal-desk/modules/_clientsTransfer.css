@@ -1,0 +1,25 @@
+.ClientsTransfer {
+	.Form__set {
+		width: 100%;
+
+		& + .Form__set {
+			margin-top: 10px;
+		}
+
+		& + .importExport__log {
+			margin-top: 20px;
+		}
+	}
+
+	.controlPanel {
+		padding-y: 15px;
+
+		&__header {
+			font-size: 17px;
+		}
+
+		&__description + .Form__set {
+			margin-top: 10px;
+		}
+	}
+}
