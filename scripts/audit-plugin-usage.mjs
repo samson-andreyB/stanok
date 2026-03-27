@@ -701,8 +701,9 @@ function renderHtml(projects, generatedDate) {
 <title>intcss Plugin Audit</title>
 <style>
 :root {
-  --bg: #f8fafc; --surface: #fff; --border: #e2e8f0; --text: #1e293b;
-  --muted: #64748b; --accent: #3b82f6;
+  --bg: #eef3f8; --surface: #fff; --border: #d3dde9; --text: #132238;
+  --muted: #5c7088; --accent: #006adc;
+  --hover:#eaf1f8; --focus-ring:rgba(0,106,220,.28);
   --critical-bg: #fee2e2; --critical: #dc2626;
   --high-bg: #fff7ed;     --high: #c2410c;
   --native-bg: #dcfce7;   --native: #15803d;
@@ -711,8 +712,8 @@ function renderHtml(projects, generatedDate) {
   --removed-bg: #f1f5f9;  --removed: #94a3b8;
 }
 html.dark {
-  --bg: #0f172a; --surface: #1e293b; --border: #334155; --text: #e2e8f0;
-  --muted: #94a3b8; --accent: #60a5fa;
+  --bg: #0b1322; --surface: #131f33; --border: #2d3f57; --text: #e2e8f0;
+  --muted: #98abc4; --accent: #67b2ff; --hover:#1f324d; --focus-ring:rgba(96,165,250,.35);
   --critical-bg: #450a0a; --critical: #fca5a5;
   --high-bg: #431407;     --high: #fdba74;
   --native-bg: #052e16;   --native: #86efac;
@@ -722,18 +723,20 @@ html.dark {
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-body{font:14px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);height:100%}
-#app{max-width:1200px;margin:0 auto;padding:24px 16px;height:100%;display:flex;flex-direction:column;box-sizing:border-box}
+body{font:14px/1.5 "Manrope",-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);height:100%}
+#app{max-width:1320px;margin:0 auto;padding:20px 14px;height:100%;display:flex;flex-direction:column;box-sizing:border-box}
 
-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px}
+header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:0}
 .hdr-title{display:flex;flex-direction:column;gap:3px}
-h1{font-size:22px;font-weight:700;letter-spacing:-.3px;line-height:1.2}
+h1{font-size:24px;font-weight:800;letter-spacing:-.3px;line-height:1.2}
 .hdr-sub{font-size:12px;color:var(--muted)}
 .hdr-meta{font-size:11px;color:var(--muted);white-space:nowrap}
 .theme-btn{width:32px;height:32px;border:1px solid var(--border);border-radius:6px;background:var(--surface);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color .15s;line-height:1}
 .theme-btn:hover{border-color:var(--accent)}
+.theme-btn:focus-visible,.proj-trigger:focus-visible,.vbtn:focus-visible,.fbtn:focus-visible,.fptab:focus-visible,.toggle-zero input:focus-visible{outline:none;box-shadow:0 0 0 3px var(--focus-ring)}
 
-.controls{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
+.top-panel{display:flex;flex-direction:column;gap:10px;margin-bottom:8px;padding:12px;border:1px solid var(--border);border-radius:12px;background:linear-gradient(130deg,rgba(0,106,220,.08),rgba(0,106,220,.02) 40%),var(--surface);box-shadow:0 8px 20px rgba(18,38,63,.08)}
+.controls{display:flex;flex-direction:column;gap:10px;margin-bottom:0}
 .ctrl-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .ctrl-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;min-width:64px}
 
@@ -745,7 +748,7 @@ h1{font-size:22px;font-weight:700;letter-spacing:-.3px;line-height:1.2}
 html.dark .proj-panel{box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .proj-panel.open{display:block}
 .proj-option{display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;font-size:13px;transition:background .1s;color:var(--text)}
-.proj-option:hover{background:var(--bg)}
+.proj-option:hover{background:var(--hover)}
 .proj-option input[type="checkbox"]{cursor:pointer;accent-color:var(--accent)}
 .proj-option.all-option{border-bottom:1px solid var(--border);font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
 
@@ -765,7 +768,7 @@ html.dark .proj-panel{box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .filter-summary a:hover{text-decoration:underline}
 
 .view-toggle{display:flex;gap:4px;margin-bottom:12px}
-.vbtn{padding:5px 14px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--muted);cursor:pointer;font-size:13px;font-weight:500;transition:all .15s}
+.vbtn{padding:5px 14px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--muted);cursor:pointer;font-size:13px;font-weight:600;transition:all .15s}
 .vbtn:hover{border-color:var(--accent);color:var(--text)}
 .vbtn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 col.cf-file{width:auto}
@@ -819,8 +822,8 @@ thead th .sort-arrow{margin-left:4px;opacity:.5}
 thead th.sorted .sort-arrow{opacity:1}
 
 tbody tr.pr{cursor:pointer;transition:background .1s}
-tbody tr.pr:hover{background:var(--bg)}
-tbody tr.pr.open{background:var(--bg)}
+tbody tr.pr:hover{background:var(--hover)}
+tbody tr.pr.open{background:var(--hover)}
 tbody tr.pr td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
 tbody tr.dr td{padding:0;border-bottom:1px solid var(--border)}
 tbody tr.hidden{display:none}
@@ -831,7 +834,8 @@ tbody tr.hidden{display:none}
 .plugin-name{font-weight:500}
 .plugin-order{font-size:11px;color:var(--muted);margin-left:4px}
 
-.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;white-space:nowrap}
+.badge{display:inline-flex;gap:4px;align-items:center;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;white-space:nowrap}
+.count-muted,.muted-count{opacity:.65;font-weight:400}
 .p-critical{background:var(--critical-bg);color:var(--critical)}
 .p-high{background:var(--high-bg);color:var(--high)}
 .p-native{background:var(--native-bg);color:var(--native)}
@@ -887,18 +891,19 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
 </head>
 <body>
 <div id="app">
-  <header>
-    <div class="hdr-title">
-      <h1>Plugin Audit</h1>
-      <span class="hdr-sub">PostCSS → Rust / Lightning CSS</span>
+  <div class="top-panel">
+    <header>
+      <div class="hdr-title">
+        <h1>Plugin Audit</h1>
+        <span class="hdr-sub">PostCSS → Rust / Lightning CSS</span>
+      </div>
+      <button class="theme-btn" id="theme-btn" title="Переключить тему" aria-label="Переключить тему">🌙</button>
+    </header>
+    <div class="view-toggle">
+      <button class="vbtn active" data-view="plugins">Плагины</button>
+      <button class="vbtn" data-view="files">Файлы</button>
     </div>
-    <button class="theme-btn" id="theme-btn" title="Переключить тему" aria-label="Переключить тему">🌙</button>
-  </header>
-  <div class="view-toggle">
-    <button class="vbtn active" data-view="plugins">Плагины</button>
-    <button class="vbtn" data-view="files">Файлы</button>
-  </div>
-  <div class="controls">
+    <div class="controls">
     <div class="ctrl-group" id="proj-ctrl">
       <span class="ctrl-label">Проект</span>
       <div class="proj-dropdown" id="proj-dropdown">
@@ -926,6 +931,7 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
       <label class="toggle-zero">
         <input type="checkbox" id="hide-zero"> Скрыть нулевые
       </label>
+    </div>
     </div>
   </div>
   <div id="plugins-section" style="display:flex;flex-direction:column;flex:1 1 0;min-height:0">
@@ -958,12 +964,12 @@ const DATA = ${safeData};
 
 const PRIORITY_CYCLE = ['critical','high','native','out-of-scope','removed'];
 const PRIORITY_LABEL = {
-  critical: '🔴 Critical', high: '🟠 High',
-  native: '🟢 Native', 'out-of-scope': '⚪ Out of scope', removed: '🔘 Removed'
+  critical: 'Critical', high: 'High',
+  native: 'Native', 'out-of-scope': 'Out of scope', removed: 'Removed'
 };
 const PRIORITY_WEIGHT = {critical:0,high:1,native:2,'out-of-scope':3,removed:4};
-const LIGHTNING_LABEL = {yes:'✅ Native', none:'❌ None', partial:'⚠️ Partial'};
-const COMPLEXITY_LABEL = {trivial:'✅ Trivial', low:'🔵 Low', medium:'🟡 Medium', high:'🔴 High', 'n/a':'— N/A'};
+const LIGHTNING_LABEL = {yes:'Native', none:'None', partial:'Partial'};
+const COMPLEXITY_LABEL = {trivial:'Trivial', low:'Low', medium:'Medium', high:'High', 'n/a':'N/A'};
 const COMPLEXITY_WEIGHT = {trivial:0,low:1,medium:2,high:3,'n/a':4};
 
 const LS_KEY = 'plugin-audit-priorities';
@@ -1168,7 +1174,7 @@ function renderFilesTable() {
         <td><span class="file-path">\${escHtml(r.file)}</span></td>
         <td><span class="matches">\${r.total}</span></td>
         <td><div class="plugin-chips">\${
-          sortedPlugins.map(p => \`<span class="badge p-\${escAttr(effectivePriorityById(p.id, plugins))}">\${escHtml(p.id)} <span style="opacity:.6;font-weight:400">\${p.count}</span></span>\`).join('')
+          sortedPlugins.map(p => \`<span class="badge p-\${escAttr(effectivePriorityById(p.id, plugins))}">\${escHtml(p.id)} <span class="count-muted">\${p.count}</span></span>\`).join('')
         }</div></td>
       </tr>\`;
     if (!isOpen) return mainRow;
@@ -1185,7 +1191,7 @@ function renderFilesTable() {
                 </div>
                 \${p.patterns.map(pat => \`
                   <div class="fd-pat">
-                    <div class="d-label">\${escHtml(pat.label)} <span style="opacity:.6">(\${pat.count})</span></div>
+                    <div class="d-label">\${escHtml(pat.label)} <span class="muted-count">(\${pat.count})</span></div>
                     \${pat.examples.length > 0
                       ? pat.examples.map(ex => \`<code class="fd-code">\${escHtml(ex)}</code>\`).join('')
                       : '<span class="fd-no-ex">—</span>'}
@@ -1320,8 +1326,8 @@ function renderFtabs() {
   }
   const tabs = ['all','critical','high','native','out-of-scope','removed'];
   const labels = {
-    all: 'Все', critical: '🔴 Critical', high: '🟠 High',
-    native: '🟢 Native', 'out-of-scope': '⚪ Out of scope', removed: '🔘 Removed'
+    all: 'Все', critical: 'Critical', high: 'High',
+    native: 'Native', 'out-of-scope': 'Out of scope', removed: 'Removed'
   };
   const ftabs = document.getElementById('ftabs');
   ftabs.innerHTML = tabs.filter(t => t === 'all' || counts[t]).map(t => {
@@ -1354,7 +1360,8 @@ function renderHead() {
   document.getElementById('thead').innerHTML = \`<tr>\${cols.map(c => {
     const sorted = sortCol === c.key;
     const arrow = sorted ? (sortDir > 0 ? '↑' : '↓') : '↕';
-    return \`<th class="\${sorted ? 'sorted' : ''}" data-col="\${c.key}" title="\${escAttr(c.title)}">\${c.label}<span class="sort-arrow">\${arrow}</span></th>\`;
+    const ariaSort = sorted ? (sortDir > 0 ? 'ascending' : 'descending') : 'none';
+    return \`<th class="\${sorted ? 'sorted' : ''}" data-col="\${c.key}" title="\${escAttr(c.title)}" aria-sort="\${ariaSort}">\${c.label}<span class="sort-arrow">\${arrow}</span></th>\`;
   }).join('')}</tr>\`;
   document.getElementById('thead').querySelectorAll('th').forEach(th => {
     th.onclick = () => {
