@@ -45,6 +45,26 @@ const PLUGINS = [
       { label: '@import string',   re: /@import\s+["']/gm },
       { label: '@import url()',     re: /@import\s+url\(/gm },
     ],
+    transforms: [
+      {
+        label: '@import → inline содержимого файла',
+        input:
+`/* main.css */
+@import "variables.css";
+@import "base/reset.css";
+
+.foo { color: red; }`,
+        output:
+`/* main.css */
+/* ── variables.css ── */
+$color-primary: #3b82f6;
+
+/* ── base/reset.css ── */
+* { box-sizing: border-box; }
+
+.foo { color: red; }`,
+      },
+    ],
   },
   {
     id: 'postcss-mixins',
@@ -58,6 +78,40 @@ const PLUGINS = [
       { label: '@mixin call',               re: /@mixin\s+\w+/gm },
       { label: '@mixin-content',            re: /@mixin-content/gm },
     ],
+    transforms: [
+      {
+        label: 'простой mixin',
+        input:
+`@define-mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box { @mixin flex-center; }`,
+        output:
+`.box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}`,
+      },
+      {
+        label: 'параметрический mixin',
+        input:
+`@define-mixin size $w, $h {
+  width: $w;
+  height: $h;
+}
+
+.icon { @mixin size 24px, 24px; }`,
+        output:
+`.icon {
+  width: 24px;
+  height: 24px;
+}`,
+      },
+    ],
   },
   {
     id: 'postcss-axis',
@@ -70,6 +124,26 @@ const PLUGINS = [
       { label: 'padding-x/y',  re: /\bpadding-[xy]\s*:/gm },
       { label: 'border-x/y',   re: /\bborder-[xy]\s*:/gm },
       { label: 'inset-x/y',    re: /\binset-[xy]\s*:/gm },
+    ],
+    transforms: [
+      {
+        label: 'axis-shorthand → отдельные стороны',
+        input:
+`.el {
+  margin-x: 16px;
+  padding-y: 8px;
+  inset-x: 0;
+}`,
+        output:
+`.el {
+  margin-left: 16px;
+  margin-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  left: 0;
+  right: 0;
+}`,
+      },
     ],
   },
   {
@@ -95,6 +169,32 @@ const PLUGINS = [
       { label: 'inline()',  re: /\binline\(['"]/gm },
       { label: 'size()',    re: /\bsize\(['"]/gm },
     ],
+    transforms: [
+      {
+        label: 'resolve() → url() с абсолютным путём',
+        input:
+`.hero {
+  background: resolve('images/hero.jpg');
+}`,
+        output:
+`.hero {
+  background: url('/assets/images/hero.jpg');
+}`,
+      },
+      {
+        label: 'width()/height() → реальные размеры файла',
+        input:
+`.logo {
+  width: width('logo.svg');
+  height: height('logo.svg');
+}`,
+        output:
+`.logo {
+  width: 120px;
+  height: 40px;
+}`,
+      },
+    ],
   },
   {
     id: 'postcss-advanced-variables',
@@ -110,6 +210,35 @@ const PLUGINS = [
       { label: '@for loop',        re: /@for\s+\$\w+\s+from/gm },
       { label: '@each loop',       re: /@each\s+\$\w+\s+in/gm },
       { label: '@if condition',    re: /@if\s+/gm },
+    ],
+    transforms: [
+      {
+        label: '$переменные',
+        input:
+`$primary: #3b82f6;
+$radius: 6px;
+
+.btn {
+  color: $primary;
+  border-radius: $radius;
+}`,
+        output:
+`.btn {
+  color: #3b82f6;
+  border-radius: 6px;
+}`,
+      },
+      {
+        label: '@for цикл',
+        input:
+`@for $i from 1 to 4 {
+  .col-$(i) { flex: 0 0 calc(100% / $i); }
+}`,
+        output:
+`.col-1 { flex: 0 0 calc(100% / 1); }
+.col-2 { flex: 0 0 calc(100% / 2); }
+.col-3 { flex: 0 0 calc(100% / 3); }`,
+      },
     ],
   },
   {
@@ -159,6 +288,33 @@ const PLUGINS = [
       { label: '&--modifier',     re: /&--[\w-]+/gm },
       { label: 'prefix& (a&)',    re: /[a-zA-Z]&(?=[^{])/gm },
     ],
+    transforms: [
+      {
+        label: 'BEM &__element и &--modifier',
+        input:
+`.block {
+  color: black;
+
+  &__elem {
+    font-size: 14px;
+  }
+
+  &--active {
+    font-weight: bold;
+  }
+}`,
+        output:
+`.block {
+  color: black;
+}
+.block__elem {
+  font-size: 14px;
+}
+.block--active {
+  font-weight: bold;
+}`,
+      },
+    ],
   },
   {
     id: 'postcss-nested (standard)',
@@ -173,6 +329,26 @@ const PLUGINS = [
       { label: '& + sibling',     re: /&\s*\+/gm },
       { label: '& ~ sibling',     re: /&\s*~/gm },
       { label: '&[attr]',         re: /&\[/gm },
+    ],
+    transforms: [
+      {
+        label: 'стандартное вложение (Lightning CSS)',
+        input:
+`.parent {
+  color: black;
+
+  .child { color: blue; }
+
+  &:hover { opacity: .8; }
+
+  & > .direct { margin: 0; }
+}`,
+        output:
+`.parent { color: black; }
+.parent .child { color: blue; }
+.parent:hover { opacity: .8; }
+.parent > .direct { margin: 0; }`,
+      },
     ],
   },
   {
@@ -196,6 +372,23 @@ const PLUGINS = [
     patterns: [
       { label: 'calc() usage', re: /\bcalc\([^)]+\)/gm },
     ],
+    transforms: [
+      {
+        label: 'вычисление числовых констант (Lightning CSS)',
+        input:
+`.el {
+  width: calc(4 * 8px);
+  margin: calc(10px + 0px);
+  padding: calc(100% / 3);
+}`,
+        output:
+`.el {
+  width: 32px;
+  margin: 10px;
+  padding: 33.3333%;
+}`,
+      },
+    ],
   },
   {
     id: 'postcss-svg',
@@ -208,13 +401,34 @@ const PLUGINS = [
       { label: 'svg() with fill/rules', re: /(?<![a-z-])svg\(['"][^'"]+['"],/gm },
       { label: 'svg() fragment #id',    re: /(?<![a-z-])svg\(['"][^'"]*#[\w-]+['"]/gm },
     ],
+    transforms: [
+      {
+        label: 'svg() → data URI inline',
+        input:
+`.icon {
+  background: svg('icons/arrow.svg', fill: #333);
+}
+
+.logo {
+  background: svg('logo.svg');
+}`,
+        output:
+`.icon {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'...fill='%23333'...%3E");
+}
+
+.logo {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'...%3E");
+}`,
+      },
+    ],
   },
   {
     id: 'postcss-url',
     order: 14,
     lightning: 'none',
-    priority: 'medium',
-    recommendation: 'Rust Pre-stage (rewrite-only)',
+    priority: 'out-of-scope',
+    recommendation: 'Out of scope — rewrite-only, 12 matches, не критично',
     patterns: [
       { label: 'url() relative',   re: /url\(['"](?!data:|https?:\/\/|\/\/)[^/'"#][^'"]*['"]\)/gm },
       { label: 'url() absolute',   re: /url\(['"]\/[^'"]+['"]\)/gm },
@@ -251,6 +465,26 @@ const PLUGINS = [
     recommendation: 'Lightning CSS native — проверить browserslist targets mapping',
     patterns: [
       { label: 'browserslist comment', re: /browsers(?:list)?:\s*['"]/gim },
+    ],
+    transforms: [
+      {
+        label: 'вендорные префиксы (Lightning CSS)',
+        input:
+`.el {
+  user-select: none;
+  appearance: none;
+  backdrop-filter: blur(4px);
+}`,
+        output:
+`.el {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}`,
+      },
     ],
   },
   {
@@ -299,6 +533,7 @@ function scanFiles(files, inputDir) {
       lightning: plugin.lightning,
       priority: plugin.priority,
       recommendation: plugin.recommendation,
+      transforms: plugin.transforms ?? [],
       totalMatches: 0,
       patterns: [],
     };
@@ -440,7 +675,6 @@ function renderHtml(projects, generatedDate) {
   --muted: #64748b; --accent: #3b82f6;
   --critical-bg: #fee2e2; --critical: #dc2626;
   --high-bg: #fff7ed;     --high: #c2410c;
-  --medium-bg: #fefce8;   --medium: #a16207;
   --native-bg: #dcfce7;   --native: #15803d;
   --scope-bg: #f1f5f9;    --scope: #64748b;
   --removed-bg: #f1f5f9;  --removed: #94a3b8;
@@ -450,7 +684,6 @@ html.dark {
   --muted: #94a3b8; --accent: #60a5fa;
   --critical-bg: #450a0a; --critical: #fca5a5;
   --high-bg: #431407;     --high: #fdba74;
-  --medium-bg: #422006;   --medium: #fcd34d;
   --native-bg: #052e16;   --native: #86efac;
   --scope-bg: #1e293b;    --scope: #94a3b8;
   --removed-bg: #1e293b;  --removed: #64748b;
@@ -459,11 +692,18 @@ html.dark {
 body{font:14px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text)}
 #app{max-width:1200px;margin:0 auto;padding:24px 16px}
 
-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
-h1{font-size:18px;font-weight:700}
-.hdr-meta{color:var(--muted);font-size:12px;margin-left:auto}
+header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px}
+.hdr-title{display:flex;flex-direction:column;gap:3px}
+h1{font-size:22px;font-weight:700;letter-spacing:-.3px;line-height:1.2}
+.hdr-sub{font-size:12px;color:var(--muted)}
+.hdr-meta{font-size:11px;color:var(--muted);white-space:nowrap}
 .theme-btn{width:32px;height:32px;border:1px solid var(--border);border-radius:6px;background:var(--surface);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color .15s;line-height:1}
 .theme-btn:hover{border-color:var(--accent)}
+
+.controls{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
+.ctrl-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ctrl-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;min-width:64px}
+
 .proj-dropdown{position:relative}
 .proj-trigger{padding:5px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;max-width:240px;transition:border-color .15s;color:var(--text)}
 .proj-trigger:hover{border-color:var(--accent)}
@@ -476,12 +716,11 @@ html.dark .proj-panel{box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .proj-option input[type="checkbox"]{cursor:pointer;accent-color:var(--accent)}
 .proj-option.all-option{border-bottom:1px solid var(--border);font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
 
-.controls{display:flex;align-items:center;gap:12px;margin-bottom:4px;flex-wrap:wrap}
 .filter-tabs{display:flex;gap:4px;flex-wrap:wrap}
 .fbtn{padding:4px 12px;border:1px solid var(--border);border-radius:20px;background:var(--surface);color:var(--text);cursor:pointer;font-size:12px;transition:all .1s;white-space:nowrap}
 .fbtn:hover{border-color:var(--accent)}
 .fbtn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.toggle-zero{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);cursor:pointer;margin-left:auto;white-space:nowrap}
+.toggle-zero{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);cursor:pointer;white-space:nowrap}
 .toggle-zero input{cursor:pointer}
 .search-input{padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);font-size:13px;width:180px;transition:border-color .15s}
 .search-input:focus{outline:none;border-color:var(--accent)}
@@ -525,7 +764,6 @@ tbody tr.hidden{display:none}
 .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;white-space:nowrap}
 .p-critical{background:var(--critical-bg);color:var(--critical)}
 .p-high{background:var(--high-bg);color:var(--high)}
-.p-medium{background:var(--medium-bg);color:var(--medium)}
 .p-native{background:var(--native-bg);color:var(--native)}
 .p-out-of-scope{background:var(--scope-bg);color:var(--scope)}
 .p-removed{background:var(--removed-bg);color:var(--removed)}
@@ -553,6 +791,13 @@ tbody tr.hidden{display:none}
 .exs{display:flex;gap:5px;flex-wrap:wrap}
 .ex-chip{background:var(--bg);border-radius:4px;padding:2px 6px;font-size:12px;font-family:'SFMono-Regular',Consolas,monospace}
 .rec-txt{font-size:12px;color:var(--muted);font-style:italic}
+.transforms{display:flex;flex-direction:column;gap:10px}
+.tf-item-label{font-size:11px;color:var(--muted);margin-bottom:4px}
+.tf-pair{display:grid;grid-template-columns:1fr 24px 1fr;gap:6px;align-items:start}
+.tf-arrow{color:var(--muted);text-align:center;padding-top:5px;font-size:14px;line-height:1.5}
+.tf-code{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:7px 10px;font:12px/1.5 'SFMono-Regular',Consolas,monospace;white-space:pre;overflow:auto;max-width:100%}
+.tf-code.tf-in{border-left:3px solid var(--border)}
+.tf-code.tf-out{border-left:3px solid var(--accent)}
 .override-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--accent);margin-left:4px;vertical-align:middle}
 mark{background:#fef08a;color:inherit;border-radius:2px}
 html.dark mark{background:#854d0e;color:#fef9c3}
@@ -568,22 +813,31 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
 <body>
 <div id="app">
   <header>
-    <h1>intcss Plugin Audit</h1>
-    <div class="proj-dropdown" id="proj-dropdown">
-      <button class="proj-trigger" id="proj-trigger">
-        <span id="proj-trigger-label">…</span>
-        <span class="trigger-arrow">▾</span>
-      </button>
-      <div class="proj-panel" id="proj-panel"></div>
+    <div class="hdr-title">
+      <h1>Plugin Audit</h1>
+      <span class="hdr-sub">PostCSS → Rust / Lightning CSS</span>
     </div>
-    <span class="hdr-meta" id="hdr-meta"></span>
     <button class="theme-btn" id="theme-btn" title="Переключить тему" aria-label="Переключить тему">🌙</button>
   </header>
   <div class="controls">
-    <div class="filter-tabs" id="ftabs"></div>
-    <label class="toggle-zero">
-      <input type="checkbox" id="hide-zero"> Скрыть нулевые
-    </label>
+    <div class="ctrl-group">
+      <span class="ctrl-label">Проект</span>
+      <div class="proj-dropdown" id="proj-dropdown">
+        <button class="proj-trigger" id="proj-trigger">
+          <span id="proj-trigger-label">…</span>
+          <span class="trigger-arrow">▾</span>
+        </button>
+        <div class="proj-panel" id="proj-panel"></div>
+      </div>
+      <span class="hdr-meta" id="hdr-meta"></span>
+    </div>
+    <div class="ctrl-group">
+      <span class="ctrl-label">Приоритет</span>
+      <div class="filter-tabs" id="ftabs"></div>
+      <label class="toggle-zero">
+        <input type="checkbox" id="hide-zero"> Скрыть нулевые
+      </label>
+    </div>
   </div>
   <div class="filter-summary" id="filter-summary"></div>
   <div class="tbl-wrap">
@@ -599,19 +853,19 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
 <script>
 const DATA = ${safeData};
 
-const PRIORITY_CYCLE = ['critical','high','medium','native','out-of-scope','removed'];
+const PRIORITY_CYCLE = ['critical','high','native','out-of-scope','removed'];
 const PRIORITY_LABEL = {
-  critical: '🔴 Critical', high: '🟠 High', medium: '🟡 Medium',
+  critical: '🔴 Critical', high: '🟠 High',
   native: '🟢 Native', 'out-of-scope': '⚪ Out of scope', removed: '🔘 Removed'
 };
-const PRIORITY_WEIGHT = {critical:0,high:1,medium:2,native:3,'out-of-scope':4,removed:5};
+const PRIORITY_WEIGHT = {critical:0,high:1,native:2,'out-of-scope':3,removed:4};
 const LIGHTNING_LABEL = {yes:'✅ Native', none:'❌ None', partial:'⚠️ Partial'};
 
 const LS_KEY = 'plugin-audit-priorities';
 const LS_THEME_KEY = 'plugin-audit-theme';
 
 let projSel = [Object.keys(DATA.projects)[0] || ''];
-let filter = 'all';
+let filters = new Set();
 let sortCol = 'order';
 let sortDir = 1;
 let hideZero = false;
@@ -759,17 +1013,27 @@ function renderFtabs() {
     const pr = effectivePriority(p);
     counts[pr] = (counts[pr] || 0) + 1;
   }
-  const tabs = ['all','critical','high','medium','native','out-of-scope','removed'];
+  const tabs = ['all','critical','high','native','out-of-scope','removed'];
   const labels = {
-    all: 'Все', critical: '🔴 Critical', high: '🟠 High', medium: '🟡 Medium',
+    all: 'Все', critical: '🔴 Critical', high: '🟠 High',
     native: '🟢 Native', 'out-of-scope': '⚪ Out of scope', removed: '🔘 Removed'
   };
   const ftabs = document.getElementById('ftabs');
-  ftabs.innerHTML = tabs.filter(t => t === 'all' || counts[t]).map(t =>
-    \`<button class="fbtn\${filter === t ? ' active' : ''}" data-filter="\${t}">\${labels[t]}\${counts[t] ? \` (\${counts[t]})\` : ''}</button>\`
-  ).join('');
+  ftabs.innerHTML = tabs.filter(t => t === 'all' || counts[t]).map(t => {
+    const isAll = t === 'all';
+    const active = isAll ? filters.size === 0 : filters.has(t);
+    return \`<button class="fbtn\${active ? ' active' : ''}" data-filter="\${t}">\${labels[t]}\${counts[t] ? \` (\${counts[t]})\` : ''}</button>\`;
+  }).join('');
   ftabs.querySelectorAll('.fbtn').forEach(btn => {
-    btn.onclick = () => { filter = btn.dataset.filter; renderFtabs(); renderBody(); };
+    btn.onclick = () => {
+      if (btn.dataset.filter === 'all') {
+        filters.clear();
+      } else {
+        const t = btn.dataset.filter;
+        if (filters.has(t)) filters.delete(t); else filters.add(t);
+      }
+      renderFtabs(); renderBody();
+    };
   });
 }
 
@@ -800,7 +1064,7 @@ function renderBody() {
   const allPlugins = getPlugins();
   const plugins = allPlugins.filter(p => {
     if (hideZero && p.totalMatches === 0) return false;
-    if (filter !== 'all' && effectivePriority(p) !== filter) return false;
+    if (filters.size > 0 && !filters.has(effectivePriority(p))) return false;
     if (searchQuery && !p.id.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     return true;
   });
@@ -857,6 +1121,20 @@ function renderBody() {
           <div class="d-section">
             <div class="d-label">Файлы (\${allFiles.length})</div>
             <div class="files-txt">\${allFiles.slice(0,8).map(f => \`<code>\${escHtml(f)}</code>\`).join(' ')}\${allFiles.length > 8 ? \` <em>+\${allFiles.length - 8} ещё</em>\` : ''}</div>
+          </div>\` : ''}
+          \${p.transforms?.length ? \`
+          <div class="d-section">
+            <div class="d-label">Трансформации</div>
+            <div class="transforms">\${p.transforms.map(tf => \`
+              <div class="tf-item">
+                \${tf.label ? \`<div class="tf-item-label">\${escHtml(tf.label)}</div>\` : ''}
+                <div class="tf-pair">
+                  <pre class="tf-code tf-in">\${escHtml(tf.input)}</pre>
+                  <div class="tf-arrow">→</div>
+                  <pre class="tf-code tf-out">\${escHtml(tf.output)}</pre>
+                </div>
+              </div>
+            \`).join('')}</div>
           </div>\` : ''}
           <div class="d-section">
             <div class="d-label">Рекомендация</div>
@@ -967,14 +1245,14 @@ function initSearch() {
 
 function renderFilterSummary(total, shown) {
   const parts = [];
-  if (filter !== 'all') parts.push(\`фильтр: <b>\${filter}</b>\`);
+  if (filters.size > 0) parts.push(\`фильтр: <b>\${[...filters].join(', ')}</b>\`);
   if (searchQuery) parts.push(\`поиск: <b>\${escHtml(searchQuery)}</b>\`);
   if (hideZero) parts.push('скрыты нулевые');
   const el = document.getElementById('filter-summary');
   if (parts.length === 0) { el.textContent = ''; return; }
   el.innerHTML = \`Показано \${shown} из \${total} · \${parts.join(' · ')} · <a id="reset-filters">Сбросить</a>\`;
   document.getElementById('reset-filters').onclick = () => {
-    filter = 'all'; searchQuery = ''; hideZero = false;
+    filters.clear(); searchQuery = ''; hideZero = false;
     document.getElementById('search-input').value = '';
     document.getElementById('hide-zero').checked = false;
     renderFtabs(); renderBody();
