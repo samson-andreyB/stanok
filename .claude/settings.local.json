@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(find /c/www/personal/stanok -type d -not -path */node_modules/* -not -path */.git/*)",
-      "Bash(wc -l /c/www/personal/stanok/crates/style_pipeline/src/*.rs)"
+      "Bash(wc -l /c/www/personal/stanok/crates/style_pipeline/src/*.rs)",
+      "Bash(npm run:*)"
     ]
   }
 }

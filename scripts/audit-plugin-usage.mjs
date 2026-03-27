@@ -40,6 +40,7 @@ const PLUGINS = [
     order: 1,
     lightning: 'none',
     priority: 'critical',
+    complexity: 'medium',
     recommendation: 'Rust Pre-stage (обязательный)',
     patterns: [
       { label: '@import string',   re: /@import\s+["']/gm },
@@ -71,6 +72,7 @@ $color-primary: #3b82f6;
     order: 2,
     lightning: 'none',
     priority: 'critical',
+    complexity: 'high',
     recommendation: 'Rust Pre-stage (обязательный)',
     patterns: [
       { label: '@define-mixin',             re: /@define-mixin\s+\w+/gm },
@@ -118,6 +120,7 @@ $color-primary: #3b82f6;
     order: 3,
     lightning: 'none',
     priority: 'high',
+    complexity: 'low',
     recommendation: 'Rust Pre-stage (обязательный — 32 matches подтверждены)',
     patterns: [
       { label: 'margin-x/y',   re: /\bmargin-[xy]\s*:/gm },
@@ -151,6 +154,7 @@ $color-primary: #3b82f6;
     order: 4,
     lightning: 'none',
     priority: 'out-of-scope',
+    complexity: 'n/a',
     recommendation: 'Out of scope — нет usage в реальных проектах',
     patterns: [
       { label: ': @property-name', re: /:\s*@[a-z][a-z-]+(?!\s*[\w(])/gm },
@@ -161,6 +165,7 @@ $color-primary: #3b82f6;
     order: 5,
     lightning: 'none',
     priority: 'critical',
+    complexity: 'high',
     recommendation: 'Rust Pre-stage (обязательный)',
     patterns: [
       { label: 'width()',   re: /\bwidth\(['"]/gm },
@@ -201,6 +206,7 @@ $color-primary: #3b82f6;
     order: 6,
     lightning: 'none',
     priority: 'critical',
+    complexity: 'high',
     recommendation: 'Rust Pre-stage для $var; @for/@if — проверить usage',
     patterns: [
       { label: '$var declaration', re: /\$[a-zA-Z][\w-]*\s*:/gm },
@@ -246,6 +252,7 @@ $radius: 6px;
     order: 7,
     lightning: 'partial',
     priority: 'out-of-scope',
+    complexity: 'n/a',
     recommendation: 'Out of scope — нет usage в реальных проектах',
     patterns: [
       { label: 'color(shade)',   re: /\bcolor\([^)]*shade\(/gm },
@@ -260,6 +267,7 @@ $radius: 6px;
     order: 8,
     lightning: 'none',
     priority: 'out-of-scope',
+    complexity: 'n/a',
     recommendation: 'Out of scope — нет usage в реальных проектах',
     patterns: [
       { label: 'strip()', re: /\bstrip\([^)]+\)/gm },
@@ -270,6 +278,7 @@ $radius: 6px;
     order: 9,
     lightning: 'none',
     priority: 'out-of-scope',
+    complexity: 'n/a',
     recommendation: 'Out of scope — нет usage в реальных проектах',
     patterns: [
       { label: '@if',      re: /@if\s+/gm },
@@ -282,6 +291,7 @@ $radius: 6px;
     order: 10,
     lightning: 'none',
     priority: 'critical',
+    complexity: 'medium',
     recommendation: '⚠️ Rust Pre-stage обязателен — Lightning CSS не поддерживает BEM-конкатенацию',
     patterns: [
       { label: '&__element',      re: /&__[\w-]+/gm },
@@ -321,6 +331,7 @@ $radius: 6px;
     order: 10,
     lightning: 'yes',
     priority: 'native',
+    complexity: 'trivial',
     recommendation: 'Lightning CSS покрывает стандартные комбинаторы нативно',
     patterns: [
       { label: '&:pseudo',        re: /&:/gm },
@@ -356,6 +367,7 @@ $radius: 6px;
     order: 11,
     lightning: 'none',
     priority: 'out-of-scope',
+    complexity: 'n/a',
     recommendation: 'Out of scope — нет usage в реальных проектах (0 matches)',
     patterns: [
       { label: '@extend .class',       re: /@extend\s+\./gm },
@@ -368,6 +380,7 @@ $radius: 6px;
     order: 12,
     lightning: 'yes',
     priority: 'native',
+    complexity: 'trivial',
     recommendation: 'Lightning CSS native — встроенная оптимизация calc()',
     patterns: [
       { label: 'calc() usage', re: /\bcalc\([^)]+\)/gm },
@@ -395,6 +408,7 @@ $radius: 6px;
     order: 13,
     lightning: 'none',
     priority: 'high',
+    complexity: 'high',
     recommendation: 'Rust Pre-stage (обязательный) — проверить $var в параметрах',
     patterns: [
       { label: 'svg() no params',       re: /(?<![a-z-])svg\(['"]/gm },
@@ -428,6 +442,7 @@ $radius: 6px;
     order: 14,
     lightning: 'none',
     priority: 'out-of-scope',
+    complexity: 'n/a',
     recommendation: 'Out of scope — rewrite-only, 12 matches, не критично',
     patterns: [
       { label: 'url() relative',   re: /url\(['"](?!data:|https?:\/\/|\/\/)[^/'"#][^'"]*['"]\)/gm },
@@ -441,6 +456,7 @@ $radius: 6px;
     order: 15,
     lightning: 'none',
     priority: 'out-of-scope',
+    complexity: 'n/a',
     recommendation: 'Rust Post-stage (опциональный) — нет usage в реальных проектах',
     patterns: [
       { label: 'SVG in url() (non-data)', re: /url\(['"](?!data:)[^'"]*\.svg['"]\)/gm },
@@ -451,6 +467,7 @@ $radius: 6px;
     order: 16,
     lightning: 'none',
     priority: 'out-of-scope',
+    complexity: 'n/a',
     recommendation: 'Out of scope — IE8 мёртв, hex fallback не нужен',
     patterns: [
       { label: 'rgba() with numbers', re: /\brgba\(\s*\d+\s*,/gm },
@@ -462,6 +479,7 @@ $radius: 6px;
     order: 17,
     lightning: 'yes',
     priority: 'native',
+    complexity: 'trivial',
     recommendation: 'Lightning CSS native — проверить browserslist targets mapping',
     patterns: [
       { label: 'browserslist comment', re: /browsers(?:list)?:\s*['"]/gim },
@@ -492,6 +510,7 @@ $radius: 6px;
     order: 18,
     lightning: 'none',
     priority: 'removed',
+    complexity: 'n/a',
     recommendation: 'Намеренно удалён — данные inline в mainX.css, _data.css больше не генерируется',
     patterns: [
       { label: 'data: image inline',    re: /url\(['"]data:image\/[^'"]+['"]\)/gm },
@@ -532,6 +551,7 @@ function scanFiles(files, inputDir) {
       order: plugin.order,
       lightning: plugin.lightning,
       priority: plugin.priority,
+      complexity: plugin.complexity ?? 'n/a',
       recommendation: plugin.recommendation,
       transforms: plugin.transforms ?? [],
       totalMatches: 0,
@@ -539,7 +559,7 @@ function scanFiles(files, inputDir) {
     };
 
     for (const pat of plugin.patterns) {
-      const patResult = { label: pat.label, count: 0, examples: [], files: new Set() };
+      const patResult = { label: pat.label, count: 0, examples: [], files: new Set(), fileMatches: {}, fileExamples: {} };
 
       for (const file of files) {
         const content = fs.readFileSync(file, 'utf8');
@@ -549,10 +569,20 @@ function scanFiles(files, inputDir) {
         if (matches.length > 0) {
           patResult.count += matches.length;
           patResult.files.add(relPath);
-          for (const m of matches) {
-            const trimmed = m.trim();
-            if (patResult.examples.length < 3 && !patResult.examples.includes(trimmed)) {
-              patResult.examples.push(trimmed);
+          patResult.fileMatches[relPath] = (patResult.fileMatches[relPath] ?? 0) + matches.length;
+          if (!patResult.fileExamples[relPath]) patResult.fileExamples[relPath] = [];
+          const lines = content.split('\n');
+          for (let li = 0; li < lines.length; li++) {
+            const hit = pat.re.test(lines[li]);
+            pat.re.lastIndex = 0;
+            if (hit) {
+              const ex = `L${li + 1}: ${lines[li].trim()}`;
+              if (patResult.fileExamples[relPath].length < 3 && !patResult.fileExamples[relPath].includes(ex)) {
+                patResult.fileExamples[relPath].push(ex);
+              }
+              if (patResult.examples.length < 3 && !patResult.examples.includes(ex)) {
+                patResult.examples.push(ex);
+              }
             }
           }
         }
@@ -676,6 +706,7 @@ function renderHtml(projects, generatedDate) {
   --critical-bg: #fee2e2; --critical: #dc2626;
   --high-bg: #fff7ed;     --high: #c2410c;
   --native-bg: #dcfce7;   --native: #15803d;
+  --low-bg: #dbeafe;      --low: #1d4ed8;
   --scope-bg: #f1f5f9;    --scope: #64748b;
   --removed-bg: #f1f5f9;  --removed: #94a3b8;
 }
@@ -685,12 +716,14 @@ html.dark {
   --critical-bg: #450a0a; --critical: #fca5a5;
   --high-bg: #431407;     --high: #fdba74;
   --native-bg: #052e16;   --native: #86efac;
-  --scope-bg: #1e293b;    --scope: #94a3b8;
+  --low-bg: #1e3a5f;      --low: #93c5fd;
+  --scope-bg: #2d3f52;    --scope: #cbd5e1;
   --removed-bg: #1e293b;  --removed: #64748b;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font:14px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text)}
-#app{max-width:1200px;margin:0 auto;padding:24px 16px}
+html,body{height:100%}
+body{font:14px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);height:100%}
+#app{max-width:1200px;margin:0 auto;padding:24px 16px;height:100%;display:flex;flex-direction:column;box-sizing:border-box}
 
 header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px}
 .hdr-title{display:flex;flex-direction:column;gap:3px}
@@ -731,7 +764,43 @@ html.dark .proj-panel{box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .filter-summary a{color:var(--accent);cursor:pointer;text-decoration:none}
 .filter-summary a:hover{text-decoration:underline}
 
-.tbl-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:auto;max-height:calc(100vh - 180px);scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.view-toggle{display:flex;gap:4px;margin-bottom:12px}
+.vbtn{padding:5px 14px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--muted);cursor:pointer;font-size:13px;font-weight:500;transition:all .15s}
+.vbtn:hover{border-color:var(--accent);color:var(--text)}
+.vbtn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+col.cf-file{width:auto}
+col.cf-matches{width:110px}
+col.cf-plugins{width:340px}
+.plugin-chips{display:flex;gap:4px;flex-wrap:wrap}
+.file-path{font-family:'SFMono-Regular',Consolas,monospace;font-size:12px}
+.files-section{display:none;flex:1 1 0;min-height:0;flex-direction:column;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.files-proj-tabs{display:flex;gap:4px;padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap}
+.fptab{padding:4px 12px;border:1px solid var(--border);border-radius:5px;background:transparent;color:var(--muted);cursor:pointer;font-size:12px;font-weight:500;transition:all .15s}
+.fptab:hover{border-color:var(--accent);color:var(--text)}
+.fptab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.files-tbl-wrap{flex:1 1 0;min-height:0;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.files-tbl-wrap::-webkit-scrollbar{width:6px;height:6px}
+.files-tbl-wrap::-webkit-scrollbar-track{background:transparent}
+.files-tbl-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.files-tbl-wrap::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+#files-table thead th{position:sticky;top:0;z-index:10;background:var(--bg);padding:9px 12px;text-align:left;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+#files-table col.cf-exp{width:32px}
+#files-table tbody td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+#files-table tbody td:nth-child(3){vertical-align:middle;text-align:right}
+#files-table tbody td.exp-col{padding:10px 8px;text-align:center;color:var(--muted);vertical-align:middle}
+tr.fr{cursor:pointer}
+tr.fr:hover td{background:var(--hover)}
+tr.fr.open td{background:var(--hover)}
+tr.fdr>td{padding:0}
+.file-detail{padding:12px 16px 16px;background:var(--bg);border-bottom:1px solid var(--border)}
+.fd-plugin{margin-bottom:14px}
+.fd-plugin:last-child{margin-bottom:0}
+.fd-plugin-label{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.fd-plugin-count{font-size:12px;color:var(--muted)}
+.fd-pat{margin-left:8px;margin-bottom:8px}
+.fd-code{display:block;font-family:'SFMono-Regular',Consolas,monospace;font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:4px 8px;margin-bottom:4px;white-space:pre-wrap;word-break:break-all;color:var(--text)}
+.fd-no-ex{font-size:12px;color:var(--muted);margin-left:8px}
+.tbl-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:auto;flex:1 1 0;min-height:0;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
 .tbl-wrap::-webkit-scrollbar{width:6px;height:6px}
 .tbl-wrap::-webkit-scrollbar-track{background:transparent}
 .tbl-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
@@ -740,6 +809,7 @@ table{width:100%;border-collapse:collapse;table-layout:fixed}
 col.c-order{width:60px}
 col.c-plugin{width:auto}
 col.c-lightning{width:145px}
+col.c-complexity{width:130px}
 col.c-priority{width:160px}
 col.c-matches{width:95px}
 thead th{position:sticky;top:0;z-index:10;background:var(--bg);padding:9px 12px;text-align:left;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;user-select:none}
@@ -767,6 +837,11 @@ tbody tr.hidden{display:none}
 .p-native{background:var(--native-bg);color:var(--native)}
 .p-out-of-scope{background:var(--scope-bg);color:var(--scope)}
 .p-removed{background:var(--removed-bg);color:var(--removed)}
+.cx-trivial{background:var(--native-bg);color:var(--native)}
+.cx-low{background:var(--low-bg);color:var(--low)}
+.cx-medium{background:var(--high-bg);color:var(--high)}
+.cx-high{background:var(--critical-bg);color:var(--critical)}
+.cx-na{background:var(--scope-bg);color:var(--scope)}
 
 .l-yes{background:var(--native-bg);color:var(--native)}
 .l-none{background:var(--critical-bg);color:var(--critical)}
@@ -819,8 +894,12 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
     </div>
     <button class="theme-btn" id="theme-btn" title="Переключить тему" aria-label="Переключить тему">🌙</button>
   </header>
+  <div class="view-toggle">
+    <button class="vbtn active" data-view="plugins">Плагины</button>
+    <button class="vbtn" data-view="files">Файлы</button>
+  </div>
   <div class="controls">
-    <div class="ctrl-group">
+    <div class="ctrl-group" id="proj-ctrl">
       <span class="ctrl-label">Проект</span>
       <div class="proj-dropdown" id="proj-dropdown">
         <button class="proj-trigger" id="proj-trigger">
@@ -831,7 +910,17 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
       </div>
       <span class="hdr-meta" id="hdr-meta"></span>
     </div>
-    <div class="ctrl-group">
+    <div class="ctrl-group" id="files-plugin-ctrl" style="display:none">
+      <span class="ctrl-label">Плагины</span>
+      <div class="proj-dropdown" id="files-plugin-dropdown">
+        <button class="proj-trigger" id="files-plugin-trigger">
+          <span id="files-plugin-trigger-label">Все плагины</span>
+          <span class="trigger-arrow">▾</span>
+        </button>
+        <div class="proj-panel" id="files-plugin-panel"></div>
+      </div>
+    </div>
+    <div class="ctrl-group" id="priority-ctrl">
       <span class="ctrl-label">Приоритет</span>
       <div class="filter-tabs" id="ftabs"></div>
       <label class="toggle-zero">
@@ -839,15 +928,29 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
       </label>
     </div>
   </div>
-  <div class="filter-summary" id="filter-summary"></div>
-  <div class="tbl-wrap">
-    <table>
-      <colgroup>
-        <col class="c-order"><col class="c-plugin"><col class="c-lightning"><col class="c-priority"><col class="c-matches">
-      </colgroup>
-      <thead id="thead"></thead>
-      <tbody id="tbody"></tbody>
-    </table>
+  <div id="plugins-section" style="display:flex;flex-direction:column;flex:1 1 0;min-height:0">
+    <div class="filter-summary" id="filter-summary"></div>
+    <div class="tbl-wrap">
+      <table>
+        <colgroup>
+          <col class="c-order"><col class="c-plugin"><col class="c-lightning"><col class="c-complexity"><col class="c-priority"><col class="c-matches">
+        </colgroup>
+        <thead id="thead"></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+  <div id="files-section" class="files-section">
+    <div class="files-proj-tabs" id="files-proj-tabs"></div>
+    <div class="files-tbl-wrap">
+      <table id="files-table" style="width:100%;border-collapse:collapse;table-layout:fixed">
+        <colgroup>
+          <col class="cf-exp"><col class="cf-file"><col class="cf-matches"><col class="cf-plugins">
+        </colgroup>
+        <thead id="files-thead"></thead>
+        <tbody id="files-tbody"></tbody>
+      </table>
+    </div>
   </div>
 </div>
 <script>
@@ -860,6 +963,8 @@ const PRIORITY_LABEL = {
 };
 const PRIORITY_WEIGHT = {critical:0,high:1,native:2,'out-of-scope':3,removed:4};
 const LIGHTNING_LABEL = {yes:'✅ Native', none:'❌ None', partial:'⚠️ Partial'};
+const COMPLEXITY_LABEL = {trivial:'✅ Trivial', low:'🔵 Low', medium:'🟡 Medium', high:'🔴 High', 'n/a':'— N/A'};
+const COMPLEXITY_WEIGHT = {trivial:0,low:1,medium:2,high:3,'n/a':4};
 
 const LS_KEY = 'plugin-audit-priorities';
 const LS_THEME_KEY = 'plugin-audit-theme';
@@ -870,6 +975,9 @@ let sortCol = 'order';
 let sortDir = 1;
 let hideZero = false;
 let expanded = new Set();
+let fileExpanded = new Set();
+let filesProjKey = Object.keys(DATA.projects)[0] || '';
+let filePluginFilters = new Set();
 let overrides = {};
 let searchQuery = '';
 let popover = { id: null, el: null };
@@ -891,11 +999,12 @@ function toggleTheme() {
   document.getElementById('theme-btn').textContent = isDark ? '☀️' : '🌙';
 }
 
-function getPlugins() {
-  if (projSel.length === 0) return [];
-  if (projSel.length === 1) return DATA.projects[projSel[0]]?.plugins || [];
+function getPlugins(keys) {
+  const sel = keys ?? projSel;
+  if (sel.length === 0) return [];
+  if (sel.length === 1) return DATA.projects[sel[0]]?.plugins || [];
   const merged = new Map();
-  for (const projectKey of projSel) {
+  for (const projectKey of sel) {
     const plugins = DATA.projects[projectKey]?.plugins || [];
     for (const p of plugins) {
       if (!merged.has(p.id)) {
@@ -926,8 +1035,198 @@ function getPlugins() {
   return [...merged.values()];
 }
 
+
 function effectivePriority(plugin) {
   return overrides[plugin.id] ?? plugin.priority;
+}
+
+function effectivePriorityById(id, plugins) {
+  const p = plugins.find(x => x.id === id);
+  return p ? effectivePriority(p) : 'out-of-scope';
+}
+
+function getFilesPlugins() {
+  return getPlugins([filesProjKey]);
+}
+
+function buildFileIndex(plugins) {
+  const map = new Map();
+  for (const p of plugins) {
+    for (const pat of p.patterns) {
+      const fm = pat.fileMatches ?? {};
+      for (const [file, count] of Object.entries(fm)) {
+        if (!map.has(file)) map.set(file, { total: 0, plugins: new Map() });
+        const fd = map.get(file);
+        fd.total += count;
+        if (!fd.plugins.has(p.id)) {
+          fd.plugins.set(p.id, { count: 0, priority: p.priority, complexity: p.complexity, patterns: new Map() });
+        }
+        const pd = fd.plugins.get(p.id);
+        pd.count += count;
+        pd.patterns.set(pat.label, {
+          count,
+          examples: (pat.fileExamples ?? {})[file] ?? [],
+        });
+      }
+    }
+  }
+  return [...map.entries()]
+    .map(([file, d]) => ({
+      file,
+      total: d.total,
+      plugins: [...d.plugins.entries()].map(([id, v]) => ({
+        id,
+        count: v.count,
+        priority: v.priority,
+        complexity: v.complexity,
+        patterns: [...v.patterns.entries()].map(([label, pv]) => ({ label, count: pv.count, examples: pv.examples })),
+      })),
+    }))
+    .sort((a, b) => b.total - a.total);
+}
+
+function renderFilesProjTabs() {
+  const projects = Object.keys(DATA.projects);
+  const container = document.getElementById('files-proj-tabs');
+  container.innerHTML = projects.map(key =>
+    \`<button class="fptab\${filesProjKey === key ? ' active' : ''}" data-proj="\${escAttr(key)}">\${escHtml(key)}</button>\`
+  ).join('');
+  container.querySelectorAll('.fptab').forEach(btn => {
+    btn.onclick = () => {
+      filesProjKey = btn.dataset.proj;
+      fileExpanded.clear();
+      filePluginFilters.clear();
+      renderFilesPluginDropdown();
+      renderFilesTable();
+      // update active tab
+      container.querySelectorAll('.fptab').forEach(b => b.classList.toggle('active', b.dataset.proj === filesProjKey));
+    };
+  });
+}
+
+function renderFilesPluginDropdown() {
+  const plugins = getFilesPlugins()
+    .filter(p => p.totalMatches > 0)
+    .sort((a, b) => (PRIORITY_WEIGHT[effectivePriority(a)] ?? 99) - (PRIORITY_WEIGHT[effectivePriority(b)] ?? 99));
+  const panel = document.getElementById('files-plugin-panel');
+  const triggerLabel = document.getElementById('files-plugin-trigger-label');
+
+  function updateLabel() {
+    if (filePluginFilters.size === 0) { triggerLabel.textContent = 'Все плагины'; return; }
+    if (filePluginFilters.size === 1) { triggerLabel.textContent = [...filePluginFilters][0]; return; }
+    triggerLabel.textContent = \`\${filePluginFilters.size} плагина\`;
+  }
+
+  function renderPanel() {
+    panel.innerHTML = [
+      \`<label class="proj-option all-option"><input type="checkbox" id="fpf-all" \${filePluginFilters.size === 0 ? 'checked' : ''}> Все плагины</label>\`,
+      ...plugins.map(p =>
+        \`<label class="proj-option"><input type="checkbox" data-plugin="\${escAttr(p.id)}" \${filePluginFilters.has(p.id) ? 'checked' : ''}> \${escHtml(p.id)}</label>\`
+      ),
+    ].join('');
+    updateLabel();
+    panel.querySelector('#fpf-all').onchange = () => {
+      filePluginFilters.clear();
+      fileExpanded.clear();
+      renderPanel();
+      renderFilesTable();
+    };
+    panel.querySelectorAll('[data-plugin]').forEach(cb => {
+      cb.onchange = () => {
+        const id = cb.dataset.plugin;
+        if (cb.checked) filePluginFilters.add(id); else filePluginFilters.delete(id);
+        fileExpanded.clear();
+        panel.querySelector('#fpf-all').checked = filePluginFilters.size === 0;
+        updateLabel();
+        renderFilesTable();
+      };
+    });
+  }
+
+  renderPanel();
+  document.getElementById('files-plugin-trigger').onclick = e => {
+    e.stopPropagation();
+    panel.classList.toggle('open');
+  };
+}
+
+function renderFilesTable() {
+  const plugins = getFilesPlugins();
+  let rows = buildFileIndex(plugins);
+  if (filePluginFilters.size > 0) {
+    rows = rows.filter(r => r.plugins.some(p => filePluginFilters.has(p.id)));
+  }
+  document.getElementById('files-thead').innerHTML =
+    \`<tr><th></th><th>Файл</th><th>Matches</th><th>Плагины</th></tr>\`;
+  document.getElementById('files-tbody').innerHTML = rows.map(r => {
+    const isOpen = fileExpanded.has(r.file);
+    const sortedPlugins = r.plugins.slice().sort((a, b) => (PRIORITY_WEIGHT[a.priority] ?? 99) - (PRIORITY_WEIGHT[b.priority] ?? 99));
+    const detailPlugins = filePluginFilters.size > 0 ? sortedPlugins.filter(p => filePluginFilters.has(p.id)) : sortedPlugins;
+    const mainRow = \`
+      <tr class="fr\${isOpen ? ' open' : ''}" data-file="\${escAttr(r.file)}">
+        <td class="exp-col"><span class="exp-icon">\${isOpen ? '▼' : '▶'}</span></td>
+        <td><span class="file-path">\${escHtml(r.file)}</span></td>
+        <td><span class="matches">\${r.total}</span></td>
+        <td><div class="plugin-chips">\${
+          sortedPlugins.map(p => \`<span class="badge p-\${escAttr(effectivePriorityById(p.id, plugins))}">\${escHtml(p.id)} <span style="opacity:.6;font-weight:400">\${p.count}</span></span>\`).join('')
+        }</div></td>
+      </tr>\`;
+    if (!isOpen) return mainRow;
+    const detailRow = \`
+      <tr class="fdr">
+        <td></td>
+        <td colspan="3">
+          <div class="file-detail">
+            \${detailPlugins.map(p => \`
+              <div class="fd-plugin">
+                <div class="fd-plugin-label">
+                  <span class="badge p-\${escAttr(effectivePriorityById(p.id, plugins))}">\${escHtml(p.id)}</span>
+                  <span class="fd-plugin-count">\${p.count} совпадений</span>
+                </div>
+                \${p.patterns.map(pat => \`
+                  <div class="fd-pat">
+                    <div class="d-label">\${escHtml(pat.label)} <span style="opacity:.6">(\${pat.count})</span></div>
+                    \${pat.examples.length > 0
+                      ? pat.examples.map(ex => \`<code class="fd-code">\${escHtml(ex)}</code>\`).join('')
+                      : '<span class="fd-no-ex">—</span>'}
+                  </div>
+                \`).join('')}
+              </div>
+            \`).join('')}
+          </div>
+        </td>
+      </tr>\`;
+    return mainRow + detailRow;
+  }).join('');
+  document.querySelectorAll('#files-tbody tr.fr').forEach(tr => {
+    tr.onclick = () => {
+      const file = tr.dataset.file;
+      if (fileExpanded.has(file)) fileExpanded.delete(file);
+      else fileExpanded.add(file);
+      renderFilesTable();
+    };
+  });
+}
+
+function renderFilesView() {
+  renderFilesProjTabs();
+  renderFilesPluginDropdown();
+  renderFilesTable();
+}
+
+let currentView = 'plugins';
+
+function switchView(view) {
+  currentView = view;
+  document.querySelectorAll('.vbtn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+  const isPlugins = view === 'plugins';
+  document.getElementById('plugins-section').style.display = isPlugins ? 'flex' : 'none';
+  document.getElementById('files-section').style.display = isPlugins ? 'none' : 'flex';
+  document.getElementById('proj-ctrl').style.display = isPlugins ? '' : 'none';
+  document.getElementById('priority-ctrl').style.display = isPlugins ? '' : 'none';
+  document.getElementById('files-plugin-ctrl').style.display = isPlugins ? 'none' : '';
+  fileExpanded.clear();
+  if (!isPlugins) renderFilesView();
 }
 
 function init() {
@@ -939,6 +1238,9 @@ function init() {
   renderProjSel();
   renderAll();
   initPopover();
+  document.querySelectorAll('.vbtn').forEach(b => {
+    b.onclick = () => switchView(b.dataset.view);
+  });
 }
 
 function renderAll() {
@@ -992,7 +1294,10 @@ function renderProjSel() {
     e.stopPropagation();
     panel.classList.toggle('open');
   };
-  document.addEventListener('click', () => panel.classList.remove('open'));
+  document.addEventListener('click', () => {
+    panel.classList.remove('open');
+    document.getElementById('files-plugin-panel')?.classList.remove('open');
+  });
 }
 
 function renderMeta() {
@@ -1042,6 +1347,7 @@ function renderHead() {
     {key:'order', label:'#', title:'Порядок в списке'},
     {key:'id', label:'Плагин', title:'Идентификатор плагина'},
     {key:'lightning', label:'Lightning CSS', title:'Поддержка в Lightning CSS: yes / partial / none'},
+    {key:'complexity', label:'Сложность', title:'Сложность реализации в Rust Pre-stage'},
     {key:'priority', label:'Приоритет', title:'Приоритет миграции (кликни на бейдж для изменения)'},
     {key:'matches', label:'Matches', title:'Количество совпадений паттернов во всех файлах'},
   ];
@@ -1076,6 +1382,10 @@ function renderBody() {
     else if (sortCol === 'matches') { av = a.totalMatches; bv = b.totalMatches; }
     else if (sortCol === 'id') { av = a.id; bv = b.id; }
     else if (sortCol === 'lightning') { av = a.lightning; bv = b.lightning; }
+    else if (sortCol === 'complexity') {
+      av = COMPLEXITY_WEIGHT[a.complexity] ?? 99;
+      bv = COMPLEXITY_WEIGHT[b.complexity] ?? 99;
+    }
     else if (sortCol === 'priority') {
       av = PRIORITY_WEIGHT[effectivePriority(a)] ?? 99;
       bv = PRIORITY_WEIGHT[effectivePriority(b)] ?? 99;
@@ -1089,7 +1399,7 @@ function renderBody() {
   const wrap = document.querySelector('.tbl-wrap');
   const savedScroll = wrap ? wrap.scrollTop : 0;
   if (sorted.length === 0) {
-    tbody.innerHTML = \`<tr><td colspan="5"><div class="empty-state">Нет плагинов для выбранного фильтра</div></td></tr>\`;
+    tbody.innerHTML = \`<tr><td colspan="6"><div class="empty-state">Нет плагинов для выбранного фильтра</div></td></tr>\`;
     return;
   }
 
@@ -1102,7 +1412,7 @@ function renderBody() {
     const lightKey = p.lightning.startsWith('yes') ? 'yes' : p.lightning.startsWith('none') ? 'none' : 'partial';
 
     const detailHtml = isOpen ? \`<tr class="dr" id="dr-\${CSS.escape(p.id)}">
-      <td colspan="5">
+      <td colspan="6">
         <div class="detail">
           \${matchHits.length ? \`
           <div class="d-section">
@@ -1149,6 +1459,7 @@ function renderBody() {
       <td><span class="exp-icon">▶</span> <span class="plugin-order">\${p.order}</span></td>
       <td><span class="plugin-name">\${highlightMatch(p.id, searchQuery)}</span></td>
       <td><span class="badge l-\${lightKey}">\${LIGHTNING_LABEL[lightKey]}</span></td>
+      <td><span class="badge cx-\${p.complexity === 'n/a' ? 'na' : p.complexity}">\${COMPLEXITY_LABEL[p.complexity] ?? p.complexity}</span></td>
       <td><span class="badge p-\${ep} pbadge" data-id="\${escAttr(p.id)}" title="Изменить приоритет">\${PRIORITY_LABEL[ep]}\${dotHtml}</span></td>
       <td><span class="\${p.totalMatches === 0 ? 'matches-zero' : 'matches'}">\${p.totalMatches}</span></td>
     </tr>\${detailHtml}\`;
