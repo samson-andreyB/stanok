@@ -1063,8 +1063,10 @@ tr.fdr>td{padding:0}
 .research-doc h3{font-size:20px}
 .research-doc h4{font-size:17px}
 .research-doc p,.research-doc ul,.research-doc ol,.research-doc blockquote,.research-doc pre{margin:0 0 1em}
-.research-doc ul,.research-doc ol{padding-left:1.25em}
+.research-doc ul,.research-doc ol{padding-left:1.7em;margin-left:0}
+.research-doc li{padding-left:.15em}
 .research-doc li + li{margin-top:.35em}
+.research-doc li > ul,.research-doc li > ol{margin-top:.45em;margin-bottom:.2em}
 .research-doc hr{height:1px;border:none;background:var(--border);margin:1.5em 0}
 .research-doc a{color:var(--accent)}
 .research-doc a:hover{color:var(--text)}
@@ -1628,6 +1630,23 @@ function isOrderedListLine(line) {
   return i > 0 && line.slice(i, i + 2) === '. ';
 }
 
+function getResearchLineIndent(line) {
+  let width = 0;
+  for (let i = 0; i < line.length; i += 1) {
+    const code = line.charCodeAt(i);
+    if (code === 32) {
+      width += 1;
+      continue;
+    }
+    if (code === 9) {
+      width += 4;
+      continue;
+    }
+    break;
+  }
+  return width;
+}
+
 function isHorizontalRuleLine(line) {
   const compact = String(line ?? '').split(' ').join('');
   if (compact.length < 3) return false;
@@ -1649,7 +1668,7 @@ function renderResearchMarkdown(markdown) {
   const lines = text.split(String.fromCharCode(10));
   const html = [];
   let paragraph = [];
-  let listType = '';
+  const listStack = [];
   let codeLines = [];
   let inCode = false;
   const fence = String.fromCharCode(96, 96, 96);
@@ -1659,10 +1678,41 @@ function renderResearchMarkdown(markdown) {
     html.push('<p>' + renderMarkdownInline(paragraph.join(' ')) + '</p>');
     paragraph = [];
   };
-  const flushList = () => {
-    if (!listType) return;
-    html.push('</' + listType + '>');
-    listType = '';
+  const closeLists = (targetDepth = 0) => {
+    while (listStack.length > targetDepth) {
+      const current = listStack[listStack.length - 1];
+      if (current.itemOpen) {
+        html.push('</li>');
+        current.itemOpen = false;
+      }
+      html.push('</' + current.type + '>');
+      listStack.pop();
+    }
+  };
+  const openListForDepth = (type, depth) => {
+    while (listStack.length < depth + 1) {
+      html.push('<' + type + '>');
+      listStack.push({ type, itemOpen: false });
+    }
+    const current = listStack[depth];
+    if (current.type !== type) {
+      closeLists(depth);
+      html.push('<' + type + '>');
+      listStack.push({ type, itemOpen: false });
+    }
+  };
+  const pushListItem = (type, depth, content, value = null) => {
+    const normalizedDepth = Math.max(0, depth);
+    if (normalizedDepth > listStack.length) {
+      openListForDepth(type, listStack.length);
+    }
+    closeLists(normalizedDepth + 1);
+    openListForDepth(type, normalizedDepth);
+    const current = listStack[normalizedDepth];
+    if (current.itemOpen) html.push('</li>');
+    const valueAttr = type === 'ol' && Number.isFinite(value) ? ' value="' + value + '"' : '';
+    html.push('<li' + valueAttr + '>' + renderMarkdownInline(content));
+    current.itemOpen = true;
   };
   const flushCode = () => {
     if (!inCode) return;
@@ -1677,7 +1727,7 @@ function renderResearchMarkdown(markdown) {
 
     if (trimmed.startsWith(fence)) {
       flushParagraph();
-      flushList();
+      closeLists();
       if (inCode) flushCode();
       else inCode = true;
       continue;
@@ -1690,13 +1740,13 @@ function renderResearchMarkdown(markdown) {
 
     if (!trimmed) {
       flushParagraph();
-      flushList();
+      closeLists();
       continue;
     }
 
     if (isHorizontalRuleLine(trimmed)) {
       flushParagraph();
-      flushList();
+      closeLists();
       html.push('<hr>');
       continue;
     }
@@ -1705,14 +1755,14 @@ function renderResearchMarkdown(markdown) {
     while (headingLevel < trimmed.length && trimmed[headingLevel] === '#') headingLevel += 1;
     if (headingLevel > 0 && headingLevel <= 4 && trimmed[headingLevel] === ' ') {
       flushParagraph();
-      flushList();
+      closeLists();
       html.push('<h' + headingLevel + '>' + renderMarkdownInline(trimmed.slice(headingLevel + 1)) + '</h' + headingLevel + '>');
       continue;
     }
 
     if (trimmed.startsWith('>')) {
       flushParagraph();
-      flushList();
+      closeLists();
       const quoteText = trimmed[1] === ' ' ? trimmed.slice(2) : trimmed.slice(1);
       html.push('<blockquote>' + renderMarkdownInline(quoteText) + '</blockquote>');
       continue;
@@ -1720,32 +1770,26 @@ function renderResearchMarkdown(markdown) {
 
     if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
       flushParagraph();
-      if (listType && listType !== 'ul') flushList();
-      if (!listType) {
-        listType = 'ul';
-        html.push('<ul>');
-      }
-      html.push('<li>' + renderMarkdownInline(trimmed.slice(2)) + '</li>');
+      const depth = Math.floor(getResearchLineIndent(line) / 4);
+      pushListItem('ul', depth, trimmed.slice(2));
       continue;
     }
 
     if (isOrderedListLine(trimmed)) {
       flushParagraph();
-      if (listType && listType !== 'ol') flushList();
-      if (!listType) {
-        listType = 'ol';
-        html.push('<ol>');
-      }
       const dotPos = trimmed.indexOf('. ');
-      html.push('<li>' + renderMarkdownInline(trimmed.slice(dotPos + 2)) + '</li>');
+      const value = Number(trimmed.slice(0, dotPos));
+      const depth = Math.floor(getResearchLineIndent(line) / 4);
+      pushListItem('ol', depth, trimmed.slice(dotPos + 2), Number.isFinite(value) ? value : null);
       continue;
     }
 
+    closeLists();
     paragraph.push(trimmed);
   }
 
   flushParagraph();
-  flushList();
+  closeLists();
   flushCode();
   return html.join('');
 }
