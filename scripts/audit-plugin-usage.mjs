@@ -746,10 +746,10 @@ function scanFiles(files) {
             pat.re.lastIndex = 0;
             if (hit) {
               const ex = `L${li + 1}: ${lines[li].trim()}`;
-              if (patResult.fileExamples[relPath].length < 3 && !patResult.fileExamples[relPath].includes(ex)) {
+              if (!patResult.fileExamples[relPath].includes(ex)) {
                 patResult.fileExamples[relPath].push(ex);
               }
-              if (patResult.examples.length < 3 && !patResult.examples.includes(ex)) {
+              if (!patResult.examples.includes(ex)) {
                 patResult.examples.push(ex);
               }
             }
@@ -3044,8 +3044,8 @@ function renderBody() {
           \${p.patterns.some(pat => pat.examples.length) ? \`
           <div class="d-section">
             <div class="d-label">Примеры</div>
-            <div class="exs">\${p.patterns.flatMap(pat => pat.examples.slice(0,2))
-              .slice(0,8).map(e => \`<code class="ex-chip">\${escHtml(e.slice(0,70))}</code>\`).join('')}</div>
+            <div class="exs">\${p.patterns.flatMap(pat => pat.examples)
+              .map(e => \`<code class="ex-chip">\${escHtml(e)}</code>\`).join('')}</div>
           </div>\` : ''}
           \${projectUsageList.length ? \`
           <div class="d-section">
