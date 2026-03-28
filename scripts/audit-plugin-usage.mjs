@@ -1049,6 +1049,35 @@ tr.fdr>td{padding:0}
   .sources-body{grid-template-columns:1fr}
   .sources-list{max-height:180px;border-right:none;border-bottom:1px solid var(--border)}
 }
+.research-section{display:none;flex:1 1 0;min-height:0;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.research-content{min-height:0;overflow:auto;padding:26px 28px 32px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.research-content::-webkit-scrollbar{width:8px;height:8px}
+.research-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px}
+.research-state{padding:14px 16px;border:1px dashed var(--border);border-radius:12px;background:var(--bg);font-size:13px;line-height:1.55;color:var(--muted)}
+.research-state.error{color:#b91c1c;border-color:rgba(185,28,28,.28);background:rgba(185,28,28,.06)}
+.research-doc{max-width:none;width:100%}
+.research-doc h1,.research-doc h2,.research-doc h3,.research-doc h4{line-height:1.2;letter-spacing:-.02em;margin:1.4em 0 .6em}
+.research-doc h1:first-child,.research-doc h2:first-child,.research-doc h3:first-child,.research-doc h4:first-child{margin-top:0}
+.research-doc h1{font-size:30px}
+.research-doc h2{font-size:24px}
+.research-doc h3{font-size:20px}
+.research-doc h4{font-size:17px}
+.research-doc p,.research-doc ul,.research-doc ol,.research-doc blockquote,.research-doc pre{margin:0 0 1em}
+.research-doc ul,.research-doc ol{padding-left:1.25em}
+.research-doc li + li{margin-top:.35em}
+.research-doc hr{height:1px;border:none;background:var(--border);margin:1.5em 0}
+.research-doc a{color:var(--accent)}
+.research-doc a:hover{color:var(--text)}
+.research-doc code{padding:.12em .38em;border-radius:6px;background:var(--surface-soft);border:1px solid var(--border);font:12px/1.4 'SFMono-Regular',Consolas,monospace}
+.research-doc pre{padding:14px 16px;border-radius:14px;background:#0f172a;color:#e2e8f0;overflow:auto}
+.research-doc pre code{padding:0;border:none;background:transparent;color:inherit}
+.research-doc blockquote{padding:12px 14px;border-left:4px solid var(--accent);background:var(--surface-soft);border-radius:0 12px 12px 0;color:var(--muted)}
+@media (max-width: 640px){
+  .research-content{padding:18px 16px 22px}
+  .research-doc h1{font-size:26px}
+  .research-doc h2{font-size:22px}
+  .research-doc h3{font-size:18px}
+}
 .tbl-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow-y:auto;overflow-x:hidden;flex:1 1 0;min-height:0;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
 .tbl-wrap::-webkit-scrollbar{width:6px;height:6px}
 .tbl-wrap::-webkit-scrollbar-track{background:transparent}
@@ -1202,6 +1231,7 @@ html.dark .settings-dialog{box-shadow:0 24px 80px rgba(0,0,0,.45)}
       <button class="vbtn active" data-view="plugins">Плагины</button>
       <button class="vbtn" data-view="files">Файлы</button>
       <button class="vbtn" data-view="sources">Исходники</button>
+      <button class="vbtn" data-view="research">Исследование</button>
     </div>
     <div class="controls">
     <div class="select-field" id="files-plugin-ctrl" style="display:none">
@@ -1288,6 +1318,10 @@ html.dark .settings-dialog{box-shadow:0 24px 80px rgba(0,0,0,.45)}
           URL JSON с данными по плагинам
           <input class="settings-input" id="plugins-meta-url-input" type="url" inputmode="url" placeholder="https://example.com/plugins-meta.json" />
         </label>
+        <label class="settings-label" for="research-md-url-input">
+          URL Markdown-файла для вкладки "Исследование"
+          <input class="settings-input" id="research-md-url-input" type="url" inputmode="url" placeholder="https://example.com/research.md" />
+        </label>
         <div class="settings-note">URL сохраняется только локально в браузере через <code>localStorage</code> для этого отчёта.</div>
         <div class="settings-status" id="settings-status"></div>
         <div class="settings-actions">
@@ -1319,6 +1353,12 @@ html.dark .settings-dialog{box-shadow:0 24px 80px rgba(0,0,0,.45)}
       </div>
     </div>
   </div>
+  <div id="research-section" class="research-section">
+    <div class="research-content">
+      <div class="research-state" id="research-state">Markdown-файл ещё не подключён.</div>
+      <article class="research-doc" id="research-doc" hidden></article>
+    </div>
+  </div>
 </div>
 <script>
 const DATA = ${safeData};
@@ -1340,6 +1380,7 @@ const LS_COMPLEXITY_KEY = 'plugin-audit-complexities';
 const LS_THEME_KEY = 'plugin-audit-theme';
 const LS_PROJECT_LABELS_URL_KEY = 'plugin-audit-project-labels-url';
 const LS_PLUGINS_META_URL_KEY = 'plugin-audit-plugins-meta-url';
+const LS_RESEARCH_MD_URL_KEY = 'plugin-audit-research-md-url';
 
 let projSel = new Set();
 let filters = new Set();
@@ -1363,6 +1404,8 @@ let projectLabelsUrl = '';
 let projectLabels = {};
 let pluginsMetaUrl = '';
 let pluginsMetaOverrides = {};
+let researchMdUrl = '';
+let researchMarkdown = '';
 let expandAll = false;
 let projNone = false;
 let filtersNone = false;
@@ -1468,6 +1511,266 @@ function refreshProjectNameViews() {
   renderBody();
 }
 
+function normalizeResearchTitle(text) {
+  const value = String(text ?? '').trim();
+  let out = '';
+  let prevSpace = false;
+  for (let i = 0; i < value.length; i += 1) {
+    const code = value.charCodeAt(i);
+    const isSpace = code === 9 || code === 10 || code === 13 || code === 32;
+    if (isSpace) {
+      if (!prevSpace) out += ' ';
+      prevSpace = true;
+      continue;
+    }
+    out += value[i];
+    prevSpace = false;
+  }
+  return out.trim() || 'Ссылка';
+}
+
+function isHttpUrl(value) {
+  const url = String(value ?? '').trim().toLowerCase();
+  return url.startsWith('http://') || url.startsWith('https://');
+}
+
+function escapeAttrValue(value) {
+  return escHtml(String(value ?? ''));
+}
+
+function extractResearchLinks(markdown) {
+  const text = String(markdown ?? '');
+  const found = new Map();
+  const pushLink = (href, title) => {
+    const url = String(href ?? '').trim();
+    if (!isHttpUrl(url) || found.has(url)) return;
+    found.set(url, {
+      href: url,
+      title: normalizeResearchTitle(title || url),
+    });
+  };
+
+  let i = 0;
+  while (i < text.length) {
+    if (text[i] === '[') {
+      const labelEnd = text.indexOf('](', i + 1);
+      if (labelEnd !== -1) {
+        const urlEnd = text.indexOf(')', labelEnd + 2);
+        if (urlEnd !== -1) {
+          const label = text.slice(i + 1, labelEnd);
+          const urlPart = text.slice(labelEnd + 2, urlEnd).trim();
+          const href = urlPart.split(' ')[0] || '';
+          pushLink(href, label);
+          i = urlEnd + 1;
+          continue;
+        }
+      }
+    }
+
+    if (text[i] === '<') {
+      const end = text.indexOf('>', i + 1);
+      if (end !== -1) {
+        const href = text.slice(i + 1, end).trim();
+        pushLink(href, href);
+        i = end + 1;
+        continue;
+      }
+    }
+
+    i += 1;
+  }
+
+  return [...found.values()];
+}
+
+function replaceDelimited(text, delimiter, renderer) {
+  let out = '';
+  let i = 0;
+  while (i < text.length) {
+    const start = text.indexOf(delimiter, i);
+    if (start === -1) {
+      out += text.slice(i);
+      break;
+    }
+    const end = text.indexOf(delimiter, start + delimiter.length);
+    if (end === -1) {
+      out += text.slice(i);
+      break;
+    }
+    out += text.slice(i, start);
+    out += renderer(text.slice(start + delimiter.length, end));
+    i = end + delimiter.length;
+  }
+  return out;
+}
+
+function renderMarkdownInline(text) {
+  let out = escHtml(String(text ?? ''));
+  out = replaceDelimited(out, String.fromCharCode(96), part => '<code>' + part + '</code>');
+  out = replaceDelimited(out, '**', part => '<strong>' + part + '</strong>');
+  out = replaceDelimited(out, '*', part => '<em>' + part + '</em>');
+
+  const links = extractResearchLinks(text);
+  for (const link of links) {
+    const markdownForm = escHtml('[' + link.title + '](' + link.href + ')');
+    const autoForm = escHtml('<' + link.href + '>');
+    const anchor = '<a href="' + escapeAttrValue(link.href) + '" target="_blank" rel="noopener noreferrer">' + escHtml(link.title) + '</a>';
+    out = out.split(markdownForm).join(anchor);
+    out = out.split(autoForm).join('<a href="' + escapeAttrValue(link.href) + '" target="_blank" rel="noopener noreferrer">' + escHtml(link.href) + '</a>');
+  }
+
+  return out;
+}
+
+function isOrderedListLine(line) {
+  let i = 0;
+  while (i < line.length && line.charCodeAt(i) >= 48 && line.charCodeAt(i) <= 57) i += 1;
+  return i > 0 && line.slice(i, i + 2) === '. ';
+}
+
+function isHorizontalRuleLine(line) {
+  const compact = String(line ?? '').split(' ').join('');
+  if (compact.length < 3) return false;
+  if (compact === '-'.repeat(compact.length)) return true;
+  if (compact === '*'.repeat(compact.length)) return true;
+  return compact === '_'.repeat(compact.length);
+}
+
+function hasResearchContent() {
+  return String(researchMarkdown ?? '').trim().length > 0;
+}
+
+function syncResearchViewAvailability() {
+  return hasResearchContent();
+}
+
+function renderResearchMarkdown(markdown) {
+  const text = String(markdown ?? '').replaceAll(String.fromCharCode(13) + String.fromCharCode(10), String.fromCharCode(10)).replaceAll(String.fromCharCode(13), String.fromCharCode(10));
+  const lines = text.split(String.fromCharCode(10));
+  const html = [];
+  let paragraph = [];
+  let listType = '';
+  let codeLines = [];
+  let inCode = false;
+  const fence = String.fromCharCode(96, 96, 96);
+
+  const flushParagraph = () => {
+    if (!paragraph.length) return;
+    html.push('<p>' + renderMarkdownInline(paragraph.join(' ')) + '</p>');
+    paragraph = [];
+  };
+  const flushList = () => {
+    if (!listType) return;
+    html.push('</' + listType + '>');
+    listType = '';
+  };
+  const flushCode = () => {
+    if (!inCode) return;
+    html.push('<pre><code>' + escHtml(codeLines.join(String.fromCharCode(10))) + '</code></pre>');
+    codeLines = [];
+    inCode = false;
+  };
+
+  for (const rawLine of lines) {
+    const line = rawLine ?? '';
+    const trimmed = line.trim();
+
+    if (trimmed.startsWith(fence)) {
+      flushParagraph();
+      flushList();
+      if (inCode) flushCode();
+      else inCode = true;
+      continue;
+    }
+
+    if (inCode) {
+      codeLines.push(line);
+      continue;
+    }
+
+    if (!trimmed) {
+      flushParagraph();
+      flushList();
+      continue;
+    }
+
+    if (isHorizontalRuleLine(trimmed)) {
+      flushParagraph();
+      flushList();
+      html.push('<hr>');
+      continue;
+    }
+
+    let headingLevel = 0;
+    while (headingLevel < trimmed.length && trimmed[headingLevel] === '#') headingLevel += 1;
+    if (headingLevel > 0 && headingLevel <= 4 && trimmed[headingLevel] === ' ') {
+      flushParagraph();
+      flushList();
+      html.push('<h' + headingLevel + '>' + renderMarkdownInline(trimmed.slice(headingLevel + 1)) + '</h' + headingLevel + '>');
+      continue;
+    }
+
+    if (trimmed.startsWith('>')) {
+      flushParagraph();
+      flushList();
+      const quoteText = trimmed[1] === ' ' ? trimmed.slice(2) : trimmed.slice(1);
+      html.push('<blockquote>' + renderMarkdownInline(quoteText) + '</blockquote>');
+      continue;
+    }
+
+    if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+      flushParagraph();
+      if (listType && listType !== 'ul') flushList();
+      if (!listType) {
+        listType = 'ul';
+        html.push('<ul>');
+      }
+      html.push('<li>' + renderMarkdownInline(trimmed.slice(2)) + '</li>');
+      continue;
+    }
+
+    if (isOrderedListLine(trimmed)) {
+      flushParagraph();
+      if (listType && listType !== 'ol') flushList();
+      if (!listType) {
+        listType = 'ol';
+        html.push('<ol>');
+      }
+      const dotPos = trimmed.indexOf('. ');
+      html.push('<li>' + renderMarkdownInline(trimmed.slice(dotPos + 2)) + '</li>');
+      continue;
+    }
+
+    paragraph.push(trimmed);
+  }
+
+  flushParagraph();
+  flushList();
+  flushCode();
+  return html.join('');
+}
+
+function renderResearchView() {
+  const stateEl = document.getElementById('research-state');
+  const docEl = document.getElementById('research-doc');
+  if (!stateEl || !docEl) return;
+
+  if (!hasResearchContent()) {
+    stateEl.textContent = researchMdUrl
+      ? 'Markdown ещё не загружен, пустой или недоступен. Проверьте URL в настройках.'
+      : 'Чтобы открыть исследование, загрузите Markdown-файл в настройках отчёта.';
+    stateEl.className = 'research-state';
+    stateEl.hidden = false;
+    docEl.hidden = true;
+    docEl.innerHTML = '';
+    return;
+  }
+
+  docEl.innerHTML = renderResearchMarkdown(researchMarkdown);
+  docEl.hidden = false;
+  stateEl.hidden = true;
+}
+
 function setSettingsStatus(message = '', tone = '') {
   const el = document.getElementById('settings-status');
   if (!el) return;
@@ -1483,11 +1786,13 @@ function openSettingsModal() {
   modal.setAttribute('aria-hidden', 'false');
   const input = document.getElementById('project-map-url-input');
   const metaInput = document.getElementById('plugins-meta-url-input');
+  const researchInput = document.getElementById('research-md-url-input');
   input.value = projectLabelsUrl;
   metaInput.value = pluginsMetaUrl;
+  researchInput.value = researchMdUrl;
   setSettingsStatus(
-    projectLabelsUrl || pluginsMetaUrl ? 'Текущие URL сохранены локально. Можно заменить их и перезагрузить данные.' : '',
-    projectLabelsUrl || pluginsMetaUrl ? 'success' : ''
+    projectLabelsUrl || pluginsMetaUrl || researchMdUrl ? 'Текущие URL сохранены локально. Можно заменить их и перезагрузить данные.' : '',
+    projectLabelsUrl || pluginsMetaUrl || researchMdUrl ? 'success' : ''
   );
   setTimeout(() => input.focus(), 0);
 }
@@ -1558,10 +1863,50 @@ async function loadPluginsMetaFromUrl(url, { silent = false } = {}) {
   }
 }
 
+async function loadResearchMarkdownFromUrl(url, { silent = false } = {}) {
+  const normalizedUrl = String(url ?? '').trim();
+  if (!normalizedUrl) {
+    researchMarkdown = '';
+    if (!silent) setSettingsStatus('Markdown для исследования отключён.', '');
+    renderResearchView();
+    return true;
+  }
+
+  try {
+    if (!silent) setSettingsStatus('Загружаю markdown исследования...', '');
+    const response = await fetch(normalizedUrl, { cache: 'no-store' });
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    const raw = await response.text();
+    researchMarkdown = raw;
+    if (!silent) {
+      setSettingsStatus('Исследование обновлено.', 'success');
+    }
+    renderResearchView();
+    return true;
+  } catch (error) {
+    researchMarkdown = '';
+    renderResearchView();
+    if (!silent) setSettingsStatus('Не удалось загрузить markdown: ' + (error instanceof Error ? error.message : String(error)), 'error');
+    const stateEl = document.getElementById('research-state');
+    const docEl = document.getElementById('research-doc');
+    if (stateEl) {
+      stateEl.textContent = 'Не удалось загрузить markdown-файл.';
+      stateEl.className = 'research-state error';
+      stateEl.hidden = false;
+    }
+    if (docEl) {
+      docEl.hidden = true;
+      docEl.innerHTML = '';
+    }
+    return false;
+  }
+}
+
 function initSettingsModal() {
   const modal = document.getElementById('settings-modal');
   const input = document.getElementById('project-map-url-input');
   const metaInput = document.getElementById('plugins-meta-url-input');
+  const researchInput = document.getElementById('research-md-url-input');
   const openBtn = document.getElementById('settings-btn');
   const closeBtn = document.getElementById('settings-close-btn');
   const saveBtn = document.getElementById('settings-save-btn');
@@ -1580,9 +1925,11 @@ function initSettingsModal() {
   saveBtn.onclick = async () => {
     const nextUrl = String(input.value || '').trim();
     const nextMetaUrl = String(metaInput.value || '').trim();
+    const nextResearchUrl = String(researchInput.value || '').trim();
     setSettingsStatus('Принудительно обновляю внешние данные...', '');
     projectLabelsUrl = nextUrl;
     pluginsMetaUrl = nextMetaUrl;
+    researchMdUrl = nextResearchUrl;
     overrides = {};
     complexityOverrides = {};
     saveOverrides();
@@ -1592,29 +1939,40 @@ function initSettingsModal() {
       else localStorage.removeItem(LS_PROJECT_LABELS_URL_KEY);
       if (pluginsMetaUrl) localStorage.setItem(LS_PLUGINS_META_URL_KEY, pluginsMetaUrl);
       else localStorage.removeItem(LS_PLUGINS_META_URL_KEY);
+      if (researchMdUrl) localStorage.setItem(LS_RESEARCH_MD_URL_KEY, researchMdUrl);
+      else localStorage.removeItem(LS_RESEARCH_MD_URL_KEY);
     } catch {}
     const okProjectLabels = await loadProjectLabelsFromUrl(projectLabelsUrl, { silent: true });
     const okPluginsMeta = await loadPluginsMetaFromUrl(pluginsMetaUrl, { silent: true });
-    if (okProjectLabels && okPluginsMeta) {
+    const okResearch = await loadResearchMarkdownFromUrl(researchMdUrl, { silent: true });
+    if (okProjectLabels && okPluginsMeta && okResearch) {
       setSettingsStatus('Настройки сохранены. Данные обновлены.', 'success');
-    } else if (!okProjectLabels && !okPluginsMeta) {
-      setSettingsStatus('Настройки сохранены, но оба внешних источника не загрузились.', 'error');
+    } else if (!okProjectLabels && !okPluginsMeta && !okResearch) {
+      setSettingsStatus('Настройки сохранены, но ни один внешний источник не загрузился.', 'error');
     } else if (!okProjectLabels) {
       setSettingsStatus('Настройки сохранены, но названия проектов не загрузились.', 'error');
-    } else {
+    } else if (!okPluginsMeta) {
       setSettingsStatus('Настройки сохранены, но meta плагинов не загрузилась.', 'error');
+    } else if (!okResearch) {
+      setSettingsStatus('Настройки сохранены, но markdown исследования не загрузился.', 'error');
+    } else {
+      setSettingsStatus('Настройки сохранены частично.', 'error');
     }
   };
 
   clearBtn.onclick = async () => {
     input.value = '';
     metaInput.value = '';
+    researchInput.value = '';
     projectLabelsUrl = '';
     pluginsMetaUrl = '';
+    researchMdUrl = '';
     try { localStorage.removeItem(LS_PROJECT_LABELS_URL_KEY); } catch {}
     try { localStorage.removeItem(LS_PLUGINS_META_URL_KEY); } catch {}
+    try { localStorage.removeItem(LS_RESEARCH_MD_URL_KEY); } catch {}
     await loadProjectLabelsFromUrl('');
     await loadPluginsMetaFromUrl('', { silent: true });
+    await loadResearchMarkdownFromUrl('', { silent: true });
     setSettingsStatus('Внешние источники отключены.', '');
   };
 }
@@ -2004,13 +2362,16 @@ function switchView(view) {
   const isPlugins = view === 'plugins';
   const isFiles = view === 'files';
   const isSources = view === 'sources';
+  const isResearch = view === 'research';
   document.getElementById('plugins-section').style.display = isPlugins ? 'flex' : 'none';
   document.getElementById('files-section').style.display = isFiles ? 'flex' : 'none';
   document.getElementById('sources-section').style.display = isSources ? 'flex' : 'none';
+  document.getElementById('research-section').style.display = isResearch ? 'flex' : 'none';
   document.getElementById('plugins-filters-ctrl').style.display = isPlugins ? '' : 'none';
   document.getElementById('files-plugin-ctrl').style.display = isFiles ? '' : 'none';
   if (isFiles) renderFilesView();
   if (isSources) renderSourcesView();
+  if (isResearch) renderResearchView();
 }
 
 function openFileInFilesView(filePath) {
@@ -2046,6 +2407,9 @@ function init() {
   pluginsMetaUrl = (() => {
     try { return localStorage.getItem(LS_PLUGINS_META_URL_KEY) || ''; } catch { return ''; }
   })();
+  researchMdUrl = (() => {
+    try { return localStorage.getItem(LS_RESEARCH_MD_URL_KEY) || ''; } catch { return ''; }
+  })();
   const isDark = document.documentElement.classList.contains('dark');
   document.getElementById('theme-btn').textContent = isDark ? '☀️' : '🌙';
   document.getElementById('theme-btn').onclick = toggleTheme;
@@ -2058,8 +2422,11 @@ function init() {
   renderAll();
   initPopover();
   initCxPopover();
+  syncResearchViewAvailability();
   if (projectLabelsUrl) loadProjectLabelsFromUrl(projectLabelsUrl, { silent: true });
   if (pluginsMetaUrl) loadPluginsMetaFromUrl(pluginsMetaUrl, { silent: true });
+  renderResearchView();
+  if (researchMdUrl) loadResearchMarkdownFromUrl(researchMdUrl, { silent: true });
   document.querySelectorAll('.vbtn').forEach(b => {
     b.onclick = () => switchView(b.dataset.view);
   });
