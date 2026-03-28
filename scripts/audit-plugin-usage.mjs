@@ -1050,11 +1050,18 @@ tr.fdr>td{padding:0}
   .sources-list{max-height:180px;border-right:none;border-bottom:1px solid var(--border)}
 }
 .research-section{display:none;flex:1 1 0;min-height:0;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
-.research-content{min-height:0;overflow:auto;padding:26px 28px 32px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.research-content{position:relative;min-height:0;overflow:auto;padding:26px 28px 32px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
 .research-content::-webkit-scrollbar{width:8px;height:8px}
 .research-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px}
+.research-toolbar{position:sticky;top:0;z-index:5;display:flex;justify-content:flex-end;align-items:flex-start;height:0;margin:0;padding:0;background:transparent;border:none;pointer-events:none}
+.research-copy-btn{margin-left:auto;background:transparent;border-color:transparent;box-shadow:none;pointer-events:auto}
+.research-copy-btn:hover{background:transparent;border-color:transparent;color:var(--accent)}
+.research-copy-btn:focus-visible{background:transparent}
+.research-copy-btn:disabled{opacity:.55;cursor:not-allowed}
+.research-copy-btn svg{display:block;width:18px;height:18px}
 .research-state{padding:14px 16px;border:1px dashed var(--border);border-radius:12px;background:var(--bg);font-size:13px;line-height:1.55;color:var(--muted)}
 .research-state.error{color:#b91c1c;border-color:rgba(185,28,28,.28);background:rgba(185,28,28,.06)}
+.research-doc,.research-state{padding-right:58px}
 .research-doc{max-width:none;width:100%}
 .research-doc h1,.research-doc h2,.research-doc h3,.research-doc h4{line-height:1.2;letter-spacing:-.02em;margin:1.4em 0 .6em}
 .research-doc h1:first-child,.research-doc h2:first-child,.research-doc h3:first-child,.research-doc h4:first-child{margin-top:0}
@@ -1076,6 +1083,7 @@ tr.fdr>td{padding:0}
 .research-doc blockquote{padding:12px 14px;border-left:4px solid var(--accent);background:var(--surface-soft);border-radius:0 12px 12px 0;color:var(--muted)}
 @media (max-width: 640px){
   .research-content{padding:18px 16px 22px}
+  .research-doc,.research-state{padding-right:48px}
   .research-doc h1{font-size:26px}
   .research-doc h2{font-size:22px}
   .research-doc h3{font-size:18px}
@@ -1185,30 +1193,34 @@ html.dark .popover{box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .icon-btn:hover{border-color:var(--accent);background:var(--hover)}
 .icon-btn:focus-visible{outline:none;box-shadow:0 0 0 3px var(--focus-ring)}
 .icon-btn:active{transform:translateY(1px)}
+.tooltip-layer{position:fixed;left:0;top:0;z-index:2000;max-width:min(280px,calc(100vw - 24px));padding:8px 10px;border-radius:10px;background:rgba(15,23,42,.96);border:1px solid rgba(148,163,184,.22);color:#f8fafc;font-size:12px;font-weight:600;line-height:1.35;letter-spacing:.01em;box-shadow:0 14px 34px rgba(2,6,23,.35);backdrop-filter:blur(10px);pointer-events:none;opacity:0;transform:translate3d(0,6px,0) scale(.98);transition:opacity .14s ease,transform .14s ease}
+.tooltip-layer.is-visible{opacity:1;transform:translate3d(0,0,0) scale(1)}
+html.light .tooltip-layer{background:rgba(15,23,42,.92);border-color:rgba(71,85,105,.18)}
 .settings-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(15,23,42,.44);backdrop-filter:blur(6px);z-index:1200}
 .settings-modal.open{display:flex}
-.settings-dialog{width:min(560px,100%);background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:0 24px 80px rgba(15,23,42,.18);overflow:hidden}
+.settings-dialog{width:min(540px,100%);background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:0 24px 80px rgba(15,23,42,.18);overflow:hidden}
 html.dark .settings-dialog{box-shadow:0 24px 80px rgba(0,0,0,.45)}
-.settings-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:20px 22px 14px;border-bottom:1px solid var(--border)}
-.settings-title{font-size:18px;font-weight:700;line-height:1.2}
-.settings-subtitle{margin-top:6px;font-size:13px;line-height:1.45;color:var(--muted)}
-.settings-close{font-size:18px}
-.settings-body{padding:20px 22px 22px;display:grid;gap:14px}
-.settings-label{display:grid;gap:8px;font-size:13px;font-weight:600;color:var(--text)}
-.settings-input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text);font:inherit}
+.settings-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:18px 18px 12px;border-bottom:1px solid var(--border)}
+.settings-title{font-size:16px;font-weight:700;line-height:1.2}
+.settings-subtitle{margin-top:4px;font-size:12px;line-height:1.45;color:var(--muted)}
+.settings-close{width:36px;height:36px;padding:0;font-size:15px;line-height:1;flex:0 0 36px;border-radius:10px}
+.settings-body{padding:18px;display:grid;gap:12px}
+.settings-label{display:grid;gap:6px;font-size:12px;font-weight:600;color:var(--text)}
+.settings-input{width:100%;height:40px;padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;line-height:1.3}
 .settings-input::placeholder{color:var(--muted)}
 .settings-input:focus-visible{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--focus-ring)}
 .settings-hint{font-size:12px;line-height:1.5;color:var(--muted)}
-.settings-status{min-height:20px;font-size:12px;line-height:1.45;color:var(--muted)}
+.settings-status{min-height:18px;font-size:11px;line-height:1.45;color:var(--muted)}
 .settings-status.error{color:#b91c1c}
 .settings-status.success{color:#0f766e}
-.settings-actions{display:flex;justify-content:flex-end;gap:10px}
-.settings-btn{display:inline-flex;align-items:center;justify-content:center;min-width:112px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);font:inherit;font-weight:600;cursor:pointer;transition:border-color .15s,background .15s}
+.settings-actions{display:flex;justify-content:flex-end;gap:8px}
+.settings-btn{display:inline-flex;align-items:center;justify-content:center;min-width:108px;height:36px;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:13px;font-weight:600;line-height:1;cursor:pointer;transition:border-color .15s,background .15s,transform .15s}
 .settings-btn:hover{border-color:var(--accent);background:var(--hover)}
 .settings-btn:focus-visible{outline:none;box-shadow:0 0 0 3px var(--focus-ring)}
+.settings-btn:active{transform:translateY(1px)}
 .settings-btn--primary{background:var(--accent);border-color:var(--accent);color:#fff}
 .settings-btn--primary:hover{filter:brightness(1.03)}
-.settings-note{padding-top:14px;border-top:1px solid var(--border);font-size:12px;line-height:1.5;color:var(--muted)}
+.settings-note{padding-top:12px;border-top:1px solid var(--border);font-size:11px;line-height:1.5;color:var(--muted)}
 
 .empty-state{padding:32px;text-align:center;color:var(--muted)}
 </style>
@@ -1224,8 +1236,8 @@ html.dark .settings-dialog{box-shadow:0 24px 80px rgba(0,0,0,.45)}
       <div class="hdr-right">
         <span class="hdr-meta" id="hdr-meta"></span>
         <div class="hdr-actions">
-          <button class="icon-btn" id="settings-btn" type="button" title="Настройки" aria-label="Настройки">⚙</button>
-          <button class="icon-btn" id="theme-btn" type="button" title="Переключить тему" aria-label="Переключить тему">🌙</button>
+          <button class="icon-btn" id="settings-btn" type="button" data-tooltip="Настройки" aria-label="Настройки">⚙</button>
+          <button class="icon-btn" id="theme-btn" type="button" data-tooltip="Переключить тему" aria-label="Переключить тему">🌙</button>
         </div>
       </div>
     </header>
@@ -1309,7 +1321,7 @@ html.dark .settings-dialog{box-shadow:0 24px 80px rgba(0,0,0,.45)}
           <div class="settings-title" id="settings-title">Настройки отчёта</div>
           <div class="settings-subtitle">Подключите внешние JSON, чтобы подгружать реальные названия проектов и данные по плагинам.</div>
         </div>
-        <button class="icon-btn settings-close" id="settings-close-btn" type="button" title="Закрыть окно" aria-label="Закрыть окно">✕</button>
+        <button class="icon-btn settings-close" id="settings-close-btn" type="button" data-tooltip="Закрыть окно" aria-label="Закрыть окно">✕</button>
       </div>
       <div class="settings-body">
         <label class="settings-label" for="project-map-url-input">
@@ -1357,6 +1369,13 @@ html.dark .settings-dialog{box-shadow:0 24px 80px rgba(0,0,0,.45)}
   </div>
   <div id="research-section" class="research-section">
     <div class="research-content">
+      <div class="research-toolbar">
+        <button class="icon-btn research-copy-btn" id="research-copy-btn" type="button" data-tooltip="Скопировать Markdown" aria-label="Скопировать Markdown">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M9 7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-1v-2h1V7h-8v1H9V7Zm-4 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-8Zm2 0v8h8v-8H7Z"/>
+          </svg>
+        </button>
+      </div>
       <div class="research-state" id="research-state">Markdown-файл ещё не подключён.</div>
       <article class="research-doc" id="research-doc" hidden></article>
     </div>
@@ -1408,6 +1427,9 @@ let pluginsMetaUrl = '';
 let pluginsMetaOverrides = {};
 let researchMdUrl = '';
 let researchMarkdown = '';
+let tooltipEl = null;
+let tooltipTarget = null;
+let researchCopyTooltipTimer = null;
 let expandAll = false;
 let projNone = false;
 let filtersNone = false;
@@ -1663,6 +1685,156 @@ function syncResearchViewAvailability() {
   return hasResearchContent();
 }
 
+function ensureTooltip() {
+  if (tooltipEl) return tooltipEl;
+  tooltipEl = document.createElement('div');
+  tooltipEl.className = 'tooltip-layer';
+  tooltipEl.setAttribute('role', 'tooltip');
+  tooltipEl.hidden = true;
+  document.body.appendChild(tooltipEl);
+  return tooltipEl;
+}
+
+function hideTooltip() {
+  if (!tooltipEl) return;
+  tooltipTarget = null;
+  tooltipEl.hidden = true;
+  tooltipEl.classList.remove('is-visible');
+}
+
+function positionTooltip(target) {
+  if (!tooltipEl || !target || tooltipEl.hidden) return;
+  const rect = target.getBoundingClientRect();
+  const tipRect = tooltipEl.getBoundingClientRect();
+  const gap = 10;
+  const minX = 12;
+  const maxX = window.innerWidth - tipRect.width - 12;
+  let left = rect.left + rect.width / 2 - tipRect.width / 2;
+  if (Number.isFinite(maxX)) left = Math.min(Math.max(left, minX), Math.max(minX, maxX));
+  let top = rect.top - tipRect.height - gap;
+  if (top < 12) top = rect.bottom + gap;
+  tooltipEl.style.left = Math.round(left) + 'px';
+  tooltipEl.style.top = Math.round(top) + 'px';
+}
+
+function showTooltip(target) {
+  const text = target && target.dataset ? String(target.dataset.tooltip || '').trim() : '';
+  if (!target || !text) {
+    hideTooltip();
+    return;
+  }
+  const el = ensureTooltip();
+  tooltipTarget = target;
+  el.textContent = text;
+  el.hidden = false;
+  positionTooltip(target);
+  requestAnimationFrame(() => {
+    if (tooltipTarget === target && tooltipEl) tooltipEl.classList.add('is-visible');
+  });
+}
+
+function initTooltips() {
+  ensureTooltip();
+  document.querySelectorAll('[title]').forEach(el => {
+    const title = String(el.getAttribute('title') || '').trim();
+    if (!title) return;
+    if (!el.dataset.tooltip) el.dataset.tooltip = title;
+    el.removeAttribute('title');
+  });
+  document.addEventListener('pointerover', e => {
+    const target = e.target instanceof Element ? e.target.closest('[data-tooltip]') : null;
+    if (!target || target.hasAttribute('disabled')) return;
+    showTooltip(target);
+  });
+  document.addEventListener('pointerout', e => {
+    if (!tooltipTarget) return;
+    const current = e.target instanceof Element ? e.target.closest('[data-tooltip]') : null;
+    const next = e.relatedTarget instanceof Element ? e.relatedTarget.closest('[data-tooltip]') : null;
+    if (current === tooltipTarget && next !== tooltipTarget) {
+      if (current && current.id === 'research-copy-btn') resetResearchCopyTooltip();
+      hideTooltip();
+    }
+  });
+  document.addEventListener('focusin', e => {
+    const target = e.target instanceof Element ? e.target.closest('[data-tooltip]') : null;
+    if (!target || target.hasAttribute('disabled')) return;
+    showTooltip(target);
+  });
+  document.addEventListener('focusout', e => {
+    const target = e.target instanceof Element ? e.target.closest('[data-tooltip]') : null;
+    if (target && target.id === 'research-copy-btn') resetResearchCopyTooltip();
+    if (target && target === tooltipTarget) hideTooltip();
+  });
+  window.addEventListener('scroll', () => {
+    if (tooltipTarget) positionTooltip(tooltipTarget);
+  }, true);
+  window.addEventListener('resize', hideTooltip);
+}
+
+function setResearchCopyState(message = '', disabled = false) {
+  const btn = document.getElementById('research-copy-btn');
+  if (researchCopyTooltipTimer) {
+    clearTimeout(researchCopyTooltipTimer);
+    researchCopyTooltipTimer = null;
+  }
+  if (btn) btn.disabled = disabled;
+  if (btn) btn.dataset.tooltip = message || 'Скопировать Markdown';
+  if (btn) btn.dataset.tooltipDefault = message || 'Скопировать Markdown';
+  if (btn) btn.setAttribute('aria-label', message || 'Скопировать Markdown');
+  if (btn && tooltipTarget === btn) showTooltip(btn);
+}
+
+function resetResearchCopyTooltip() {
+  const btn = document.getElementById('research-copy-btn');
+  if (researchCopyTooltipTimer) {
+    clearTimeout(researchCopyTooltipTimer);
+    researchCopyTooltipTimer = null;
+  }
+  if (!btn) return;
+  const next = btn.dataset.tooltipDefault || 'Скопировать Markdown';
+  btn.dataset.tooltip = next;
+  if (tooltipTarget === btn) showTooltip(btn);
+}
+
+function flashResearchCopyTooltip(message) {
+  const btn = document.getElementById('research-copy-btn');
+  if (!btn) return;
+  if (researchCopyTooltipTimer) clearTimeout(researchCopyTooltipTimer);
+  btn.dataset.tooltip = message;
+  if (tooltipTarget === btn) showTooltip(btn);
+  researchCopyTooltipTimer = setTimeout(() => {
+    researchCopyTooltipTimer = null;
+    resetResearchCopyTooltip();
+  }, 1400);
+}
+
+async function copyResearchMarkdown() {
+  if (!hasResearchContent()) {
+    setResearchCopyState('Сначала загрузите Markdown-файл.', true);
+    return;
+  }
+
+  const text = String(researchMarkdown ?? '');
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const area = document.createElement('textarea');
+      area.value = text;
+      area.setAttribute('readonly', 'readonly');
+      area.style.position = 'fixed';
+      area.style.opacity = '0';
+      document.body.appendChild(area);
+      area.select();
+      document.execCommand('copy');
+      area.remove();
+    }
+    flashResearchCopyTooltip('Скопировано');
+  } catch (error) {
+    flashResearchCopyTooltip('Не удалось скопировать');
+  }
+}
+
 function renderResearchMarkdown(markdown) {
   const text = String(markdown ?? '').replaceAll(String.fromCharCode(13) + String.fromCharCode(10), String.fromCharCode(10)).replaceAll(String.fromCharCode(13), String.fromCharCode(10));
   const lines = text.split(String.fromCharCode(10));
@@ -1807,12 +1979,14 @@ function renderResearchView() {
     stateEl.hidden = false;
     docEl.hidden = true;
     docEl.innerHTML = '';
+    setResearchCopyState(researchMdUrl ? 'Markdown недоступен для копирования.' : 'Загрузите markdown, чтобы скопировать его.', true);
     return;
   }
 
   docEl.innerHTML = renderResearchMarkdown(researchMarkdown);
   docEl.hidden = false;
   stateEl.hidden = true;
+  setResearchCopyState('', false);
 }
 
 function setSettingsStatus(message = '', tone = '') {
@@ -2443,6 +2617,7 @@ function openSourceLine(filePath, lineNo) {
 function init() {
   initExportButtons();
   loadTheme();
+  initTooltips();
   loadOverrides();
   loadComplexityOverrides();
   projectLabelsUrl = (() => {
@@ -2457,6 +2632,7 @@ function init() {
   const isDark = document.documentElement.classList.contains('dark');
   document.getElementById('theme-btn').textContent = isDark ? '☀️' : '🌙';
   document.getElementById('theme-btn').onclick = toggleTheme;
+  document.getElementById('research-copy-btn').onclick = () => copyResearchMarkdown();
   initSettingsModal();
   ['proj-panel', 'priority-panel', 'complexity-panel', 'files-plugin-panel', 'export-panel'].forEach(id => {
     const panel = document.getElementById(id);
@@ -2756,16 +2932,16 @@ function renderHead() {
   const cols = [
     {key:'order', label:'#', title:'Порядок в списке'},
     {key:'id', label:'Плагин', title:'Идентификатор плагина'},
-    {key:'lightning', label:'Lightning CSS', title:'Поддержка в Lightning CSS: нативно / частично / нет'},
-    {key:'complexity', label:'Сложность', title:'Сложность реализации в Rust Pre-stage'},
-    {key:'priority', label:'Приоритет', title:'Приоритет миграции (кликни на бейдж для изменения)'},
-    {key:'matches', label:'Совпадения', title:'Количество совпадений паттернов во всех файлах'},
+    {key:'lightning', label:'Lightning CSS', title:'Поддержка в Lightning CSS'},
+    {key:'complexity', label:'Сложность', title:'Сложность реализации'},
+    {key:'priority', label:'Приоритет', title:'Приоритет миграции'},
+    {key:'matches', label:'Совпадения', title:'Количество совпадений паттернов'},
   ];
   document.getElementById('thead').innerHTML = \`<tr>\${cols.map(c => {
     const sorted = sortCol === c.key;
     const arrow = sorted ? (sortDir > 0 ? '↑' : '↓') : '↕';
     const ariaSort = sorted ? (sortDir > 0 ? 'ascending' : 'descending') : 'none';
-    return \`<th class="\${sorted ? 'sorted' : ''}" data-col="\${c.key}" title="\${escAttr(c.title)}" aria-sort="\${ariaSort}">\${c.label}<span class="sort-arrow">\${arrow}</span></th>\`;
+    return \`<th class="\${sorted ? 'sorted' : ''}" data-col="\${c.key}" data-tooltip="\${escAttr(c.title)}" aria-sort="\${ariaSort}">\${c.label}<span class="sort-arrow">\${arrow}</span></th>\`;
   }).join('')}</tr>\`;
   document.getElementById('thead').querySelectorAll('th').forEach(th => {
     th.onclick = () => {
@@ -2909,8 +3085,8 @@ function renderBody() {
       <td><span class="exp-icon">▶</span> <span class="plugin-order">\${p.order}</span></td>
       <td><span class="plugin-name">\${highlightMatch(p.id, searchQuery)}</span></td>
       <td><span class="badge l-\${lightKey}">\${LIGHTNING_LABEL[lightKey]}</span></td>
-      <td><span class="badge cx-\${complexityBadgeClass(ec)} cxbadge" data-id="\${escAttr(p.id)}" title="Изменить сложность">\${COMPLEXITY_LABEL[ec] ?? ec}\${cxDotHtml}</span></td>
-      <td><span class="badge p-\${priorityBadgeClass(ep)} pbadge" data-id="\${escAttr(p.id)}" title="Изменить приоритет">\${PRIORITY_LABEL[ep] ?? ep}\${dotHtml}</span></td>
+      <td><span class="badge cx-\${complexityBadgeClass(ec)} cxbadge" data-id="\${escAttr(p.id)}" data-tooltip="Изменить сложность">\${COMPLEXITY_LABEL[ec] ?? ec}\${cxDotHtml}</span></td>
+      <td><span class="badge p-\${priorityBadgeClass(ep)} pbadge" data-id="\${escAttr(p.id)}" data-tooltip="Изменить приоритет">\${PRIORITY_LABEL[ep] ?? ep}\${dotHtml}</span></td>
       <td><span class="\${p.totalMatches === 0 ? 'matches-zero' : 'matches'}">\${p.totalMatches}</span></td>
     </tr>\${detailHtml}\`;
   });
