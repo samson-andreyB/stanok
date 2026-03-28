@@ -1054,6 +1054,7 @@ tr.fdr>td{padding:0}
 .research-content::-webkit-scrollbar{width:8px;height:8px}
 .research-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px}
 .research-toolbar{position:sticky;top:0;z-index:5;display:flex;justify-content:flex-end;align-items:flex-start;height:0;margin:0;padding:0;background:transparent;border:none;pointer-events:none}
+.research-toolbar[hidden],.research-copy-btn[hidden]{display:none !important}
 .research-copy-btn{margin-left:auto;background:transparent;border-color:transparent;box-shadow:none;pointer-events:auto}
 .research-copy-btn:hover{background:transparent;border-color:transparent;color:var(--accent)}
 .research-copy-btn:focus-visible{background:transparent}
@@ -1369,7 +1370,7 @@ html.dark .settings-dialog{box-shadow:0 24px 80px rgba(0,0,0,.45)}
   </div>
   <div id="research-section" class="research-section">
     <div class="research-content">
-      <div class="research-toolbar">
+      <div class="research-toolbar" id="research-toolbar" hidden>
         <button class="icon-btn research-copy-btn" id="research-copy-btn" type="button" data-tooltip="Скопировать Markdown" aria-label="Скопировать Markdown">
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path fill="currentColor" d="M9 7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-1v-2h1V7h-8v1H9V7Zm-4 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-8Zm2 0v8h8v-8H7Z"/>
@@ -1969,6 +1970,8 @@ function renderResearchMarkdown(markdown) {
 function renderResearchView() {
   const stateEl = document.getElementById('research-state');
   const docEl = document.getElementById('research-doc');
+  const toolbarEl = document.getElementById('research-toolbar');
+  const copyBtn = document.getElementById('research-copy-btn');
   if (!stateEl || !docEl) return;
 
   if (!hasResearchContent()) {
@@ -1979,6 +1982,11 @@ function renderResearchView() {
     stateEl.hidden = false;
     docEl.hidden = true;
     docEl.innerHTML = '';
+    if (toolbarEl) toolbarEl.hidden = true;
+    if (copyBtn) {
+      copyBtn.hidden = true;
+      if (tooltipTarget === copyBtn) hideTooltip();
+    }
     setResearchCopyState(researchMdUrl ? 'Markdown недоступен для копирования.' : 'Загрузите markdown, чтобы скопировать его.', true);
     return;
   }
@@ -1986,6 +1994,8 @@ function renderResearchView() {
   docEl.innerHTML = renderResearchMarkdown(researchMarkdown);
   docEl.hidden = false;
   stateEl.hidden = true;
+  if (toolbarEl) toolbarEl.hidden = false;
+  if (copyBtn) copyBtn.hidden = false;
   setResearchCopyState('', false);
 }
 
